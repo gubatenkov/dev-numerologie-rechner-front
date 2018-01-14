@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import AnalysisInput from './components/AnalysisInput';
 import Login from './components/Login';
+import AnalysisResultPersonal from './components/AnalysisResultPersonal';
 import PrivateRoute from './utils/PrivateRoute';
 
 import registerServiceWorker from './utils/registerServiceWorker';
@@ -17,10 +18,11 @@ import './styles/brand-icons/brand-icons.min.css';
 import './styles/web-icons/web-icons.min.css';
 import './styles/font-awesome/font-awesome.min.css';
 
-ReactDOM.render(
+ReactDOM.render(	
 	<BrowserRouter>
 		<Switch>
 			<Route path='/login' component={Login}/>
+			<Route path='/resultPersonal' component={AnalysisResultPersonal}/>
 			<PrivateRoute path="/analysisInput" isAuthenticated={isUserAuthenticated} loginPath='/login' component={AnalysisInput} />
 		</Switch>
 	</BrowserRouter>,

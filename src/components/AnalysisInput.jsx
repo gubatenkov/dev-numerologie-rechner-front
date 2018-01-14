@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import Panel from './Panel';
 import InputField from './InputField';
+
+import logo from '../logo.png';
+import '../styles/AnalysisInput.css';
 
 /* eslint-disable react/prefer-stateless-function */
 class AnalysisInput extends Component {
@@ -23,6 +27,9 @@ class AnalysisInput extends Component {
 			<div className="page-register-v3 layout-full">
 				<div className="page vertical-align">
 					<div className="page-content">
+						<div className="text-center">
+							<img className="brand-img logo" height="150" src={logo} alt="logo" />
+						</div>
 						<Panel title="Akademie Bios Analyse">
 							<InputField
 								icon="wb-user"
@@ -39,7 +46,11 @@ class AnalysisInput extends Component {
 								fieldName="Geburtsdatum"
 								onChange={this.handleDateOfBirthChange}
 							/>
-							<button className="btn btn-primary btn-block" onClick={this.startAnalysis}>Starten</button>
+							<Link to='/resultPersonal'>
+								<button className="btn btn-primary btn-block" onClick={this.startAnalysis}>
+									Starten
+								</button>
+							</Link>
 						</Panel>
 					</div>
 				</div>
@@ -65,7 +76,7 @@ class AnalysisInput extends Component {
 	/**
 	 * handes changes of the date of birth
 	 */
-	handleDateOfBirthChange = (event) => {
+	handleDateOfBirthChange = event => {
 		this.dateOfBirth = event.target.value;
 	};
 
