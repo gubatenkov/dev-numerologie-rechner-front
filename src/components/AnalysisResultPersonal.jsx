@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import calculateExpressionLevel from '../utils/NumerologyCalculations';
 
@@ -19,10 +20,11 @@ class AnalysisResultPersonal extends Component {
 		// render table, table shows spinner
 		return (
 			<div>
+                <Link to='/analysisInput'> Zurück </Link>
 				<h3>Results</h3>
-                {this.results.map(item => {
-                    return (<h5 key={item.id}>{item.name} ({item.id}) = {item.value}</h5>);
-                })}
+				{this.results.map(item => {
+					return <h5 key={item.id}>{item.name} ({item.id}) = {item.value}</h5>;
+				})}
 			</div>
 		);
 	}
