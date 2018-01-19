@@ -67,10 +67,6 @@ html, body {
   height: 100%;
 }
 
-body {
-  padding-top: 66.01px;
-}
-
 .site-menubar {
   position: fixed;
   top: 66.01px;
