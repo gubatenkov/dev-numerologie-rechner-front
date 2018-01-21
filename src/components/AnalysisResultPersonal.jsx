@@ -41,9 +41,21 @@ class AnalysisResultPersonal extends Component {
 					</div>
 					<div className="ResultContent">
 						<Panel title="Ausdrucksebene">
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
+
+							<table className="table">
+								<tbody>
+									{this.state.results.map(item => {
+										return (
+											<tr key={item.id}>
+												<td>{item.name}</td>
+												<td>{item.id}</td>
+												<td>{item.value}</td>
+												<td>{item.description}</td>
+											</tr>
+										);
+									})}
+								</tbody>
+							</table>
 						</Panel>
 						<Panel title="Persönlichkeitsebene">
 							{this.state.results.map(item => {
@@ -61,27 +73,6 @@ class AnalysisResultPersonal extends Component {
 							})}
 						</Panel>
 						<Panel title="Zeitliche Ebene">
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
 							{this.state.results.map(item => {
 								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
 							})}
