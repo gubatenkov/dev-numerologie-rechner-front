@@ -4,10 +4,17 @@ import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
+import ResultTable from './ResultTable';
 
 import '../styles/AnalysisResultPersonal.css';
 
-import calculateExpressionLevel from '../utils/NumerologyCalculations';
+import {
+	calculateExpressionLevel,
+	calculatePersonalLevel,
+	calculateDevelopmentLevel,
+	calculateSoulLevelNumbers,
+	calculateTimeLevelNumbers
+} from '../utils/NumerologyCalculations';
 
 /**
  * result screen for personal analysis
@@ -17,7 +24,19 @@ class AnalysisResultPersonal extends Component {
 		super(props);
 
 		// faking call to server
-		this.state = { results: calculateExpressionLevel(null, null, null) };
+		// TODO get firstname, lastName and date of birth from input
+		const firstName = 'Christoph';
+		const lastName = 'Hechenblaikner';
+		const dateOfBirth = '18.04.1989';
+
+		// setting initial state based on calculations
+		this.state = {
+			expressionLevel: calculateExpressionLevel(firstName, lastName, dateOfBirth),
+			personalityLevel: calculatePersonalLevel(firstName, lastName, dateOfBirth),
+			developmentLevel: calculateDevelopmentLevel(firstName, lastName, dateOfBirth),
+			soulLevel: calculateSoulLevelNumbers(firstName, lastName, dateOfBirth),
+			timeLevel: calculateTimeLevelNumbers(firstName, lastName, dateOfBirth)
+		};
 	}
 	/**
      * default render
@@ -40,42 +59,22 @@ class AnalysisResultPersonal extends Component {
 						<ContentNavigation />
 					</div>
 					<div className="ResultContent">
-						<Panel title="Ausdrucksebene">
 
-							<table className="table">
-								<tbody>
-									{this.state.results.map(item => {
-										return (
-											<tr key={item.id}>
-												<td>{item.name}</td>
-												<td>{item.id}</td>
-												<td>{item.value}</td>
-												<td>{item.description}</td>
-											</tr>
-										);
-									})}
-								</tbody>
-							</table>
+						<Panel title="Ausdrucksebene">
+							<ResultTable data={this.state.expressionLevel} />
 						</Panel>
+
 						<Panel title="Persönlichkeitsebene">
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
+							<ResultTable data={this.state.personalityLevel} />
 						</Panel>
 						<Panel title="Entfaltungspotential">
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
+							<ResultTable data={this.state.developmentLevel} />
 						</Panel>
 						<Panel title="Seelische Ebene">
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
+							<ResultTable data={this.state.soulLevel} />
 						</Panel>
 						<Panel title="Zeitliche Ebene">
-							{this.state.results.map(item => {
-								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-							})}
+							<ResultTable data={this.state.timeLevel} />
 						</Panel>
 					</div>
 				</div>
