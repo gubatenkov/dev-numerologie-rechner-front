@@ -39,6 +39,12 @@ class ContentNaviation extends Component {
 			this.setState({
 				currentIndex: stepIndex
 			});
+
+			// scrolling to item if present
+			const stepContentItem = document.getElementById(clickedStep);
+			if (stepContentItem) {
+				stepContentItem.scrollIntoView();
+			}
 		}
 	};
 

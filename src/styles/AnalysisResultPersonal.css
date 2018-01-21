@@ -2,13 +2,13 @@
     display: flex;
     align-content: flex-start;
     flex-direction: row;
-    flex-wrap: nowrap;
 }
 
 .ResultContentOverview {
     margin-left: 30px;
     border-color: black;
-    width: 25%;
+    flex-shrink: 0;
+    min-width: 25%;
 }
 
 .ResultContent {
