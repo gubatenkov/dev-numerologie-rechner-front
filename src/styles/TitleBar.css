@@ -1,0 +1,32 @@
+.barContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 40px;
+    color: white;
+}
+
+.barTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.barTitle__badge {
+    height: 20px;
+    margin-top: 5px;
+    margin-right: 10px;
+    padding-top: 5px !important;
+}
+
+.barContainer__rightElements {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.barContainer button {
+    margin-left: 10px;
+}

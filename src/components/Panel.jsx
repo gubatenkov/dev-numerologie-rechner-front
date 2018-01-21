@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import '../styles/Panel.css';
+
 /**
  * Represents a panel in the UI code
  */
@@ -8,9 +10,10 @@ class Panel extends Component {
 		return (
 			<div className="panel panel-bordered panel-default">
 				<div className="panel-heading">
-					<h3 className="panel-title">
-						{this.props.title}
-					</h3>
+					{this.props.title &&
+						<h5 className="panel-title">
+							{this.props.title}
+						</h5>}
 				</div>
 				<div className="panel-body">
 					{this.props.children}

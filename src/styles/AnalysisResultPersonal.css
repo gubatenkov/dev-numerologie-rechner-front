@@ -1,0 +1,11 @@
+.ResultContentOverview {
+    float: left;
+    margin-left: 30px;
+    border-color: black;
+}
+
+.ResultContent {
+    float: left;
+    margin-right: 50px;
+    margin-left: 50px;
+}

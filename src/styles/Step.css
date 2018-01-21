@@ -1,0 +1,36 @@
+.step__num {
+    padding-top: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.step_num__circle {
+    border: 2px solid #62a8ea;
+    background-color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    margin-top: 2.5px;
+    z-index: 0;
+}
+
+.step_num__circle--current {
+    border-width: 3px;
+}
+
+.step_num__circle--done {
+    background-color: #62a8ea;
+}
+
+.step_num__stepName {
+    margin-left: 20px;
+}
+
+.step_num__stepName--current {
+    font-weight: bold;
+}
+
+.step_num_stepNumber {
+    margin-right: 5px;
+}

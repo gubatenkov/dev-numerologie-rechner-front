@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
-import NavigationTitleBar from './NavigationTitleBar';
+import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
+import ContentNavigation from './ContentNavigation';
+import Panel from './Panel';
+
+import '../styles/AnalysisResultPersonal.css';
 
 import calculateExpressionLevel from '../utils/NumerologyCalculations';
 
@@ -14,7 +17,7 @@ class AnalysisResultPersonal extends Component {
 		super(props);
 
 		// faking call to server
-		this.results = calculateExpressionLevel(null, null, null);
+		this.state = { results: calculateExpressionLevel(null, null, null) };
 	}
 	/**
      * default render
@@ -24,10 +27,26 @@ class AnalysisResultPersonal extends Component {
 		return (
 			<div>
 				<NavigationBar />
-				<NavigationTitleBar title="Ergebnis" backRoute="/analysisInput" />
-				{this.results.map(item => {
-					return <h5 key={item.id}>{item.name} ({item.id}) = {item.value}</h5>;
-				})}
+				<TitleBar
+					title="Übersicht der Zahlen"
+					backTitle="Zurück"
+					backRoute="/analysisInput"
+					primaryActionTitle="Speichern"
+					badgeTitle="Kurztext"
+					secondaryActionTitle="Drucken"
+				/>
+				<div className="ResultContentOverview">
+					<ContentNavigation />
+				</div>
+				<div className="ResultContent">
+					<Panel>
+						<h5>Result Content</h5>
+						{this.state.results.map(item => {
+							return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
+						})}
+					</Panel>
+				</div>
+
 			</div>
 		);
 	}
