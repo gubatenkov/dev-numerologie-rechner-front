@@ -84,7 +84,7 @@ class AnalysisInput extends Component {
 	 * starts the analysis upon button click
 	 */
 	startAnalysis = () => {
-		console.log(`Start anallysis with ${this.firstNames}, ${this.lastNames}, ${this.dateOfBirth}`);
+		// console.log(`Start anallysis with ${this.firstNames}, ${this.lastNames}, ${this.dateOfBirth}`);
 	};
 }
 

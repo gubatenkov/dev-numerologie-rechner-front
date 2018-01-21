@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom';
 
 import '../styles/TitleBar.css';
 
+/**
+ * title bar on top of screen featuring a page title, 
+ * sub-information, a back action as well as multipe action 
+ * buttons (right)
+ */
 class TitleBar extends Component {
 	render() {
 		return (
@@ -10,7 +15,6 @@ class TitleBar extends Component {
 				<div className="barContainer__leftElements">
 					{this.props.backTitle &&
 						<Link to={this.props.backRoute}>
-
 							<button className="btn btn-default">{this.props.backTitle}</button>
 						</Link>}
 				</div>

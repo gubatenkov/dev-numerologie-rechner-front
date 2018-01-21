@@ -35,18 +35,18 @@ class AnalysisResultPersonal extends Component {
 					badgeTitle="Kurztext"
 					secondaryActionTitle="Drucken"
 				/>
-				<div className="ResultContentOverview">
-					<ContentNavigation />
+				<div className="ContentArea">
+					<div className="ResultContentOverview">
+						<ContentNavigation />
+					</div>
+					<div className="ResultContent">
+						<Panel title="Resultat">
+							{this.state.results.map(item => {
+								return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
+							})}
+						</Panel>
+					</div>
 				</div>
-				<div className="ResultContent">
-					<Panel>
-						<h5>Result Content</h5>
-						{this.state.results.map(item => {
-							return <h6 key={item.id}>{item.name} ({item.id}) = {item.value}</h6>;
-						})}
-					</Panel>
-				</div>
-
 			</div>
 		);
 	}

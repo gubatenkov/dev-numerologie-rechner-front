@@ -1,11 +1,18 @@
+.ContentArea {
+    display: flex;
+    align-content: flex-start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
 .ResultContentOverview {
-    float: left;
     margin-left: 30px;
     border-color: black;
+    width: 25%;
 }
 
 .ResultContent {
-    float: left;
     margin-right: 50px;
-    margin-left: 50px;
+    margin-left: 30px;
+    width: 100%;
 }

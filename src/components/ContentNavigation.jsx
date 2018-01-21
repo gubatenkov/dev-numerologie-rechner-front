@@ -10,8 +10,11 @@ import Step from './Step';
  */
 class ContentNaviation extends Component {
 	constructor(props) {
+		// calling super constructor
 		super(props);
 
+		// setting initial state
+		// TODO fetch thispanel-title
 		this.state = {
 			steps: [
 				'Ausdrucksebene',
@@ -28,8 +31,6 @@ class ContentNaviation extends Component {
 	 * handler method for clicks on steps
 	 */
 	handleStepClick = clickedStep => {
-		console.log('!!!!');
-		console.log(clickedStep);
 		// searching for step
 		const stepIndex = this.state.steps.indexOf(clickedStep);
 
@@ -46,8 +47,7 @@ class ContentNaviation extends Component {
 	 */
 	render() {
 		return (
-			<Panel>
-				<h5>Inhalt</h5>
+			<Panel title="Inhalt">
 				<Steps>
 					{this.state.steps.map((item, index) => {
 						return (
