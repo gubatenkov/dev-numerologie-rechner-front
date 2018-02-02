@@ -74,7 +74,8 @@ class AnalysisResultPersonal extends Component {
 							<ResultTable data={this.state.soulLevel} />
 						</Panel>
 						<Panel title="Zeitliche Ebene">
-							<ResultTable data={this.state.timeLevel} />
+							<ResultTable data={this.state.timeLevel[0]} />
+							<ResultTable data={this.state.timeLevel[1]} />
 						</Panel>
 					</div>
 				</div>

@@ -1,0 +1,8 @@
+.tableRow__name {
+    width: 20%;
+}
+
+.tableRow--highlighted {
+    border-color: #4397e6;
+    border-style: solid;
+}
