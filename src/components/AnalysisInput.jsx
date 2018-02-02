@@ -30,28 +30,32 @@ class AnalysisInput extends Component {
 						<div className="text-center">
 							<img className="brand-img logo" height="150" src={logo} alt="logo" />
 						</div>
-						<Panel title="Akademie Bios Analyse">
-							<InputField
-								icon="wb-user"
-								fieldName="Vorname(n)"
-								onChange={this.handleFirstNamesValueChanged}
-							/>
-							<InputField
-								icon="wb-user"
-								fieldName="Nachname"
-								onChange={this.handleLastNameValueChanged}
-							/>
-							<InputField
-								icon="wb-calendar"
-								fieldName="Geburtsdatum"
-								onChange={this.handleDateOfBirthChange}
-							/>
-							<Link to='/resultPersonal'>
-								<button className="btn btn-primary btn-block" onClick={this.startAnalysis}>
-									Starten
-								</button>
-							</Link>
-						</Panel>
+						<div className="row justify-content-md-center">
+							<div className="col-lg-6">
+								<Panel title="Akademie Bios Analyse">
+									<InputField
+										icon="wb-user"
+										fieldName="Vorname(n)"
+										onChange={this.handleFirstNamesValueChanged}
+									/>
+									<InputField
+										icon="wb-user"
+										fieldName="Nachname"
+										onChange={this.handleLastNameValueChanged}
+									/>
+									<InputField
+										icon="wb-calendar"
+										fieldName="Geburtsdatum"
+										onChange={this.handleDateOfBirthChange}
+									/>
+									<Link to="/resultPersonal">
+										<button className="btn btn-primary btn-block" onClick={this.startAnalysis}>
+											Starten
+										</button>
+									</Link>
+								</Panel>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

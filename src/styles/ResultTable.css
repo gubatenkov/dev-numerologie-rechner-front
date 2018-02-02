@@ -1,3 +1,15 @@
 .ResultTable--highlighted {
     background-color: #FFC0BF;
 }
+
+/*prevents user from selecting results*/
+.ResultTable--non-selectable {
+    user-select: none;
+}
+
+/*prevents printing of result information*/
+@media print {    
+    .ResultTable--non-printable, .ResultTable--non-printable * {
+        display: none !important;
+    }
+}

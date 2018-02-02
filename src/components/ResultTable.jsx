@@ -13,7 +13,7 @@ class ResultTable extends Component {
      */
 	render() {
 		return (
-			<table className="table table-striped">
+			<table className="table table-striped ResultTable--non-selectable ResultTable--non-printable">
 				{this.props.data.headings && this.renderHeadings(this.props.data.headings)}
 				<tbody>
 					{this.props.data.numbers.map((item, index) => {

@@ -14,6 +14,17 @@ const TYPE_ID_MATRIX = 'matrix';
  * row rendering a single row item of an analysis result
  */
 class ResultTableRow extends Component {
+	/**
+	 * returns the row representation of the text passed by the server 
+	 */
+	getTextRepresentation(rowText) {
+		let rowTextRepresentation = null;
+		if (rowText && rowText && rowText.length > 0) {
+			rowTextRepresentation = [rowText.substring(0, 57) + '...  ', <a href="#">Lesen</a>];
+		}
+		return rowTextRepresentation;
+	}
+
 	render() {
 		// getting item from passed props
 		const item = this.props.item;
@@ -37,13 +48,15 @@ class ResultTableRow extends Component {
 				{rowItem.values.map((value, index) => {
 					// defining style of cell
 					let cellStyle = '';
+					let cellValue = value;
 					if (index === lastIndex) {
 						cellStyle += 'text-right';
+						cellValue = this.getTextRepresentation(value);
 					}
 					if (index === 0) {
 						cellStyle += 'tableRow__name';
 					}
-					return <td className={cellStyle} key={value}>{value}</td>;
+					return <td className={cellStyle} key={cellValue}>{cellValue}</td>;
 				})}
 			</tr>
 		);
@@ -68,7 +81,7 @@ class ResultTableRow extends Component {
 				<td className="table--bold tableRow__name">{rowItem.name}</td>
 				<td>{rowItem.id}</td>
 				<td className="table--bold">{contentColumn}</td>
-				<td className="text-right">{rowItem.textShort}</td>
+				<td className="text-right">{this.getTextRepresentation(rowItem.textShort)}</td>
 			</tr>
 		);
 	}

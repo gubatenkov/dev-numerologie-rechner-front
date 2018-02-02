@@ -18,12 +18,14 @@ import './styles/brand-icons/brand-icons.min.css';
 import './styles/web-icons/web-icons.min.css';
 import './styles/font-awesome/font-awesome.min.css';
 
-ReactDOM.render(	
+// <PrivateRoute path="/analysisInput" isAuthenticated={isUserAuthenticated} loginPath='/login' component={AnalysisInput} />
+
+ReactDOM.render(
 	<BrowserRouter>
 		<Switch>
-			<Route path='/login' component={Login}/>
-			<Route path='/resultPersonal' component={AnalysisResultPersonal}/>
-			<PrivateRoute path="/analysisInput" isAuthenticated={isUserAuthenticated} loginPath='/login' component={AnalysisInput} />
+			<Route path="/login" component={Login} />
+			<Route path="/resultPersonal" component={AnalysisResultPersonal} />
+			<Route path="/analysisInput" component={AnalysisInput} />
 		</Switch>
 	</BrowserRouter>,
 	document.getElementById('root')
