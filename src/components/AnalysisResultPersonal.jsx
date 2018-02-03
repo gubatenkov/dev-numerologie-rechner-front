@@ -56,7 +56,15 @@ class AnalysisResultPersonal extends Component {
 				/>
 				<div className="ContentArea">
 					<div className="ResultContentOverview">
-						<ContentNavigation />
+						<ContentNavigation
+							contentItems={[
+								'Ausdrucksebene',
+								'Persönlichkeitsebene',
+								'Entfaltungspotential',
+								'Seelische Ebene',
+								'Zeitliche Ebene'
+							]}
+						/>
 					</div>
 					<div className="ResultContent">
 						<Panel title="Ausdrucksebene">

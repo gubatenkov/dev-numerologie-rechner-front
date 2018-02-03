@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import '../styles/ContentNavigation.css';
+import Stickyfill from 'stickyfilljs';
 
 import Panel from './Panel';
 import Steps from './Steps';
@@ -8,7 +9,6 @@ import Step from './Step';
 
 /**
  * the content navigation item to display the content of the result and help navigate
- * TODO: Replace with real fetch
  */
 class ContentNaviation extends Component {
 	constructor(props) {
@@ -17,23 +17,25 @@ class ContentNaviation extends Component {
 		// setting initial state
 		// TODO fetch thispanel-title
 		this.state = {
-			steps: [
-				'Ausdrucksebene',
-				'Persönlichkeitsebene',
-				'Entfaltungspotential',
-				'Seelische Ebene',
-				'Zeitliche Ebene'
-			],
 			currentIndex: 0
 		};
 	}
 
 	/**
+	 * default react lifecylce
+	 */
+	componentDidMount() {
+		// adding polyfill for browsers not yet supporting position: sticky
+		// https://github.com/wilddeer/stickyfill
+		Stickyfill.add(this.self);
+	}
+
+	/**
 	 * handler method for clicks on steps
 	 */
-	handleStepClick = clickedStep => {
+	handleStepClick = clickedStepName => {
 		// searching for step
-		const stepIndex = this.state.steps.indexOf(clickedStep);
+		const stepIndex = this.props.contentItems.indexOf(clickedStepName);
 
 		// if found in steps -> setting new index
 		if (stepIndex > -1) {
@@ -42,7 +44,7 @@ class ContentNaviation extends Component {
 			});
 
 			// scrolling to item if present
-			const stepContentItem = document.getElementById(clickedStep);
+			const stepContentItem = document.getElementById(clickedStepName);
 			if (stepContentItem) {
 				stepContentItem.scrollIntoView();
 			}
@@ -54,10 +56,10 @@ class ContentNaviation extends Component {
 	 */
 	render() {
 		return (
-			<div className="ContentNavigation">
+			<div className="ContentNavigation" ref={element => this.self = element}>
 				<Panel title="Inhalt">
 					<Steps>
-						{this.state.steps.map((item, index) => {
+						{this.props.contentItems.map((item, index) => {
 							return (
 								<Step
 									name={item}
