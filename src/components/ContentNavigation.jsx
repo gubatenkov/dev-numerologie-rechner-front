@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import '../styles/ContentNavigation.css';
+
 import Panel from './Panel';
 import Steps from './Steps';
 import Step from './Step';
@@ -12,7 +14,6 @@ class ContentNaviation extends Component {
 	constructor(props) {
 		// calling super constructor
 		super(props);
-
 		// setting initial state
 		// TODO fetch thispanel-title
 		this.state = {
@@ -53,21 +54,23 @@ class ContentNaviation extends Component {
 	 */
 	render() {
 		return (
-			<Panel title="Inhalt">
-				<Steps>
-					{this.state.steps.map((item, index) => {
-						return (
-							<Step
-								name={item}
-								current={this.state.currentIndex === index}
-								done={index < this.state.currentIndex}
-								onStepClick={this.handleStepClick}
-								key={index}
-							/>
-						);
-					})}
-				</Steps>
-			</Panel>
+			<div className="ContentNavigation">
+				<Panel title="Inhalt">
+					<Steps>
+						{this.state.steps.map((item, index) => {
+							return (
+								<Step
+									name={item}
+									current={this.state.currentIndex === index}
+									done={index < this.state.currentIndex}
+									onStepClick={this.handleStepClick}
+									key={index}
+								/>
+							);
+						})}
+					</Steps>
+				</Panel>
+			</div>
 		);
 	}
 }

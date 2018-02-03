@@ -20,7 +20,7 @@ class ResultTableRow extends Component {
 	getTextRepresentation(rowText) {
 		let rowTextRepresentation = null;
 		if (rowText && rowText && rowText.length > 0) {
-			rowTextRepresentation = [rowText.substring(0, 57) + '...  ', <a href="#">Lesen</a>];
+			rowTextRepresentation = [rowText.substring(0, 57) + '...  ', <a key="readIndicator" href="#">Lesen</a>];
 		}
 		return rowTextRepresentation;
 	}

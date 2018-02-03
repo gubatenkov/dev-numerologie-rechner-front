@@ -59,11 +59,9 @@ class AnalysisResultPersonal extends Component {
 						<ContentNavigation />
 					</div>
 					<div className="ResultContent">
-
 						<Panel title="Ausdrucksebene">
 							<ResultTable data={this.state.expressionLevel} />
 						</Panel>
-
 						<Panel title="Persönlichkeitsebene">
 							<ResultTable data={this.state.personalityLevel} />
 						</Panel>
