@@ -54,12 +54,7 @@ class Step extends Component {
           <div className="step_num_stepNumber">{this.props.number}</div>
         )}
         <div className={circleStyle} />
-        <div
-          className={nameStyle}
-          onClick={this.handleStepClick}
-          role="button"
-          tabIndex={0}
-        >
+        <div className={nameStyle} onClick={this.handleStepClick} role="button">
           {this.props.name}
         </div>
       </div>

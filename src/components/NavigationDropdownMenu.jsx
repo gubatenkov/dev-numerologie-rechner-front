@@ -44,7 +44,6 @@ class NavigationDropdownMenu extends Component {
         onClick={this.handleDropdownItemClick}
         onBlur={this.handleBlur}
         role="button"
-        tabIndex={0}
       >
         <li className={`nav-item dropdown${this.state.isOpen ? ' show' : ''}`}>
           <a className="nav-link dropdown-toggle" role="button">
