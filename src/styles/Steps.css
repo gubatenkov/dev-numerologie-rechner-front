@@ -1,0 +1,15 @@
+.steps__num {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.steps_num_connector {
+    top: 30px;
+    left: 7px;
+    position: absolute; 
+    content: " ";
+    width: 1px; 
+    height: calc(100% - 35px);
+    background-color: black;
+}

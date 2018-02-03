@@ -1,0 +1,27 @@
+.tableRow__name {
+    width: 20%;
+}
+
+.tableRow__id {
+    width: 10%;
+}
+
+.tableRow__text {
+    width: 55%;
+}
+
+.tableRow--highlighted {
+    border-color: #4397e6;
+    border-style: solid;
+}
+
+.tableRow__matrix {
+    width: 20vh !important;
+    height: 20vh !important;
+    text-align: center;
+}
+
+.tableRow__matrix td {
+    vertical-align: middle !important;
+    width: 33% !important;
+}

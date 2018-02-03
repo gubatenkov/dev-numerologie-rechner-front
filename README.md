@@ -3,7 +3,10 @@
 ## Getting started
 - Checkout
 - run ```yarn install``` to install packages
-- TODO
+- run ```yarn start``` to  start dev environment
+
+## Routes
+- ```/analysisInput``` input for personal analysis
 
 ## Used Frameworks
 - [React](http://knexjs.org/)

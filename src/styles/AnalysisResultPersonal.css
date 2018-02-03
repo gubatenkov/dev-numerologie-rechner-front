@@ -1,0 +1,23 @@
+/* The whole content area (nav + results)*/ 
+.ContentArea {
+    display: flex;
+    align-content: flex-start;
+    flex-direction: row;
+}
+
+.ResultContentOverview {
+    margin-left: 30px;
+    border-color: black;
+    flex-shrink: 0;
+    min-width: 20%;
+}
+
+.ResultContent {
+    margin-right: 50px;
+    margin-left: 30px;
+    width: 100%;
+}
+
+.table--bold {
+    font-weight: bold;
+}
