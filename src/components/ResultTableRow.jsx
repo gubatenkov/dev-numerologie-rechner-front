@@ -20,7 +20,7 @@ class ResultTableRow extends Component {
 	getTextRepresentation(rowText) {
 		let rowTextRepresentation = null;
 		if (rowText && rowText && rowText.length > 0) {
-			rowTextRepresentation = [rowText.substring(0, 57) + '...  ', <a key="readIndicator" href="#">Lesen</a>];
+			rowTextRepresentation = [rowText.substring(0, 80) + '...  ', <a key="readIndicator" href="#">Lesen</a>];
 		}
 		return rowTextRepresentation;
 	}
@@ -79,9 +79,9 @@ class ResultTableRow extends Component {
 		return (
 			<tr key={rowItem.id} className={rowItem.highlighted ? 'tableRow--highlighted' : ''}>
 				<td className="table--bold tableRow__name">{rowItem.name}</td>
-				<td>{rowItem.id}</td>
+				<td className="tableRow__id ">{rowItem.id}</td>
 				<td className="table--bold">{contentColumn}</td>
-				<td className="text-right">{this.getTextRepresentation(rowItem.textShort)}</td>
+				<td className="text-right tableRow__text">{this.getTextRepresentation(rowItem.textShort)}</td>
 			</tr>
 		);
 	}
@@ -96,7 +96,7 @@ class ResultTableRow extends Component {
 
 		// rendering and returning matrix
 		return (
-			<table className="table table-bordered">
+			<table className="table table-bordered tableRow__matrix">
 				<tbody>
 					{[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => {
 						return (
@@ -112,9 +112,13 @@ class ResultTableRow extends Component {
 									return (
 										<td
 											key={resultItem.name + currentIndex}
-											className={highlighted ? 'ResultTable--highlighted' : ''}
+											className={highlighted ? ' ResultTable--highlighted' : ''}
 										>
-											{resultItem.result.values[currentIndex]}
+											<div className="content">
+												{resultItem.result.values[currentIndex]
+													? resultItem.result.values[currentIndex]
+													: '-'}
+											</div>
 										</td>
 									);
 								})}
