@@ -6,10 +6,11 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import AnalysisInput from './components/AnalysisInput';
 import Login from './components/Login';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
-// import PrivateRoute from './utils/PrivateRoute';
+import UserHome from './components/UserHome';
+import PrivateRoute from './utils/PrivateRoute';
 
 import registerServiceWorker from './utils/registerServiceWorker';
-// import isUserAuthenticated from './utils/AuthUtils';
+import isUserAuthenticated from './utils/AuthUtils';
 
 import './styles/theme.css';
 import './styles/bootstrap-extend.css';
@@ -28,6 +29,12 @@ ReactDOM.render(
       <Route path="/resultPersonal" component={AnalysisResultPersonal} />
       <Route path="/analysisInput" component={AnalysisInput} />
       <Route path="/" component={AnalysisInput} />
+      <PrivateRoute
+        path="/userHome"
+        isAuthenticated={isUserAuthenticated}
+        loginPath="/login"
+        component={UserHome}
+      />
     </Switch>
   </BrowserRouter>,
   document.getElementById('root'),

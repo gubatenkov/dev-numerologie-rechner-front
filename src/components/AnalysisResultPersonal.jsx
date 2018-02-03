@@ -75,8 +75,10 @@ class AnalysisResultPersonal extends Component {
           backTitle="Zurück"
           backRoute="/analysisInput"
           primaryActionTitle="Speichern"
+          onPrimaryAction={() => {}}
           badgeTitle="Kurztext"
           secondaryActionTitle="Drucken"
+          onSecondaryAction={() => {}}
         />
         <div className="ContentArea">
           <div className="ResultContentOverview">
