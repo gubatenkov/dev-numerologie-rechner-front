@@ -38,6 +38,18 @@ class AnalysisResultPersonal extends Component {
 			timeLevel: calculateTimeLevelNumbers(firstName, lastName, dateOfBirth)
 		};
 	}
+
+	/**
+	 * handles the navigation to a specific item
+	 */
+	navigateToElementHandler = (name, anchor) => {
+		// scrolling to item if present in DOM
+		const stepContentItem = document.getElementById(anchor);
+		if (stepContentItem) {
+			stepContentItem.scrollIntoView();
+		}
+	};
+
 	/**
      * default render
      */
@@ -64,22 +76,31 @@ class AnalysisResultPersonal extends Component {
 								'Seelische Ebene',
 								'Zeitliche Ebene'
 							]}
+							contentItemAnchors={[
+								'ExpressionResult',
+								'PersonalityResult',
+								'DevelopmentResult',
+								'SoulResult',
+								'TimeResult'
+							]}
+							onItemClick={this.navigateToElementHandler}
+							autoAdapt={true}
 						/>
 					</div>
 					<div className="ResultContent">
-						<Panel title="Ausdrucksebene">
+						<Panel title="Ausdrucksebene" id="ExpressionResult">
 							<ResultTable data={this.state.expressionLevel} />
 						</Panel>
-						<Panel title="Persönlichkeitsebene">
+						<Panel title="Persönlichkeitsebene" id="PersonalityResult">
 							<ResultTable data={this.state.personalityLevel} />
 						</Panel>
-						<Panel title="Entfaltungspotential">
+						<Panel title="Entfaltungspotential" id="DevelopmentResult">
 							<ResultTable data={this.state.developmentLevel} />
 						</Panel>
-						<Panel title="Seelische Ebene">
+						<Panel title="Seelische Ebene" id="SoulResult">
 							<ResultTable data={this.state.soulLevel} />
 						</Panel>
-						<Panel title="Zeitliche Ebene">
+						<Panel title="Zeitliche Ebene" id="TimeResult">
 							<ResultTable data={this.state.timeLevel[0]} />
 							<ResultTable data={this.state.timeLevel[1]} />
 						</Panel>
