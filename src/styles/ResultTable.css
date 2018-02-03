@@ -7,6 +7,7 @@
     user-select: none;
 }
 
+/*text displayed if results are printed without rights to do so*/
 .ResultTable--printWatermark {
     display: none;
 }
