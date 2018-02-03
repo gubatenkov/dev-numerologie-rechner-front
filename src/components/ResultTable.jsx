@@ -12,7 +12,7 @@ class ResultTable extends Component {
      * default render method rendering content objects based on their type
      */
 	render() {
-		return (
+		return [
 			<table className="table table-striped ResultTable--non-selectable ResultTable--non-printable">
 				{this.props.data.headings && this.renderHeadings(this.props.data.headings)}
 				<tbody>
@@ -21,8 +21,9 @@ class ResultTable extends Component {
 						return <ResultTableRow key={index} item={item} />;
 					})}
 				</tbody>
-			</table>
-		);
+			</table>,
+			<h3 className="ResultTable--printWatermark">Die Resultate können nur mit Druckpaket ausgedruckt werden.</h3>
+		];
 	}
 
 	/**

@@ -7,8 +7,16 @@
     user-select: none;
 }
 
+.ResultTable--printWatermark {
+    display: none;
+}
+
 /*prevents printing of result information*/
 @media print {    
+    .ResultTable--printWatermark {
+        display: block;
+    }
+
     .ResultTable--non-printable, .ResultTable--non-printable * {
         display: none !important;
     }
