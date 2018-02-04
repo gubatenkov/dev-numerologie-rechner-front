@@ -14,13 +14,14 @@ class Step extends Component {
     name: PropTypes.string.isRequired,
     current: PropTypes.bool,
     done: PropTypes.bool,
-    number: PropTypes.number.isRequired,
+    number: PropTypes.number,
   };
 
   static defaultProps = {
     onStepClick: () => {},
     current: false,
     done: false,
+    number: null,
   };
   /**
    * handler for clicks on step, redirects to own handler

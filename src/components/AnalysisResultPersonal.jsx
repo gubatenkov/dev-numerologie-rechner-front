@@ -103,6 +103,7 @@ class AnalysisResultPersonal extends Component {
             <Panel title="Ausdrucksebene" id="ExpressionResult">
               <ResultTable data={this.state.expressionLevel} />
             </Panel>
+
             <Panel title="Persönlichkeitsebene" id="PersonalityResult">
               <ResultTable data={this.state.personalityLevel} />
             </Panel>

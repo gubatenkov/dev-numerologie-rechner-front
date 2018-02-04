@@ -11,11 +11,12 @@ const NavigationDropdownMenuItem = props => (
 );
 
 NavigationDropdownMenuItem.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   children: PropTypes.node,
 };
 
 NavigationDropdownMenuItem.defaultProps = {
+  onClick: () => {},
   children: null,
 };
 export default NavigationDropdownMenuItem;
