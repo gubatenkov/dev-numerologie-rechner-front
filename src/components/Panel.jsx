@@ -11,11 +11,15 @@ class Panel extends Component {
     title: PropTypes.string.isRequired,
     id: PropTypes.string,
     children: PropTypes.node,
+    footer: PropTypes.element,
+    actions: PropTypes.arrayOf(PropTypes.element),
   };
 
   static defaultProps = {
     id: null,
     children: null,
+    footer: null,
+    actions: null,
   };
 
   /**
@@ -28,8 +32,14 @@ class Panel extends Component {
           {this.props.title && (
             <h5 className="panel-title">{this.props.title}</h5>
           )}
+          {this.props.actions && (
+            <div className="panel-actions">{this.props.actions}</div>
+          )}
         </div>
         <div className="panel-body">{this.props.children}</div>
+        {this.props.footer && (
+          <div className="panel-footer">{this.props.footer}</div>
+        )}
       </div>
     );
   }

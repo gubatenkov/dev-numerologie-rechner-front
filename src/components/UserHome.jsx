@@ -22,7 +22,6 @@ class UserHome extends Component {
             <AdArea />
           </div>
           <div className="UserHomeContent">
-            <h3> Content </h3>
             <AnalysisBrowser />
             <PaketWidget />
             <AdArea />
