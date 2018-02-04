@@ -28,13 +28,13 @@ ReactDOM.render(
       <Route path="/login" component={Login} />
       <Route path="/resultPersonal" component={AnalysisResultPersonal} />
       <Route path="/analysisInput" component={AnalysisInput} />
-      <Route path="/" component={AnalysisInput} />
       <PrivateRoute
         path="/userHome"
         isAuthenticated={isUserAuthenticated}
         loginPath="/login"
         component={UserHome}
       />
+      <Route path="/" component={AnalysisInput} />
     </Switch>
   </BrowserRouter>,
   document.getElementById('root'),

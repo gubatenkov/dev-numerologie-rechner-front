@@ -1,0 +1,19 @@
+.UserHomeContentArea {
+    display: flex;
+    flex-direction: row;
+}
+
+.UserHomeContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border: 1px solid black;
+    margin-left: 30px;
+    margin-right: 50px;
+    width: 100%;
+}
+
+.UserHomeLeftAdArea {
+    margin-left: 30px;
+    min-width: 15%;
+}

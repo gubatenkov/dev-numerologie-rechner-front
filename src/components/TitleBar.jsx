@@ -14,7 +14,7 @@ class TitleBar extends Component {
     backTitle: PropTypes.string,
     backRoute: PropTypes.string,
     badgeTitle: PropTypes.string,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     primaryActionTitle: PropTypes.string,
     secondaryActionTitle: PropTypes.string,
   };
@@ -25,6 +25,7 @@ class TitleBar extends Component {
     badgeTitle: null,
     primaryActionTitle: null,
     secondaryActionTitle: null,
+    title: '',
   };
 
   render() {
