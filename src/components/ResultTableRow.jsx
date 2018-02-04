@@ -16,7 +16,7 @@ const TYPE_ID_MATRIX = 'matrix';
  */
 class ResultTableRow extends Component {
   static propTypes = {
-    item: PropTypes.element.isRequired,
+    item: PropTypes.object.isRequired,
   };
 
   /**
@@ -48,7 +48,13 @@ class ResultTableRow extends Component {
       <table className="table table-bordered tableRow__matrix">
         <tbody>
           {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
-            <tr key={resultItem.name + resultItem.id}>
+            <tr
+              key={
+                resultItem.name +
+                resultItem.id +
+                resultItem.result.values[rowIndex]
+              }
+            >
               {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
                 // determining current index composed of cols and rows
                 const currentIndex =
