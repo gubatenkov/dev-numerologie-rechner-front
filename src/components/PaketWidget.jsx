@@ -18,7 +18,7 @@ class PaketWidget extends Component {
     // TODO fetch this from server or get passed
     // as prop if this becomes dumb method
     this.state = {
-      packageName: 'Druck Paket',
+      packageName: 'Druck Packet',
       packageFeatures: [
         'Unbeschränkte Anzahl an Analysen',
         'Kurztextversionen der Analysen',

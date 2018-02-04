@@ -1,0 +1,12 @@
+.AnalysisTableRow--analysisNameCell {
+    padding-left: 2em !important;
+    width: 40%;
+ }
+
+ .AnalysisTableRow--analysisTypeCell {
+    width: 30%;
+}
+
+.AnalysisTableRow--analysisActionCell button {
+    margin-right: 1em;
+}

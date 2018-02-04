@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { withRouter } from 'react-router-dom';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -14,12 +17,17 @@ import {
   calculateDevelopmentLevel,
   calculateSoulLevelNumbers,
   calculateTimeLevelNumbers,
-} from '../utils/NumerologyCalculations';
+} from '../utils/Server';
 
 /**
  * result screen for personal analysis
  */
 class AnalysisResultPersonal extends Component {
+  static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  };
   constructor(props) {
     super(props);
 
@@ -75,7 +83,9 @@ class AnalysisResultPersonal extends Component {
           backTitle="Zurück"
           backRoute="/analysisInput"
           primaryActionTitle="Speichern"
-          onPrimaryAction={() => {}}
+          onPrimaryAction={() => {
+            this.props.history.push('/userHome');
+          }}
           badgeTitle="Kurztext"
           secondaryActionTitle="Drucken"
           onSecondaryAction={() => {}}
@@ -126,4 +136,4 @@ class AnalysisResultPersonal extends Component {
   }
 }
 
-export default AnalysisResultPersonal;
+export default withRouter(AnalysisResultPersonal);
