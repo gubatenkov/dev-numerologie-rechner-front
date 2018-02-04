@@ -5,6 +5,8 @@ import '../styles/UserHome.css';
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
+import AnalysisBrowser from './AnalysisBrowser';
+import PaketWidget from './PaketWidget';
 
 class UserHome extends Component {
   /**
@@ -21,6 +23,9 @@ class UserHome extends Component {
           </div>
           <div className="UserHomeContent">
             <h3> Content </h3>
+            <AnalysisBrowser />
+            <PaketWidget />
+            <AdArea />
           </div>
         </div>
       </div>
