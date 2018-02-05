@@ -24,14 +24,14 @@
 .barContainer__rightElements {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     min-width: 10%;
 }
 
 .barContainer__leftElements {
     min-width: 10%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .barContainer button + button {

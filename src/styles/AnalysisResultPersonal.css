@@ -9,7 +9,7 @@
     margin-left: 50px;
     border-color: black;
     flex-shrink: 0;
-    min-width: 20%;
+    min-width: 15%;
 }
 
 .ResultContent {
@@ -30,6 +30,7 @@
     flex-direction: row;
     justify-content: space-between;
     min-width: 20%;
+    flex-wrap: wrap;
 }
 
 .table--bold {
