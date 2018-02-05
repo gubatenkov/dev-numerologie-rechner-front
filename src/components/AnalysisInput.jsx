@@ -66,7 +66,7 @@ class AnalysisInput extends Component {
               />
             </div>
             <div className="row justify-content-md-center">
-              <div className="col-lg-6">
+              <div className="col-lg-4">
                 <Panel title="Akademie Bios Analyse">
                   <InputField
                     icon="wb-user"

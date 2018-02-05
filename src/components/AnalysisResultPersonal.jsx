@@ -56,6 +56,9 @@ class AnalysisResultPersonal extends Component {
       ),
       soulLevel: calculateSoulLevelNumbers(firstName, lastName, dateOfBirth),
       timeLevel: calculateTimeLevelNumbers(firstName, lastName, dateOfBirth),
+      firstName,
+      lastName,
+      dateOfBirth,
     };
   }
 
@@ -90,6 +93,12 @@ class AnalysisResultPersonal extends Component {
           secondaryActionTitle="Drucken"
           onSecondaryAction={() => {}}
         />
+        <div className="ResultPersonalDataContainer">
+          <div className="ResultPersonalData">
+            <h4>{`${this.state.firstName} ${this.state.lastName}`}</h4>
+            <h4>{this.state.dateOfBirth}</h4>
+          </div>
+        </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
             <ContentNavigation

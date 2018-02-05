@@ -25,8 +25,15 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    min-width: 10%;
 }
 
-.barContainer button {
+.barContainer__leftElements {
+    min-width: 10%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.barContainer button + button {
     margin-left: 10px;
 }
