@@ -1,0 +1,7 @@
+.AnalysisBrowser--table td{
+    vertical-align: middle !important;
+}
+
+.AnalysisBrowser--table {
+    user-select: none;
+}

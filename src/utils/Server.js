@@ -416,3 +416,67 @@ export function calculateTimeLevelNumbers(firstNames, lastName, dateOfBirth) {
     },
   ];
 }
+
+/**
+ * mocks server call to get user groups and analyses
+ */
+export function getUserGroupsAnalyses() {
+  return [
+    {
+      id: 0,
+      name: 'Familie',
+      analyses: [
+        { id: 0, name: 'Analyse Familie 1' },
+        { id: 1, name: 'Analyse Familie 2' },
+      ],
+    },
+    {
+      id: 1,
+      name: 'Stammfamilie',
+      analyses: [
+        { id: 2, name: 'Analyse Stammfamilie 1' },
+        { id: 3, name: 'Analyse Stammfamilie 2' },
+      ],
+    },
+    {
+      id: 2,
+      name: 'Verwandte',
+      analyses: [
+        { id: 4, name: 'Analyse Verwandte 1' },
+        { id: 5, name: 'Analyse Verwandte 2' },
+      ],
+    },
+    {
+      id: 3,
+      name: 'Freunde',
+      analyses: [
+        { id: 6, name: 'Analyse Freunde 1' },
+        { id: 7, name: 'Analyse Freunde 2' },
+      ],
+    },
+    {
+      id: 4,
+      name: 'Beruf',
+      analyses: [
+        { id: 8, name: 'Analyse Beruf 1' },
+        { id: 9, name: 'Analyse Beruf 2' },
+      ],
+    },
+    {
+      id: 5,
+      name: 'Freizeit',
+      analyses: [
+        { id: 10, name: 'Analyse Freizeit 1' },
+        { id: 11, name: 'Analyse Freizeit 2' },
+      ],
+    },
+    {
+      id: 6,
+      name: 'Sonstige',
+      analyses: [
+        { id: 12, name: 'Analyse Sonstige 1' },
+        { id: 13, name: 'Analyse Sonstige 2' },
+      ],
+    },
+  ];
+}

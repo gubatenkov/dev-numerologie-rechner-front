@@ -28,7 +28,7 @@ class NavigationDropdownMenu extends Component {
   }
 
   /**
-   * handles clicks on the dropdown item itself and hides/shows menu
+   * handles clicks on the dropdown itself and hides/shows menu
    */
   handleDropdownItemClick = () => {
     this.setState({ isOpen: !this.state.isOpen });

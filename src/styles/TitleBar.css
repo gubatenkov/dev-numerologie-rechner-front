@@ -24,9 +24,16 @@
 .barContainer__rightElements {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
+    min-width: 10%;
 }
 
-.barContainer button {
+.barContainer__leftElements {
+    min-width: 10%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.barContainer button + button {
     margin-left: 10px;
 }

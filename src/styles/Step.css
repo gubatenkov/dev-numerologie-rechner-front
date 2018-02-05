@@ -6,7 +6,7 @@
 }
 
 .step_num__circle {
-    border: 2px solid #62a8ea;
+    border: 2px solid #00b3d4;
     background-color: white;
     width: 15px;
     height: 15px;
@@ -20,7 +20,7 @@
 }
 
 .step_num__circle--done {
-    background-color: #62a8ea;
+    background-color: #00b3d4;
 }
 
 .step_num__stepName {

@@ -14,9 +14,11 @@ class TitleBar extends Component {
     backTitle: PropTypes.string,
     backRoute: PropTypes.string,
     badgeTitle: PropTypes.string,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     primaryActionTitle: PropTypes.string,
     secondaryActionTitle: PropTypes.string,
+    onPrimaryAction: PropTypes.func,
+    onSecondaryAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -25,6 +27,9 @@ class TitleBar extends Component {
     badgeTitle: null,
     primaryActionTitle: null,
     secondaryActionTitle: null,
+    title: '',
+    onPrimaryAction: () => {},
+    onSecondaryAction: () => {},
   };
 
   render() {
@@ -50,12 +55,18 @@ class TitleBar extends Component {
         </div>
         <div className="barContainer__rightElements">
           {this.props.secondaryActionTitle && (
-            <button className="btn btn-default">
+            <button
+              className="btn btn-default"
+              onClick={this.props.onSecondaryAction}
+            >
               {this.props.secondaryActionTitle}
             </button>
           )}
           {this.props.primaryActionTitle && (
-            <button className="btn btn-success">
+            <button
+              className="btn btn-success"
+              onClick={this.props.onPrimaryAction}
+            >
               {this.props.primaryActionTitle}
             </button>
           )}

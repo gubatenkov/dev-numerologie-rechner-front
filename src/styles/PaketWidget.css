@@ -1,0 +1,22 @@
+.PaketWidgetContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.PaketWidgetContent--Badge h1{
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.PaketWidgetContent--Badge {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 1rem !important;
+}

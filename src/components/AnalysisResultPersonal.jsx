@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { withRouter } from 'react-router-dom';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -14,12 +17,17 @@ import {
   calculateDevelopmentLevel,
   calculateSoulLevelNumbers,
   calculateTimeLevelNumbers,
-} from '../utils/NumerologyCalculations';
+} from '../utils/Server';
 
 /**
  * result screen for personal analysis
  */
 class AnalysisResultPersonal extends Component {
+  static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  };
   constructor(props) {
     super(props);
 
@@ -48,6 +56,9 @@ class AnalysisResultPersonal extends Component {
       ),
       soulLevel: calculateSoulLevelNumbers(firstName, lastName, dateOfBirth),
       timeLevel: calculateTimeLevelNumbers(firstName, lastName, dateOfBirth),
+      firstName,
+      lastName,
+      dateOfBirth,
     };
   }
 
@@ -75,9 +86,19 @@ class AnalysisResultPersonal extends Component {
           backTitle="Zurück"
           backRoute="/analysisInput"
           primaryActionTitle="Speichern"
+          onPrimaryAction={() => {
+            this.props.history.push('/userHome');
+          }}
           badgeTitle="Kurztext"
           secondaryActionTitle="Drucken"
+          onSecondaryAction={() => {}}
         />
+        <div className="ResultPersonalDataContainer">
+          <div className="ResultPersonalData">
+            <h4>{`${this.state.firstName} ${this.state.lastName}`}</h4>
+            <h4>{this.state.dateOfBirth}</h4>
+          </div>
+        </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
             <ContentNavigation
@@ -124,4 +145,4 @@ class AnalysisResultPersonal extends Component {
   }
 }
 
-export default AnalysisResultPersonal;
+export default withRouter(AnalysisResultPersonal);

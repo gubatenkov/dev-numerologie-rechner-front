@@ -1,0 +1,12 @@
+.GroupTableRow--groupNameCell {
+    font-weight: bold;
+    width: 40%;
+}
+
+.GroupTableRow--groupTypeCell {
+    width: 30%;
+}
+
+.GroupTableRow--groupActionCell button {
+    margin-right: 1em;
+}
