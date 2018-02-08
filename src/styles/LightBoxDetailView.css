@@ -1,0 +1,52 @@
+.modal-backdrop {
+    background-color: rgba(0,0,0,0.5) !important;
+}
+
+.LightBoxDetailView__Container {
+    display: flex;
+    flex-direction: column;
+}
+
+.LightBoxDetailView__ContentOverview {
+    background-color: white;
+    min-height: 10%;
+    flex: 0, 0, auto;
+
+    display: flex;
+    justify-content: center;
+}
+
+.LightBoxDetailView__Content {
+    flex: 1, 1, auto;
+    margin-top: 40px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.LightBoxDetailView__BottomActions {
+    flex: 0, 0, auto;
+    margin-top: 30px;
+    
+    display: flex;
+    justify-content: center;
+}
+
+
+.LightBoxDetailView__NavigationButton {
+    border-radius: 100%;
+    height: 50px;
+    width: 50px;
+}
+
+.LightBoxDetailView__NavigationButton i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.LightBoxDetailView__ButtonArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

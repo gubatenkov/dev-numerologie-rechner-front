@@ -13,3 +13,7 @@
 .panel-actions {
     right: 15px !important;
 }
+
+.panel {
+    margin-bottom: 0 !important;
+}

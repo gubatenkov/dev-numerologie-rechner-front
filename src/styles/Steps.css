@@ -1,10 +1,26 @@
-.steps__num {
+.steps__num_vertical {
     display: flex;
     flex-direction: column;
     position: relative;
 }
 
-.steps_num_connector {
+.steps_num_connector_vertical {
+    top: 30px;
+    left: 7px;
+    position: absolute; 
+    content: " ";
+    width: 1px; 
+    height: calc(100% - 35px);
+    background-color: black;
+}
+
+.steps__num_horizontal {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.steps_num_connector_horizontal {
     top: 30px;
     left: 7px;
     position: absolute; 

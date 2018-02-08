@@ -8,6 +8,7 @@ import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTable from './ResultTable';
+import LightBoxDetailView from './LightBoxDetailView';
 
 import '../styles/AnalysisResultPersonal.css';
 

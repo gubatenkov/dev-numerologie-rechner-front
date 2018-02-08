@@ -20,8 +20,8 @@ class Steps extends Component {
    */
   render() {
     return (
-      <div className="steps__num">
-        <div className="steps_num_connector" />
+      <div className="steps__num_vertical">
+        <div className="steps_num_connector_vertical" />
         {this.props.children}
       </div>
     );
