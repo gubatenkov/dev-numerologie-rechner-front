@@ -9,6 +9,9 @@ import Panel from './Panel';
 import Steps from './Steps';
 import Step from './Step';
 
+// wiggle room for definition of if element is in viewport in pixels
+const TOLERANCE_INVIEW = 50;
+
 /**
  * the content navigation item to display the content of the result and help navigate
  */
@@ -78,7 +81,7 @@ class ContentNaviation extends Component {
       const itemBottomPosition = stepContentItem.getBoundingClientRect().bottom;
 
       // calculating if in viewport
-      return itemBottomPosition < window.innerHeight;
+      return itemBottomPosition < window.innerHeight + TOLERANCE_INVIEW;
     }
     return false;
   }
@@ -107,7 +110,7 @@ class ContentNaviation extends Component {
   };
 
   /**
-   *
+   * checks last item that is visible in viewport
    */
   checkContentVisibility = () => {
     // assigning anchors
