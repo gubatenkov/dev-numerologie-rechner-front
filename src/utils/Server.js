@@ -501,3 +501,191 @@ export function getUserGroupsAnalyses() {
     },
   ];
 }
+
+/**
+ * alphabet
+ */
+const ALPHABET = [
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
+];
+
+// vowels and consonants
+const VOWELS = ['a', 'e', 'i', 'o', 'u'];
+// TODO
+const CONSONANTS = [''];
+const UMLAUTS = ['ä', 'ü', 'ö'];
+
+/**
+ * calculates the digit value of a character by mapping it according to a scheme
+ * 1  2  3  4  5  6  7  8  9
+ * a  b  c  d  e    ...    i
+ * j  k  l  m  n    ...    r
+ * s  t  u  v  w    ... z  -
+ * where the value of the caracter corresponds with
+ * the column number: e.g. d => 4, n => 5
+ * @param char the character to be translated, if a string
+ * longer than length 1 is passed, the first character is considered
+ * as input
+ */
+function getCharDigit(char) {
+  // assigning input
+  let input = char;
+
+  // if input is longer than one char -> first char is used
+  if (char.length > 1) {
+    input = char[0];
+  }
+  const index = ALPHABET.indexOf(input.toLowerCase());
+  return index % 9 + 1;
+}
+
+/**
+ * maps an array of characters to an array of numbers according to the defined schema
+ * @param {array(chars)} inputArray an array of characters to be mapped
+ * @return an array of digits (ints) corresponding to the numbers
+ */
+function mapToDigits(inputArray) {
+  return inputArray.map(item => getCharDigit(item));
+}
+
+/**
+ * sums up the digits of the input digits and reduces to one digit
+ * if required
+ * @param {array(int)} digits the digits to sum up as an array of numbers
+ * @param {bool} reduce if set to true, the method will reduce results with
+ * more than one digit to one digit (except for if contained in the passed exceptions)
+ * @param {*} exceptedFromReduction if @param reduce is set to true, the numbers passed here
+ * are NOT reduced
+ */
+function sumDigits(digits, reduce, exceptedFromReduction) {
+  // calculating sum of digits
+  const sum = digits.reduce((a, b) => a + b);
+
+  // if more than one digit -> reduce if set
+  if (reduce && sum > 9) {
+    // if current sum value is excepted -> returning without reduction
+    if (exceptedFromReduction.includes(sum)) {
+      return sum;
+    }
+
+    // calling recursively to reduce (pot. multiple times: 19 > 10 > 1)
+    return sumDigits(sum);
+  }
+
+  return sum;
+}
+
+function sanitizeDateOfBirth(dateofBirth) {
+  return true;
+}
+
+/**
+ * sanitizes and removes unwanted characters from date of birth.
+ * returns an array of digits as contained in the date in the formst dd.mm.yyyy.
+ * e.g. 18.03.2009 => [1,8,0,3,2,0,0,9]
+ * @param dateOfBirth a string in the format dd.mm.yyyy representing the date
+ */
+function preprocessDateOfBirth(dateOfBirth) {
+  // returning null if sanitization fails
+  if (!sanitizeDateOfBirth(dateOfBirth)) {
+    return null;
+  }
+  // replacing all dots -> splitting into chars and
+  // removing emtpy elements and spaces
+  return dateOfBirth
+    .replace(/\./g, '')
+    .split('')
+    .filter(item => item !== ' ' && item.length > 0);
+}
+
+/**
+ * extracts vowels from the input array, returns an array of only the vowels
+ * contained in @param input in the same order
+ * @param {array(char)} input an array of characters
+ */
+function extractVowels(input) {
+  return input.filter(char => VOWELS.includes(char));
+}
+
+/**
+ * extracts consonants from the input array, returns an array of only the consonants
+ * contained in @param input in the same order
+ * @param {array(char)} input an array of characters
+ */
+function extractConsonants(input) {
+  return input.filter(char => CONSONANTS.includes(char));
+}
+
+/*--------------------------------------------------------------------------------*/
+/* Calculations of numbers */
+
+/**
+ * calculation of LZ
+ * @param {array(digits)} dateOfBirthArray an array of the digits of the birth date
+ * @returns returns the digit sum of the date birth digits
+ */
+export function calculateLZ(dateOfBirthArray) {
+  // summing up digits and reducing to one digit except for 11, 22 and 33
+  return sumDigits(dateOfBirthArray, true, [11, 22, 33]);
+}
+
+/**
+ * calculation of the AZ
+ * @param {array(chars)} firstNameArray an array of the characters of the first name
+ * @param {array(chars)} lastNameArray an array of the characters of the last name
+ * @returns returns the digit sum of the digits of the merged first and last name
+ */
+export function calculateAZ(firstNameArray, lastNameArray) {
+  // gettin digits for consonants
+  const firstNameConsonantDigitArray = mapToDigits(extractConsonants(firstNameArray));
+
+  // getting digits for vowels
+  const lastNameConsonantDigitArray = mapToDigits(extractConsonants(lastNameArray));
+
+  // calculating digit sum of merged arrays
+  return sumDigits(firstNameConsonantDigitArray.concat(lastNameConsonantDigitArray));
+}
+
+/**
+ * calulation of the BZ
+ * @param {array(char)} firstNameArray an array of the characters of the first name
+ * @param lastNameArray an array of the characters of the last name
+ * @returns the digit sum of the merge of the first name and last name digits
+ */
+export function calculateBZ(firstNameArray, lastNameArray) {
+  return sumDigits(mapToDigits(firstNameArray).concat(mapToDigits(lastNameArray)));
+}
+
+/**
+ * calculatio of the NNZ
+ * @param lastNameArray an array of the characters of the last name
+ * @returns the digit representing the first char of the last name
+ */
+export function calculateNNZ(lastNameArray) {
+  return mapToDigits(lastNameArray[0]);
+}

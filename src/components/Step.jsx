@@ -54,11 +54,7 @@ class Step extends Component {
     }
 
     return (
-      <div
-        className={
-          this.props.horizontal ? 'Step--horizontal' : 'Step'
-        }
-      >
+      <div className={this.props.horizontal ? 'Step--horizontal' : 'Step'}>
         <div className={circleStyle} />
         <div className={nameStyle} onClick={this.handleStepClick} role="button">
           {this.props.name}
