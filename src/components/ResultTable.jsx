@@ -11,6 +11,12 @@ import '../styles/ResultTable.css';
 class ResultTable extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
+    dataKey: PropTypes.string.isRequired,
+    handleTextDetailClick: PropTypes.func.isRequired,
+  };
+
+  handleTextDetailClick = (index) => {
+    this.props.handleTextDetailClick(this.props.dataKey, index);
   };
 
   /**
@@ -40,8 +46,13 @@ class ResultTable extends Component {
         {this.props.data.headings &&
           this.renderHeadings(this.props.data.headings)}
         <tbody>
-          {this.props.data.numbers.map(item => (
-            <ResultTableRow key={`ResultTableRow ${item.id}`} item={item} />
+          {this.props.data.numbers.map((item, index) => (
+            <ResultTableRow
+              key={`ResultTableRow ${item.id}`}
+              item={item}
+              rowIndex={index}
+              onTextDetailClick={this.handleTextDetailClick}
+            />
           ))}
         </tbody>
       </table>,

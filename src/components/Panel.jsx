@@ -13,6 +13,7 @@ class Panel extends Component {
     children: PropTypes.node,
     footer: PropTypes.element,
     actions: PropTypes.arrayOf(PropTypes.element),
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -20,14 +21,20 @@ class Panel extends Component {
     children: null,
     footer: null,
     actions: null,
+    className: '',
   };
 
   /**
    * default render
    */
   render() {
+    // defining panel base class
+    const panelBaseClass = `panel panel-bordered panel-default ${
+      this.props.className
+    }`;
+
     return (
-      <div className="panel panel-bordered panel-default" id={this.props.id}>
+      <div className={panelBaseClass} id={this.props.id}>
         <div className="panel-heading">
           {this.props.title && (
             <h5 className="panel-title">{this.props.title}</h5>

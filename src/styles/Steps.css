@@ -1,10 +1,10 @@
-.steps__num_vertical {
+.steps--vertical {
     display: flex;
     flex-direction: column;
     position: relative;
 }
 
-.steps_num_connector_vertical {
+.steps_Connector--vertical {
     top: 30px;
     left: 7px;
     position: absolute; 
@@ -14,18 +14,17 @@
     background-color: black;
 }
 
-.steps__num_horizontal {
+.steps--horizontal {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     position: relative;
 }
 
-.steps_num_connector_horizontal {
-    top: 30px;
-    left: 7px;
+.steps_Connector--horizontal {
+    top: 35px;
     position: absolute; 
     content: " ";
-    width: 1px; 
-    height: calc(100% - 35px);
+    height: 1px; 
+    width: calc(100%);
     background-color: black;
 }

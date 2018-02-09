@@ -5,6 +5,18 @@
     justify-content: flex-start;
 }
 
+.step__num--horizontal {
+    padding-top: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/*Space between horizontal steps*/
+.step__num--horizontal + .step__num--horizontal {
+    margin-left: 30px;
+}
+
 .step_num__circle {
     border: 2px solid #00b3d4;
     background-color: white;
@@ -13,6 +25,17 @@
     border-radius: 15px;
     margin-top: 2.5px;
     z-index: 0;
+}
+
+.step_num__circle--horizontal {
+    border: 2px solid #00b3d4;
+    background-color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    margin-top: 2.5px;
+    z-index: 0;
+    text-align: center;
 }
 
 .step_num__circle--current {
@@ -27,6 +50,10 @@
     margin-left: 20px;
 }
 
+.step_num__stepName--horizontal {
+    margin-top: 10px;
+}
+
 .step_num__stepName--current {
     font-weight: bold;
 }
@@ -34,3 +61,4 @@
 .step_num_stepNumber {
     margin-right: 5px;
 }
+

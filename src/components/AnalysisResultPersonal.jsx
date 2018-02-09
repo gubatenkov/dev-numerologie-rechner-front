@@ -8,7 +8,7 @@ import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTable from './ResultTable';
-// import LightBoxDetailView from './LightBoxDetailView';
+import LightBoxDetailView from './LightBoxDetailView';
 
 import '../styles/AnalysisResultPersonal.css';
 
@@ -60,6 +60,9 @@ class AnalysisResultPersonal extends Component {
       firstName,
       lastName,
       dateOfBirth,
+      resultTextDetailViewOpen: false,
+      resultTextDetailViewSectionIndex: 0,
+      resultTextDetailViewElementIndex: 0,
     };
   }
 
@@ -73,6 +76,50 @@ class AnalysisResultPersonal extends Component {
       stepContentItem.scrollIntoView();
     }
   };
+
+  /**
+   * handles close of detail view
+   */
+  handleCloseDetail = () => {
+    this.setState({
+      resultTextDetailViewOpen: false,
+    });
+  };
+
+  /**
+   *  handles clicks on detail links
+   */
+  handleItemDetailClick = (dataKey, index) => {
+    // opening detail view
+    // TODO pass index = starting position
+    this.setState({
+      resultTextDetailViewOpen: true,
+      resultTextDetailViewSectionIndex: 0,
+      resultTextDetailViewElementIndex: index,
+    });
+  };
+
+  /**
+   * maps the state of this component to one that can be used
+   * by the detail component
+   * @param {*} state
+   */
+  convertStateToDetailsData(state) {
+    return [
+      state.expressionLevel,
+      state.personalityLevel,
+      state.developmentLevel,
+      state.soulLevel,
+      // state.timeLevel[0],
+      // state.timeLevel[1],
+    ].map(item => ({
+      sectionName: item.name,
+      sectionElements: item.numbers.map(numberItem => ({
+        elementTitle: `${numberItem.name} = ${numberItem.result.value}`,
+        elementContent: numberItem.textShort,
+      })),
+    }));
+  }
 
   /**
    * default render
@@ -123,24 +170,55 @@ class AnalysisResultPersonal extends Component {
           </div>
           <div className="ResultContent">
             <Panel title="Ausdrucksebene" id="ExpressionResult">
-              <ResultTable data={this.state.expressionLevel} />
+              <ResultTable
+                data={this.state.expressionLevel}
+                dataKey="expressionLevel"
+                handleTextDetailClick={this.handleItemDetailClick}
+              />
             </Panel>
 
             <Panel title="Persönlichkeitsebene" id="PersonalityResult">
-              <ResultTable data={this.state.personalityLevel} />
+              <ResultTable
+                data={this.state.personalityLevel}
+                dataKey="personalityLevel"
+                handleTextDetailClick={this.handleItemDetailClick}
+              />
             </Panel>
             <Panel title="Entfaltungspotential" id="DevelopmentResult">
-              <ResultTable data={this.state.developmentLevel} />
+              <ResultTable
+                data={this.state.developmentLevel}
+                dataKey="developmentLevel"
+                handleTextDetailClick={this.handleItemDetailClick}
+              />
             </Panel>
             <Panel title="Seelische Ebene" id="SoulResult">
-              <ResultTable data={this.state.soulLevel} />
+              <ResultTable
+                data={this.state.soulLevel}
+                dataKey="soulLevel"
+                handleTextDetailClick={this.handleItemDetailClick}
+              />
             </Panel>
             <Panel title="Zeitliche Ebene" id="TimeResult">
-              <ResultTable data={this.state.timeLevel[0]} />
-              <ResultTable data={this.state.timeLevel[1]} />
+              <ResultTable
+                data={this.state.timeLevel[0]}
+                dataKey="timeLevel"
+                handleTextDetailClick={this.handleItemDetailClick}
+              />
+              <ResultTable
+                data={this.state.timeLevel[1]}
+                dataKey="timeLevel"
+                handleTextDetailClick={this.handleItemDetailClick}
+              />
             </Panel>
           </div>
         </div>
+        <LightBoxDetailView
+          isOpen={this.state.resultTextDetailViewOpen}
+          onClose={this.handleCloseDetail}
+          data={this.convertStateToDetailsData(this.state)}
+          sectionIndex={this.state.resultTextDetailViewSectionIndex}
+          elementIndex={this.state.resultTextDetailViewElementIndex}
+        />
       </div>
     );
   }

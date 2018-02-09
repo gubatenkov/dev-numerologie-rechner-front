@@ -15,6 +15,7 @@ class Step extends Component {
     current: PropTypes.bool,
     done: PropTypes.bool,
     number: PropTypes.number,
+    horizontal: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -22,6 +23,7 @@ class Step extends Component {
     current: false,
     done: false,
     number: null,
+    horizontal: false,
   };
   /**
    * handler for clicks on step, redirects to own handler
@@ -36,7 +38,9 @@ class Step extends Component {
    */
   render() {
     // adapting styling of circle based on status
-    let circleStyle = 'step_num__circle';
+    let circleStyle = this.props.horizontal
+      ? 'step_num__circle--horizontal'
+      : 'step_num__circle';
     if (this.props.current) {
       circleStyle += ' step_num__circle--current';
     } else if (this.props.done) {
@@ -44,13 +48,19 @@ class Step extends Component {
     }
 
     // adapting styling of name based on status
-    let nameStyle = 'step_num__stepName';
+    let nameStyle = this.props.horizontal
+      ? 'step_num__stepName--horizontal'
+      : 'step_num__stepName';
     if (this.props.current) {
       nameStyle += ' step_num__stepName--current';
     }
 
     return (
-      <div className="step__num">
+      <div
+        className={
+          this.props.horizontal ? 'step__num--horizontal' : 'step__num'
+        }
+      >
         {this.props.number && (
           <div className="step_num_stepNumber">{this.props.number}</div>
         )}

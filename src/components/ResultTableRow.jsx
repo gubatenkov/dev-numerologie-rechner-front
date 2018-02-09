@@ -17,6 +17,8 @@ const TYPE_ID_MATRIX = 'matrix';
 class ResultTableRow extends Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
+    onTextDetailClick: PropTypes.func.isRequired,
+    rowIndex: PropTypes.number.isRequired,
   };
 
   /**
@@ -27,13 +29,20 @@ class ResultTableRow extends Component {
     if (rowText && rowText && rowText.length > 0) {
       rowTextRepresentation = [
         `${rowText.substring(0, 80)}...  `,
-        <a key="readIndicator" href="#">
+        <a key="readIndicator" role="Link" onClick={this.handleMoreClick}>
           Lesen
         </a>,
       ];
     }
     return rowTextRepresentation;
   }
+
+  /**
+   * handles clicks on the more link of the description text
+   */
+  handleMoreClick = () => {
+    this.props.onTextDetailClick(this.props.rowIndex);
+  };
 
   /**
    * renders a result matrix as content of the table

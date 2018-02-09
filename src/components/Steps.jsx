@@ -10,12 +10,12 @@ import '../styles/Steps.css';
 class Steps extends Component {
   static propTypes = {
     children: PropTypes.node,
-    vertical: PropTypes.bool,
+    horizontal: PropTypes.bool,
   };
 
   static defaultProps = {
     children: null,
-    vertical: true,
+    horizontal: false,
   };
   /**
    * default render - steps are passed as children
@@ -24,14 +24,14 @@ class Steps extends Component {
     return (
       <div
         className={
-          this.props.vertical ? 'steps__num_vertical' : 'steps__num_horizontal'
+          this.props.horizontal ? 'steps--horizontal' : 'steps--vertical'
         }
       >
         <div
           className={
-            this.props.vertical
-              ? 'steps_num_connector_vertical'
-              : 'steps_num_connector_horizontal'
+            this.props.horizontal
+              ? 'steps_Connector--horizontal'
+              : 'steps_Connector--vertical'
           }
         />
         {this.props.children}
