@@ -67,15 +67,19 @@ class AnalysisResultPersonal extends Component {
   }
 
   /**
-   * handles the navigation to a specific item
+   * returns an array representation of the state of the component
+   * @param state the state to be transformed
    */
-  navigateToElementHandler = (name, anchor) => {
-    // scrolling to item if present in DOM
-    const stepContentItem = document.getElementById(anchor);
-    if (stepContentItem) {
-      stepContentItem.scrollIntoView();
-    }
-  };
+  getResultArrayFormat(state) {
+    return [
+      state.expressionLevel,
+      state.personalityLevel,
+      state.developmentLevel,
+      state.soulLevel,
+      state.timeLevel[0],
+      state.timeLevel[1],
+    ];
+  }
 
   /**
    * handles close of detail view
@@ -90,34 +94,77 @@ class AnalysisResultPersonal extends Component {
    *  handles clicks on detail links
    */
   handleItemDetailClick = (dataKey, index) => {
+    // getting index of elemnent represented by dataKey in state
+    const dataIndex = this.getResultArrayFormat(this.state).indexOf(this.state[dataKey]);
+
+    // if data is not here -> skip
+    if (dataIndex < 0) {
+      return;
+    }
+
     // opening detail view
-    // TODO pass index = starting position
     this.setState({
       resultTextDetailViewOpen: true,
-      resultTextDetailViewSectionIndex: 0,
+      resultTextDetailViewSectionIndex: dataIndex,
       resultTextDetailViewElementIndex: index,
     });
   };
 
   /**
+   * handles the navigation to a specific item
+   */
+  navigateToElementHandler = (name, anchor) => {
+    // scrolling to item if present in DOM
+    const stepContentItem = document.getElementById(anchor);
+    if (stepContentItem) {
+      stepContentItem.scrollIntoView();
+    }
+  };
+
+  /**
    * maps the state of this component to one that can be used
    * by the detail component
-   * @param {*} state
+   * @param state the state to be transformed
    */
   convertStateToDetailsData(state) {
-    return [
-      state.expressionLevel,
-      state.personalityLevel,
-      state.developmentLevel,
-      state.soulLevel,
-      // state.timeLevel[0],
-      // state.timeLevel[1],
-    ].map(item => ({
+    // transforming into items where results are numbers and a text to display is present
+    return this.getResultArrayFormat(state).map(item => ({
       sectionName: item.name,
-      sectionElements: item.numbers.map(numberItem => ({
-        elementTitle: `${numberItem.name} = ${numberItem.result.value}`,
-        elementContent: numberItem.textShort,
-      })),
+      sectionElements: item.numbers
+        // filtering elements that are not suitable for displaying as detail view
+        .filter((numberItem) => {
+          if (numberItem.type === 'row') {
+            return (
+              numberItem.result.value &&
+              numberItem.textShort &&
+              numberItem.textShort.length > 0
+            );
+          } else if (numberItem.type === 'customRow') {
+            return (
+              numberItem.descriptionTextIndex &&
+              numberItem.descriptionTextIndex >= 0 &&
+              numberItem.values[numberItem.descriptionTextIndex]
+            );
+          }
+          return false;
+        })
+        // mapping those elements to data for detail
+        .map((numberItem) => {
+          if (numberItem.type === 'row') {
+            return {
+              elementTitle: `${numberItem.name} = ${numberItem.result.value}`,
+              elementContent: numberItem.textShort,
+            };
+          } else if (numberItem.type === 'customRow') {
+            return {
+              elementTitle: `${numberItem.values[numberItem.nameIndex]} = ${
+                numberItem.values[numberItem.valueIndex]
+              }`,
+              elementContent: numberItem.values[numberItem.descriptionTextIndex],
+            };
+          }
+          return null;
+        }),
     }));
   }
 

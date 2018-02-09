@@ -37,13 +37,29 @@ class LightBoxDetailView extends Component {
   constructor(props) {
     super(props);
 
-    /**
-     * setting data elements
-     */
+    // initializing state based on props passed from server
     this.state = {
-      currentSectionIndex: 0,
-      currentElementIndex: 0,
+      currentSectionIndex: props.sectionIndex,
+      currentElementIndex: props.elementIndex,
     };
+  }
+
+  /**
+   * lifcycle method called if props change
+   * @param nextProps new version of the props
+   */
+  componentWillReceiveProps(nextProps) {
+    // checking if own state needs ro be re-initilized based on props
+    // from parent component
+    if (
+      this.state.currentSectionIndex !== nextProps.sectionIndex ||
+      this.state.currentElementIndex !== nextProps.elementIndex
+    ) {
+      this.setState({
+        currentSectionIndex: nextProps.sectionIndex,
+        currentElementIndex: nextProps.elementIndex,
+      });
+    }
   }
 
   /**
@@ -57,13 +73,6 @@ class LightBoxDetailView extends Component {
     if (this.props.isOpen) {
       this.self.focus();
     }
-
-    /* if (this.state.currentSectionIndex !== this.props.sectionIndex) {
-      this.setState({
-        currentSectionIndex: this.props.sectionIndex,
-        currentElementIndex: this.props.elementIndex,
-      });
-    } */
   }
 
   /**
