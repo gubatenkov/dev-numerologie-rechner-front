@@ -157,15 +157,37 @@ class LightBoxDetailView extends Component {
       >
         <div className="LightBoxDetailView__ContentOverview">
           <Steps horizontal>
-            {this.props.data.map((item, index) => (
-              <Step
-                key={item.sectionName}
-                name={item.sectionName}
-                current={index === this.state.currentSectionIndex}
-                done={index < this.state.currentSectionIndex}
-                horizontal
-              />
-            ))}
+            {this.props.data.map((item, index) => {
+              // getting length of current section
+              const currentSectionLength = item.sectionElements.length;
+
+              // determining index to display for step
+              let stepElementIndex = 0;
+              if (index === this.state.currentSectionIndex) {
+                stepElementIndex = this.state.currentElementIndex;
+              } else if (index < this.state.currentSectionIndex) {
+                stepElementIndex = currentSectionLength - 1;
+              }
+
+              // determining the name of the item to display
+              // if if is the current section, an indication for
+              // the element position in the current section is given
+              let stepName = item.sectionName;
+              if (index === this.state.currentSectionIndex) {
+                stepName += ` (${stepElementIndex +
+                  1}/${currentSectionLength})`;
+              }
+
+              return (
+                <Step
+                  key={item.sectionName}
+                  name={stepName}
+                  current={index === this.state.currentSectionIndex}
+                  done={index < this.state.currentSectionIndex}
+                  horizontal
+                />
+              );
+            })}
           </Steps>
         </div>
         <div className="LightBoxDetailView__Content">

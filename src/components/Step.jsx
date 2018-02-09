@@ -14,7 +14,6 @@ class Step extends Component {
     name: PropTypes.string.isRequired,
     current: PropTypes.bool,
     done: PropTypes.bool,
-    number: PropTypes.number,
     horizontal: PropTypes.bool,
   };
 
@@ -22,7 +21,6 @@ class Step extends Component {
     onStepClick: () => {},
     current: false,
     done: false,
-    number: null,
     horizontal: false,
   };
   /**
@@ -39,31 +37,28 @@ class Step extends Component {
   render() {
     // adapting styling of circle based on status
     let circleStyle = this.props.horizontal
-      ? 'step_num__circle--horizontal'
-      : 'step_num__circle';
+      ? 'Step__Circle--horizontal'
+      : 'Step__Circle';
     if (this.props.current) {
-      circleStyle += ' step_num__circle--current';
+      circleStyle += ' Step__Circle--current';
     } else if (this.props.done) {
-      circleStyle += ' step_num__circle--done';
+      circleStyle += ' Step__Circle--done';
     }
 
     // adapting styling of name based on status
     let nameStyle = this.props.horizontal
-      ? 'step_num__stepName--horizontal'
-      : 'step_num__stepName';
+      ? 'Step__StepName--horizontal'
+      : 'Step__StepName';
     if (this.props.current) {
-      nameStyle += ' step_num__stepName--current';
+      nameStyle += ' Step__StepName--current';
     }
 
     return (
       <div
         className={
-          this.props.horizontal ? 'step__num--horizontal' : 'step__num'
+          this.props.horizontal ? 'Step--horizontal' : 'Step'
         }
       >
-        {this.props.number && (
-          <div className="step_num_stepNumber">{this.props.number}</div>
-        )}
         <div className={circleStyle} />
         <div className={nameStyle} onClick={this.handleStepClick} role="button">
           {this.props.name}

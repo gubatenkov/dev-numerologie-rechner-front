@@ -17,6 +17,7 @@ class Steps extends Component {
     children: null,
     horizontal: false,
   };
+
   /**
    * default render - steps are passed as children
    */

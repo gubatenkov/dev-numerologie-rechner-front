@@ -1,6 +1,7 @@
 .steps--vertical {
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     position: relative;
 }
 

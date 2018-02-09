@@ -1,11 +1,11 @@
-.step__num {
+.Step {
     padding-top: 25px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 }
 
-.step__num--horizontal {
+.Step--horizontal {
     padding-top: 25px;
     display: flex;
     flex-direction: column;
@@ -13,11 +13,11 @@
 }
 
 /*Space between horizontal steps*/
-.step__num--horizontal + .step__num--horizontal {
+.Step--horizontal + .Step--horizontal {
     margin-left: 30px;
 }
 
-.step_num__circle {
+.Step__Circle {
     border: 2px solid #00b3d4;
     background-color: white;
     width: 15px;
@@ -27,38 +27,34 @@
     z-index: 0;
 }
 
-.step_num__circle--horizontal {
+.Step__Circle--horizontal {
     border: 2px solid #00b3d4;
     background-color: white;
     width: 15px;
     height: 15px;
     border-radius: 15px;
     margin-top: 2.5px;
+    margin-left: 50%;
     z-index: 0;
     text-align: center;
 }
 
-.step_num__circle--current {
+.Step__Circle--current {
     border-width: 3px;
 }
 
-.step_num__circle--done {
+.Step__Circle--done {
     background-color: #00b3d4;
 }
 
-.step_num__stepName {
+.Step__StepName {
     margin-left: 20px;
 }
 
-.step_num__stepName--horizontal {
+.Step__StepName--horizontal {
     margin-top: 10px;
 }
 
-.step_num__stepName--current {
+.Step__StepName--current {
     font-weight: bold;
 }
-
-.step_num_stepNumber {
-    margin-right: 5px;
-}
-
