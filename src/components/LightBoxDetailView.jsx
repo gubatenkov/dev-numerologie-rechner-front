@@ -63,7 +63,8 @@ class LightBoxDetailView extends Component {
   }
 
   /**
-   * lifecylce method
+   * default licecylce method that makes sure component
+   * parameters are set upon display/hide
    */
   componentDidUpdate() {
     // updating body class of the site to prevent scrolling
