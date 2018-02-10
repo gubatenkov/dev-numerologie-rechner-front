@@ -1,54 +1,4 @@
 /**
- * calculates the expression level numbers
- * @param {*} firstNames
- * @param {*} lastName
- * @param {*} dateOfBirth
- */
-export function calculateExpressionLevel(firstNames, lastName, dateOfBirth) {
-  return {
-    name: 'Ausdrucksebene',
-    numbers: [
-      {
-        name: 'Ausdruckszahl',
-        type: 'row',
-        id: 'AZ',
-        textShort:
-          'Diese Menschen haben eine beschützende Ausstrahlung und Verantwortungsgefühl für ihre Mitmenschen. Aufgrund ihrer mütterlichen bzw. väterlichen Ausdruckskraft, die Sicherheit und Geborgenheit vermittelt, kommen die anderen Menschen zu ihnen, um Rat, Belehrung und Heilung zu finden. Ihr soziales Gewissen drängt sie dazu, nach Wahrheit und Gerechtigkeit zu streben. Personen mit der Ausdruckszahl 6 sind gefährdet, sich für andere Menschen, für ein wertvolles Ideal oder sich aus Liebe aufzuopfern. Doch kann ihre soziale Verantwortlichkeit auch zu Unverantwortlichkeit verkommen oder dazu führen, dass sie sich in Angelegenheiten einmischen, die sie nichts angehen.',
-        result: {
-          type: 'number',
-          value: 6,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Berufszahl',
-        type: 'row',
-        id: 'BZ',
-        textShort:
-          'Diese Berufszahl weist auf Dynamik und persönliche Unabhängigkeit hin. Personen, denen die Zahl 1 zugeordnet wird, sind kreativ und können gut organisieren. Sie eignen sich für administrative Tätigkeiten und Führungspositionen, denn sie arbeiten gerne selbstständig, besitzen viel Ausdauer und verfügen über eine rasche Auffassungsgabe sowie logisches Denken. Diese Personen können gut organisieren, besitzen Ausdauer, eine rasche Auffassungsgabe und logisches Denken, arbeiten gerne selbstständig, eignen sich für administrative Tätigkeiten, Führungspositionen, Angestelltenverhältnis oder Selbstständigkeit. Berufe: LektorIn, VerlagsleiterIn, SchriftstellerIn, TheaterproduzentIn, SchauspielerIn, wissenschaftliche oder technische Berufe.',
-        result: {
-          type: 'number',
-          value: 1,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Nachnamenszahl',
-        type: 'row',
-        id: 'NNZ',
-        textShort:
-          'Das Kind wird oft in eine starre Struktur gepresst. Beide Eltern sind meist berufstätig und die Betreuung der Kinder muss gut nebenher funktionieren. Es gibt wenig Freude, Gelassenheit und Leichtigkeit. Zwei Glaubenssätze werden gelebt: „Ohne Fleiß kein Preis“ und „Das Leben ist schwer, ohne Erfolg ist keine Entwicklung möglich“. Für die Eltern ist es wichtig, die Fassade nach außen hin aufrechtzuerhalten. Diese Kinder entwickeln die Verhaltensstrategien, brav zu sein und sich anzupassen.',
-        result: {
-          type: 'number',
-          value: 4,
-        },
-        highlighted: false,
-      },
-    ],
-  };
-}
-
-/**
  * calculates the personal level numbers
  * @param {*} firstNames
  * @param {*} lastName
@@ -536,9 +486,8 @@ const ALPHABET = [
 
 // vowels and consonants
 const VOWELS = ['a', 'e', 'i', 'o', 'u'];
-// TODO
-const CONSONANTS = [''];
 const UMLAUTS = ['ä', 'ü', 'ö'];
+const UMLAUT_MAPPING = ['ae', 'ue', 'oe'];
 
 /**
  * calculates the digit value of a character by mapping it according to a scheme
@@ -558,7 +507,7 @@ function getCharDigit(char) {
 
   // if input is longer than one char -> first char is used
   if (char.length > 1) {
-    input = char[0];
+    [input] = char;
   }
   const index = ALPHABET.indexOf(input.toLowerCase());
   return index % 9 + 1;
@@ -623,6 +572,43 @@ function preprocessDateOfBirth(dateOfBirth) {
     .filter(item => item !== ' ' && item.length > 0);
 }
 
+export function splitIntoArray(input) {
+  return input.split('').filter(item => item !== ' ' && item.length > 0);
+}
+
+export function replaceUmlauts(input) {
+  // assigning input to result to replace here
+  let result = input;
+
+  // iterating though umlauts and replacing
+  for (let index = 0; index < UMLAUTS.length; index += 1) {
+    // getting current umlaut to replace
+    const currentUmlaut = UMLAUTS[index];
+
+    // replacing lower case occurences of umlaut
+    result = result.replace(
+      new RegExp(currentUmlaut, 'g'),
+      UMLAUT_MAPPING[index],
+    );
+
+    // replacing upper case occurences of umlaut
+    result = result.replace(
+      new RegExp(currentUmlaut.toUpperCase(), 'g'),
+      UMLAUT_MAPPING[index].toUpperCase(),
+    );
+  }
+
+  return result;
+}
+
+export function preprocessString(input) {
+  // replacing umlauts of names
+  const nameWithoutUmlauts = replaceUmlauts(input);
+
+  // returning replaced results
+  return splitIntoArray(nameWithoutUmlauts);
+}
+
 /**
  * extracts vowels from the input array, returns an array of only the vowels
  * contained in @param input in the same order
@@ -638,7 +624,7 @@ function extractVowels(input) {
  * @param {array(char)} input an array of characters
  */
 function extractConsonants(input) {
-  return input.filter(char => CONSONANTS.includes(char));
+  return input.filter(char => !VOWELS.includes(char));
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -673,7 +659,7 @@ export function calculateAZ(firstNameArray, lastNameArray) {
 
 /**
  * calulation of the BZ
- * @param {array(char)} firstNameArray an array of the characters of the first name
+ * @param {array(char)} firstNameArqqray an array of the characters of the first name
  * @param lastNameArray an array of the characters of the last name
  * @returns the digit sum of the merge of the first name and last name digits
  */
@@ -682,10 +668,81 @@ export function calculateBZ(firstNameArray, lastNameArray) {
 }
 
 /**
- * calculatio of the NNZ
+ * calculation of the NNZ
  * @param lastNameArray an array of the characters of the last name
  * @returns the digit representing the first char of the last name
  */
 export function calculateNNZ(lastNameArray) {
   return mapToDigits(lastNameArray[0]);
+}
+
+/*----------------------------------------------------------------------------------*/
+
+/**
+ * calculates the expression level numbers
+ * @param {string} firstNames
+ * @param {string} lastName
+ */
+export function calculateExpressionLevel(firstNames, lastName) {
+  console.log('!!!!!!!!!!!!!');
+  // getting process array representation of strings
+  const firstNamesArray = preprocessString(firstNames);
+  const lastNameArray = preprocessString(lastName);
+
+  // calculating AZ
+  const azValue = calculateAZ(firstNamesArray, lastNameArray);
+  // TODO getting description for calculated value
+  const azValueText =
+    'ÄÄÄÄÄÄÄÄDiese Menschen haben eine beschützende Ausstrahlung und Verantwortungsgefühl für ihre Mitmenschen. Aufgrund ihrer mütterlichen bzw. väterlichen Ausdruckskraft, die Sicherheit und Geborgenheit vermittelt, kommen die anderen Menschen zu ihnen, um Rat, Belehrung und Heilung zu finden. Ihr soziales Gewissen drängt sie dazu, nach Wahrheit und Gerechtigkeit zu streben. Personen mit der Ausdruckszahl 6 sind gefährdet, sich für andere Menschen, für ein wertvolles Ideal oder sich aus Liebe aufzuopfern. Doch kann ihre soziale Verantwortlichkeit auch zu Unverantwortlichkeit verkommen oder dazu führen, dass sie sich in Angelegenheiten einmischen, die sie nichts angehen.';
+
+  // caclulating BZ
+  const bzValue = calculateBZ(firstNamesArray, lastNameArray);
+  // TODO getting description for calculated value
+  const bzValueText =
+    'Diese Berufszahl weist auf Dynamik und persönliche Unabhängigkeit hin. Personen, denen die Zahl 1 zugeordnet wird, sind kreativ und können gut organisieren. Sie eignen sich für administrative Tätigkeiten und Führungspositionen, denn sie arbeiten gerne selbstständig, besitzen viel Ausdauer und verfügen über eine rasche Auffassungsgabe sowie logisches Denken. Diese Personen können gut organisieren, besitzen Ausdauer, eine rasche Auffassungsgabe und logisches Denken, arbeiten gerne selbstständig, eignen sich für administrative Tätigkeiten, Führungspositionen, Angestelltenverhältnis oder Selbstständigkeit. Berufe: LektorIn, VerlagsleiterIn, SchriftstellerIn, TheaterproduzentIn, SchauspielerIn, wissenschaftliche oder technische Berufe.';
+
+  // calculating NNZ
+  const nnzValue = calculateNNZ(lastNameArray);
+  // TODO getting description for calculated value
+  const nnzValueText =
+    'Das Kind wird oft in eine starre Struktur gepresst. Beide Eltern sind meist berufstätig und die Betreuung der Kinder muss gut nebenher funktionieren. Es gibt wenig Freude, Gelassenheit und Leichtigkeit. Zwei Glaubenssätze werden gelebt: „Ohne Fleiß kein Preis“ und „Das Leben ist schwer, ohne Erfolg ist keine Entwicklung möglich“. Für die Eltern ist es wichtig, die Fassade nach außen hin aufrechtzuerhalten. Diese Kinder entwickeln die Verhaltensstrategien, brav zu sein und sich anzupassen.';
+
+  return {
+    name: 'Ausdrucksebene',
+    numbers: [
+      {
+        name: 'Ausdruckszahl',
+        type: 'row',
+        id: 'AZ',
+        textShort: azValueText,
+        result: {
+          type: 'number',
+          value: azValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Berufszahl',
+        type: 'row',
+        id: 'BZ',
+        textShort: bzValueText,
+        result: {
+          type: 'number',
+          value: bzValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Nachnamenszahl',
+        type: 'row',
+        id: 'NNZ',
+        textShort: nnzValueText,
+        result: {
+          type: 'number',
+          value: nnzValue,
+        },
+        highlighted: false,
+      },
+    ],
+  };
 }

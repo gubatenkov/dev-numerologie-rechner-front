@@ -40,11 +40,7 @@ class AnalysisResultPersonal extends Component {
 
     // setting initial state based on calculations
     this.state = {
-      expressionLevel: calculateExpressionLevel(
-        firstName,
-        lastName,
-        dateOfBirth,
-      ),
+      expressionLevel: calculateExpressionLevel(firstName, lastName),
       personalityLevel: calculatePersonalLevel(
         firstName,
         lastName,
