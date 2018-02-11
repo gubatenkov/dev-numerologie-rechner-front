@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "eslint": "^4.17.0",
+    "lodash": "^4.17.5",
     "prettier": "^1.10.2",
     "prettier-eslint": "^8.8.1",
     "prop-types": "^15.6.0",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.6.1"
   }

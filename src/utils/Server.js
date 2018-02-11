@@ -1,3 +1,23 @@
+import _ from 'lodash';
+
+// constants
+const NUMBER_ID_AZ = 'AZ';
+const NUMBER_ID_BZ = 'BZ';
+const NUMBER_ID_NNZ = 'NNZ';
+
+// mapping from matrix index (as used by the UI) and the GDR indexing scheme
+const GDR_INDEX_NUMBER_MAPPING = {
+  0: 3,
+  1: 6,
+  2: 9,
+  3: 2,
+  4: 5,
+  5: 8,
+  6: 1,
+  7: 4,
+  8: 7,
+};
+
 /**
  * calculates the personal level numbers
  * @param {*} firstNames
@@ -513,6 +533,18 @@ function getCharDigit(char) {
   return index % 9 + 1;
 }
 
+export function splitStringIntoCharArray(input) {
+  return input.split('').filter(item => item !== ' ' && item.length > 0);
+}
+
+export function splitNumberIntoDigitArray(input) {
+  return input
+    .toString()
+    .split('')
+    .filter(item => item !== ' ' && item.length > 0)
+    .map(item => parseInt(item, 10));
+}
+
 /**
  * maps an array of characters to an array of numbers according to the defined schema
  * @param {array(chars)} inputArray an array of characters to be mapped
@@ -531,7 +563,7 @@ function mapToDigits(inputArray) {
  * @param {*} exceptedFromReduction if @param reduce is set to true, the numbers passed here
  * are NOT reduced
  */
-function sumDigits(digits, reduce, exceptedFromReduction) {
+function sumDigits(digits, reduce = true, exceptedFromReduction = []) {
   // calculating sum of digits
   const sum = digits.reduce((a, b) => a + b);
 
@@ -543,9 +575,8 @@ function sumDigits(digits, reduce, exceptedFromReduction) {
     }
 
     // calling recursively to reduce (pot. multiple times: 19 > 10 > 1)
-    return sumDigits(sum);
+    return sumDigits(splitNumberIntoDigitArray(sum));
   }
-
   return sum;
 }
 
@@ -559,21 +590,14 @@ function sanitizeDateOfBirth(dateofBirth) {
  * e.g. 18.03.2009 => [1,8,0,3,2,0,0,9]
  * @param dateOfBirth a string in the format dd.mm.yyyy representing the date
  */
-function preprocessDateOfBirth(dateOfBirth) {
+export function preprocessDateOfBirth(dateOfBirth) {
   // returning null if sanitization fails
   if (!sanitizeDateOfBirth(dateOfBirth)) {
     return null;
   }
   // replacing all dots -> splitting into chars and
   // removing emtpy elements and spaces
-  return dateOfBirth
-    .replace(/\./g, '')
-    .split('')
-    .filter(item => item !== ' ' && item.length > 0);
-}
-
-export function splitIntoArray(input) {
-  return input.split('').filter(item => item !== ' ' && item.length > 0);
+  return splitNumberIntoDigitArray(dateOfBirth.replace(/\./g, ''));
 }
 
 export function replaceUmlauts(input) {
@@ -606,7 +630,7 @@ export function preprocessString(input) {
   const nameWithoutUmlauts = replaceUmlauts(input);
 
   // returning replaced results
-  return splitIntoArray(nameWithoutUmlauts);
+  return splitStringIntoCharArray(nameWithoutUmlauts);
 }
 
 /**
@@ -631,16 +655,6 @@ function extractConsonants(input) {
 /* Calculations of numbers */
 
 /**
- * calculation of LZ
- * @param {array(digits)} dateOfBirthArray an array of the digits of the birth date
- * @returns returns the digit sum of the date birth digits
- */
-export function calculateLZ(dateOfBirthArray) {
-  // summing up digits and reducing to one digit except for 11, 22 and 33
-  return sumDigits(dateOfBirthArray, true, [11, 22, 33]);
-}
-
-/**
  * calculation of the AZ
  * @param {array(chars)} firstNameArray an array of the characters of the first name
  * @param {array(chars)} lastNameArray an array of the characters of the last name
@@ -659,24 +673,245 @@ export function calculateAZ(firstNameArray, lastNameArray) {
 
 /**
  * calulation of the BZ
- * @param {array(char)} firstNameArqqray an array of the characters of the first name
+ * @param {array(char)} firstNameArray an array of the characters of the first name (and middle name)
  * @param lastNameArray an array of the characters of the last name
- * @returns the digit sum of the merge of the first name and last name digits
  */
-export function calculateBZ(firstNameArray, lastNameArray) {
-  return sumDigits(mapToDigits(firstNameArray).concat(mapToDigits(lastNameArray)));
+export function calculateBZ(firstNamesArray, lastNameArray) {
+  return sumDigits(
+    mapToDigits(firstNamesArray).concat(mapToDigits(lastNameArray)),
+    true,
+  );
 }
 
 /**
  * calculation of the NNZ
  * @param lastNameArray an array of the characters of the last name
- * @returns the digit representing the first char of the last name
  */
 export function calculateNNZ(lastNameArray) {
-  return mapToDigits(lastNameArray[0]);
+  return getCharDigit(lastNameArray[0]);
+}
+
+/**
+ * calculation of the WZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateWZ(dateOfBirthArray) {
+  return sumDigits(dateOfBirthArray, false);
+}
+
+/**
+ * calculation of the LZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateLZ(dateOfBirthArray) {
+  return sumDigits(dateOfBirthArray, true, [11, 22, 33]);
+}
+
+/**
+ * calculation of the SZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateSZ(dateOfBirthArray) {
+  return 42;
+}
+
+/**
+ * calculation of the IZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateIZ(firstNamesArray, lastNameArray, dateOfBirthArray) {
+  // getting full name
+  const fullNameArray = firstNamesArray.concat(lastNameArray);
+
+  // getting number values of full name
+  const fullNameDigits = mapToDigits(fullNameArray);
+
+  // getting most occuring digit
+  const occurences = _.countBy(fullNameDigits);
+  const mostOccuring = _.maxBy(Object.keys(occurences), key => occurences[key]);
+
+  // check if maximum unique
+  const isMaxUnique =
+    Object.keys(occurences).filter(key => occurences[key] === occurences[mostOccuring]).length === 1;
+
+  // if maximum is unique: IZ = maximum
+  if (isMaxUnique) {
+    return parseInt(mostOccuring, 10);
+  }
+  // if maximum is not unique -> IZ = SZ
+  return calculateSZ(dateOfBirthArray);
+}
+
+/**
+ * calculation of the GZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateGZ(dateOfBirthArray) {
+  // extracting birthday
+  const birthDayAndMonth = dateOfBirthArray.slice(0, 4);
+
+  // calculating sum of day and month
+  return sumDigits(birthDayAndMonth, true);
+}
+
+/**
+ * calculation of the GDR
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateGDR(dateOfBirthArray) {
+  // creating gdr data structure: index 1 to 0 according to positions in scheme
+  const GDR = [];
+
+  // counting occurences of numbers in dateOfBirth
+  const occurencesDateOfBirth = _.countBy(dateOfBirthArray);
+  // const occurencesDateOfBirth = _.countBy()
+
+  for (let index = 0; index < 9; index += 1) {
+    // defining entry for gdr
+    const entry = [];
+    // getting number relevant for index
+    const currentNumber = GDR_INDEX_NUMBER_MAPPING[index];
+
+    // 1) calculating frequency of number in birthdate
+    entry[0] = occurencesDateOfBirth[currentNumber]
+      ? occurencesDateOfBirth[currentNumber]
+      : 0;
+
+    // 2) calculate frequency of number in LZ + WZ and intermediate values (recucing)
+    // TODO how is this calculated
+    entry[1] = 0;
+
+    // adding entry to result
+    GDR[index] = entry;
+  }
+
+  return GDR.map(item => (item[0] + item[1] === 0 ? null : item[0] + item[1]));
+}
+
+/**
+ * calculation of the GDR-F
+ * @param gdrArray result of the GDR calculation
+ */
+export function calculateGDRF(gdrArray) {
+  // defining result array of missing numbers in gdrArray
+  const missingValues = [];
+
+  // going through numbers, if value not present (value is null),
+  // saving associated number with index
+  gdrArray.forEach((item, index) => {
+    if (item === null) {
+      missingValues.push(GDR_INDEX_NUMBER_MAPPING[index]);
+    }
+  });
+
+  return missingValues;
+}
+
+/**
+ * calculation of the GDR-V
+ * @param gdrArray result of the GDR calculation
+ */
+export function calculateGDRV(gdrArray) {
+  // defining result array of present numbers in gdrArray
+  const presentValues = [];
+
+  // going through numbers, if value not present (value is null),
+  // saving associated number with index
+  gdrArray.forEach((item, index) => {
+    if (item !== null) {
+      presentValues.push(GDR_INDEX_NUMBER_MAPPING[index]);
+    }
+  });
+
+  return presentValues;
+}
+
+/**
+ * calculation of the GDR-I
+ * @param gdrArray result of the GDR calculation
+ */
+export function calculateGDRI(gdrArray) {
+  // TODO
+  return 42;
+}
+
+/**
+ * calculation fo the TZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateTZ(dateOfBirthArray) {
+  // returning sum of digits for first name
+  return sumDigits(dateOfBirthArray.slice(2, 7), true);
+}
+
+/**
+ * calculation of the KZ
+ * @param firstNameArray an array of the characters of the first name
+ * @param middleNameArray an array of the characters of the middle name
+ */
+export function calculateKZ(firstNameArray, middleNameArray = null) {
+  // calculating kz value from first name
+  let kzValue = getCharDigit(firstNameArray[0]);
+
+  // adding kz value from middle name if present
+  if (middleNameArray) {
+    kzValue += getCharDigit(middleNameArray[0]);
+  }
+
+  return kzValue;
+}
+/**
+ * calculation of the BfZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateBfZ(dateOfBirthArray) {
+  // calculating LZ
+  const lzValue = calculateLZ(dateOfBirthArray);
+
+  // calculating TZ
+  const tzValue = calculateTZ(dateOfBirthArray);
+
+  // returning BfZ as sum of digits of TZ and LZ
+  return sumDigits(splitNumberIntoDigitArray(lzValue + tzValue));
+}
+
+/**
+ * calculation of the VisZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateVisZ(dateOfBirthArray) {
+  // calculating LZ
+  const lzValue = calculateLZ(dateOfBirthArray);
+
+  // calculating SZ
+  const szValue = calculateSZ(dateOfBirthArray);
+
+  // calculating BfZ
+  const bfzValue = calculateBfZ(dateOfBirthArray);
+
+  // returning sum of digit of sum of values
+  return sumDigits(splitNumberIntoDigitArray(lzValue + szValue + bfzValue));
 }
 
 /*----------------------------------------------------------------------------------*/
+
+/**
+ * returns a result text for the result number value calculated
+ * @param numberID id of the number
+ * @param resultValue value of the calculated result
+ * @returns a text describing this number
+ */
+function getTextForResult(numberID, resultValue) {
+  if (numberID === NUMBER_ID_AZ) {
+    return 'Diese Menschen haben eine beschützende Ausstrahlung und Verantwortungsgefühl für ihre Mitmenschen. Aufgrund ihrer mütterlichen bzw. väterlichen Ausdruckskraft, die Sicherheit und Geborgenheit vermittelt, kommen die anderen Menschen zu ihnen, um Rat, Belehrung und Heilung zu finden. Ihr soziales Gewissen drängt sie dazu, nach Wahrheit und Gerechtigkeit zu streben. Personen mit der Ausdruckszahl 6 sind gefährdet, sich für andere Menschen, für ein wertvolles Ideal oder sich aus Liebe aufzuopfern. Doch kann ihre soziale Verantwortlichkeit auch zu Unverantwortlichkeit verkommen oder dazu führen, dass sie sich in Angelegenheiten einmischen, die sie nichts angehen.';
+  } else if (numberID === NUMBER_ID_BZ) {
+    return 'Diese Berufszahl weist auf Dynamik und persönliche Unabhängigkeit hin. Personen, denen die Zahl 1 zugeordnet wird, sind kreativ und können gut organisieren. Sie eignen sich für administrative Tätigkeiten und Führungspositionen, denn sie arbeiten gerne selbstständig, besitzen viel Ausdauer und verfügen über eine rasche Auffassungsgabe sowie logisches Denken. Diese Personen können gut organisieren, besitzen Ausdauer, eine rasche Auffassungsgabe und logisches Denken, arbeiten gerne selbstständig, eignen sich für administrative Tätigkeiten, Führungspositionen, Angestelltenverhältnis oder Selbstständigkeit. Berufe: LektorIn, VerlagsleiterIn, SchriftstellerIn, TheaterproduzentIn, SchauspielerIn, wissenschaftliche oder technische Berufe.';
+  } else if (numberID === NUMBER_ID_NNZ) {
+    return 'Das Kind wird oft in eine starre Struktur gepresst. Beide Eltern sind meist berufstätig und die Betreuung der Kinder muss gut nebenher funktionieren. Es gibt wenig Freude, Gelassenheit und Leichtigkeit. Zwei Glaubenssätze werden gelebt: „Ohne Fleiß kein Preis“ und „Das Leben ist schwer, ohne Erfolg ist keine Entwicklung möglich“. Für die Eltern ist es wichtig, die Fassade nach außen hin aufrechtzuerhalten. Diese Kinder entwickeln die Verhaltensstrategien, brav zu sein und sich anzupassen.';
+  }
+
+  return null;
+}
 
 /**
  * calculates the expression level numbers
@@ -684,7 +919,6 @@ export function calculateNNZ(lastNameArray) {
  * @param {string} lastName
  */
 export function calculateExpressionLevel(firstNames, lastName) {
-  console.log('!!!!!!!!!!!!!');
   // getting process array representation of strings
   const firstNamesArray = preprocessString(firstNames);
   const lastNameArray = preprocessString(lastName);
@@ -692,20 +926,17 @@ export function calculateExpressionLevel(firstNames, lastName) {
   // calculating AZ
   const azValue = calculateAZ(firstNamesArray, lastNameArray);
   // TODO getting description for calculated value
-  const azValueText =
-    'ÄÄÄÄÄÄÄÄDiese Menschen haben eine beschützende Ausstrahlung und Verantwortungsgefühl für ihre Mitmenschen. Aufgrund ihrer mütterlichen bzw. väterlichen Ausdruckskraft, die Sicherheit und Geborgenheit vermittelt, kommen die anderen Menschen zu ihnen, um Rat, Belehrung und Heilung zu finden. Ihr soziales Gewissen drängt sie dazu, nach Wahrheit und Gerechtigkeit zu streben. Personen mit der Ausdruckszahl 6 sind gefährdet, sich für andere Menschen, für ein wertvolles Ideal oder sich aus Liebe aufzuopfern. Doch kann ihre soziale Verantwortlichkeit auch zu Unverantwortlichkeit verkommen oder dazu führen, dass sie sich in Angelegenheiten einmischen, die sie nichts angehen.';
+  const azValueText = getTextForResult(NUMBER_ID_AZ, azValue);
 
   // caclulating BZ
   const bzValue = calculateBZ(firstNamesArray, lastNameArray);
   // TODO getting description for calculated value
-  const bzValueText =
-    'Diese Berufszahl weist auf Dynamik und persönliche Unabhängigkeit hin. Personen, denen die Zahl 1 zugeordnet wird, sind kreativ und können gut organisieren. Sie eignen sich für administrative Tätigkeiten und Führungspositionen, denn sie arbeiten gerne selbstständig, besitzen viel Ausdauer und verfügen über eine rasche Auffassungsgabe sowie logisches Denken. Diese Personen können gut organisieren, besitzen Ausdauer, eine rasche Auffassungsgabe und logisches Denken, arbeiten gerne selbstständig, eignen sich für administrative Tätigkeiten, Führungspositionen, Angestelltenverhältnis oder Selbstständigkeit. Berufe: LektorIn, VerlagsleiterIn, SchriftstellerIn, TheaterproduzentIn, SchauspielerIn, wissenschaftliche oder technische Berufe.';
+  const bzValueText = getTextForResult(NUMBER_ID_BZ, bzValue);
 
   // calculating NNZ
   const nnzValue = calculateNNZ(lastNameArray);
   // TODO getting description for calculated value
-  const nnzValueText =
-    'Das Kind wird oft in eine starre Struktur gepresst. Beide Eltern sind meist berufstätig und die Betreuung der Kinder muss gut nebenher funktionieren. Es gibt wenig Freude, Gelassenheit und Leichtigkeit. Zwei Glaubenssätze werden gelebt: „Ohne Fleiß kein Preis“ und „Das Leben ist schwer, ohne Erfolg ist keine Entwicklung möglich“. Für die Eltern ist es wichtig, die Fassade nach außen hin aufrechtzuerhalten. Diese Kinder entwickeln die Verhaltensstrategien, brav zu sein und sich anzupassen.';
+  const nnzValueText = getTextForResult(NUMBER_ID_NNZ, nnzValue);
 
   return {
     name: 'Ausdrucksebene',
