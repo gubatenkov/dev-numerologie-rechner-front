@@ -711,8 +711,10 @@ export function calculateLZ(dateOfBirthArray) {
  * calculation of the SZ
  * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
  */
-export function calculateSZ(dateOfBirthArray) {
-  return 42;
+export function calculateSZ(firstNamesArray, lastNameArray) {
+  const nameVowels = extractVowels(firstNamesArray.concat(lastNameArray));
+  // console.log(mapToDigits(nameVowels));
+  return sumDigits(mapToDigits(nameVowels), true);
 }
 
 /**
@@ -739,7 +741,7 @@ export function calculateIZ(firstNamesArray, lastNameArray, dateOfBirthArray) {
     return parseInt(mostOccuring, 10);
   }
   // if maximum is not unique -> IZ = SZ
-  return calculateSZ(dateOfBirthArray);
+  return calculateSZ(firstNamesArray, lastNameArray);
 }
 
 /**
@@ -815,7 +817,7 @@ export function calculateGDRV(gdrArray) {
   // defining result array of present numbers in gdrArray
   const presentValues = [];
 
-  // going through numbers, if value not present (value is null),
+  // going through numbers, if value present,
   // saving associated number with index
   gdrArray.forEach((item, index) => {
     if (item !== null) {
@@ -831,8 +833,41 @@ export function calculateGDRV(gdrArray) {
  * @param gdrArray result of the GDR calculation
  */
 export function calculateGDRI(gdrArray) {
-  // TODO
-  return 42;
+  const isolated = [];
+  gdrArray.forEach((item, index) => {
+    // only checking items not null themselves
+    if (item !== null) {
+      // bottom
+      const bottomRelevant = index + 3 < 9;
+      const bottomNull = bottomRelevant && gdrArray[index + 3] === null;
+
+      // top
+      const topRelevant = index - 3 > 0;
+      const topNull = topRelevant && gdrArray[index - 3] === null;
+
+      // right
+      const rightRelevant = index % 3 !== 2;
+      const rightNull = rightRelevant && gdrArray[index + 1] === null;
+
+      // left
+      const leftRelevant = index % 3 !== 0;
+      const leftNull = leftRelevant && gdrArray[index - 1] === null;
+
+      // not isolated if side is relevant and value is not null
+      const notIsolated =
+        (bottomRelevant && !bottomNull) ||
+        (topRelevant && !topNull) ||
+        (rightRelevant && !rightNull) ||
+        (leftRelevant && !leftNull);
+
+      // if not not isolated -> adding to isolated
+      if (!notIsolated) {
+        isolated.push(GDR_INDEX_NUMBER_MAPPING[index]);
+      }
+    }
+  });
+
+  return isolated;
 }
 
 /**
@@ -878,19 +913,204 @@ export function calculateBfZ(dateOfBirthArray) {
 /**
  * calculation of the VisZ
  * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ * @param firstNameArray an array of the characters of the first name
+ * @param middleNameArray an array of the characters of the middle name
  */
-export function calculateVisZ(dateOfBirthArray) {
+export function calculateVisZ(
+  firstNamesArray,
+  lastNameArray,
+  dateOfBirthArray,
+) {
   // calculating LZ
   const lzValue = calculateLZ(dateOfBirthArray);
 
   // calculating SZ
-  const szValue = calculateSZ(dateOfBirthArray);
+  const szValue = calculateSZ(firstNamesArray, lastNameArray, dateOfBirthArray);
 
   // calculating BfZ
   const bfzValue = calculateBfZ(dateOfBirthArray);
 
   // returning sum of digit of sum of values
   return sumDigits(splitNumberIntoDigitArray(lzValue + szValue + bfzValue));
+}
+
+/**
+ * calculation of the IniZ
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ * @param firstNameArray an array of the characters of the first name
+ * @param middleNameArray an array of the characters of the middle name
+ */
+export function calculateIniZ(
+  firstNamesArray,
+  lastNameArray,
+  dateOfBirthArray,
+) {
+  // calculating LZ
+  const lzValue = calculateLZ(dateOfBirthArray);
+
+  // calculating SZ
+  const szValue = calculateSZ(firstNamesArray, lastNameArray, dateOfBirthArray);
+
+  // calculating IZ
+  const izValue = calculateIZ(firstNamesArray, lastNameArray, dateOfBirthArray);
+
+  // returning sum of digit of sum of values
+  return sumDigits(splitNumberIntoDigitArray(lzValue + szValue + izValue));
+}
+
+/**
+ * calculation of the SM
+ * @param firstNameArray an array of the characters of the first name
+ * @param middleNameArray an array of the characters of the middle name
+ */
+export function calculateSM(firstNamesArray, lastNameArray) {
+  // creating sm data structure
+  const SM = [];
+
+  // counting occurences of numbers in dateOfBirth
+  const ocurrencesName = _.countBy(mapToDigits(firstNamesArray.concat(lastNameArray)));
+
+  for (let index = 0; index < 9; index += 1) {
+    // getting number relevant for index
+    const currentNumber = index + 1;
+
+    // calculating frequency of number in name
+    SM.push(ocurrencesName[currentNumber] || null);
+  }
+  return SM;
+}
+
+/**
+ * calculation of the SM
+ * @param smArray result of the SM calculation
+ */
+export function calculateSMV(smArray) {
+  // defining result array of present numbers in smArray
+  const presentValues = [];
+
+  // going through numbers, if value present,
+  // saving associated number with index
+  smArray.forEach((item, index) => {
+    if (item !== null) {
+      presentValues.push(index + 1);
+    }
+  });
+
+  return presentValues;
+}
+
+/**
+ * calculation of the KL
+ * @param smArray result of the SM calculation
+ */
+export function calculateKL(smArray) {
+  // defining result array of missing numbers in smArray
+  const missingValues = [];
+
+  // going through numbers, if value present,
+  // saving associated number with index
+  smArray.forEach((item, index) => {
+    if (item === null) {
+      missingValues.push(index + 1);
+    }
+  });
+
+  return missingValues;
+}
+
+export function calculateZSA(klArray) {
+  // if missing values of SM emtpy -> 0
+  if (klArray.length === 0) {
+    return 0;
+  }
+
+  // sum of digits of KL
+  return sumDigits(klArray, true);
+}
+
+/**
+ * calculation of the VZB
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateVZB(dateOfBirthArray) {
+  return sumDigits(dateOfBirthArray.slice(2, 4), true);
+}
+
+/**
+ * calculation of the VZP
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateVZP(dateOfBirthArray) {
+  return sumDigits(dateOfBirthArray.slice(0, 2), true);
+}
+
+/**
+ * calculation of the VZE
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateVZE(dateOfBirthArray) {
+  return sumDigits(dateOfBirthArray.slice(4, 8), true);
+}
+
+/**
+ * calculation of the HF
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateHF(dateOfBirthArray) {
+  const hf1 = sumDigits(dateOfBirthArray.slice(0, 2).concat(dateOfBirthArray.slice(2, 4)));
+  const hf2 = sumDigits(dateOfBirthArray.slice(0, 2).concat(dateOfBirthArray.slice(4, 8)));
+  return [
+    hf1,
+    hf2,
+    sumDigits(splitNumberIntoDigitArray(hf1 + hf2)),
+    sumDigits(dateOfBirthArray.slice(2, 4).concat(dateOfBirthArray.slice(4, 8))),
+  ];
+}
+
+/**
+ * calculation of the HP
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculateHP(dateOfBirthArray) {
+  const hp1 = sumDigits(dateOfBirthArray.slice(0, 2).concat(dateOfBirthArray.slice(2, 4)));
+  const hp2 = sumDigits(dateOfBirthArray.slice(2, 4).concat(dateOfBirthArray.slice(4, 8)));
+  return [
+    hp1,
+    hp2,
+    sumDigits(splitNumberIntoDigitArray(hp1 + hp2)),
+    sumDigits(dateOfBirthArray.slice(0, 2).concat(dateOfBirthArray.slice(2, 4))),
+  ];
+}
+
+/**
+ * calculation of the PM
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculatePM(dateOfBirthArray) {
+  // getting LZ value
+  const lzValue = calculateLZ(dateOfBirthArray);
+
+  // getting current month and year (month is returned from 0-11 -> therefore the +1)
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
+
+  return sumDigits(splitNumberIntoDigitArray(lzValue + currentMonth + currentYear));
+}
+
+/**
+ * calculation of the PT
+ * @param dateOfBirthArray an array of the digits of the birth date in the format ddmmyyyy
+ */
+export function calculatePT(dateOfBirthArray) {
+  // getting LZ value
+  const lzValue = calculateLZ(dateOfBirthArray);
+
+  // getting current month and year
+  const now = new Date();
+  const currentDay = now.getDate();
+
+  return sumDigits(splitNumberIntoDigitArray(lzValue + currentDay));
 }
 
 /*----------------------------------------------------------------------------------*/
