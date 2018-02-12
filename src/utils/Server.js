@@ -28,66 +28,6 @@ const GDR_INDEX_NUMBER_MAPPING = {
 };
 
 /**
- * calculates the development level numbers
- * @param {*} firstNames
- * @param {*} lastName
- * @param {*} dateOfBirth
- */
-export function calculateDevelopmentLevel(firstNames, lastName, dateOfBirth) {
-  return {
-    name: 'Entfaltungspotential',
-    numbers: [
-      {
-        name: 'Talenzahl',
-        type: 'row',
-        id: 'TZ',
-        textShort:
-          'Diese Menschen haben eine Gabe, Harmonie zu schaffen und für Gerechtigkeit einzutreten. Sie sind herzlich, liebenswürdig, sensibel und durch ihr freundliches, positives Wesen, ihr Einfühlungsvermögen und ihre Weitsicht sind sie ausgesprochen teamfähig. Mit ihrer bemerkenswerten Ausstrahlung gelingt es ihnen, Menschen zusammenzuführen und aufgrund ihrer natürlichen Sensibilität und Ausstrahlung eignen sie sich gut für Führungspositionen. Sie können die Folgen ihrer Entscheidungen und Aussagen sehr gut einschätzen und versuchen, immer diplomatisch zu sein. Ausgewogenheit ist für sie äußerst wichtig. Ihre Kreativität konzentriert sich oft im freien Ausdruck mit dem Körper: Singen, Tanzen, Bewegung. ',
-        result: {
-          type: 'number',
-          value: 8,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Kreativitätszahl',
-        type: 'row',
-        id: 'KZ',
-        textShort:
-          'Diese Person braucht Abwechslung im Leben, da ihr schnell langweilig wird.  Unterwegs zu sein ist für sie mit einer kindlichen Freude fürs Abenteuer verbunden Ihren kreativen Ausdruck erleben sie beim Tanzen oder Malen. Sie lieben das Wasser und sollten daher an einem See, Fluss oder am Meer regelmäßig sich aufhalten oder sogar wohnen.',
-        result: {
-          type: 'number',
-          value: 5,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Berufungszahl',
-        type: 'row',
-        id: 'BfZ',
-        textShort: '',
-        result: {
-          type: 'number',
-          value: 8,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Visionszahl',
-        type: 'row',
-        id: 'VisZ',
-        textShort: '',
-        result: {
-          type: 'number',
-          value: 3,
-        },
-        highlighted: false,
-      },
-    ],
-  };
-}
-
-/**
  * calculates the soul level numbers
  * @param {*} firstNames
  * @param {*} lastName
@@ -370,6 +310,7 @@ export function getUserGroupsAnalyses() {
 }
 
 /**
+<<<<<<< HEAD
  * alphabet
  */
 const ALPHABET = [
@@ -1068,6 +1009,8 @@ function getTextForResult(numberID, resultValue) {
     return 'Diese Person ist sehr sensibel, es fällt ihr schwer, ihre Bedürfnisse bewusst zu erfassen, Entscheidungen zu treffen, Prioritäten zu setzen und Absichten in die Tat umzusetzen. Die Herausforderung besteht darin, dem „Bauchgefühl“ zu vertrauen und mit Leichtigkeit, Freude und Gelassenheit durch das Leben zu gehen.';
   } else if (numberID === NUMBER_ID_GDRI) {
     return 'Diese Person zeigt Selbstsicherheit, Freiheitsliebe und einen starken Wunsch nach Unabhängigkeit und Selbstbestimmung. Sie ist mit ihrer Kraft und ihrer Intuition verbunden, vermag umzusetzen, was für sie Priorität hat, verspürt das Bedürfnis, zu sich zu stehen und ist sehr sensibel, doch fällt es ihr schwer, ihre Gefühle auszudrücken.';
+  } else if (numberID === NUMBER_ID_TZ) {
+    return 'Diese Menschen haben eine Gabe, Harmonie zu schaffen und für Gerechtigkeit einzutreten. Sie sind herzlich, liebenswürdig, sensibel und durch ihr freundliches, positives Wesen, ihr Einfühlungsvermögen und ihre Weitsicht sind sie ausgesprochen teamfähig. Mit ihrer bemerkenswerten Ausstrahlung gelingt es ihnen, Menschen zusammenzuführen und aufgrund ihrer natürlichen Sensibilität und Ausstrahlung eignen sie sich gut für Führungspositionen. Sie können die Folgen ihrer Entscheidungen und Aussagen sehr gut einschätzen und versuchen, immer diplomatisch zu sein. Ausgewogenheit ist für sie äußerst wichtig. Ihre Kreativität konzentriert sich oft im freien Ausdruck mit dem Körper: Singen, Tanzen, Bewegung. ';
   }
 
   return null;
@@ -1290,4 +1233,95 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
       },
     ],
   };
+}
+
+/**
+ * calculates the development level numbers
+ * @param {*} firstNames
+ * @param {*} lastName
+ * @param {*} dateOfBirth
+ */
+export function calculateDevelopmentLevel(firstNames, lastName, dateOfBirth) {
+  // getting process array representation of strings
+  const firstNameArray = preprocessString(firstNames);
+  const lastNameArray = preprocessString(lastName);
+
+  // getting date of birth ready
+  const dateOfBirthArray = preprocessDateOfBirth(dateOfBirth);
+
+  // calculating TZ
+  const tzValue = calculateTZ(dateOfBirthArray);
+  // getting description for calculated value
+  const tzValueText = getTextForResult(NUMBER_ID_TZ, tzValue);
+
+  // calculating KZ
+  const kzValue = calculateKZ(firstNameArray);
+  // getting description for calculated value
+  const tzValueText = getTextForResult(NUMBER_ID_TZ, tzValue);
+
+  return {
+    name: 'Entfaltungspotential',
+    numbers: [
+      {
+        name: 'Talenzahl',
+        type: 'row',
+        id: 'TZ',
+        textShort: tzValueText,
+        result: {
+          type: 'number',
+          value: tzValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Kreativitätszahl',
+        type: 'row',
+        id: 'KZ',
+        textShort:
+          'Diese Person braucht Abwechslung im Leben, da ihr schnell langweilig wird.  Unterwegs zu sein ist für sie mit einer kindlichen Freude fürs Abenteuer verbunden Ihren kreativen Ausdruck erleben sie beim Tanzen oder Malen. Sie lieben das Wasser und sollten daher an einem See, Fluss oder am Meer regelmäßig sich aufhalten oder sogar wohnen.',
+        result: {
+          type: 'number',
+          value: 5,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Berufungszahl',
+        type: 'row',
+        id: 'BfZ',
+        textShort: '',
+        result: {
+          type: 'number',
+          value: 8,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Visionszahl',
+        type: 'row',
+        id: 'VisZ',
+        textShort: '',
+        result: {
+          type: 'number',
+          value: 3,
+        },
+        highlighted: false,
+      },
+    ],
+  };
+}
+
+/*
+ * mocks server call for the groups for a user
+ */
+export function getUserGroups() {
+  return [
+    'Familie',
+    'Stammfamilie',
+    'Verwandte',
+    'Freunde',
+    'Beruf',
+    'Freizeit',
+    'Sonstige',
+  ];
 }

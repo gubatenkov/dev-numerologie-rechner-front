@@ -1,0 +1,11 @@
+.modal{
+    background-color: rgba(0,0,0,0.75) !important;
+}
+
+.noScroll {
+    overflow-y: hidden;
+}
+
+.modal-body {
+    padding-bottom: 0px !important;
+}
