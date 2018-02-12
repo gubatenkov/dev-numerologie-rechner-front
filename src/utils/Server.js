@@ -502,6 +502,9 @@ export function getUserGroupsAnalyses() {
   ];
 }
 
+/**
+ * mocks server call for the groups for a user
+ */
 export function getUserGroups() {
   return [
     'Familie',
