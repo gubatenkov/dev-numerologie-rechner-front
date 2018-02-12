@@ -34,6 +34,11 @@
     flex-wrap: wrap;
 }
 
+.ResultPersonalData h4 {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
 .table--bold {
     font-weight: bold;
 }

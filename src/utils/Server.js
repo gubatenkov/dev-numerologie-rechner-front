@@ -5,6 +5,15 @@ const NUMBER_ID_AZ = 'AZ';
 const NUMBER_ID_BZ = 'BZ';
 const NUMBER_ID_NNZ = 'NNZ';
 
+const NUMBER_ID_WZ = 'WZ';
+const NUMBER_ID_LZ = 'LZ';
+const NUMBER_ID_IZ = 'ID';
+const NUMBER_ID_GZ = 'GZ';
+const NUMBER_ID_GDR = 'GDR';
+const NUMBER_ID_GDRV = 'GDR-V';
+const NUMBER_ID_GDRF = 'GDR-F';
+const NUMBER_ID_GDRI = 'GDR-I';
+
 // mapping from matrix index (as used by the UI) and the GDR indexing scheme
 const GDR_INDEX_NUMBER_MAPPING = {
   0: 3,
@@ -17,118 +26,6 @@ const GDR_INDEX_NUMBER_MAPPING = {
   7: 4,
   8: 7,
 };
-
-/**
- * calculates the personal level numbers
- * @param {*} firstNames
- * @param {*} lastName
- * @param {*} dateOfBirth
- */
-export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
-  return {
-    name: 'Persönlichkeitsebene',
-    numbers: [
-      {
-        name: 'Wurzelzahl',
-        type: 'row',
-        id: 'WZ',
-        textShort:
-          'Diese Zahl zeigt eine Persönlichkeit, die viel Raum braucht, um sich zu entfalten. Es ist eine Persönlichkeit, die gerne im Mittelpunkt steht und einen wichtigen Beitrag für die Gesellschaft leisten möchte. Eine Herausforderung für diese Zahl ist es, zu lernen, dass sie wirklich auf sich achtet und Momente der Einsamkeit innerlich pflegt, um sich selbst authentisch wahrnehmen zu können.',
-        result: {
-          type: 'number',
-          value: 19,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Lebenszahl',
-        type: 'row',
-        id: 'LZ',
-        textShort: 'Lorem Ipsum Metus scelerisque ante sollicitudin commodo.',
-        result: {
-          type: 'number',
-          value: '27/9',
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Identitätszahl',
-        type: 'row',
-        id: 'IZ',
-        textShort:
-          'Der Mensch mit der Meisterzahl 22/4 ist eine Person, die idealistisch und gleichzeitig pragmatisch ist. Sie verfügt über eine enorme Kraft und ist in der Lage, die eigenen Pläne und Lebensvisionen umzusetzen. Einfühlungsvermögen, Charisma und Empathie zeichnen einen solchen Charakter aus. Sensibilität und Lebenskraft machen aus diesen Menschen besonders verlässliche Führungskräfte und Mitarbeiter/innen, die sich engagiert und enthusiastisch einsetzen. Sie verfügen über eine starke Willenskraft und eine positive Lebenseinstellung. Wenn sie sich aber eingeschränkt fühlen, wirkt die große Menge an positiver Energie selbstzerstörerisch und richtet sich gegen die Person selbst. Manchmal neigt der 22/4-Mensch dazu, sich anzupassen, und führt aus dem Bedürfnis nach Liebe und Anerkennung sowie aus Rücksicht auf andere nicht das Leben, das zu ihm passt. In diesem Fall werden seine konstruktiven Kräfte zu seelischem Gift und verursachen starke Belastungen. Teilweise äußern sich diese in Zurückgezogenheit und in psychosomatischen Beschwerden. Persönlichkeiten mit dieser Lebenszahl sind intelligent und kreativ und versuchen, Klarheit und Struktur in ihrem Umfeld zu schaffen. Bezeichnend ist ein starker Sinn für Gerechtigkeit. Wenn dieser Mensch es nicht schafft, die Sicherheit, die er sucht, in sich selbst zu finden, dann hält er im Außen Ausschau nach ihr: entweder, indem er etwas schafft und leistet, oder, indem er sich stark an Prinzipien hält und einen Ehrenkodex entwickelt. Im Laufe ihres Lebens verspüren die 22/4-Personen immer wieder das Bedürfnis, sich weiter zu entfalten. In jeder Situation und durch jeden Menschen, mit denen sie in Kontakt treten, finden sie eine Chance für ihre Persönlichkeitsentwicklung sowie für die Umsetzung ihrer Pläne und Wünsche. Sie brauchen einen gewissen Druck und ein Ziel vor Augen, um sich lebendig zu fühlen. Routine und festgefahrene Gewohnheiten langweilen sie und bringen sie dazu, sich anders zu orientieren. Aus diesem Grund werden Beziehungen oder Freundschaften, die diese Menschen nicht herausfordern, uninteressant. Gerechtigkeit und Beobachtungsgabe zeichnen den Menschen mit der Meisterzahl 22/4 aus. ',
-        result: {
-          type: 'number',
-          value: 3,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Gesundheitszahl',
-        type: 'row',
-        id: 'GZ',
-        textShort: '',
-        result: {
-          type: 'number',
-          value: 4,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'Geburtsdatumsraster',
-        type: 'row',
-        id: 'GDR',
-        textShort: '',
-        result: {
-          type: 'matrix',
-          dimensions: {
-            rows: 3,
-            cols: 3,
-          },
-          values: [3, 6, 9, null, null, null, 11, null, 7],
-          highlighted: [6, 8],
-        },
-        highlighted: false,
-      },
-      {
-        name: 'GDR vorhandene Zahl',
-        type: 'row',
-        id: 'GDR-V',
-        textShort:
-          'Dieser Mensch besitzt ein natürliches Gefühl für Schönheit, eine ausgeprägte Empathie und fühlt sich seinem Umfeld tief verbunden. Daher ist ihm das Wohlbefinden der Mitmenschen sehr am Herzen. Die Lernaufgabe besteht darin, das Leben im Allgemeinen und seine Mitmenschen im Besonderen mit größerem Realitätssinn zu betrachten. ',
-        result: {
-          type: 'number',
-          value: 2,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'GDR fehlende Zahl',
-        type: 'row',
-        id: 'GDR-F',
-        textShort:
-          'Diese Person ist sehr sensibel, es fällt ihr schwer, ihre Bedürfnisse bewusst zu erfassen, Entscheidungen zu treffen, Prioritäten zu setzen und Absichten in die Tat umzusetzen. Die Herausforderung besteht darin, dem „Bauchgefühl“ zu vertrauen und mit Leichtigkeit, Freude und Gelassenheit durch das Leben zu gehen.',
-        result: {
-          type: 'number',
-          value: 3,
-        },
-        highlighted: false,
-      },
-      {
-        name: 'GDR isolierte Zahlen',
-        type: 'row',
-        id: 'GDR-I',
-        textShort:
-          'Diese Person zeigt Selbstsicherheit, Freiheitsliebe und einen starken Wunsch nach Unabhängigkeit und Selbstbestimmung. Sie ist mit ihrer Kraft und ihrer Intuition verbunden, vermag umzusetzen, was für sie Priorität hat, verspürt das Bedürfnis, zu sich zu stehen und ist sehr sensibel, doch fällt es ihr schwer, ihre Gefühle auszudrücken. ',
-        result: {
-          type: 'number',
-          value: 1,
-        },
-        highlighted: false,
-      },
-    ],
-  };
-}
 
 /**
  * calculates the development level numbers
@@ -580,8 +477,35 @@ function sumDigits(digits, reduce = true, exceptedFromReduction = []) {
   return sum;
 }
 
-function sanitizeDateOfBirth(dateofBirth) {
-  return true;
+/**
+ * sums up the digits of the input digits and reduces to one digit
+ * if required
+ * @param {array(int)} digits the digits to sum up as an array of numbers
+ * @param {bool} reduce if set to true, the method will reduce results with
+ * more than one digit to one digit (except for if contained in the passed exceptions)
+ * @param {*} exceptedFromReduction if @param reduce is set to true, the numbers passed here
+ * are NOT reduced
+ */
+export function sumDigitsWithIntermediateValues(
+  digits,
+  exceptedFromReduction = [],
+) {
+  // inetmediate sum values
+  let digitValues = digits;
+  const intermediateSumValues = [parseInt(digitValues.join(''), 10)];
+  let sum = 0;
+  do {
+    // calculating sum of digits
+    sum = digitValues.reduce((a, b) => a + b);
+
+    // pushing to intermediate values
+    intermediateSumValues.push(sum);
+
+    // splitting up sum values
+    digitValues = splitNumberIntoDigitArray(sum);
+  } while (sum > 9 && !exceptedFromReduction.includes(sum));
+
+  return intermediateSumValues;
 }
 
 /**
@@ -591,10 +515,6 @@ function sanitizeDateOfBirth(dateofBirth) {
  * @param dateOfBirth a string in the format dd.mm.yyyy representing the date
  */
 export function preprocessDateOfBirth(dateOfBirth) {
-  // returning null if sanitization fails
-  if (!sanitizeDateOfBirth(dateOfBirth)) {
-    return null;
-  }
   // replacing all dots -> splitting into chars and
   // removing emtpy elements and spaces
   return splitNumberIntoDigitArray(dateOfBirth.replace(/\./g, ''));
@@ -766,7 +686,12 @@ export function calculateGDR(dateOfBirthArray) {
 
   // counting occurences of numbers in dateOfBirth
   const occurencesDateOfBirth = _.countBy(dateOfBirthArray);
-  // const occurencesDateOfBirth = _.countBy()
+
+  // counting occurences of numbers in lz+wz with intermediate numbers
+  const lzValue = calculateLZ(dateOfBirthArray);
+  const wzValue = calculateWZ(dateOfBirthArray);
+  const lzWzSumsWithIntermediateArray = sumDigitsWithIntermediateValues(splitNumberIntoDigitArray(lzValue + wzValue));
+  const occurenceslzWzSumWithIntermediate = _.countBy(lzWzSumsWithIntermediateArray);
 
   for (let index = 0; index < 9; index += 1) {
     // defining entry for gdr
@@ -780,8 +705,9 @@ export function calculateGDR(dateOfBirthArray) {
       : 0;
 
     // 2) calculate frequency of number in LZ + WZ and intermediate values (recucing)
-    // TODO how is this calculated
-    entry[1] = 0;
+    entry[1] = occurenceslzWzSumWithIntermediate[currentNumber]
+      ? occurenceslzWzSumWithIntermediate[currentNumber]
+      : 0;
 
     // adding entry to result
     GDR[index] = entry;
@@ -1128,6 +1054,20 @@ function getTextForResult(numberID, resultValue) {
     return 'Diese Berufszahl weist auf Dynamik und persönliche Unabhängigkeit hin. Personen, denen die Zahl 1 zugeordnet wird, sind kreativ und können gut organisieren. Sie eignen sich für administrative Tätigkeiten und Führungspositionen, denn sie arbeiten gerne selbstständig, besitzen viel Ausdauer und verfügen über eine rasche Auffassungsgabe sowie logisches Denken. Diese Personen können gut organisieren, besitzen Ausdauer, eine rasche Auffassungsgabe und logisches Denken, arbeiten gerne selbstständig, eignen sich für administrative Tätigkeiten, Führungspositionen, Angestelltenverhältnis oder Selbstständigkeit. Berufe: LektorIn, VerlagsleiterIn, SchriftstellerIn, TheaterproduzentIn, SchauspielerIn, wissenschaftliche oder technische Berufe.';
   } else if (numberID === NUMBER_ID_NNZ) {
     return 'Das Kind wird oft in eine starre Struktur gepresst. Beide Eltern sind meist berufstätig und die Betreuung der Kinder muss gut nebenher funktionieren. Es gibt wenig Freude, Gelassenheit und Leichtigkeit. Zwei Glaubenssätze werden gelebt: „Ohne Fleiß kein Preis“ und „Das Leben ist schwer, ohne Erfolg ist keine Entwicklung möglich“. Für die Eltern ist es wichtig, die Fassade nach außen hin aufrechtzuerhalten. Diese Kinder entwickeln die Verhaltensstrategien, brav zu sein und sich anzupassen.';
+  } else if (numberID === NUMBER_ID_WZ) {
+    return 'Diese Zahl zeigt eine Persönlichkeit, die viel Raum braucht, um sich zu entfalten. Es ist eine Persönlichkeit, die gerne im Mittelpunkt steht und einen wichtigen Beitrag für die Gesellschaft leisten möchte. Eine Herausforderung für diese Zahl ist es, zu lernen, dass sie wirklich auf sich achtet und Momente der Einsamkeit innerlich pflegt, um sich selbst authentisch wahrnehmen zu können.';
+  } else if (numberID === NUMBER_ID_IZ) {
+    return 'Der Mensch mit der Meisterzahl 22/4 ist eine Person, die idealistisch und gleichzeitig pragmatisch ist. Sie verfügt über eine enorme Kraft und ist in der Lage, die eigenen Pläne und Lebensvisionen umzusetzen. Einfühlungsvermögen, Charisma und Empathie zeichnen einen solchen Charakter aus. Sensibilität und Lebenskraft machen aus diesen Menschen besonders verlässliche Führungskräfte und Mitarbeiter/innen, die sich engagiert und enthusiastisch einsetzen. Sie verfügen über eine starke Willenskraft und eine positive Lebenseinstellung. Wenn sie sich aber eingeschränkt fühlen, wirkt die große Menge an positiver Energie selbstzerstörerisch und richtet sich gegen die Person selbst. Manchmal neigt der 22/4-Mensch dazu, sich anzupassen, und führt aus dem Bedürfnis nach Liebe und Anerkennung sowie aus Rücksicht auf andere nicht das Leben, das zu ihm passt. In diesem Fall werden seine konstruktiven Kräfte zu seelischem Gift und verursachen starke Belastungen. Teilweise äußern sich diese in Zurückgezogenheit und in psychosomatischen Beschwerden. Persönlichkeiten mit dieser Lebenszahl sind intelligent und kreativ und versuchen, Klarheit und Struktur in ihrem Umfeld zu schaffen. Bezeichnend ist ein starker Sinn für Gerechtigkeit. Wenn dieser Mensch es nicht schafft, die Sicherheit, die er sucht, in sich selbst zu finden, dann hält er im Außen Ausschau nach ihr: entweder, indem er etwas schafft und leistet, oder, indem er sich stark an Prinzipien hält und einen Ehrenkodex entwickelt. Im Laufe ihres Lebens verspüren die 22/4-Personen immer wieder das Bedürfnis, sich weiter zu entfalten. In jeder Situation und durch jeden Menschen, mit denen sie in Kontakt treten, finden sie eine Chance für ihre Persönlichkeitsentwicklung sowie für die Umsetzung ihrer Pläne und Wünsche. Sie brauchen einen gewissen Druck und ein Ziel vor Augen, um sich lebendig zu fühlen. Routine und festgefahrene Gewohnheiten langweilen sie und bringen sie dazu, sich anders zu orientieren. Aus diesem Grund werden Beziehungen oder Freundschaften, die diese Menschen nicht herausfordern, uninteressant. Gerechtigkeit und Beobachtungsgabe zeichnen den Menschen mit der Meisterzahl 22/4 aus.';
+  } else if (numberID === NUMBER_ID_GZ) {
+    return '';
+  } else if (numberID === NUMBER_ID_GDR) {
+    return '';
+  } else if (numberID === NUMBER_ID_GDRV) {
+    return 'Diese Person ist sehr sensibel, es fällt ihr schwer, ihre Bedürfnisse bewusst zu erfassen, Entscheidungen zu treffen, Prioritäten zu setzen und Absichten in die Tat umzusetzen. Die Herausforderung besteht darin, dem „Bauchgefühl“ zu vertrauen und mit Leichtigkeit, Freude und Gelassenheit durch das Leben zu gehen.';
+  } else if (numberID === NUMBER_ID_GDRF) {
+    return 'Diese Person ist sehr sensibel, es fällt ihr schwer, ihre Bedürfnisse bewusst zu erfassen, Entscheidungen zu treffen, Prioritäten zu setzen und Absichten in die Tat umzusetzen. Die Herausforderung besteht darin, dem „Bauchgefühl“ zu vertrauen und mit Leichtigkeit, Freude und Gelassenheit durch das Leben zu gehen.';
+  } else if (numberID === NUMBER_ID_GDRI) {
+    return 'Diese Person zeigt Selbstsicherheit, Freiheitsliebe und einen starken Wunsch nach Unabhängigkeit und Selbstbestimmung. Sie ist mit ihrer Kraft und ihrer Intuition verbunden, vermag umzusetzen, was für sie Priorität hat, verspürt das Bedürfnis, zu sich zu stehen und ist sehr sensibel, doch fällt es ihr schwer, ihre Gefühle auszudrücken.';
   }
 
   return null;
@@ -1145,17 +1085,17 @@ export function calculateExpressionLevel(firstNames, lastName) {
 
   // calculating AZ
   const azValue = calculateAZ(firstNamesArray, lastNameArray);
-  // TODO getting description for calculated value
+  // getting description for calculated value
   const azValueText = getTextForResult(NUMBER_ID_AZ, azValue);
 
   // caclulating BZ
   const bzValue = calculateBZ(firstNamesArray, lastNameArray);
-  // TODO getting description for calculated value
+  // getting description for calculated value
   const bzValueText = getTextForResult(NUMBER_ID_BZ, bzValue);
 
   // calculating NNZ
   const nnzValue = calculateNNZ(lastNameArray);
-  // TODO getting description for calculated value
+  // getting description for calculated value
   const nnzValueText = getTextForResult(NUMBER_ID_NNZ, nnzValue);
 
   return {
@@ -1191,6 +1131,160 @@ export function calculateExpressionLevel(firstNames, lastName) {
         result: {
           type: 'number',
           value: nnzValue,
+        },
+        highlighted: false,
+      },
+    ],
+  };
+}
+
+/**
+ * calculates the personal level numbers
+ * @param {*} firstNames
+ * @param {*} lastName
+ * @param {*} dateOfBirth
+ */
+export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
+  // getting process array representation of strings
+  const firstNamesArray = preprocessString(firstNames);
+  const lastNameArray = preprocessString(lastName);
+
+  // getting date of birth ready
+  const dateOfBirthArray = preprocessDateOfBirth(dateOfBirth);
+
+  // calculating WZ
+  const wzValue = calculateWZ(dateOfBirthArray);
+  // getting description for calculated value
+  const wzValueText = getTextForResult(NUMBER_ID_WZ, wzValue);
+
+  // calculating LZ
+  const lzValue = calculateLZ(dateOfBirthArray);
+  // getting description for calculated value
+  const lzValueText = getTextForResult(NUMBER_ID_LZ, lzValue);
+
+  // calculating Iz
+  const izValue = calculateIZ(firstNamesArray, lastNameArray);
+  // getting description for calculated value
+  const izValueText = getTextForResult(NUMBER_ID_IZ, izValue);
+
+  // calculating GZ
+  const gzValue = calculateGZ(dateOfBirthArray);
+  // getting description for calculated value
+  const gzValueText = getTextForResult(NUMBER_ID_GZ, gzValue);
+
+  // calculating GDR
+  const gdrValue = calculateGDR(dateOfBirthArray);
+  // getting description for calculated value
+  const gdrValueText = getTextForResult(NUMBER_ID_GDR, gdrValue);
+
+  // calculating GDRV
+  const gdrvValue = calculateGDRV(gdrValue);
+  // getting description for calculated value
+  const gdrvValueText = getTextForResult(NUMBER_ID_GDRV, gdrvValue);
+
+  // calculating GDRF
+  const gdrfValue = calculateGDRF(gdrValue);
+  // getting description for calculated value
+  const gdrfValueText = getTextForResult(NUMBER_ID_GDRF, gdrfValue);
+
+  // calculating GDRI
+  const gdriValue = calculateGDRI(gdrValue);
+  // getting description for calculated value
+  const gdriValueText = getTextForResult(NUMBER_ID_GDRI, gdriValue);
+
+  return {
+    name: 'Persönlichkeitsebene',
+    numbers: [
+      {
+        name: 'Wurzelzahl',
+        type: 'row',
+        id: 'WZ',
+        textShort: wzValueText,
+        result: {
+          type: 'number',
+          value: wzValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Lebenszahl',
+        type: 'row',
+        id: 'LZ',
+        textShort: lzValueText,
+        result: {
+          type: 'number',
+          value: lzValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Identitätszahl',
+        type: 'row',
+        id: 'IZ',
+        textShort: izValueText,
+        result: {
+          type: 'number',
+          value: izValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Gesundheitszahl',
+        type: 'row',
+        id: 'GZ',
+        textShort: gzValueText,
+        result: {
+          type: 'number',
+          value: gzValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'Geburtsdatumsraster',
+        type: 'row',
+        id: 'GDR',
+        textShort: gdrValueText,
+        result: {
+          type: 'matrix',
+          dimensions: {
+            rows: 3,
+            cols: 3,
+          },
+          values: gdrValue,
+          highlighted: [6, 8],
+        },
+        highlighted: false,
+      },
+      {
+        name: 'GDR vorhandene Zahl',
+        type: 'row',
+        id: 'GDR-V',
+        textShort: gdrvValueText,
+        result: {
+          type: 'number',
+          value: gdrvValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'GDR fehlende Zahl',
+        type: 'row',
+        id: 'GDR-F',
+        textShort: gdrfValueText,
+        result: {
+          type: 'number',
+          value: gdrfValue,
+        },
+        highlighted: false,
+      },
+      {
+        name: 'GDR isolierte Zahlen',
+        type: 'row',
+        id: 'GDR-I',
+        textShort: gdriValueText,
+        result: {
+          type: 'number',
+          value: gdriValue,
         },
         highlighted: false,
       },

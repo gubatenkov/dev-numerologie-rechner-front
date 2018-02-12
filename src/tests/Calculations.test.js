@@ -29,6 +29,7 @@ import {
   calculateVZE,
   calculateHF,
   calculateHP,
+  sumDigitsWithIntermediateValues,
 } from '../utils/Server';
 
 // constants
@@ -73,8 +74,6 @@ const REF_VZE = 9;
 
 const REF_HF = [4, 9, 4, 4];
 const REF_HP = [4, 4, 8, 4];
-
-const REF_PT = 0;
 
 /* String umlaut handling */
 it('replaces lowercase umlauts in name preprocessing', () => {
@@ -346,4 +345,13 @@ it('HF is calculated according to reference value', () => {
 /* HP calculation */
 it('HP is calculated according to reference value', () => {
   expect(calculateHP(preprocessDateOfBirth(TEST_DATE_OF_BIRTH))).toEqual(REF_HP);
+});
+
+/* sumup with intermediate calculations */
+it('sumup with intermediate values should reutrn an array of intediate values', () => {
+  expect(sumDigitsWithIntermediateValues([9, 8])).toEqual([98, 17, 8]);
+});
+
+it('sumup with intermediate values should reutrn an array of intediate values', () => {
+  expect(sumDigitsWithIntermediateValues([1, 6])).toEqual([16, 7]);
 });
