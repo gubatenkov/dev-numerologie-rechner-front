@@ -12,12 +12,12 @@ import PrivateRoute from './utils/PrivateRoute';
 import registerServiceWorker from './utils/registerServiceWorker';
 import isUserAuthenticated from './utils/AuthUtils';
 
-import './styles/theme.css';
 import './styles/bootstrap-extend.css';
 import './styles/bootstrap.css';
 import './styles/brand-icons/brand-icons.min.css';
 import './styles/web-icons/web-icons.min.css';
 import './styles/font-awesome/font-awesome.min.css';
+import './styles/theme.css';
 
 // <PrivateRoute path="/analysisInput"
 // isAuthenticated={isUserAuthenticated} loginPath='/login' component={AnalysisInput} />

@@ -501,3 +501,15 @@ export function getUserGroupsAnalyses() {
     },
   ];
 }
+
+export function getUserGroups() {
+  return [
+    'Familie',
+    'Stammfamilie',
+    'Verwandte',
+    'Freunde',
+    'Beruf',
+    'Freizeit',
+    'Sonstige',
+  ];
+}
