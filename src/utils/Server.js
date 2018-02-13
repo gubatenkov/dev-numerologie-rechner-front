@@ -13,6 +13,7 @@ const NUMBER_ID_GDR = 'GDR';
 const NUMBER_ID_GDRV = 'GDR-V';
 const NUMBER_ID_GDRF = 'GDR-F';
 const NUMBER_ID_GDRI = 'GDR-I';
+const NUMBER_ID_TZ = 'TZ';
 
 // mapping from matrix index (as used by the UI) and the GDR indexing scheme
 const GDR_INDEX_NUMBER_MAPPING = {
@@ -1251,11 +1252,6 @@ export function calculateDevelopmentLevel(firstNames, lastName, dateOfBirth) {
 
   // calculating TZ
   const tzValue = calculateTZ(dateOfBirthArray);
-  // getting description for calculated value
-  const tzValueText = getTextForResult(NUMBER_ID_TZ, tzValue);
-
-  // calculating KZ
-  const kzValue = calculateKZ(firstNameArray);
   // getting description for calculated value
   const tzValueText = getTextForResult(NUMBER_ID_TZ, tzValue);
 
