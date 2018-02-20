@@ -200,12 +200,12 @@ class LightBoxDetailView extends Component {
               <i className="icon wb-chevron-left" />
             </button>
           </div>
-          <div className="col-10">
+          <div className="col-8">
             <Panel
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}
             >
-              {currentElement.elementContent}
+              <div className="LightBoxDetailView__text">{currentElement.elementContent}</div>
             </Panel>
           </div>
           <div className="LightBoxDetailView__ButtonArea">
