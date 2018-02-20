@@ -11,6 +11,9 @@ const TYPE_ID_NUMBER = 'number';
 const TYPE_ID_LIST = 'list';
 const TYPE_ID_MATRIX = 'matrix';
 
+// chars in description preview
+const LENGTH_DESCRIPITON_PREVIEW = 50;
+
 /**
  * row rendering a single row item of an analysis result
  */
@@ -28,7 +31,7 @@ class ResultTableRow extends Component {
     let rowTextRepresentation = null;
     if (rowText && rowText && rowText.length > 0) {
       rowTextRepresentation = [
-        `${rowText.substring(0, 80)}...  `,
+        `${rowText.substring(0, LENGTH_DESCRIPITON_PREVIEW)}...  `,
         <a key="readIndicator" role="Link" onClick={this.handleMoreClick}>
           Lesen
         </a>,

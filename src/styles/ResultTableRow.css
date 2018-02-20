@@ -22,6 +22,7 @@
     width: 20vh !important;
     height: 20vh !important;
     text-align: center;
+    margin-bottom: 0 !important;
 }
 
 .tableRow__matrix td {
