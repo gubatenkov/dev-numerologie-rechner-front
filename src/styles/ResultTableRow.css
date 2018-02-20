@@ -1,5 +1,5 @@
 .tableRow__name {
-    width: 20%;
+    width: 30%;
 }
 
 .tableRow__id {
@@ -7,7 +7,8 @@
 }
 
 .tableRow__text {
-    width: 55%;
+    width: 40%;
+    overflow-wrap: break-word;
 }
 
 .tableRow--highlighted {

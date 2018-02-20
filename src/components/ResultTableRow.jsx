@@ -106,7 +106,7 @@ class ResultTableRow extends Component {
    * renders the cells of a custom item
    */
   renderCustomRow(rowItem) {
-    // determining last element to right align
+    // determining last element to align properly
     const lastIndex = rowItem.values.length - 1;
     return (
       <tr
@@ -118,7 +118,7 @@ class ResultTableRow extends Component {
           let cellStyle = '';
           let cellValue = value;
           if (index === lastIndex) {
-            cellStyle += 'text-right';
+            cellStyle += 'tableRow__text';
             cellValue = this.getTextRepresentation(value);
           }
           if (index === 0) {
@@ -156,7 +156,7 @@ class ResultTableRow extends Component {
         <td className="table--bold tableRow__name">{rowItem.name}</td>
         <td className="tableRow__id ">{rowItem.id}</td>
         <td className="table--bold">{contentColumn}</td>
-        <td className="text-right tableRow__text">
+        <td className="tableRow__text">
           {this.getTextRepresentation(rowItem.textShort)}
         </td>
       </tr>
