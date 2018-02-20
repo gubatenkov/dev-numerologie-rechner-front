@@ -11,8 +11,10 @@
 }
 
 .tableRow--highlighted {
-    border-color: #00b3d4;
-    border-style: solid;
+    /*border-color: #00b3d4;*/
+    background-color: #00b3d4;
+    color: white;
+    opacity: 0.7;
 }
 
 .tableRow__matrix {
