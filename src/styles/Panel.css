@@ -17,3 +17,8 @@
 .panel {
     margin-bottom: 0 !important;
 }
+
+.panel-body {
+    padding-top: 15px !important;
+    padding-bottom: 0px !important;
+}
