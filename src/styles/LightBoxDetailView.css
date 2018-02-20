@@ -63,3 +63,11 @@
 .noScroll {
     overflow-y: hidden;
 }
+
+.LightBoxDetailView__text {
+    line-height: 200%;
+    font-size: large;
+
+    margin-left: 5%;
+    margin-right: 5%;
+} 
