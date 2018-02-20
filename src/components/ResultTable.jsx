@@ -23,12 +23,29 @@ class ResultTable extends Component {
    * renders the heading of the table
    */
   renderHeadings() {
+    // determining last header element to align properly
+    const lastIndex = this.props.data.headings.length - 1;
     return (
       <thead>
         <tr>
-          {this.props.data.headings.map((heading, index) => (
-            <th key={heading || this.props.data.name + index}>{heading}</th>
-          ))}
+          {this.props.data.headings.map((heading, index) => {
+            // setting style based on index
+            let headingStyleClass = '';
+            if (index === 0) {
+              headingStyleClass += 'tableRow__name';
+            } else if (index === lastIndex) {
+              headingStyleClass += 'tableRow__text';
+            }
+
+            return (
+              <th
+                key={heading || this.props.data.name + index}
+                className={headingStyleClass}
+              >
+                {heading}
+              </th>
+            );
+          })}
         </tr>
       </thead>
     );
@@ -41,7 +58,7 @@ class ResultTable extends Component {
     return [
       <table
         key={`ResultTable ${this.props.data.name}`}
-        className="table table-striped ResultTable--non-selectable ResultTable--non-printable"
+        className="ResultTable table table-striped ResultTable--non-selectable ResultTable--non-printable"
       >
         {this.props.data.headings &&
           this.renderHeadings(this.props.data.headings)}
