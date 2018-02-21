@@ -210,9 +210,12 @@ class LightBoxDetailView extends Component {
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}
             >
-              <div className="LightBoxDetailView__text">
+              <div className="LightBoxDetailView__text LightBoxDetailView--non-printable">
                 {currentElement.elementContent}
               </div>
+              <h3 className="LightBoxDetailView--printWatermark">
+                Die Resultate können nur mit Druckpaket ausgedruckt werden.
+              </h3>,
             </Panel>
           </div>
           <div className="LightBoxDetailView__ButtonArea">

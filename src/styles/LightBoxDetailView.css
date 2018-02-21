@@ -74,4 +74,20 @@
 
     margin-left: 5%;
     margin-right: 5%;
-} 
+    user-select: none;
+}
+
+.LightBoxDetailView--printWatermark {
+    display: none;
+}
+
+/*prevents printing of result information*/
+@media print {    
+    .LightBoxDetailView--printWatermark {
+        display: block;
+    }
+
+    .LightBoxDetailView--non-printable, .LightBoxDetailView--non-printable * {
+        display: none !important;
+    }
+}
