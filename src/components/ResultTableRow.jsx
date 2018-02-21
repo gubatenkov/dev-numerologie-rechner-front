@@ -64,6 +64,7 @@ class ResultTableRow extends Component {
               key={
                 resultItem.name +
                 resultItem.id +
+                rowIndex +
                 resultItem.result.values[rowIndex]
               }
             >
