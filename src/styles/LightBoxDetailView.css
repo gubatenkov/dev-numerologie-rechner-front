@@ -9,8 +9,11 @@
 
 .LightBoxDetailView__ContentOverview {
     background-color: white;
-    min-height: 10%;
+    min-height: 5em;
     flex: 0, 0, auto;
+    flex-shrink: 0;
+    flex-grow: 0;
+    padding-bottom: 1em;
 
     display: flex;
     justify-content: center;
