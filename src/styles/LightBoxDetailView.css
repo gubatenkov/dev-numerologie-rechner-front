@@ -37,6 +37,7 @@
 
 .LightBoxDetailView__Panel {
     height: 100%;
+    overflow-y: auto;
 }
 
 
