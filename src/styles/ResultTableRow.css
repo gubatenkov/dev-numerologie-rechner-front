@@ -13,9 +13,13 @@
 
 .tableRow--highlighted {
     /*border-color: #00b3d4;*/
-    background-color: #00b3d4;
+    background-color: #00b3d4 !important;
     color: white;
     opacity: 0.7;
+}
+
+.tableRow--highlighted a {
+    color: white;
 }
 
 .tableRow__matrix {
