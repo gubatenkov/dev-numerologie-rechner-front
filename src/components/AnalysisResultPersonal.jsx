@@ -56,7 +56,16 @@ class AnalysisResultPersonal extends Component {
         dateOfBirth,
       ),
       soulLevel: calculateSoulLevelNumbers(firstName, lastName, dateOfBirth),
-      timeLevel: calculateTimeLevelNumbers(firstName, lastName, dateOfBirth),
+      vibratoryCycles: calculateTimeLevelNumbers(
+        firstName,
+        lastName,
+        dateOfBirth,
+      )[0],
+      challengesHighs: calculateTimeLevelNumbers(
+        firstName,
+        lastName,
+        dateOfBirth,
+      )[1],
       firstName,
       lastName,
       dateOfBirth,
@@ -76,8 +85,8 @@ class AnalysisResultPersonal extends Component {
       state.personalityLevel,
       state.developmentLevel,
       state.soulLevel,
-      state.timeLevel[0],
-      state.timeLevel[1],
+      state.vibratoryCycles,
+      state.challengesHighs,
     ];
   }
 
@@ -102,11 +111,19 @@ class AnalysisResultPersonal extends Component {
       return;
     }
 
+    // calculating index in filtered data passed to details component
+    // indeNew = index - #of items removed by filtering before passed to detail component
+    const sectionUpToIndex = this.state[dataKey].numbers.slice(0, index);
+    const removedElementsToIndexCount =
+      sectionUpToIndex.length -
+      sectionUpToIndex.filter(item => this.doesElementHaveDescription(item))
+        .length;
+
     // opening detail view
     this.setState({
       resultTextDetailViewOpen: true,
       resultTextDetailViewSectionIndex: dataIndex,
-      resultTextDetailViewElementIndex: index,
+      resultTextDetailViewElementIndex: index - removedElementsToIndexCount,
     });
   };
 
@@ -122,6 +139,28 @@ class AnalysisResultPersonal extends Component {
   };
 
   /**
+   * checks whether an element has a description text element present
+   * @param element the element to check for
+   * @returns true if contains valid description, false otherwise
+   */
+  doesElementHaveDescription(element) {
+    if (element.type === 'row') {
+      return (
+        element.result.value &&
+        element.textShort &&
+        element.textShort.length > 0
+      );
+    } else if (element.type === 'customRow') {
+      return (
+        element.descriptionTextIndex &&
+        element.descriptionTextIndex >= 0 &&
+        element.values[element.descriptionTextIndex]
+      );
+    }
+    return false;
+  }
+
+  /**
    * maps the state of this component to one that can be used
    * by the detail component
    * @param state the state to be transformed
@@ -132,22 +171,7 @@ class AnalysisResultPersonal extends Component {
       sectionName: item.name,
       sectionElements: item.numbers
         // filtering elements that are not suitable for displaying as detail view
-        .filter((numberItem) => {
-          if (numberItem.type === 'row') {
-            return (
-              numberItem.result.value &&
-              numberItem.textShort &&
-              numberItem.textShort.length > 0
-            );
-          } else if (numberItem.type === 'customRow') {
-            return (
-              numberItem.descriptionTextIndex &&
-              numberItem.descriptionTextIndex >= 0 &&
-              numberItem.values[numberItem.descriptionTextIndex]
-            );
-          }
-          return false;
-        })
+        .filter(numberItem => this.doesElementHaveDescription(numberItem))
         // mapping those elements to data for detail
         .map((numberItem) => {
           if (numberItem.type === 'row') {
@@ -247,13 +271,13 @@ class AnalysisResultPersonal extends Component {
             </Panel>
             <Panel title="Zeitliche Ebene" id="TimeResult">
               <ResultTable
-                data={this.state.timeLevel[0]}
-                dataKey="timeLevel"
+                data={this.state.vibratoryCycles}
+                dataKey="vibratoryCycles"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
               <ResultTable
-                data={this.state.timeLevel[1]}
-                dataKey="timeLevel"
+                data={this.state.challengesHighs}
+                dataKey="challengesHighs"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>

@@ -146,6 +146,11 @@ class LightBoxDetailView extends Component {
     const currentElement = this.props.data[this.state.currentSectionIndex]
       .sectionElements[this.state.currentElementIndex];
 
+    // if for ome reason, the current element is invalid > rendering nothing
+    if (!currentElement) {
+      return null;
+    }
+
     return (
       <div
         className="LightBoxDetailView__Container modal-backdrop"
@@ -159,7 +164,7 @@ class LightBoxDetailView extends Component {
         <div className="LightBoxDetailView__ContentOverview">
           <Steps horizontal>
             {this.props.data.map((item, index) => {
-              // getting length of current section
+              // getting length of current section (only elements that have content)
               const currentSectionLength = item.sectionElements.length;
 
               // determining index to display for step
@@ -205,7 +210,9 @@ class LightBoxDetailView extends Component {
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}
             >
-              <div className="LightBoxDetailView__text">{currentElement.elementContent}</div>
+              <div className="LightBoxDetailView__text">
+                {currentElement.elementContent}
+              </div>
             </Panel>
           </div>
           <div className="LightBoxDetailView__ButtonArea">
