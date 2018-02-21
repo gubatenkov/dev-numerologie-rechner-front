@@ -1,3 +1,7 @@
+.ResultTable {
+    table-layout: fixed;
+}
+
 .ResultTable--highlighted {
     background-color: #FFC0BF;
 }

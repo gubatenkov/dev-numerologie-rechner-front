@@ -11,6 +11,9 @@ const TYPE_ID_NUMBER = 'number';
 const TYPE_ID_LIST = 'list';
 const TYPE_ID_MATRIX = 'matrix';
 
+// chars in description preview
+const LENGTH_DESCRIPITON_PREVIEW = 50;
+
 /**
  * row rendering a single row item of an analysis result
  */
@@ -28,8 +31,8 @@ class ResultTableRow extends Component {
     let rowTextRepresentation = null;
     if (rowText && rowText && rowText.length > 0) {
       rowTextRepresentation = [
-        `${rowText.substring(0, 80)}...  `,
-        <a key="readIndicator" role="Link" onClick={this.handleMoreClick}>
+        `${rowText.substring(0, LENGTH_DESCRIPITON_PREVIEW)}...  `,
+        <a href="#" key="readIndicator" onClick={this.handleMoreClick}>
           Lesen
         </a>,
       ];
@@ -106,7 +109,7 @@ class ResultTableRow extends Component {
    * renders the cells of a custom item
    */
   renderCustomRow(rowItem) {
-    // determining last element to right align
+    // determining last element to align properly
     const lastIndex = rowItem.values.length - 1;
     return (
       <tr
@@ -118,7 +121,7 @@ class ResultTableRow extends Component {
           let cellStyle = '';
           let cellValue = value;
           if (index === lastIndex) {
-            cellStyle += 'text-right';
+            cellStyle += 'tableRow__text';
             cellValue = this.getTextRepresentation(value);
           }
           if (index === 0) {
@@ -156,7 +159,7 @@ class ResultTableRow extends Component {
         <td className="table--bold tableRow__name">{rowItem.name}</td>
         <td className="tableRow__id ">{rowItem.id}</td>
         <td className="table--bold">{contentColumn}</td>
-        <td className="text-right tableRow__text">
+        <td className="tableRow__text">
           {this.getTextRepresentation(rowItem.textShort)}
         </td>
       </tr>

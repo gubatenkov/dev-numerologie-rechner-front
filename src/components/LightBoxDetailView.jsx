@@ -146,6 +146,11 @@ class LightBoxDetailView extends Component {
     const currentElement = this.props.data[this.state.currentSectionIndex]
       .sectionElements[this.state.currentElementIndex];
 
+    // if for ome reason, the current element is invalid > rendering nothing
+    if (!currentElement) {
+      return null;
+    }
+
     return (
       <div
         className="LightBoxDetailView__Container modal-backdrop"
@@ -159,7 +164,7 @@ class LightBoxDetailView extends Component {
         <div className="LightBoxDetailView__ContentOverview">
           <Steps horizontal>
             {this.props.data.map((item, index) => {
-              // getting length of current section
+              // getting length of current section (only elements that have content)
               const currentSectionLength = item.sectionElements.length;
 
               // determining index to display for step
@@ -200,12 +205,17 @@ class LightBoxDetailView extends Component {
               <i className="icon wb-chevron-left" />
             </button>
           </div>
-          <div className="col-10">
+          <div className="col-8">
             <Panel
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}
             >
-              {currentElement.elementContent}
+              <div className="LightBoxDetailView__text LightBoxDetailView--non-printable">
+                {currentElement.elementContent}
+              </div>
+              <h3 className="LightBoxDetailView--printWatermark">
+                Die Resultate können nur mit Druckpaket ausgedruckt werden.
+              </h3>,
             </Panel>
           </div>
           <div className="LightBoxDetailView__ButtonArea">
