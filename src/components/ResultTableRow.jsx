@@ -32,7 +32,7 @@ class ResultTableRow extends Component {
     if (rowText && rowText && rowText.length > 0) {
       rowTextRepresentation = [
         `${rowText.substring(0, LENGTH_DESCRIPITON_PREVIEW)}...  `,
-        <a key="readIndicator" role="Link" onClick={this.handleMoreClick}>
+        <a href="#" key="readIndicator" onClick={this.handleMoreClick}>
           Lesen
         </a>,
       ];
