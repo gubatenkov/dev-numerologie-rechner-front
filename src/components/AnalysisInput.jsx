@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -9,6 +10,11 @@ import '../styles/AnalysisInput.css';
 
 /* eslint-disable react/prefer-stateless-function */
 class AnalysisInput extends Component {
+  static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+  };
   /**
    * default constructor
    */
@@ -48,8 +54,7 @@ class AnalysisInput extends Component {
    * starts the analysis upon button click
    */
   startAnalysis = () => {
-    /* console.log(`Start anallysis with ${this.firstNames},
-    ${this.lastNames}, ${this.dateOfBirth}`); */
+    this.props.history.push(`/resultPersonal/${this.firstNames}/${this.lastNames}/${this.dateOfBirth}`);
   };
 
   render() {
@@ -83,14 +88,12 @@ class AnalysisInput extends Component {
                     fieldName="Geburtsdatum"
                     onChange={this.handleDateOfBirthChange}
                   />
-                  <Link href="/resultPersonal" to="/resultPersonal">
-                    <button
-                      className="btn btn-primary btn-block"
-                      onClick={this.startAnalysis}
-                    >
-                      Starten
-                    </button>
-                  </Link>
+                  <button
+                    className="btn btn-primary btn-block"
+                    onClick={this.startAnalysis}
+                  >
+                    Starten
+                  </button>
                 </Panel>
               </div>
             </div>
@@ -101,4 +104,4 @@ class AnalysisInput extends Component {
   }
 }
 
-export default AnalysisInput;
+export default withRouter(AnalysisInput);

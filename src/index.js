@@ -26,7 +26,10 @@ ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route path="/login" component={Login} />
-      <Route path="/resultPersonal" component={AnalysisResultPersonal} />
+      <Route
+        path="/resultPersonal/:firstNames/:lastName/:dateOfBirth"
+        component={AnalysisResultPersonal}
+      />
       <Route path="/analysisInput" component={AnalysisInput} />
       <PrivateRoute
         path="/userHome"

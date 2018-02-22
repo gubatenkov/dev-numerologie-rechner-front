@@ -28,41 +28,45 @@ class AnalysisResultPersonal extends Component {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }).isRequired,
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        firstNames: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
   };
+
   constructor(props) {
     super(props);
 
-    // faking call to server
-    // TODO get firstname, lastName and date of birth from input
-    const firstName = 'Christoph';
-    const lastName = 'Hechenblaikner';
-    const dateOfBirth = '18.04.1989';
+    // getting data from parameters
+    const { firstNames, lastName, dateOfBirth } = props.match.params;
 
     // setting initial state based on calculations
     this.state = {
-      expressionLevel: calculateExpressionLevel(firstName, lastName),
+      expressionLevel: calculateExpressionLevel(firstNames, lastName),
       personalityLevel: calculatePersonalLevel(
-        firstName,
+        firstNames,
         lastName,
         dateOfBirth,
       ),
       developmentLevel: calculateDevelopmentLevel(
-        firstName,
+        firstNames,
         lastName,
         dateOfBirth,
       ),
-      soulLevel: calculateSoulLevelNumbers(firstName, lastName, dateOfBirth),
+      soulLevel: calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth),
       vibratoryCycles: calculateTimeLevelNumbers(
-        firstName,
+        firstNames,
         lastName,
         dateOfBirth,
       )[0],
       challengesHighs: calculateTimeLevelNumbers(
-        firstName,
+        firstNames,
         lastName,
         dateOfBirth,
       )[1],
-      firstName,
+      firstNames,
       lastName,
       dateOfBirth,
       resultTextDetailViewOpen: false,
@@ -210,7 +214,7 @@ class AnalysisResultPersonal extends Component {
         />
         <div className="ResultPersonalDataContainer">
           <div className="ResultPersonalData">
-            <h4>{`${this.state.firstName} ${this.state.lastName}`}</h4>
+            <h4>{`${this.state.firstNames} ${this.state.lastName}`}</h4>
             <h4>{this.state.dateOfBirth}</h4>
           </div>
         </div>
