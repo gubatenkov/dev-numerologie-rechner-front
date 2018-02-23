@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
+import gql from 'graphql-tag';
+import { graphql, compose } from 'react-apollo';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -19,6 +21,36 @@ import {
   calculateSoulLevelNumbers,
   calculateTimeLevelNumbers,
 } from '../utils/Server';
+
+// queries for getting results from server
+const personalResultsQuery = gql`
+  query personalAnalysis(
+    $firstNames: String!
+    $lastName: String!
+    $dateOfBirth: String!
+  ) {
+    personalAnalysis(
+      firstNames: $firstNames
+      lastName: $lastName
+      dateOfBirth: $dateOfBirth
+    ) {
+      expressionLevel {
+        name
+        numbers {
+          name
+          type
+          id
+          descriptionText
+          result {
+            type
+            value
+          }
+          highlighted
+        }
+      }
+    }
+  }
+`;
 
 /**
  * result screen for personal analysis
@@ -196,6 +228,9 @@ class AnalysisResultPersonal extends Component {
    * default render
    */
   render() {
+    if (!this.props.data.loading) {
+      console.log(this.props.data.personalAnalysis.expressionLevel.name);
+    }
     // render table, table shows spinner
     return (
       <div>
@@ -295,4 +330,12 @@ class AnalysisResultPersonal extends Component {
   }
 }
 
-export default withRouter(AnalysisResultPersonal);
+export default compose(graphql(personalResultsQuery, {
+  options: params => ({
+    variables: {
+      firstNames: params.match.params.firstNames,
+      lastName: params.match.params.lastName,
+      dateOfBirth: params.match.params.dateOfBirth,
+    },
+  }),
+}))(withRouter(AnalysisResultPersonal));
