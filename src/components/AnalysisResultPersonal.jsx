@@ -18,6 +18,7 @@ import '../styles/AnalysisResultPersonal.css';
 const AnalysisPartsFragment = gql`
   fragment AnalysisParts on AnalysisResult {
     name
+    headings
     numbers {
       ... on DefaultAnalysisResultItem {
         name
@@ -81,7 +82,10 @@ const personalResultsQuery = gql`
       soulLevel {
         ...AnalysisParts
       }
-      timeLevel {
+      vibratoryCycles {
+        ...AnalysisParts
+      }
+      challengesHighs {
         ...AnalysisParts
       }
     }
@@ -126,8 +130,8 @@ class AnalysisResultPersonal extends Component {
       data.personalLevel,
       data.developmentLevel,
       data.soulLevel,
-      data.timeLevel[0],
-      data.timeLevel[1],
+      data.vibratoryCycles,
+      data.challengesHighs,
     ];
   }
 
@@ -333,12 +337,12 @@ class AnalysisResultPersonal extends Component {
             </Panel>
             <Panel title="Zeitliche Ebene" id="TimeResult">
               <ResultTable
-                data={this.props.data.personalAnalysis.timeLevel[0]}
+                data={this.props.data.personalAnalysis.vibratoryCycles}
                 dataKey="vibratoryCycles"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
               <ResultTable
-                data={this.props.data.personalAnalysis.timeLevel[1]}
+                data={this.props.data.personalAnalysis.challengesHighs}
                 dataKey="challengesHighs"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
