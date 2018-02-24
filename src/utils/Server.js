@@ -21,7 +21,7 @@ const NUMBER_ID_VISZ = 'VisZ';
 
 const NUMBER_ID_SZ = 'SZ';
 const NUMBER_ID_INIZ = 'IniZ';
-const NUMBER_ID_SM = 'SM';
+// const NUMBER_ID_SM = 'SM';
 const NUMBER_ID_SM_V = 'SM-V';
 const NUMBER_ID_KL = 'KL';
 const NUMBER_ID_ZSA = 'ZSA';
@@ -1285,8 +1285,8 @@ export function calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth) {
  */
 export function calculateTimeLevelNumbers(firstNames, lastName, dateOfBirth) {
   // getting process array representation of strings
-  const firstNamesArray = preprocessString(firstNames);
-  const lastNameArray = preprocessString(lastName);
+  // const firstNamesArray = preprocessString(firstNames);
+  // const lastNameArray = preprocessString(lastName);
 
   // getting date of birth ready
   const dateOfBirthArray = preprocessDateOfBirth(dateOfBirth);
@@ -1310,7 +1310,7 @@ export function calculateTimeLevelNumbers(firstNames, lastName, dateOfBirth) {
   const hfValue = calculateHF(dateOfBirthArray);
   const hpValue = calculateHP(dateOfBirthArray);
   // getting description for calculated value
-  const hfValueText = getTextForResult(NUMBER_ID_HF, hfValue);
+  // const hfValueText = getTextForResult(NUMBER_ID_HF, hfValue);
   const hpValueText = getTextForResult(NUMBER_ID_HP, hpValue);
 
   return [

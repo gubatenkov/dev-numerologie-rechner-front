@@ -14,50 +14,48 @@ import LightBoxDetailView from './LightBoxDetailView';
 
 import '../styles/AnalysisResultPersonal.css';
 
-import { calculateTimeLevelNumbers } from '../utils/Server';
-
 // queries for getting results from server
 const AnalysisPartsFragment = gql`
-fragment AnalysisParts on AnalysisResult {
-  name
-  numbers {
-    ... on DefaultAnalysisResultItem {
-      name
-      id
-      highlighted
-      descriptionText
-      type
-      result {
-        ... on AnalysisResultValueNumber {
-          type
-          value
-        }
-        ... on AnalysisResultValueMatrix {
-          type
-          values
-          dimensions {
-            rows
-            cols
+  fragment AnalysisParts on AnalysisResult {
+    name
+    numbers {
+      ... on DefaultAnalysisResultItem {
+        name
+        id
+        highlighted
+        descriptionText
+        type
+        result {
+          ... on AnalysisResultValueNumber {
+            type
+            value
           }
-          highlighted
-        }
-        ... on AnalysisResultValueList {
-          type
-          list
+          ... on AnalysisResultValueMatrix {
+            type
+            values
+            dimensions {
+              rows
+              cols
+            }
+            highlighted
+          }
+          ... on AnalysisResultValueList {
+            type
+            list
+          }
         }
       }
-    }
-    ... on CustomAnalysisResultItem {
-      type
-      id
-      values
-      nameIndex
-      valueIndex
-      descriptionTextIndex
-      highlighted
+      ... on CustomAnalysisResultItem {
+        type
+        id
+        values
+        nameIndex
+        valueIndex
+        descriptionTextIndex
+        highlighted
+      }
     }
   }
-}
 `;
 
 const personalResultsQuery = gql`
@@ -81,6 +79,9 @@ const personalResultsQuery = gql`
         ...AnalysisParts
       }
       soulLevel {
+        ...AnalysisParts
+      }
+      timeLevel {
         ...AnalysisParts
       }
     }
@@ -107,21 +108,8 @@ class AnalysisResultPersonal extends Component {
   constructor(props) {
     super(props);
 
-    // getting data from parameters
-    const { firstNames, lastName, dateOfBirth } = props.match.params;
-
     // setting initial state based on calculations
     this.state = {
-      vibratoryCycles: calculateTimeLevelNumbers(
-        firstNames,
-        lastName,
-        dateOfBirth,
-      )[0],
-      challengesHighs: calculateTimeLevelNumbers(
-        firstNames,
-        lastName,
-        dateOfBirth,
-      )[1],
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
@@ -138,8 +126,8 @@ class AnalysisResultPersonal extends Component {
       data.personalLevel,
       data.developmentLevel,
       data.soulLevel,
-      // data.vibratoryCycles,
-      // data.challengesHighs,
+      data.timeLevel[0],
+      data.timeLevel[1],
     ];
   }
 
@@ -345,12 +333,12 @@ class AnalysisResultPersonal extends Component {
             </Panel>
             <Panel title="Zeitliche Ebene" id="TimeResult">
               <ResultTable
-                data={this.state.vibratoryCycles}
+                data={this.props.data.personalAnalysis.timeLevel[0]}
                 dataKey="vibratoryCycles"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
               <ResultTable
-                data={this.state.challengesHighs}
+                data={this.props.data.personalAnalysis.timeLevel[1]}
                 dataKey="challengesHighs"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
