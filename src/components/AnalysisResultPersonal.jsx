@@ -14,15 +14,42 @@ import LightBoxDetailView from './LightBoxDetailView';
 
 import '../styles/AnalysisResultPersonal.css';
 
-import {
-  calculateExpressionLevel,
-  calculatePersonalLevel,
-  calculateDevelopmentLevel,
-  calculateSoulLevelNumbers,
-  calculateTimeLevelNumbers,
-} from '../utils/Server';
+import { calculateTimeLevelNumbers } from '../utils/Server';
 
 // queries for getting results from server
+const AnalysisPartsFragment = gql`
+  fragment AnalysisParts on AnalysisResult {
+    name
+    numbers {
+      name
+      id
+      highlighted
+      descriptionText
+      type
+      result {
+        __typename
+        ... on AnalysisResultValueNumber {
+          type
+          value
+        }
+        ... on AnalysisResultValueMatrix {
+          type
+          values
+          dimensions {
+            rows
+            cols
+          }
+          highlighted
+        }
+        ... on AnalysisResultValueList {
+          type
+          list
+        }
+      }
+    }
+  }
+`;
+
 const personalResultsQuery = gql`
   query personalAnalysis(
     $firstNames: String!
@@ -35,21 +62,20 @@ const personalResultsQuery = gql`
       dateOfBirth: $dateOfBirth
     ) {
       expressionLevel {
-        name
-        numbers {
-          name
-          type
-          id
-          descriptionText
-          result {
-            type
-            value
-          }
-          highlighted
-        }
+        ...AnalysisParts
+      }
+      personalLevel {
+        ...AnalysisParts
+      }
+      developmentLevel {
+        ...AnalysisParts
+      }
+      soulLevel {
+        ...AnalysisParts
       }
     }
   }
+  ${AnalysisPartsFragment}
 `;
 
 /**
@@ -76,18 +102,6 @@ class AnalysisResultPersonal extends Component {
 
     // setting initial state based on calculations
     this.state = {
-      expressionLevel: calculateExpressionLevel(firstNames, lastName),
-      personalityLevel: calculatePersonalLevel(
-        firstNames,
-        lastName,
-        dateOfBirth,
-      ),
-      developmentLevel: calculateDevelopmentLevel(
-        firstNames,
-        lastName,
-        dateOfBirth,
-      ),
-      soulLevel: calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth),
       vibratoryCycles: calculateTimeLevelNumbers(
         firstNames,
         lastName,
@@ -98,9 +112,6 @@ class AnalysisResultPersonal extends Component {
         lastName,
         dateOfBirth,
       )[1],
-      firstNames,
-      lastName,
-      dateOfBirth,
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
@@ -109,16 +120,16 @@ class AnalysisResultPersonal extends Component {
 
   /**
    * returns an array representation of the state of the component
-   * @param state the state to be transformed
+   * @param data the state to be transformed
    */
-  getResultArrayFormat(state) {
+  getResultArrayFormat(data) {
     return [
-      state.expressionLevel,
-      state.personalityLevel,
-      state.developmentLevel,
-      state.soulLevel,
-      state.vibratoryCycles,
-      state.challengesHighs,
+      data.expressionLevel,
+      data.personalLevel,
+      data.developmentLevel,
+      data.soulLevel,
+      // data.vibratoryCycles,
+      // data.challengesHighs,
     ];
   }
 
@@ -135,8 +146,9 @@ class AnalysisResultPersonal extends Component {
    *  handles clicks on detail links
    */
   handleItemDetailClick = (dataKey, index) => {
+    const analysisResult = this.props.data.personalAnalysis;
     // getting index of elemnent represented by dataKey in state
-    const dataIndex = this.getResultArrayFormat(this.state).indexOf(this.state[dataKey]);
+    const dataIndex = this.getResultArrayFormat(analysisResult).indexOf(analysisResult[dataKey]);
 
     // if data is not here -> skip
     if (dataIndex < 0) {
@@ -145,7 +157,9 @@ class AnalysisResultPersonal extends Component {
 
     // calculating index in filtered data passed to details component
     // indeNew = index - #of items removed by filtering before passed to detail component
-    const sectionUpToIndex = this.state[dataKey].numbers.slice(0, index);
+    const sectionUpToIndex = this.props.data.personalAnalysis[
+      dataKey
+    ].numbers.slice(0, index);
     const removedElementsToIndexCount =
       sectionUpToIndex.length -
       sectionUpToIndex.filter(item => this.doesElementHaveDescription(item))
@@ -177,11 +191,7 @@ class AnalysisResultPersonal extends Component {
    */
   doesElementHaveDescription(element) {
     if (element.type === 'row') {
-      return (
-        element.result.value &&
-        element.textShort &&
-        element.textShort.length > 0
-      );
+      return element.descriptionText && element.descriptionText.length > 0;
     } else if (element.type === 'customRow') {
       return (
         element.descriptionTextIndex &&
@@ -195,11 +205,11 @@ class AnalysisResultPersonal extends Component {
   /**
    * maps the state of this component to one that can be used
    * by the detail component
-   * @param state the state to be transformed
+   * @param resultData the state to be transformed
    */
-  convertStateToDetailsData(state) {
+  convertResultsToDetailsDataFormat(resultData) {
     // transforming into items where results are numbers and a text to display is present
-    return this.getResultArrayFormat(state).map(item => ({
+    return this.getResultArrayFormat(resultData).map(item => ({
       sectionName: item.name,
       sectionElements: item.numbers
         // filtering elements that are not suitable for displaying as detail view
@@ -208,8 +218,10 @@ class AnalysisResultPersonal extends Component {
         .map((numberItem) => {
           if (numberItem.type === 'row') {
             return {
-              elementTitle: `${numberItem.name} = ${numberItem.result.value}`,
-              elementContent: numberItem.textShort,
+              elementTitle: `${numberItem.name} = ${numberItem.result.value ||
+                numberItem.result.values ||
+                numberItem.result.list}`,
+              elementContent: numberItem.descriptionText,
             };
           } else if (numberItem.type === 'customRow') {
             return {
@@ -228,9 +240,10 @@ class AnalysisResultPersonal extends Component {
    * default render
    */
   render() {
-    if (!this.props.data.loading) {
-      console.log(this.props.data.personalAnalysis.expressionLevel.name);
+    if (this.props.data.loading) {
+      return <h1>Loading...</h1>;
     }
+
     // render table, table shows spinner
     return (
       <div>
@@ -249,8 +262,12 @@ class AnalysisResultPersonal extends Component {
         />
         <div className="ResultPersonalDataContainer">
           <div className="ResultPersonalData">
-            <h4>{`${this.state.firstNames} ${this.state.lastName}`}</h4>
-            <h4>{this.state.dateOfBirth}</h4>
+            <h4>
+              {`${this.props.match.params.firstNames} ${
+                this.props.match.params.lastName
+              }`}
+            </h4>
+            <h4>{this.props.match.params.dateOfBirth}</h4>
           </div>
         </div>
         <div className="ContentArea">
@@ -265,7 +282,7 @@ class AnalysisResultPersonal extends Component {
               ]}
               contentItemAnchors={[
                 'ExpressionResult',
-                'PersonalityResult',
+                'PersonalResult',
                 'DevelopmentResult',
                 'SoulResult',
                 'TimeResult',
@@ -275,31 +292,43 @@ class AnalysisResultPersonal extends Component {
             />
           </div>
           <div className="ResultContent">
-            <Panel title="Ausdrucksebene" id="ExpressionResult">
+            <Panel
+              title={this.props.data.personalAnalysis.expressionLevel.name}
+              id="ExpressionResult"
+            >
               <ResultTable
-                data={this.state.expressionLevel}
+                data={this.props.data.personalAnalysis.expressionLevel}
                 dataKey="expressionLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
 
-            <Panel title="Persönlichkeitsebene" id="PersonalityResult">
+            <Panel
+              title={this.props.data.personalAnalysis.personalLevel.name}
+              id="PersonalResult"
+            >
               <ResultTable
-                data={this.state.personalityLevel}
-                dataKey="personalityLevel"
+                data={this.props.data.personalAnalysis.personalLevel}
+                dataKey="personalLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
-            <Panel title="Entfaltungspotential" id="DevelopmentResult">
+            <Panel
+              title={this.props.data.personalAnalysis.developmentLevel.name}
+              id="DevelopmentResult"
+            >
               <ResultTable
-                data={this.state.developmentLevel}
+                data={this.props.data.personalAnalysis.developmentLevel}
                 dataKey="developmentLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
-            <Panel title="Seelische Ebene" id="SoulResult">
+            <Panel
+              title={this.props.data.personalAnalysis.soulLevel.name}
+              id="SoulResult"
+            >
               <ResultTable
-                data={this.state.soulLevel}
+                data={this.props.data.personalAnalysis.soulLevel}
                 dataKey="soulLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
@@ -321,7 +350,7 @@ class AnalysisResultPersonal extends Component {
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={this.handleCloseDetail}
-          data={this.convertStateToDetailsData(this.state)}
+          data={this.convertResultsToDetailsDataFormat(this.props.data.personalAnalysis)}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />

@@ -1,0 +1,161 @@
+{
+      "__schema": {
+        "types": [
+          {
+            "kind": "OBJECT",
+            "name": "Query",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "User",
+            "possibleTypes": null
+          },
+          {
+            "kind": "SCALAR",
+            "name": "String",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "AnalysisGroup",
+            "possibleTypes": null
+          },
+          {
+            "kind": "SCALAR",
+            "name": "ID",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "Analysis",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "AnalysisValues",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "UserCredit",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "Credit",
+            "possibleTypes": null
+          },
+          {
+            "kind": "SCALAR",
+            "name": "Int",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "PersonalAnalysisResult",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "AnalysisResult",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "AnalysisResultNumber",
+            "possibleTypes": null
+          },
+          {
+            "kind": "UNION",
+            "name": "AnalysisResultValue",
+            "possibleTypes": [
+              {
+                "name": "AnalysisResultValueNumber"
+              },
+              {
+                "name": "AnalysisResultValueMatrix"
+              },
+              {
+                "name": "AnalysisResultValueList"
+              }
+            ]
+          },
+          {
+            "kind": "OBJECT",
+            "name": "AnalysisResultValueNumber",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "AnalysisResultValueMatrix",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "MatrixDimensions",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "AnalysisResultValueList",
+            "possibleTypes": null
+          },
+          {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "Mutation",
+            "possibleTypes": null
+          },
+          {
+            "kind": "INPUT_OBJECT",
+            "name": "AnalysisInput",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "__Schema",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "__Type",
+            "possibleTypes": null
+          },
+          {
+            "kind": "ENUM",
+            "name": "__TypeKind",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "__Field",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "__InputValue",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "__EnumValue",
+            "possibleTypes": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "__Directive",
+            "possibleTypes": null
+          },
+          {
+            "kind": "ENUM",
+            "name": "__DirectiveLocation",
+            "possibleTypes": null
+          }
+        ]
+      }
+  }

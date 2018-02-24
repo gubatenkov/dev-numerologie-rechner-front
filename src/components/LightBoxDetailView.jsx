@@ -71,7 +71,7 @@ class LightBoxDetailView extends Component {
     document.body.classList.toggle('noScroll', this.props.isOpen);
 
     // if modal is shown, getting forcus so key inputs work
-    if (this.props.isOpen) {
+    if (this.self && this.props.isOpen) {
       this.self.focus();
     }
   }

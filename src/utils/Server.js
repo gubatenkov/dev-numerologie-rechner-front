@@ -877,7 +877,7 @@ export function calculateExpressionLevel(firstNames, lastName) {
         name: 'Ausdruckszahl',
         type: 'row',
         id: 'AZ',
-        textShort: azValueText,
+        descriptionText: azValueText,
         result: {
           type: 'number',
           value: azValue,
@@ -888,7 +888,7 @@ export function calculateExpressionLevel(firstNames, lastName) {
         name: 'Berufszahl',
         type: 'row',
         id: 'BZ',
-        textShort: bzValueText,
+        descriptionText: bzValueText,
         result: {
           type: 'number',
           value: bzValue,
@@ -899,7 +899,7 @@ export function calculateExpressionLevel(firstNames, lastName) {
         name: 'Nachnamenszahl',
         type: 'row',
         id: 'NNZ',
-        textShort: nnzValueText,
+        descriptionText: nnzValueText,
         result: {
           type: 'number',
           value: nnzValue,
@@ -971,7 +971,7 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'Wurzelzahl',
         type: 'row',
         id: 'WZ',
-        textShort: wzValueText,
+        descriptionText: wzValueText,
         result: {
           type: 'number',
           value: wzValue,
@@ -982,7 +982,7 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'Lebenszahl',
         type: 'row',
         id: 'LZ',
-        textShort: lzValueText,
+        descriptionText: lzValueText,
         result: {
           type: 'number',
           value: lzValue,
@@ -993,7 +993,7 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'Identitätszahl',
         type: 'row',
         id: 'IZ',
-        textShort: izValueText,
+        descriptionText: izValueText,
         result: {
           type: 'number',
           value: izValue,
@@ -1004,7 +1004,7 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'Gesundheitszahl',
         type: 'row',
         id: 'GZ',
-        textShort: gzValueText,
+        descriptionText: gzValueText,
         result: {
           type: 'number',
           value: gzValue,
@@ -1015,14 +1015,14 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'Geburtsdatumsraster',
         type: 'row',
         id: 'GDR',
-        textShort: gdrValueText,
+        descriptionText: gdrValueText,
         result: {
           type: 'matrix',
           dimensions: {
             rows: 3,
             cols: 3,
           },
-          values: gdrValue,
+          value: gdrValue,
           highlighted: [6, 8],
         },
         highlighted: false,
@@ -1031,7 +1031,7 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'GDR vorhandene Zahl',
         type: 'row',
         id: 'GDR-V',
-        textShort: gdrvValueText,
+        descriptionText: gdrvValueText,
         result: {
           type: 'number',
           value: gdrvValue,
@@ -1042,7 +1042,7 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'GDR fehlende Zahl',
         type: 'row',
         id: 'GDR-F',
-        textShort: gdrfValueText,
+        descriptionText: gdrfValueText,
         result: {
           type: 'number',
           value: gdrfValue,
@@ -1053,7 +1053,7 @@ export function calculatePersonalLevel(firstNames, lastName, dateOfBirth) {
         name: 'GDR isolierte Zahlen',
         type: 'row',
         id: 'GDR-I',
-        textShort: gdriValueText,
+        descriptionText: gdriValueText,
         result: {
           type: 'number',
           value: gdriValue,
@@ -1109,7 +1109,7 @@ export function calculateDevelopmentLevel(firstNames, lastName, dateOfBirth) {
         name: 'Talenzahl',
         type: 'row',
         id: 'TZ',
-        textShort: tzValueText,
+        descriptionText: tzValueText,
         result: {
           type: 'number',
           value: tzValue,
@@ -1120,7 +1120,7 @@ export function calculateDevelopmentLevel(firstNames, lastName, dateOfBirth) {
         name: 'Kreativitätszahl',
         type: 'row',
         id: 'KZ',
-        textShort: kzValueText,
+        descriptionText: kzValueText,
         result: {
           type: 'number',
           value: kzValue,
@@ -1131,7 +1131,7 @@ export function calculateDevelopmentLevel(firstNames, lastName, dateOfBirth) {
         name: 'Berufungszahl',
         type: 'row',
         id: 'BfZ',
-        textShort: bfzValueText,
+        descriptionText: bfzValueText,
         result: {
           type: 'number',
           value: bfzValue,
@@ -1142,7 +1142,7 @@ export function calculateDevelopmentLevel(firstNames, lastName, dateOfBirth) {
         name: 'Visionszahl',
         type: 'row',
         id: 'VisZ',
-        textShort: viszValueText,
+        descriptionText: viszValueText,
         result: {
           type: 'number',
           value: viszValue,
@@ -1206,7 +1206,7 @@ export function calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth) {
         name: 'Seelenzahl',
         type: 'row',
         id: 'SZ',
-        textShort: szValueText,
+        descriptionText: szValueText,
         result: {
           type: 'number',
           value: szValue,
@@ -1217,7 +1217,7 @@ export function calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth) {
         name: 'Initiationszahl',
         type: 'row',
         id: 'IniZ',
-        textShort: inizValueText,
+        descriptionText: inizValueText,
         result: {
           type: 'number',
           value: inizValue,
@@ -1228,7 +1228,7 @@ export function calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth) {
         name: 'Seelische Matrix',
         type: 'row',
         id: 'SM',
-        textShort: '',
+        descriptionText: '',
         result: {
           type: 'matrix',
           dimensions: {
@@ -1244,7 +1244,7 @@ export function calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth) {
         name: 'SM vorhandene Zahl',
         type: 'row',
         id: 'SM-V',
-        textShort: smvValueText,
+        descriptionText: smvValueText,
         result: {
           type: 'number',
           value: smvValue,
@@ -1255,10 +1255,10 @@ export function calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth) {
         name: 'Karmische Lektion',
         type: 'row',
         id: 'KL',
-        textShort: klValueText,
+        descriptionText: klValueText,
         result: {
           type: 'list',
-          values: klValue,
+          list: klValue,
         },
         highlighted: false,
       },
@@ -1266,7 +1266,7 @@ export function calculateSoulLevelNumbers(firstNames, lastName, dateOfBirth) {
         name: 'Zahl des seelischen Ausgleichs',
         type: 'row',
         id: 'ZSA',
-        textShort: zsaValueText,
+        descriptionText: zsaValueText,
         result: {
           type: 'number',
           value: zsaValue,

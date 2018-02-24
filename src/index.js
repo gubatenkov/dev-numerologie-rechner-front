@@ -6,7 +6,11 @@ import { ApolloProvider } from 'react-apollo';
 
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from 'apollo-cache-inmemory';
+import introspectionQueryResultData from './utils/FragmentTypes.json';
 
 import AnalysisInput from './components/AnalysisInput';
 import Login from './components/Login';
@@ -27,10 +31,15 @@ import './styles/theme.css';
 // graphql endpoint url
 const GRAPHQL_ENDPOINT = 'http://localhost:4000/graphql';
 
+// creating fragment matcher
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData,
+});
+
 // creating client for graphQL connection
 const client = new ApolloClient({
   link: createHttpLink({ uri: GRAPHQL_ENDPOINT }),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({ fragmentMatcher }),
 });
 
 // <PrivateRoute path="/analysisInput"

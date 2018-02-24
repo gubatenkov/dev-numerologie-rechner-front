@@ -32,7 +32,7 @@ class ResultTableRow extends Component {
     if (rowText && rowText && rowText.length > 0) {
       rowTextRepresentation = [
         `${rowText.substring(0, LENGTH_DESCRIPITON_PREVIEW)}...  `,
-        <a href="#" key="readIndicator" onClick={this.handleMoreClick}>
+        <a role="link" key="readIndicator" onClick={this.handleMoreClick}>
           Lesen
         </a>,
       ];
@@ -103,7 +103,7 @@ class ResultTableRow extends Component {
    * @param {*} resultItem the received result item of type list
    */
   renderResultList(resultItem) {
-    return resultItem.result.values.map(item => ` ${item}`);
+    return resultItem.result.list.map(item => ` ${item}`);
   }
 
   /**
@@ -161,7 +161,7 @@ class ResultTableRow extends Component {
         <td className="tableRow__id ">{rowItem.id}</td>
         <td className="table--bold">{contentColumn}</td>
         <td className="tableRow__text">
-          {this.getTextRepresentation(rowItem.textShort)}
+          {this.getTextRepresentation(rowItem.descriptionText)}
         </td>
       </tr>
     );
