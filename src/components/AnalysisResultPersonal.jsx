@@ -18,16 +18,16 @@ import { calculateTimeLevelNumbers } from '../utils/Server';
 
 // queries for getting results from server
 const AnalysisPartsFragment = gql`
-  fragment AnalysisParts on AnalysisResult {
-    name
-    numbers {
+fragment AnalysisParts on AnalysisResult {
+  name
+  numbers {
+    ... on DefaultAnalysisResultItem {
       name
       id
       highlighted
       descriptionText
       type
       result {
-        __typename
         ... on AnalysisResultValueNumber {
           type
           value
@@ -47,7 +47,17 @@ const AnalysisPartsFragment = gql`
         }
       }
     }
+    ... on CustomAnalysisResultItem {
+      type
+      id
+      values
+      nameIndex
+      valueIndex
+      descriptionTextIndex
+      highlighted
+    }
   }
+}
 `;
 
 const personalResultsQuery = gql`
