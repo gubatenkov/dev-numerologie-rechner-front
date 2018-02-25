@@ -70,7 +70,9 @@ class SaveDialog extends Component {
               <p>Gruppe</p>
               <div className="dropdown">
                 <select className="form-control">
-                  {this.props.groups.map(item => <option>{item}</option>)}
+                  {this.props.groups.map(item => (
+                    <option key={item}>{item}</option>
+                  ))}
                 </select>
               </div>
               <p>

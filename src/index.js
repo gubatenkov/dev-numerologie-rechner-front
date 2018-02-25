@@ -56,7 +56,7 @@ ReactDOM.render(
         />
         <Route path="/analysisInput" component={AnalysisInput} />
         <PrivateRoute
-          path="/userHome"
+          path="/userHome/:userAction?/:firstNames?/:lastName?/:dateOfBirth?"
           isAuthenticated={isUserAuthenticated}
           loginPath="/login"
           component={UserHome}
