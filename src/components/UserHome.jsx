@@ -11,7 +11,7 @@ import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
 import AnalysisBrowser from './AnalysisBrowser';
-import PaketWidget from './PaketWidget';
+import CreditWidget from './CreditWidget';
 import SaveDialog from './SaveDialog';
 
 const currentUserQuery = gql`
@@ -35,6 +35,7 @@ const currentUserQuery = gql`
       credits {
         type {
           name
+          description
         }
         value
       }
@@ -100,7 +101,10 @@ class UserHome extends Component {
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.currentUser.analyses}
             />
-            <PaketWidget />
+            <CreditWidget
+              credits={this.props.data.currentUser.credits}
+              handleBuyCredits={() => console.log('buy credits!')}
+            />
             <AdArea />
           </div>
         </div>
