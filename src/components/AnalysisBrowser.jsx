@@ -84,7 +84,7 @@ class AnalysisBrowser extends Component {
    */
   handleAnalysisShowClick = (analysis) => {
     const analysisInput = analysis.inputs[0];
-    this.props.history.replace(`resultPersonal/${analysisInput.firstNames}/${analysisInput.lastName}/${
+    this.props.history.push(`/resultPersonal/${analysisInput.firstNames}/${analysisInput.lastName}/${
       analysisInput.dateOfBirth
     }`);
   };
