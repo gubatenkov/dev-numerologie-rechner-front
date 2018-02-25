@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
 import GroupTableRow from './GroupTableRow';
@@ -6,20 +9,35 @@ import AnalysisTableRow from './AnalysisTableRow';
 
 import '../styles/AnalysisBrowser.css';
 
-import { getUserGroupsAnalyses } from '../utils/Server';
-
 /**
  * browser that allows users to view and organize
  * their analyses and groups
  */
 class AnalysisBrowser extends Component {
+  static propTypes = {
+    analyses: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      groupId: PropTypes.string.isRequired,
+      inputs: PropTypes.arrayOf(PropTypes.shape({
+        firstNames: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        dateOfBirth: PropTypes.string.isRequired,
+      })).isRequired,
+    })).isRequired,
+    groups: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })).isRequired,
+  };
   constructor(props) {
     super(props);
 
     // getting initial state from server
     // TODO replace with real server call
     this.state = {
-      data: getUserGroupsAnalyses(),
+      analyses: props.analyses,
+      groups: props.groups,
       expandedIndex: -1,
     };
   }
@@ -64,8 +82,11 @@ class AnalysisBrowser extends Component {
    * handler for showing a specific analysis
    * @param id the id of the analysis to show
    */
-  handleAnalysisShowClick = (id) => {
-    console.log(`Show analysis ${id}`);
+  handleAnalysisShowClick = (analysis) => {
+    const analysisInput = analysis.inputs[0];
+    this.props.history.replace(`resultPersonal/${analysisInput.firstNames}/${analysisInput.lastName}/${
+      analysisInput.dateOfBirth
+    }`);
   };
 
   /**
@@ -98,7 +119,7 @@ class AnalysisBrowser extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.data.map((group, index) => {
+            {this.state.groups.map((group, index) => {
               // adding group row to result
               const groupCellContent = [
                 <GroupTableRow
@@ -114,14 +135,16 @@ class AnalysisBrowser extends Component {
               // if index of current group is expanded
               // -> rendering analyses as well
               if (this.state.expandedIndex === index) {
-                groupCellContent.push(group.analyses.map(analysis => (
-                  <AnalysisTableRow
-                    key={analysis.id}
-                    analysis={analysis}
-                    deleteHandler={this.handleAnalysisDeleteClick}
-                    showHandler={this.handleAnalysisShowClick}
-                  />
-                  )));
+                groupCellContent.push(this.state.analyses
+                    .filter(analysis => analysis.groupId === group.id)
+                    .map(analysis => (
+                      <AnalysisTableRow
+                        key={analysis.id}
+                        analysis={analysis}
+                        deleteHandler={this.handleAnalysisDeleteClick}
+                        showHandler={this.handleAnalysisShowClick}
+                      />
+                    )));
               }
 
               // returning accumulated rows for group
@@ -134,4 +157,4 @@ class AnalysisBrowser extends Component {
   }
 }
 
-export default AnalysisBrowser;
+export default withRouter(AnalysisBrowser);

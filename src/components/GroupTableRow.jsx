@@ -9,7 +9,7 @@ import '../styles/GroupTableRow.css';
 class GroupTableRow extends Component {
   static propTypes = {
     group: PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
     clickHandler: PropTypes.func,

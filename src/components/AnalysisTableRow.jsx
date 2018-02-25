@@ -9,7 +9,7 @@ import '../styles/AnalysisTableRow.css';
 class AnalysisTableRow extends Component {
   static propTypes = {
     analysis: PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
     showHandler: PropTypes.func,
@@ -25,7 +25,7 @@ class AnalysisTableRow extends Component {
    * forward show click to handler
    */
   handleShowClick = () => {
-    this.props.showHandler(this.props.analysis.id);
+    this.props.showHandler(this.props.analysis);
   };
 
   /**

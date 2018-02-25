@@ -15,7 +15,7 @@ import LightBoxDetailView from './LightBoxDetailView';
 import '../styles/AnalysisResultPersonal.css';
 
 // queries for getting results from server
-const AnalysisPartsFragment = gql`
+const analysisPartsFragment = gql`
   fragment AnalysisParts on AnalysisResult {
     name
     headings
@@ -90,7 +90,7 @@ const personalResultsQuery = gql`
       }
     }
   }
-  ${AnalysisPartsFragment}
+  ${analysisPartsFragment}
 `;
 
 /**
@@ -105,6 +105,7 @@ class AnalysisResultPersonal extends Component {
       params: PropTypes.shape({
         firstNames: PropTypes.string.isRequired,
         lastName: PropTypes.string.isRequired,
+        dateOfBirth: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
   };
@@ -256,7 +257,9 @@ class AnalysisResultPersonal extends Component {
           backRoute="/analysisInput"
           primaryActionTitle="Speichern"
           onPrimaryAction={() => {
-            this.props.history.push('/userHome');
+            this.props.history.push(`/userHome/saveAnalysis/${this.props.match.params.firstNames}/${
+                this.props.match.params.lastName
+              }/${this.props.match.params.dateOfBirth}`);
           }}
           badgeTitle="Kurztext"
           secondaryActionTitle="Drucken"
@@ -297,6 +300,7 @@ class AnalysisResultPersonal extends Component {
             <Panel
               title={this.props.data.personalAnalysis.expressionLevel.name}
               id="ExpressionResult"
+              className="panelResult"
             >
               <ResultTable
                 data={this.props.data.personalAnalysis.expressionLevel}
@@ -308,6 +312,7 @@ class AnalysisResultPersonal extends Component {
             <Panel
               title={this.props.data.personalAnalysis.personalLevel.name}
               id="PersonalResult"
+              className="panelResult"
             >
               <ResultTable
                 data={this.props.data.personalAnalysis.personalLevel}
@@ -318,6 +323,7 @@ class AnalysisResultPersonal extends Component {
             <Panel
               title={this.props.data.personalAnalysis.developmentLevel.name}
               id="DevelopmentResult"
+              className="panelResult"
             >
               <ResultTable
                 data={this.props.data.personalAnalysis.developmentLevel}
@@ -328,6 +334,7 @@ class AnalysisResultPersonal extends Component {
             <Panel
               title={this.props.data.personalAnalysis.soulLevel.name}
               id="SoulResult"
+              className="panelResult"
             >
               <ResultTable
                 data={this.props.data.personalAnalysis.soulLevel}
@@ -335,7 +342,11 @@ class AnalysisResultPersonal extends Component {
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
-            <Panel title="Zeitliche Ebene" id="TimeResult">
+            <Panel
+              title="Zeitliche Ebene"
+              id="TimeResult"
+              className="panelResult"
+            >
               <ResultTable
                 data={this.props.data.personalAnalysis.vibratoryCycles}
                 dataKey="vibratoryCycles"
