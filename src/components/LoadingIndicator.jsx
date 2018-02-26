@@ -10,7 +10,11 @@ class LoadingIndicator extends Component {
   render() {
     return (
       <div className="LoadingIndicator__container">
-        <Spinner className="LoadingIndicator" name="double-bounce" fadeIn={0} />
+        <Spinner
+          className="LoadingIndicator"
+          name="double-bounce"
+          fadeIn="none"
+        />
       </div>
     );
   }
