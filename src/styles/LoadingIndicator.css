@@ -1,0 +1,10 @@
+.LoadingIndicator {
+    text-align: center;
+}
+
+.LoadingIndicator__container {
+    padding-top: 10em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
