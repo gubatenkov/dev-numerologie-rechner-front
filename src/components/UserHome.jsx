@@ -13,6 +13,7 @@ import AdArea from './AdArea';
 import AnalysisBrowser from './AnalysisBrowser';
 import CreditWidget from './CreditWidget';
 import SaveDialog from './SaveDialog';
+import LoadingIndicator from './LoadingIndicator';
 
 const currentUserQuery = gql`
   query currentUser {
@@ -78,7 +79,7 @@ class UserHome extends Component {
    */
   render() {
     if (this.props.data.loading) {
-      return <h1>Loading...</h1>;
+      return <LoadingIndicator />;
     }
 
     // console.log(this.props.computedMatch.params.userAction);

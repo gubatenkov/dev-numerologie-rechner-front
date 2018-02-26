@@ -11,6 +11,7 @@ import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTable from './ResultTable';
 import LightBoxDetailView from './LightBoxDetailView';
+import LoadingIndicator from './LoadingIndicator';
 
 import '../styles/AnalysisResultPersonal.css';
 
@@ -244,7 +245,7 @@ class AnalysisResultPersonal extends Component {
    */
   render() {
     if (this.props.data.loading) {
-      return <h1>Loading...</h1>;
+      return <LoadingIndicator />;
     }
 
     // render table, table shows spinner
