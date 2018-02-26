@@ -18,7 +18,6 @@ class AnalysisBrowser extends Component {
     analyses: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      groupId: PropTypes.string.isRequired,
       inputs: PropTypes.arrayOf(PropTypes.shape({
         firstNames: PropTypes.string.isRequired,
         lastName: PropTypes.string.isRequired,
@@ -136,7 +135,7 @@ class AnalysisBrowser extends Component {
               // -> rendering analyses as well
               if (this.state.expandedIndex === index) {
                 groupCellContent.push(this.state.analyses
-                    .filter(analysis => analysis.groupId === group.id)
+                    .filter(analysis => analysis.group.id === group.id)
                     .map(analysis => (
                       <AnalysisTableRow
                         key={analysis.id}

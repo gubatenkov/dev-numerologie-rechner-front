@@ -25,7 +25,9 @@ const currentUserQuery = gql`
       analyses {
         id
         name
-        groupId
+        group {
+          id
+        }
         inputs {
           firstNames
           lastName
