@@ -114,6 +114,20 @@ class LightBoxDetailView extends Component {
   };
 
   /**
+   * handles clicks on steps
+   * @param sectionTitleClicked: the title of the step clicked
+   */
+  handleStepClick = (sectionTitleClicked) => {
+    // getting index of section title clicked and setting it's index as current section index
+    const index = this.props.data.findIndex(item => item.sectionName === sectionTitleClicked);
+    if (index > -1) {
+      this.setState({
+        currentSectionIndex: index,
+      });
+    }
+  };
+
+  /**
    * handle method for key strokes
    * @param event the key down event
    */
@@ -190,6 +204,7 @@ class LightBoxDetailView extends Component {
                   name={stepName}
                   current={index === this.state.currentSectionIndex}
                   done={index < this.state.currentSectionIndex}
+                  onStepClick={this.handleStepClick}
                   horizontal
                 />
               );

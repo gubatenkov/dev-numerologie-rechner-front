@@ -49,10 +49,12 @@
 
 .Step__StepName {
     margin-left: 20px;
+    cursor: pointer;
 }
 
 .Step__StepName--horizontal {
     margin-top: 10px;
+    cursor: pointer;
 }
 
 .Step__StepName--current {
