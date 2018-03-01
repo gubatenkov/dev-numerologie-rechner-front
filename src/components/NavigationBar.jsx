@@ -59,6 +59,7 @@ class NavigationBar extends Component {
       <ul className="nav navbar-toolbar navbar-right">
         <NavigationDropdownMenu
           name={`${this.state.user.firstName} ${this.state.user.lastName}`}
+          navbar
         >
           <NavigationDropdownMenuItem>Paket ändern</NavigationDropdownMenuItem>
           <NavigationDropdownMenuItem onClick={this.handleLogout}>

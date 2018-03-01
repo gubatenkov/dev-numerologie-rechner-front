@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import '../styles/NavigationDropdownMenu.css';
+
 /**
  * A Dropdown Menu in the navigation bar
  */
@@ -8,10 +10,12 @@ class NavigationDropdownMenu extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     children: PropTypes.node,
+    navbar: PropTypes.bool,
   };
 
   static defaultProps = {
     children: null,
+    navbar: false,
   };
 
   /**
@@ -46,7 +50,12 @@ class NavigationDropdownMenu extends Component {
         role="button"
       >
         <li className={`nav-item dropdown${this.state.isOpen ? ' show' : ''}`}>
-          <a className="nav-link dropdown-toggle" role="button">
+          <a
+            className={`NavigationDropdownMenu__button ${
+              this.props.navbar ? 'nav-link' : ''
+            }`}
+            role="button"
+          >
             {this.props.name}
           </a>
           <div className="dropdown-menu dropdown-menu-bullet" role="menu">

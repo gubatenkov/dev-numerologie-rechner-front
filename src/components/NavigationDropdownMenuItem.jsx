@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import '../styles/NavigationDropdownMenuItem.css';
+
 /**
  * wrapper component for dropdown items in the navbar
  */
 const NavigationDropdownMenuItem = props => (
-  <a onClick={props.onClick} className="dropdown-item" role="button">
+  <a
+    onClick={props.onClick}
+    className="NavigationDropdownMenuItem dropdown-item"
+    role="button"
+  >
     {props.children}
   </a>
 );
