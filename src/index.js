@@ -10,6 +10,8 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
+import 'react-notifications/lib/notifications.css';
+
 import introspectionQueryResultData from './utils/FragmentTypes.json';
 
 import AnalysisInput from './components/AnalysisInput';

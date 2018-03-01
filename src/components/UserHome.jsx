@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
-
 import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
+import {
+  NotificationContainer,
+  NotificationManager,
+} from 'react-notifications';
 
 import '../styles/UserHome.css';
+
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
 import AnalysisBrowser from './AnalysisBrowser';
 import CreditWidget from './CreditWidget';
-
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
-
 import LoadingIndicator from './LoadingIndicator';
 
 const currentUserQuery = gql`
@@ -48,6 +50,16 @@ const currentUserQuery = gql`
     }
   }
 `;
+
+const createGroupMutation = gql`
+  mutation createGroup($groupName: String!) {
+    createAnalysisGroup(name: $groupName) {
+      id
+      name
+    }
+  }
+`;
+
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
 /**
@@ -66,6 +78,7 @@ class UserHome extends Component {
         dateOfBirth: PropTypes.string,
       }),
     }).isRequired,
+    createGroup: PropTypes.func.isRequired,
   };
   /**
    * default constructor
@@ -87,8 +100,15 @@ class UserHome extends Component {
    * @param groupName the name of the new group to be created
    */
   handleCreateGroup = (groupName) => {
-    // todo implement
-    console.log(`Creating group ${groupName}`);
+    // performing mutation call
+    this.props
+      .createGroup({
+        variables: {
+          groupName,
+        },
+      })
+      .then(() =>
+        NotificationManager.success(`Die Gruppe ${groupName} wurde erfolgreich erstellt.`));
   };
 
   /**
@@ -166,9 +186,13 @@ class UserHome extends Component {
           }}
           groups={this.props.data.currentUser.groups.map(item => item.name)}
         />
+        <NotificationContainer />
       </div>
     );
   }
 }
 
-export default graphql(currentUserQuery)(withRouter(UserHome));
+export default compose(
+  graphql(currentUserQuery),
+  graphql(createGroupMutation, { name: 'createGroup' }),
+)(withRouter(UserHome));
