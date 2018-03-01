@@ -6,15 +6,19 @@ import '../styles/Dialog.css';
 class Dialog extends Component {
   static propTypes = {
     isOpen: PropTypes.bool,
-    groups: PropTypes.arrayOf(PropTypes.string).isRequired,
-    onSave: PropTypes.func,
+    onAction: PropTypes.func,
     onClose: PropTypes.func,
+    title: PropTypes.string.isRequired,
+    cancelTitle: PropTypes.string,
+    actionTitle: PropTypes.string,
   };
 
   static defaultProps = {
     isOpen: false,
-    onSave: () => {},
+    onAction: () => {},
     onClose: () => {},
+    cancelTitle: null,
+    actionTitle: null,
   };
 
   /**
@@ -54,7 +58,11 @@ class Dialog extends Component {
         <div className="modal-dialog modal-center">
           <div className="modal-content">
             <div className="modal-header">
-              <button type="button" className="close">
+              <button
+                type="button"
+                className="close"
+                onClick={this.props.onClose}
+              >
                 <span aria-hidden="true">×</span>
               </button>
               <h4 className="modal-title">{this.props.title}</h4>
@@ -67,14 +75,14 @@ class Dialog extends Component {
                 data-dismiss="modal"
                 onClick={this.props.onClose}
               >
-                Abbrechen
+                {this.props.cancelTitle}
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={this.props.onSave}
+                onClick={this.props.onAction}
               >
-                Speichern
+                {this.props.actionTitle}
               </button>
             </div>
           </div>

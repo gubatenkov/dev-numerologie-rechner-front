@@ -28,6 +28,8 @@ class SaveAnalysisDialog extends Component {
         onClose={this.props.onClose}
         onAction={this.props.onSave}
         title="Analyse Speichern"
+        cancelTitle="Abbrechen"
+        actionTitle="Speichern"
       >
         <p>Gruppe</p>
         <div className="dropdown">
