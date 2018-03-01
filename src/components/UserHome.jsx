@@ -47,6 +47,9 @@ const currentUserQuery = gql`
 `;
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
+/**
+ * Home screen of the user displaying analyses, groups and credits
+ */
 class UserHome extends Component {
   static propTypes = {
     history: PropTypes.shape({

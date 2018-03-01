@@ -11,11 +11,13 @@ class NavigationDropdownMenu extends Component {
     name: PropTypes.string.isRequired,
     children: PropTypes.node,
     navbar: PropTypes.bool,
+    direction: PropTypes.oneOf(['default', 'right']),
   };
 
   static defaultProps = {
     children: null,
     navbar: false,
+    direction: 'default',
   };
 
   /**
@@ -58,7 +60,12 @@ class NavigationDropdownMenu extends Component {
           >
             {this.props.name}
           </a>
-          <div className="dropdown-menu dropdown-menu-bullet" role="menu">
+          <div
+            className={`dropdown-menu dropdown-menu-bullet ${
+              this.props.direction === 'right' ? 'dropdown-menu-right' : ''
+            }`}
+            role="menu"
+          >
             {this.props.children}
           </div>
         </li>

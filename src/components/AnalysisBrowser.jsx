@@ -6,6 +6,8 @@ import { withRouter } from 'react-router-dom';
 import Panel from './Panel';
 import GroupTableRow from './GroupTableRow';
 import AnalysisTableRow from './AnalysisTableRow';
+import NavigationDropdownMenu from './NavigationDropdownMenu';
+import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import '../styles/AnalysisBrowser.css';
 
@@ -104,9 +106,10 @@ class AnalysisBrowser extends Component {
       <Panel
         title="Analysen"
         actions={[
-          <a key="AddIconAnalysis" className="panel-action icon wb-plus">
-            {' '}
-          </a>,
+          <NavigationDropdownMenu name="+" direction="right" navbar>
+            <NavigationDropdownMenuItem>Gruppe</NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem>Analyse</NavigationDropdownMenuItem>
+          </NavigationDropdownMenu>,
         ]}
       >
         <table className="table table-striped table-hover AnalysisBrowser--table">

@@ -77,7 +77,7 @@ class NavigationBar extends Component {
     ) : (
       <ul className="nav navbar-toolbar navbar-right">
         <button
-          className="btn btn-default btn-block"
+          className="btn btn-default btn-block "
           onClick={this.handleLogin}
         >
           Anmelden

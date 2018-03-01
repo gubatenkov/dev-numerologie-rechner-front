@@ -47,8 +47,6 @@ class SaveDialog extends Component {
     return (
       <div
         className="modal fade show"
-        id="examplePositionCenter"
-        aria-labelledby="examplePositionCenter"
         role="dialog"
         tabIndex="-1"
         style={{ display: 'block' }}
@@ -59,8 +57,6 @@ class SaveDialog extends Component {
               <button
                 type="button"
                 className="close"
-                data-dismiss="modal"
-                aria-label="Close"
               >
                 <span aria-hidden="true">×</span>
               </button>
