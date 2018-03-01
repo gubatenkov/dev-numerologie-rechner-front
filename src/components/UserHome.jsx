@@ -12,7 +12,10 @@ import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
 import AnalysisBrowser from './AnalysisBrowser';
 import CreditWidget from './CreditWidget';
-import SaveAnalysisDialog from './SaveAnalysisDialog';
+
+import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
+import CreateGroupDialog from './dialogs/CreateGroupDialog';
+
 import LoadingIndicator from './LoadingIndicator';
 
 const currentUserQuery = gql`
@@ -74,8 +77,38 @@ class UserHome extends Component {
     this.state = {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
+      createGroupDialogOpen: false,
+      createAnalysisDialogOpen: false,
     };
   }
+
+  /**
+   * handler for the creation of a group
+   * @param groupName the name of the new group to be created
+   */
+  handleCreateGroup = (groupName) => {
+    // todo implement
+    console.log(`Creating group ${groupName}`);
+  };
+
+  /**
+   * handler for renaming a group
+   * @param id the id of the group to be renamed
+   * @param newName the name to rename into
+   */
+  handleRenameGroup = (id, newName) => {
+    // todo implement
+    console.log(`Renaming Group ${id} into ${newName}`);
+  };
+
+  /**
+   * handler for deleting a group
+   * @param id: the id of the group to be deleted
+   */
+  handleDeleteGroup = (id) => {
+    // todo implement
+    console.log(`Deleting Group ${id}`);
+  };
 
   /**
    * default component render
@@ -84,11 +117,6 @@ class UserHome extends Component {
     if (this.props.data.loading) {
       return <LoadingIndicator />;
     }
-
-    // console.log(this.props.computedMatch.params.userAction);
-    // console.log(this.props.computedMatch.params.firstNames);
-    // console.log(this.props.computedMatch.params.lastName);
-    // console.log(this.props.computedMatch.params.dateOfBirth);
 
     return (
       <div>
@@ -106,6 +134,12 @@ class UserHome extends Component {
             <AnalysisBrowser
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.currentUser.analyses}
+              handleCreateGroup={() =>
+                this.setState({ createGroupDialogOpen: true })
+              }
+              handleCreateAnalysis={() => {
+                this.setState({ createAnalysisDialogOpen: true });
+              }}
             />
             <CreditWidget
               credits={this.props.data.currentUser.credits}
@@ -118,6 +152,18 @@ class UserHome extends Component {
           isOpen={this.state.saveDialogOpen}
           onClose={() => this.setState({ saveDialogOpen: false })}
           onSave={() => this.setState({ saveDialogOpen: false })}
+          groups={this.props.data.currentUser.groups.map(item => item.name)}
+        />
+        <CreateGroupDialog
+          isOpen={this.state.createGroupDialogOpen}
+          onClose={() => this.setState({ createGroupDialogOpen: false })}
+          onAction={(groupName) => {
+            // calling handler
+            this.handleCreateGroup(groupName);
+
+            // hiding dialog
+            this.setState({ createGroupDialogOpen: false });
+          }}
           groups={this.props.data.currentUser.groups.map(item => item.name)}
         />
       </div>

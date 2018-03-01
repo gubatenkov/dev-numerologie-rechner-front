@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import '../styles/Dialog.css';
+import '../../styles/Dialog.css';
 
 class Dialog extends Component {
   static propTypes = {

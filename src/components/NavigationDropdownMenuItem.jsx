@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import '../styles/NavigationDropdownMenuItem.css';
 
 /**
- * wrapper component for dropdown items in the navbar
+ * wrapper component for dropdown items
  */
 const NavigationDropdownMenuItem = props => (
   <a

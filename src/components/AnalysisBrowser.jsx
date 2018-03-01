@@ -30,6 +30,13 @@ class AnalysisBrowser extends Component {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     })).isRequired,
+    handleCreateGroup: PropTypes.func,
+    handleCreateAnalysis: PropTypes.func,
+  };
+
+  static defaultProps = {
+    handleCreateGroup: () => {},
+    handleCreateAnalysis: () => {},
   };
   constructor(props) {
     super(props);
@@ -106,9 +113,20 @@ class AnalysisBrowser extends Component {
       <Panel
         title="Analysen"
         actions={[
-          <NavigationDropdownMenu name="+" direction="right" navbar>
-            <NavigationDropdownMenuItem>Gruppe</NavigationDropdownMenuItem>
-            <NavigationDropdownMenuItem>Analyse</NavigationDropdownMenuItem>
+          <NavigationDropdownMenu
+            key="AddGroupAnalysis"
+            name="+"
+            direction="right"
+            navbar
+          >
+            <NavigationDropdownMenuItem onClick={this.props.handleCreateGroup}>
+              Gruppe
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem
+              onClick={this.props.handleCreateAnalysis}
+            >
+              Analyse
+            </NavigationDropdownMenuItem>
           </NavigationDropdownMenu>,
         ]}
       >
