@@ -12,7 +12,7 @@ import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
 import AnalysisBrowser from './AnalysisBrowser';
 import CreditWidget from './CreditWidget';
-import SaveDialog from './SaveDialog';
+import SaveAnalysisDialog from './SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
 
 const currentUserQuery = gql`
@@ -114,11 +114,11 @@ class UserHome extends Component {
             <AdArea />
           </div>
         </div>
-        <SaveDialog
+        <SaveAnalysisDialog
           isOpen={this.state.saveDialogOpen}
-          groups={this.props.data.currentUser.groups.map(group => group.name)}
           onClose={() => this.setState({ saveDialogOpen: false })}
           onSave={() => this.setState({ saveDialogOpen: false })}
+          groups={this.props.data.currentUser.groups.map(item => item.name)}
         />
       </div>
     );
