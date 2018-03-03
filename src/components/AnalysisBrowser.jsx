@@ -139,7 +139,7 @@ class AnalysisBrowser extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.groups.map((group, index) => {
+            {this.props.groups.map((group, index) => {
               // adding group row to result
               const groupCellContent = [
                 <GroupTableRow

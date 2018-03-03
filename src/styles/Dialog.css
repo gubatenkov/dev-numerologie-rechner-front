@@ -6,10 +6,6 @@
     overflow-y: hidden;
 }
 
-.modal-body {
-    padding-bottom: 0px !important;
-}
-
 .modal-header .close {
     margin: 0px !important;
     padding-left: 0px !important;
