@@ -95,29 +95,32 @@ class UserHome extends Component {
     };
   }
 
-  componentWillReceiveProps() {
-    console.log('componentWillReceiveProps');
-  }
-
   /**
    * handler for the creation of a group
    * @param groupName the name of the new group to be created
    */
   handleCreateGroup = async (groupName) => {
-    // performing mutation call
-    await this.props.createGroup({
-      variables: {
-        groupName,
-      },
-      update: (store, { data: { createAnalysisGroup } }) => {
-        // gettint the query from the local cache and adding group
-        const data = store.readQuery({ query: currentUserQuery });
-        data.currentUser.groups.push(createAnalysisGroup);
-        store.writeQuery({ query: currentUserQuery, data });
-      },
-    });
+    // defining result of the mutation
+    let result;
 
-    NotificationManager.success(`Die Gruppe ${groupName} wurde erfolgreich erstellt.`);
+    try {
+      // performing mutation call
+      result = await this.props.createGroup({
+        variables: {
+          groupName,
+        },
+        update: (store, { data: { createAnalysisGroup } }) => {
+          // gettint the query from the local cache and adding group
+          const data = store.readQuery({ query: currentUserQuery });
+          data.currentUser.groups.push(createAnalysisGroup);
+          store.writeQuery({ query: currentUserQuery, data });
+        },
+      });
+      NotificationManager.success(`Die Gruppe ${groupName} wurde erfolgreich erstellt.`);
+    } catch (error) {
+      // error occured -> displaying notification
+      NotificationManager.error(error.graphQLErrors[0].message);
+    }
   };
 
   /**

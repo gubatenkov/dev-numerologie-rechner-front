@@ -16,8 +16,21 @@ class CreateGroupDialog extends Component {
     onAction: () => {},
   };
 
+  /**
+   * default lifecylce method
+   */
+  componentDidUpdate() {
+    // if rendered and input is there -> focusing
+    if (this.groupNameInput) {
+      this.groupNameInput.focus();
+    }
+  }
+
   // member for the group name
   groupName = null;
+
+  // input ref
+  groupNameInput = null;
 
   /**
    * handler for clicks on the create button
@@ -55,6 +68,9 @@ class CreateGroupDialog extends Component {
           className="form-control"
           placeholder="Neue Gruppe"
           onChange={this.handleInputchange}
+          ref={(ref) => {
+            this.groupNameInput = ref;
+          }}
         />
       </Dialog>
     );
