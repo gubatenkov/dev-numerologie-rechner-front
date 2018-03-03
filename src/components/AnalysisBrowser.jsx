@@ -6,6 +6,8 @@ import { withRouter } from 'react-router-dom';
 import Panel from './Panel';
 import GroupTableRow from './GroupTableRow';
 import AnalysisTableRow from './AnalysisTableRow';
+import NavigationDropdownMenu from './NavigationDropdownMenu';
+import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import '../styles/AnalysisBrowser.css';
 
@@ -28,6 +30,13 @@ class AnalysisBrowser extends Component {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     })).isRequired,
+    handleCreateGroup: PropTypes.func,
+    handleCreateAnalysis: PropTypes.func,
+  };
+
+  static defaultProps = {
+    handleCreateGroup: () => {},
+    handleCreateAnalysis: () => {},
   };
   constructor(props) {
     super(props);
@@ -104,9 +113,21 @@ class AnalysisBrowser extends Component {
       <Panel
         title="Analysen"
         actions={[
-          <a key="AddIconAnalysis" className="panel-action icon wb-plus">
-            {' '}
-          </a>,
+          <NavigationDropdownMenu
+            key="AddGroupAnalysis"
+            name="+"
+            direction="right"
+            navbar
+          >
+            <NavigationDropdownMenuItem onClick={this.props.handleCreateGroup}>
+              Gruppe
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem
+              onClick={this.props.handleCreateAnalysis}
+            >
+              Analyse
+            </NavigationDropdownMenuItem>
+          </NavigationDropdownMenu>,
         ]}
       >
         <table className="table table-striped table-hover AnalysisBrowser--table">
@@ -118,7 +139,7 @@ class AnalysisBrowser extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.groups.map((group, index) => {
+            {this.props.groups.map((group, index) => {
               // adding group row to result
               const groupCellContent = [
                 <GroupTableRow
