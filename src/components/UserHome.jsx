@@ -100,12 +100,9 @@ class UserHome extends Component {
    * @param groupName the name of the new group to be created
    */
   handleCreateGroup = async (groupName) => {
-    // defining result of the mutation
-    let result;
-
     try {
       // performing mutation call
-      result = await this.props.createGroup({
+      await this.props.createGroup({
         variables: {
           groupName,
         },
