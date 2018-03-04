@@ -157,27 +157,10 @@ class AnalysisBrowser extends Component {
    * default render method rendering panel and table of groups and analyses
    */
   render() {
-    return (
-      <Panel
-        title="Analysen"
-        actions={[
-          <NavigationDropdownMenu
-            key="AddGroupAnalysis"
-            name="+"
-            direction="right"
-            navbar
-          >
-            <NavigationDropdownMenuItem onClick={this.props.handleCreateGroup}>
-              Gruppe
-            </NavigationDropdownMenuItem>
-            <NavigationDropdownMenuItem
-              onClick={this.props.handleCreateAnalysis}
-            >
-              Analyse
-            </NavigationDropdownMenuItem>
-          </NavigationDropdownMenu>,
-        ]}
-      >
+    // determining content of panel based on if there is data or not
+    let panelContent = null;
+    if (this.props.groups.length > 0) {
+      panelContent = (
         <table className="table table-striped table-hover AnalysisBrowser--table">
           <thead>
             <tr>
@@ -220,6 +203,36 @@ class AnalysisBrowser extends Component {
             })}
           </tbody>
         </table>
+      );
+    } else {
+      panelContent = (
+        <p className="AnalysisBrowser--placeholder">
+          Keine Gruppen oder Analysen
+        </p>
+      );
+    }
+    return (
+      <Panel
+        title="Analysen"
+        actions={[
+          <NavigationDropdownMenu
+            key="AddGroupAnalysis"
+            name="+"
+            direction="right"
+            navbar
+          >
+            <NavigationDropdownMenuItem onClick={this.props.handleCreateGroup}>
+              Gruppe
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem
+              onClick={this.props.handleCreateAnalysis}
+            >
+              Analyse
+            </NavigationDropdownMenuItem>
+          </NavigationDropdownMenu>,
+        ]}
+      >
+        {panelContent}
       </Panel>
     );
   }
