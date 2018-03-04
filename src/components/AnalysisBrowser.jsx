@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
+import gql from 'graphql-tag';
+import { graphql, compose } from 'react-apollo';
+import { NotificationManager } from 'react-notifications';
+import _ from 'lodash';
 
 import Panel from './Panel';
 import GroupTableRow from './GroupTableRow';
@@ -9,7 +13,18 @@ import AnalysisTableRow from './AnalysisTableRow';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
+import { currentUserQuery } from '../graphql/Queries';
+
 import '../styles/AnalysisBrowser.css';
+
+const deleteGroupMutation = gql`
+  mutation deleteGroup($id: String!) {
+    deleteAnalysisGroup(id: $id) {
+      id
+      name
+    }
+  }
+`;
 
 /**
  * browser that allows users to view and organize
@@ -82,8 +97,41 @@ class AnalysisBrowser extends Component {
    * @param index the index of the group to delete
    * @param id the id of the group to delete
    */
-  handleGroupDeleteClick = (index, id) => {
-    console.log(`Delete item ${id} @ ${index}`);
+  handleGroupDeleteClick = async (index, id) => {
+    // deleting group
+    try {
+      const deletedGroup = await this.props.deleteGroup({
+        variables: {
+          id,
+        },
+        update: (store, { data: { deleteAnalysisGroup } }) => {
+          // gettint the query from the local cache and deleting group
+          const data = store.readQuery({ query: currentUserQuery });
+          // getting index of item to delete
+          const groupIndex = _.findIndex(
+            data.currentUser.groups,
+            item =>
+              item.id === deleteAnalysisGroup.id &&
+              item.name === deleteAnalysisGroup.name,
+          );
+
+          // deleting item if present
+          if (groupIndex > -1) {
+            data.currentUser.groups.splice(groupIndex, 1);
+          }
+
+          // writing object back to cache
+          store.writeQuery({ query: currentUserQuery, data });
+        },
+      });
+
+      // shooting notification informting the user
+      NotificationManager.success(`Die Gruppe ${
+        deletedGroup.data.deleteAnalysisGroup.name
+      } wurde erfolgreich gelöscht.`);
+    } catch (error) {
+      NotificationManager.error('Gruppe konnte nicht gelöscht werden.');
+    }
   };
 
   /**
@@ -177,4 +225,4 @@ class AnalysisBrowser extends Component {
   }
 }
 
-export default withRouter(AnalysisBrowser);
+export default compose(graphql(deleteGroupMutation, { name: 'deleteGroup' }))(withRouter(AnalysisBrowser));

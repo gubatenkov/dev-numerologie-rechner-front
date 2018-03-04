@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
-import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo';
 import {
   NotificationContainer,
@@ -20,45 +19,8 @@ import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
 import LoadingIndicator from './LoadingIndicator';
 
-const currentUserQuery = gql`
-  query currentUser {
-    currentUser {
-      email
-      groups {
-        id
-        name
-      }
-      analyses {
-        id
-        name
-        group {
-          id
-        }
-        inputs {
-          firstNames
-          lastName
-          dateOfBirth
-        }
-      }
-      credits {
-        type {
-          name
-          description
-        }
-        value
-      }
-    }
-  }
-`;
-
-const createGroupMutation = gql`
-  mutation createGroup($groupName: String!) {
-    createAnalysisGroup(name: $groupName) {
-      id
-      name
-    }
-  }
-`;
+import { currentUserQuery } from '../graphql/Queries';
+import { createGroupMutation } from '../graphql/Mutations';
 
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
