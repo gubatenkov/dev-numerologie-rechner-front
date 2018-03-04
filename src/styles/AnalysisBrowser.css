@@ -5,3 +5,7 @@
 .AnalysisBrowser--table {
     user-select: none;
 }
+
+.AnalysisBrowser--placeholder {
+    padding-bottom: 10px !important;
+}
