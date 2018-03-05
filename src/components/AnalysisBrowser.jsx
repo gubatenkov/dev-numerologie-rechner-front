@@ -14,6 +14,7 @@ import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
 import ConfirmDeletionDialog from './dialogs/ConfirmDeletionDialog';
+import RenameGroupDialog from './dialogs/RenameGroupDialog';
 
 import { currentUserQuery } from '../graphql/Queries';
 import { deleteGroupMutation, createGroupMutation } from '../graphql/Mutations';
@@ -320,6 +321,24 @@ class AnalysisBrowser extends Component {
             this.setState({ createGroupDialogOpen: false });
           }}
           groups={this.props.groups.map(item => item.name)}
+        />
+        <RenameGroupDialog
+          isOpen={this.state.renameGroupDialopOpen}
+          onClose={() => {
+            // clearing to be renamed field
+            this.groupToBeRenamed = null;
+
+            // hiding dialog
+            this.setState({ renameGroupDialopOpen: false });
+          }}
+          onAction={(index, id) => {
+            // renaming group
+            this.renameGroup(index, id);
+
+            // hiding dialog
+            this.setState({ renameGroupDialopOpen: false });
+          }}
+          group={this.groupToBeRenamed}
         />
       </div>
     );
