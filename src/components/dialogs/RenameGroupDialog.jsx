@@ -10,7 +10,9 @@ class RenameGroupDialog extends Component {
   static propTypes = {
     group: PropTypes.shape({
       name: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
     }),
+    onAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {

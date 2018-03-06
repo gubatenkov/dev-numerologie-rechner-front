@@ -22,7 +22,7 @@ import {
   deleteGroupMutation,
   createGroupMutation,
   renameGroupMutation,
-  deleteAnalysis,
+  deleteAnalysisMutation,
 } from '../graphql/Mutations';
 
 import '../styles/AnalysisBrowser.css';
@@ -406,5 +406,5 @@ export default compose(
   graphql(deleteGroupMutation, { name: 'deleteGroup' }),
   graphql(createGroupMutation, { name: 'createGroup' }),
   graphql(renameGroupMutation, { name: 'renameGroup' }),
-  graphql(deleteAnalysis, { name: 'deleteAnalysis' }),
+  graphql(deleteAnalysisMutation, { name: 'deleteAnalysis' }),
 )(withRouter(AnalysisBrowser));

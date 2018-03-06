@@ -27,11 +27,34 @@ export const renameGroupMutation = gql`
   }
 `;
 
-export const deleteAnalysis = gql`
+export const deleteAnalysisMutation = gql`
   mutation deleteAnalysis($id: String!) {
     deleteAnalysis(id: $id) {
       id
       name
+    }
+  }
+`;
+
+export const saveAnalysisMutation = gql`
+  mutation saveAnalysis(
+    $inputs: [AnalysisInput!]!
+    $name: String!
+    $group: ID!
+  ) {
+    saveAnalysis(inputs: $inputs, name: $name, group: $group) {
+      id
+      name
+      inputs {
+        id
+        lastName
+        firstNames
+        dateOfBirth
+      }
+      group {
+        id
+        name
+      }
     }
   }
 `;
