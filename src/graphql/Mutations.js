@@ -17,3 +17,12 @@ export const deleteGroupMutation = gql`
     }
   }
 `;
+
+export const renameGroupMutation = gql`
+  mutation renameGroup($id: ID!, $newName: String!) {
+    renameAnalysisGroup(id: $id, newName: $newName) {
+      id
+      name
+    }
+  }
+`;

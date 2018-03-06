@@ -14,9 +14,14 @@ import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
 import ConfirmDeletionDialog from './dialogs/ConfirmDeletionDialog';
+import RenameGroupDialog from './dialogs/RenameGroupDialog';
 
 import { currentUserQuery } from '../graphql/Queries';
-import { deleteGroupMutation, createGroupMutation } from '../graphql/Mutations';
+import {
+  deleteGroupMutation,
+  createGroupMutation,
+  renameGroupMutation,
+} from '../graphql/Mutations';
 
 import '../styles/AnalysisBrowser.css';
 
@@ -41,6 +46,7 @@ class AnalysisBrowser extends Component {
     })).isRequired,
     createGroup: PropTypes.func.isRequired,
     deleteGroup: PropTypes.func.isRequired,
+    renameGroup: PropTypes.func.isRequired,
   };
 
   static defaultProps = {};
@@ -112,15 +118,27 @@ class AnalysisBrowser extends Component {
 
   /**
    * handler for the rename action of group rows
-   * @param index the index of the item to rename
-   * @param id the id of the item to rename
+   * @param newName the name to be renamed to
+   * @param id the id of the item to renamed
    */
-  renameGroup = (index, id) => {
-    console.log(`Rename item ${id} @ ${index}`);
+  renameGroup = async (newName, id) => {
+    try {
+      // performing mutation call
+      await this.props.renameGroup({
+        variables: {
+          id,
+          newName,
+        },
+      });
+      NotificationManager.success(`Die Gruppe ${newName} wurde erfolgreich umbenannt.`);
+    } catch (error) {
+      // error occured -> displaying notification
+      NotificationManager.error('Die Gruppe konnte nicht umbenannt werden');
+    }
   };
 
   /**
-   *  deletes the group identified by id from the server
+   * deletes the group identified by id from the server
    * @param id: the id of the group to be deleted
    */
   deleteGroup = async (id) => {
@@ -321,6 +339,24 @@ class AnalysisBrowser extends Component {
           }}
           groups={this.props.groups.map(item => item.name)}
         />
+        <RenameGroupDialog
+          isOpen={this.state.renameGroupDialopOpen}
+          onClose={() => {
+            // clearing to be renamed field
+            this.groupToBeRenamed = null;
+
+            // hiding dialog
+            this.setState({ renameGroupDialopOpen: false });
+          }}
+          onAction={(id, newName) => {
+            // renaming group
+            this.renameGroup(newName, id);
+
+            // hiding dialog
+            this.setState({ renameGroupDialopOpen: false });
+          }}
+          group={this.groupToBeRenamed}
+        />
       </div>
     );
   }
@@ -329,4 +365,5 @@ class AnalysisBrowser extends Component {
 export default compose(
   graphql(deleteGroupMutation, { name: 'deleteGroup' }),
   graphql(createGroupMutation, { name: 'createGroup' }),
+  graphql(renameGroupMutation, { name: 'renameGroup' }),
 )(withRouter(AnalysisBrowser));
