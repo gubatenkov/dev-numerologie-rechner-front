@@ -26,3 +26,12 @@ export const renameGroupMutation = gql`
     }
   }
 `;
+
+export const deleteAnalysis = gql`
+  mutation deleteAnalysis($id: String!) {
+    deleteAnalysis(id: $id) {
+      id
+      name
+    }
+  }
+`;
