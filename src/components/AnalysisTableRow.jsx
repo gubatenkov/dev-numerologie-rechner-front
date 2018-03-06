@@ -22,20 +22,6 @@ class AnalysisTableRow extends Component {
   };
 
   /**
-   * forward show click to handler
-   */
-  handleShowClick = () => {
-    this.props.showHandler(this.props.analysis);
-  };
-
-  /**
-   * forward delete click to handler
-   */
-  handleDeleteClick = () => {
-    this.props.deleteHandler(this.props.analysis.id);
-  };
-
-  /**
    * default render -> renders the table row with analysis information
    */
   render() {
@@ -49,13 +35,17 @@ class AnalysisTableRow extends Component {
           {' '}
           <button
             className="btn btn-primary btn-outline btn-sm"
-            onClick={this.handleShowClick}
+            onClick={() => {
+              this.props.showHandler(this.props.analysis);
+            }}
           >
             Anzeigen
           </button>
           <button
             className="btn btn-danger btn-outline btn-sm"
-            onClick={this.handleDeleteClick}
+            onClick={() => {
+              this.props.deleteHandler(this.props.analysis.id);
+            }}
           >
             Löschen
           </button>

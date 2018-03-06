@@ -13,7 +13,8 @@ import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
-import ConfirmDeletionDialog from './dialogs/ConfirmDeletionDialog';
+import ConfirmGroupDeletionDialog from './dialogs/ConfirmGroupDeletionDialog';
+import ConfirmAnalysisDeletionDialog from './dialogs/ConfirmAnalysisDeletionDialog';
 import RenameGroupDialog from './dialogs/RenameGroupDialog';
 
 import { currentUserQuery } from '../graphql/Queries';
@@ -21,6 +22,7 @@ import {
   deleteGroupMutation,
   createGroupMutation,
   renameGroupMutation,
+  deleteAnalysisMutation,
 } from '../graphql/Mutations';
 
 import '../styles/AnalysisBrowser.css';
@@ -47,6 +49,7 @@ class AnalysisBrowser extends Component {
     createGroup: PropTypes.func.isRequired,
     deleteGroup: PropTypes.func.isRequired,
     renameGroup: PropTypes.func.isRequired,
+    deleteAnalysis: PropTypes.func.isRequired,
   };
 
   static defaultProps = {};
@@ -62,6 +65,7 @@ class AnalysisBrowser extends Component {
     this.state = {
       expandedIndex: -1,
       confirmGroupDeletionDialogOpen: false,
+      confirmAnalysisDeletionDialogOpen: false,
       createGroupDialogOpen: false,
       renameGroupDialopOpen: false,
     };
@@ -73,23 +77,8 @@ class AnalysisBrowser extends Component {
   // group to be renamed
   groupToBeRenamed = null;
 
-  /**
-   * handler method for clicks on rows
-   * @param index the index of the group that was clicked
-   */
-  handleRowClick = (index) => {
-    // if index is not already set -> setting new index
-    // else resetting
-    if (index !== this.state.expandedIndex) {
-      this.setState({
-        expandedIndex: index,
-      });
-    } else {
-      this.setState({
-        expandedIndex: -1,
-      });
-    }
-  };
+  // analysis about to be deleted (yet to be confirmed)
+  analysisToBeDeleted = null;
 
   /**
    * handler for the creation of a group
@@ -179,37 +168,43 @@ class AnalysisBrowser extends Component {
   };
 
   /**
-   * handler for clicks on the delete action of group rows
-   * @param index the index of the group to delete
-   * @param id the id of the group to delete
-   */
-  handleGroupDeleteClick = async (index, id) => {
-    // setting group that is about to be deleted
-    this.groupToBeDeleted = this.props.groups[index];
-
-    // showing confirm dilog
-    this.setState({
-      confirmGroupDeletionDialogOpen: true,
-    });
-  };
-
-  /**
-   * handler for showing a specific analysis
-   * @param id the id of the analysis to show
-   */
-  handleAnalysisShowClick = (analysis) => {
-    const analysisInput = analysis.inputs[0];
-    this.props.history.push(`/resultPersonal/${analysisInput.firstNames}/${analysisInput.lastName}/${
-      analysisInput.dateOfBirth
-    }`);
-  };
-
-  /**
    * handler for deleting a specific analysis
    * @param id the id of the analysis to be deleted
    */
-  handleAnalysisDeleteClick = (id) => {
-    console.log(`Delete analysis ${id}`);
+  deleteAnalysis = async (id) => {
+    // deleting analysis
+    try {
+      const deletedAnalysis = await this.props.deleteAnalysis({
+        variables: {
+          id,
+        },
+        update: (store, { data: { deleteAnalysis } }) => {
+          // getting the query from the local cache and deleting analysis
+          const data = store.readQuery({ query: currentUserQuery });
+
+          // getting index of item to delete
+          const analysisIndex = _.findIndex(
+            data.currentUser.analyses,
+            item => item.id === deleteAnalysis.id,
+          );
+
+          // deleting item if present
+          if (analysisIndex > -1) {
+            data.currentUser.analyses.splice(analysisIndex, 1);
+          }
+
+          // writing object back to cache
+          store.writeQuery({ query: currentUserQuery, data });
+        },
+      });
+
+      // shooting notification informting the user
+      NotificationManager.success(`Die Analyse ${
+        deletedAnalysis.data.deleteAnalysis.name
+      } wurde erfolgreich gelöscht.`);
+    } catch (error) {
+      NotificationManager.error('Analyse konnte nicht gelöscht werden.');
+    }
   };
 
   /**
@@ -236,8 +231,20 @@ class AnalysisBrowser extends Component {
                   key={group.id}
                   group={group}
                   index={index}
-                  clickHandler={this.handleRowClick}
-                  renameHandler={(renameIndex, id) => {
+                  clickHandler={(clickIndex) => {
+                    // if index is not already set -> setting new index
+                    // else resetting
+                    if (clickIndex !== this.state.expandedIndex) {
+                      this.setState({
+                        expandedIndex: clickIndex,
+                      });
+                    } else {
+                      this.setState({
+                        expandedIndex: -1,
+                      });
+                    }
+                  }}
+                  renameHandler={(renameIndex) => {
                     // setting group that is about to be renamed
                     this.groupToBeRenamed = this.props.groups[renameIndex];
 
@@ -246,7 +253,7 @@ class AnalysisBrowser extends Component {
                       renameGroupDialopOpen: true,
                     });
                   }}
-                  deleteHandler={(deleteIndex, id) => {
+                  deleteHandler={(deleteIndex) => {
                     // setting group that is about to be deleted
                     this.groupToBeDeleted = this.props.groups[deleteIndex];
 
@@ -267,8 +274,27 @@ class AnalysisBrowser extends Component {
                       <AnalysisTableRow
                         key={analysis.id}
                         analysis={analysis}
-                        deleteHandler={this.handleAnalysisDeleteClick}
-                        showHandler={this.handleAnalysisShowClick}
+                        deleteHandler={(analysisId) => {
+                          // getting analysis to be deleted
+                          this.analysisToBeDeleted = _.find(
+                            this.props.analyses,
+                            item => item.id === analysisId,
+                          );
+
+                          // showing confirm dialog
+                          this.setState({
+                            confirmAnalysisDeletionDialogOpen: true,
+                          });
+                        }}
+                        showHandler={() => {
+                          // getting input of analysis = names and dob
+                          const analysisInput = analysis.inputs[0];
+
+                          // navigating to analysis results
+                          this.props.history.push(`/resultPersonal/${analysisInput.firstNames}/${
+                              analysisInput.lastName
+                            }/${analysisInput.dateOfBirth}`);
+                        }}
                       />
                     )));
               }
@@ -312,7 +338,7 @@ class AnalysisBrowser extends Component {
         >
           {panelContent}
         </Panel>
-        <ConfirmDeletionDialog
+        <ConfirmGroupDeletionDialog
           group={this.groupToBeDeleted}
           isOpen={this.state.confirmGroupDeletionDialogOpen}
           onClose={() => {
@@ -325,6 +351,20 @@ class AnalysisBrowser extends Component {
             this.setState({ confirmGroupDeletionDialogOpen: false });
             this.deleteGroup(this.groupToBeDeleted.id);
             this.groupToBeDeleted = null;
+          }}
+        />
+        <ConfirmAnalysisDeletionDialog
+          analysis={this.analysisToBeDeleted}
+          isOpen={this.state.confirmAnalysisDeletionDialogOpen}
+          onClose={() => {
+            this.setState({ confirmAnalysisDeletionDialogOpen: false });
+            this.analysisToBeDeleted = null;
+          }}
+          onAction={() => {
+            // hiding dialog, deleting analysis and clearing to be deleted group
+            this.setState({ confirmAnalysisDeletionDialogOpen: false });
+            this.deleteAnalysis(this.analysisToBeDeleted.id);
+            this.analysisToBeDeleted = null;
           }}
         />
         <CreateGroupDialog
@@ -366,4 +406,5 @@ export default compose(
   graphql(deleteGroupMutation, { name: 'deleteGroup' }),
   graphql(createGroupMutation, { name: 'createGroup' }),
   graphql(renameGroupMutation, { name: 'renameGroup' }),
+  graphql(deleteAnalysisMutation, { name: 'deleteAnalysis' }),
 )(withRouter(AnalysisBrowser));

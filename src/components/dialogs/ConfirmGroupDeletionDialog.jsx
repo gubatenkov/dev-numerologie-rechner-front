@@ -4,7 +4,7 @@ import PropTyes from 'prop-types';
 import Dialog from './Dialog';
 
 /**
- * dialog that prompts the user to confirm the deletion of a dialog
+ * dialog that prompts the user to confirm the deletion of a group
  */
 class ConfirmGroupDeletionDialog extends Component {
   static propTypes = {

@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
 import { graphql, compose } from 'react-apollo';
-import { NotificationContainer } from 'react-notifications';
+import {
+  NotificationContainer,
+  NotificationManager,
+} from 'react-notifications';
 
 import '../styles/UserHome.css';
 
@@ -16,6 +19,7 @@ import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
 
 import { currentUserQuery } from '../graphql/Queries';
+import { saveAnalysisMutation } from '../graphql/Mutations';
 
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
@@ -35,6 +39,7 @@ class UserHome extends Component {
         dateOfBirth: PropTypes.string,
       }),
     }).isRequired,
+    saveAnalysis: PropTypes.func.isRequired,
   };
   /**
    * default constructor
@@ -47,6 +52,40 @@ class UserHome extends Component {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
     };
+  }
+
+  /**
+   * saves the analysis passed to user home
+   * @param name: the name of the new analysis
+   * @param groupId: the id of the group of the new analysis
+   */
+  async saveAnalysis(name, groupId) {
+    try {
+      // performing mutation call
+      await this.props.saveAnalysis({
+        variables: {
+          name,
+          group: groupId,
+          inputs: [
+            {
+              firstNames: this.props.computedMatch.params.firstNames,
+              lastName: this.props.computedMatch.params.lastName,
+              dateOfBirth: this.props.computedMatch.params.dateOfBirth,
+            },
+          ],
+        },
+        update: (store, { data: { saveAnalysis } }) => {
+          // gettint the query from the local cache and adding group
+          const data = store.readQuery({ query: currentUserQuery });
+          data.currentUser.analyses.push(saveAnalysis);
+          store.writeQuery({ query: currentUserQuery, data });
+        },
+      });
+      NotificationManager.success(`Die Analyse ${name} wurde erfolgreich erstellt.`);
+    } catch (error) {
+      // error occured -> displaying notification
+      NotificationManager.error('Analyse konnte nicht gespreichert werden.');
+    }
   }
 
   /**
@@ -84,8 +123,14 @@ class UserHome extends Component {
         <SaveAnalysisDialog
           isOpen={this.state.saveDialogOpen}
           onClose={() => this.setState({ saveDialogOpen: false })}
-          onSave={() => this.setState({ saveDialogOpen: false })}
-          groups={this.props.data.currentUser.groups.map(item => item.name)}
+          onSave={(analysisName, group) => {
+            // saving analysis
+            this.saveAnalysis(analysisName, group.id);
+
+            // hiding dialog
+            this.setState({ saveDialogOpen: false });
+          }}
+          groups={this.props.data.currentUser.groups}
         />
         <NotificationContainer />
       </div>
@@ -93,4 +138,7 @@ class UserHome extends Component {
   }
 }
 
-export default compose(graphql(currentUserQuery))(withRouter(UserHome));
+export default compose(
+  graphql(currentUserQuery),
+  graphql(saveAnalysisMutation, { name: 'saveAnalysis' }),
+)(withRouter(UserHome));
