@@ -123,7 +123,13 @@ class UserHome extends Component {
         <SaveAnalysisDialog
           isOpen={this.state.saveDialogOpen}
           onClose={() => this.setState({ saveDialogOpen: false })}
-          onSave={(analysisName, group) => {
+          onSave={(group) => {
+            // constructing name for analysis
+            const analysisName = `${
+              this.props.computedMatch.params.firstNames
+            } ${this.props.computedMatch.params.lastName}, ${
+              this.props.computedMatch.params.dateOfBirth
+            }`;
             // saving analysis
             this.saveAnalysis(analysisName, group.id);
 

@@ -31,12 +31,6 @@ class SaveAnalysisDialog extends Component {
     [this.selectedGroup] = this.props.groups;
   }
 
-  // input for name
-  analysisName = null;
-
-  // input field ref
-  analysisNameInput = null;
-
   // selected group
   selectedGroup = null;
 
@@ -49,7 +43,7 @@ class SaveAnalysisDialog extends Component {
         isOpen={this.props.isOpen}
         onClose={this.props.onClose}
         onAction={() =>
-          this.props.onSave(this.analysisName, this.selectedGroup)
+          this.props.onSave(this.selectedGroup)
         }
         title="Analyse Speichern"
         cancelTitle="Abbrechen"
@@ -73,23 +67,6 @@ class SaveAnalysisDialog extends Component {
           <small>
             Bitte geben Sie die Gruppe an der die Analyse zugeordnet werden
             soll.
-          </small>
-        </p>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Meine Persönlichkeitsanalyse"
-          onChange={(newName) => {
-            this.analysisName = newName.target.value;
-          }}
-          ref={(ref) => {
-            this.analysisNameInput = ref;
-          }}
-        />
-        <p>
-          <small>
-            Bitte geben Sie den Namen an unter dem die Analyse gespeichert
-            werden soll.
           </small>
         </p>
       </Dialog>
