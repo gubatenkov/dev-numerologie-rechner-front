@@ -29,7 +29,7 @@ class ConfirmAnalysisDeletionDialog extends Component {
         actionTitle="Löschen"
       >
         <p>
-          {`Sind Sie sicher dass Sie die Analyse "${this.props.analysis &&
+          {`Sind Sie sicher, dass Sie die Analyse "${this.props.analysis &&
             this.props.analysis.name}" löschen wollen? `}
         </p>
       </Dialog>

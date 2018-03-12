@@ -29,7 +29,7 @@ class ConfirmGroupDeletionDialog extends Component {
         actionTitle="Löschen"
       >
         <p>
-          {`Sind Sie sicher dass Sie die Gruppe "${this.props.group &&
+          {`Sind Sie sicher, dass Sie die Gruppe "${this.props.group &&
             this.props.group.name}" und alle Analysen in dieser Gruppe
           löschen wollen? `}
         </p>
