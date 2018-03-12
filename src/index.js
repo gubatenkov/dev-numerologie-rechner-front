@@ -13,6 +13,7 @@ import {
 import 'react-notifications/lib/notifications.css';
 
 import introspectionQueryResultData from './utils/FragmentTypes.json';
+
 import AnalysisInput from './components/AnalysisInput';
 import Login from './components/Login';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
