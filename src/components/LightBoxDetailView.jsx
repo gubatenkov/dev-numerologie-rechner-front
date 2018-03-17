@@ -225,9 +225,12 @@ class LightBoxDetailView extends Component {
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}
             >
-              <div className="LightBoxDetailView__text LightBoxDetailView--non-printable">
-                {currentElement.elementContent}
-              </div>
+              <div
+                className="LightBoxDetailView__text LightBoxDetailView--non-printable"
+                dangerouslySetInnerHTML={{
+                  __html: currentElement.elementContent,
+                }}
+              />
               <h3 className="LightBoxDetailView--printWatermark">
                 Die Resultate können nur mit Druckpaket ausgedruckt werden.
               </h3>,

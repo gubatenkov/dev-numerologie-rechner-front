@@ -77,6 +77,10 @@
     user-select: none;
 }
 
+.LightBoxDetailView__text h2 {
+    margin-top: 1em;
+}
+
 .LightBoxDetailView--printWatermark {
     display: none;
 }
