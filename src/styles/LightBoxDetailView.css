@@ -81,6 +81,10 @@
     margin-top: 1em;
 }
 
+.LightBoxDetailView__text h3 {
+    margin-top: 1em;
+}
+
 .LightBoxDetailView--printWatermark {
     display: none;
 }
