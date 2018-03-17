@@ -30,8 +30,13 @@ class ResultTableRow extends Component {
   getTextRepresentation(rowText) {
     let rowTextRepresentation = null;
     if (rowText && rowText && rowText.length > 0) {
+      // removing html tags for preview
+      rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, '');
       rowTextRepresentation = [
-        `${rowText.substring(0, LENGTH_DESCRIPITON_PREVIEW)}...  `,
+        `${rowTextRepresentation.substring(
+          0,
+          LENGTH_DESCRIPITON_PREVIEW,
+        )}...  `,
         <a role="link" key="readIndicator" onClick={this.handleMoreClick}>
           Lesen
         </a>,
