@@ -11,6 +11,7 @@ class GroupTableRow extends Component {
     group: PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
+      isDefault: PropTypes.bool.isRequired,
     }).isRequired,
     clickHandler: PropTypes.func,
     renameHandler: PropTypes.func,
@@ -51,6 +52,8 @@ class GroupTableRow extends Component {
    * default render -> renders the table row with group information
    */
   render() {
+    // determining if group is defautl => deactivate actions
+    const isDefaultGroup = this.props.group.isDefault;
     return (
       <tr key={this.props.group.id} onClick={this.handleRowClick}>
         <td className="GroupTableRow--groupNameCell">
@@ -61,12 +64,14 @@ class GroupTableRow extends Component {
           <button
             className="btn btn-primary btn-outline btn-sm"
             onClick={this.handleRenameClick}
+            disabled={isDefaultGroup}
           >
             Umbenennen
           </button>
           <button
             onClick={this.handleDeleteClick}
             className="btn btn-danger btn-outline btn-sm"
+            disabled={isDefaultGroup}
           >
             Löschen
           </button>
