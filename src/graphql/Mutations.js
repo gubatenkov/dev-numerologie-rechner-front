@@ -5,6 +5,7 @@ export const createGroupMutation = gql`
     createAnalysisGroup(name: $groupName) {
       id
       name
+      isDefault
     }
   }
 `;

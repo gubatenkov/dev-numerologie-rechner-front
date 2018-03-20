@@ -7,6 +7,7 @@ export const currentUserQuery = gql`
       groups {
         id
         name
+        isDefault
       }
       analyses {
         id
