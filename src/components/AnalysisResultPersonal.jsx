@@ -89,6 +89,9 @@ const personalResultsQuery = gql`
       challengesHighs {
         ...AnalysisParts
       }
+      personalYear {
+        ...AnalysisParts
+      }
     }
   }
   ${analysisPartsFragment}
@@ -356,6 +359,11 @@ class AnalysisResultPersonal extends Component {
               <ResultTable
                 data={this.props.data.personalAnalysis.challengesHighs}
                 dataKey="challengesHighs"
+                handleTextDetailClick={this.handleItemDetailClick}
+              />
+              <ResultTable
+                data={this.props.data.personalAnalysis.personalYear}
+                dataKey="personalYear"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>

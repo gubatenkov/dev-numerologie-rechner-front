@@ -119,7 +119,7 @@ class ResultTableRow extends Component {
     const lastIndex = rowItem.values.length - 1;
     return (
       <tr
-        key={rowItem.name}
+        key={rowItem.id}
         className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
         {rowItem.values.map((value, index) => {
@@ -134,7 +134,7 @@ class ResultTableRow extends Component {
             cellStyle += 'tableRow__name';
           }
           return (
-            <td className={cellStyle} key={cellValue}>
+            <td className={cellStyle} key={rowItem.id + index + cellValue}>
               {cellValue}
             </td>
           );
