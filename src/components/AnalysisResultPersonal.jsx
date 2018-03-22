@@ -137,6 +137,7 @@ class AnalysisResultPersonal extends Component {
       data.soulLevel,
       data.vibratoryCycles,
       data.challengesHighs,
+      data.personalYear,
     ];
   }
 
