@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from '../fonts/vfs_fonts';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -14,6 +16,23 @@ import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
 
 import '../styles/AnalysisResultPersonal.css';
+
+// setting fonts for pdfmake
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.fonts = {
+  MavenPro: {
+    normal: 'MavenPro-Regular.ttf',
+    bold: 'MavenPro-Bold.ttf',
+    italics: 'MavenPro-Regular.ttf',
+    bolditalics: 'MavenPro-Regular.ttf',
+  },
+  Roboto: {
+    normal: 'Roboto-Regular.ttf',
+    bold: 'Roboto-Medium.ttf',
+    italics: 'Roboto-Italic.ttf',
+    bolditalics: 'Roboto-MediumItalic.ttf',
+  },
+};
 
 // queries for getting results from server
 const analysisPartsFragment = gql`
@@ -268,7 +287,18 @@ class AnalysisResultPersonal extends Component {
           }}
           badgeTitle="Kurztext"
           secondaryActionTitle="Drucken"
-          onSecondaryAction={() => {}}
+          onSecondaryAction={() => {
+            // defining pdf and default styling
+            const docDefinition = {
+              content: 'Numerologische Analyse',
+              defaultStyle: {
+                font: 'MavenPro',
+              },
+            };
+
+            // creating pdf and opening in new window
+            pdfMake.createPdf(docDefinition).open();
+          }}
         />
         <div className="ResultPersonalDataContainer">
           <div className="ResultPersonalData">

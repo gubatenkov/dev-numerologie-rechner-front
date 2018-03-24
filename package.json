@@ -10,6 +10,7 @@
     "graphql": "0.12.3",
     "graphql-tag": "^2.8.0",
     "lodash": "^4.17.5",
+    "pdfmake": "^0.1.36",
     "prettier": "^1.10.2",
     "prettier-eslint": "^8.8.1",
     "prop-types": "^15.6.0",
