@@ -296,7 +296,7 @@ class AnalysisResultPersonal extends Component {
               },
             };
 
-            // creating pdf and opening in new window
+            // creating pdf and opening in new tab
             pdfMake.createPdf(docDefinition).open();
           }}
         />
