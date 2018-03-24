@@ -290,9 +290,31 @@ class AnalysisResultPersonal extends Component {
           onSecondaryAction={() => {
             // defining pdf and default styling
             const docDefinition = {
-              content: 'Numerologische Analyse',
+              pageSize: 'A5',
+              pageOrientation: 'portrait',
+              pageMargins: [40, 60, 40, 60],
+              content: [
+                { text: 'This is a header', style: 'h1' },
+                { text: 'Numerologische Analyse', pageBreak: 'after' },
+                'asdfasdf',
+                'asdfasdf',
+              ],
+              footer: currentPage => ({
+                columns: [
+                  `Persoenlichkeitsnumeroskop fuer ${
+                    this.props.match.params.firstNames
+                  } ${this.props.match.params.lastName} mit Namensvergleich`,
+                  { text: currentPage, alignment: 'right' },
+                ],
+              }),
               defaultStyle: {
                 font: 'MavenPro',
+              },
+              styles: {
+                h1: {
+                  fontSize: 22,
+                  bold: true,
+                },
               },
             };
 
