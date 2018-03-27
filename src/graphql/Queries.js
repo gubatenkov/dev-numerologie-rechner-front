@@ -47,6 +47,10 @@ export const analysisPartsFragment = gql`
         id
         highlighted
         descriptionText
+        numberDescription {
+          description
+          calculationDescription
+        }
         type
         result {
           ... on AnalysisResultValueNumber {

@@ -208,15 +208,6 @@ class AnalysisResultPersonal extends Component {
           text: 'TODO: Table with numbers goes here. ',
           pageBreak: 'after',
         },
-        {
-          text: this.props.data.personalAnalysis.expressionLevel.introText
-            .title,
-          style: 'h1',
-        },
-        {
-          text: this.props.data.personalAnalysis.expressionLevel.introText.text,
-          pageBreak: 'after',
-        },
       ],
       footer: currentPage => ({
         columns: [
@@ -244,24 +235,117 @@ class AnalysisResultPersonal extends Component {
       },
     };
 
-    // adding number entries to pdf definition
-    // expression level
-    this.props.data.personalAnalysis.expressionLevel.numbers.forEach((item) => {
-      // pushing heading
-      docDefinition.content.push({
-        text: `${item.name} ${item.result.value}`,
-        style: 'h1',
-      });
-      // pushing subheading with name
-      docDefinition.content.push({
-        text: `mit Name ${this.props.match.params.firstNames} ${
-          this.props.match.params.lastName
-        }`,
-        style: 'h3',
-      });
-      // pushing text for number
-      docDefinition.content.push({
-        text: item.descriptionText,
+    // getting result in array format
+    const resultArray = this.getResultArrayFormat(this.props.data.personalAnalysis);
+
+    // pushing content to pdf
+    resultArray.forEach((result) => {
+      // adding level intro
+      if (result.introText) {
+        docDefinition.content.push(
+          {
+            text: result.introText.title,
+            style: 'h1',
+          },
+          {
+            text: result.introText.text,
+            pageBreak: 'after',
+          },
+        );
+      }
+
+      // adding numbers
+      result.numbers.forEach((item) => {
+        /* if (item.type === 'customRow') {
+          return;
+        } */
+        // console.log(item);
+
+        let itemName = null;
+        let itemValue = null;
+
+        // determining name of element
+        if (
+          item.type === 'row' &&
+          (item.result.value || item.result.values || item.result.list)
+        ) {
+          itemName = item.name;
+          itemValue =
+            item.result.value || item.result.values || item.result.list;
+
+          // if item is matrix => not showing value in titel
+          if (item.result.type === 'matrix') {
+            itemValue = ' ';
+          }
+        } else if (
+          item.type === 'customRow' &&
+          item.values &&
+          item.nameIndex !== null &&
+          item.values[item.nameIndex] &&
+          item.valueIndex !== null
+        ) {
+          itemName = item.values[item.nameIndex];
+          itemValue = item.values[item.valueIndex];
+        }
+
+        // if item name set => adding name and name subtitle
+        if (itemName && itemValue) {
+          // adding heading for number
+          docDefinition.content.push({
+            text: `${itemName} ${itemValue}`,
+            style: 'h1',
+          });
+
+          // adding subheading with name
+          docDefinition.content.push({
+            text: `mit Name ${this.props.match.params.firstNames} ${
+              this.props.match.params.lastName
+            }`,
+            style: 'h3',
+          });
+
+          // adding number description if present
+          if (item.numberDescription && item.numberDescription.description) {
+            docDefinition.content.push({
+              text: item.numberDescription.description,
+            });
+          }
+
+          // adding number calculation description if present
+          if (
+            item.numberDescription &&
+            item.numberDescription.calculationDescription
+          ) {
+            docDefinition.content.push({
+              text: item.numberDescription.calculationDescription,
+            });
+          }
+
+          // pushing description text
+          let descriptionText = null;
+
+          // having to determine between standard and custom row
+          if (item.type === 'row') {
+            descriptionText = item.descriptionText;
+          } else if (item.type === 'customRow') {
+            descriptionText = item.values[item.descriptionTextIndex];
+          }
+          else {
+            console.log('NOooooooo discription');
+          }
+
+          // if description text is present => adding to content
+          if (descriptionText) {
+            docDefinition.content.push({
+              text: descriptionText,
+            });
+          }
+        } else {
+          console.log('not in there');
+          console.log(item);
+          console.log(itemName);
+          console.log(itemValue);
+        }
       });
     });
 
