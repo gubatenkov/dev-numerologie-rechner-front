@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
-import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from '../fonts/vfs_fonts';
@@ -14,6 +13,8 @@ import Panel from './Panel';
 import ResultTable from './ResultTable';
 import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
+
+import { personalResultsQuery } from '../graphql/Queries';
 
 import '../styles/AnalysisResultPersonal.css';
 
@@ -33,88 +34,6 @@ pdfMake.fonts = {
     bolditalics: 'Roboto-MediumItalic.ttf',
   },
 };
-
-// queries for getting results from server
-const analysisPartsFragment = gql`
-  fragment AnalysisParts on AnalysisResult {
-    name
-    headings
-    numbers {
-      ... on DefaultAnalysisResultItem {
-        name
-        id
-        highlighted
-        descriptionText
-        type
-        result {
-          ... on AnalysisResultValueNumber {
-            type
-            value
-          }
-          ... on AnalysisResultValueMatrix {
-            type
-            values
-            dimensions {
-              rows
-              cols
-            }
-            highlighted
-          }
-          ... on AnalysisResultValueList {
-            type
-            list
-          }
-        }
-      }
-      ... on CustomAnalysisResultItem {
-        type
-        id
-        values
-        nameIndex
-        valueIndex
-        descriptionTextIndex
-        highlighted
-      }
-    }
-  }
-`;
-
-const personalResultsQuery = gql`
-  query personalAnalysis(
-    $firstNames: String!
-    $lastName: String!
-    $dateOfBirth: String!
-  ) {
-    personalAnalysis(
-      firstNames: $firstNames
-      lastName: $lastName
-      dateOfBirth: $dateOfBirth
-    ) {
-      expressionLevel {
-        ...AnalysisParts
-      }
-      personalLevel {
-        ...AnalysisParts
-      }
-      developmentLevel {
-        ...AnalysisParts
-      }
-      soulLevel {
-        ...AnalysisParts
-      }
-      vibratoryCycles {
-        ...AnalysisParts
-      }
-      challengesHighs {
-        ...AnalysisParts
-      }
-      personalYear {
-        ...AnalysisParts
-      }
-    }
-  }
-  ${analysisPartsFragment}
-`;
 
 /**
  * result screen for personal analysis
@@ -264,6 +183,93 @@ class AnalysisResultPersonal extends Component {
   }
 
   /**
+   * creates a pdf for the analysis and opens it in a new tab
+   */
+  createAnalysisPdf = () => {
+    // defining pdf and default styling
+    const docDefinition = {
+      pageSize: 'A5',
+      pageOrientation: 'portrait',
+      pageMargins: [40, 60, 40, 60],
+      content: [
+        {
+          text: this.props.data.personalAnalysis.analysisIntro.title,
+          style: 'h1',
+        },
+        {
+          text: this.props.data.personalAnalysis.analysisIntro.text,
+          pageBreak: 'after',
+        },
+        {
+          text: 'Übersichtsblatt der Zahlen',
+          style: 'h1',
+        },
+        {
+          text: 'TODO: Table with numbers goes here. ',
+          pageBreak: 'after',
+        },
+        {
+          text: this.props.data.personalAnalysis.expressionLevel.introText
+            .title,
+          style: 'h1',
+        },
+        {
+          text: this.props.data.personalAnalysis.expressionLevel.introText.text,
+          pageBreak: 'after',
+        },
+      ],
+      footer: currentPage => ({
+        columns: [
+          `Persoenlichkeitsnumeroskop fuer ${
+            this.props.match.params.firstNames
+          } ${this.props.match.params.lastName} mit Namensvergleich`,
+          { text: currentPage, alignment: 'right' },
+        ],
+      }),
+      defaultStyle: {
+        font: 'MavenPro',
+        fontSize: 8,
+      },
+      styles: {
+        h1: {
+          fontSize: 14,
+          bold: true,
+        },
+        h2: {
+          fontSize: 12,
+        },
+        h3: {
+          fontSize: 10,
+        },
+      },
+    };
+
+    // adding number entries to pdf definition
+    // expression level
+    this.props.data.personalAnalysis.expressionLevel.numbers.forEach((item) => {
+      // pushing heading
+      docDefinition.content.push({
+        text: `${item.name} ${item.result.value}`,
+        style: 'h1',
+      });
+      // pushing subheading with name
+      docDefinition.content.push({
+        text: `mit Name ${this.props.match.params.firstNames} ${
+          this.props.match.params.lastName
+        }`,
+        style: 'h3',
+      });
+      // pushing text for number
+      docDefinition.content.push({
+        text: item.descriptionText,
+      });
+    });
+
+    // creating pdf and opening in new tab
+    pdfMake.createPdf(docDefinition).open();
+  };
+
+  /**
    * default render
    */
   render() {
@@ -287,40 +293,7 @@ class AnalysisResultPersonal extends Component {
           }}
           badgeTitle="Kurztext"
           secondaryActionTitle="Drucken"
-          onSecondaryAction={() => {
-            // defining pdf and default styling
-            const docDefinition = {
-              pageSize: 'A5',
-              pageOrientation: 'portrait',
-              pageMargins: [40, 60, 40, 60],
-              content: [
-                { text: 'This is a header', style: 'h1' },
-                { text: 'Numerologische Analyse', pageBreak: 'after' },
-                'asdfasdf',
-                'asdfasdf',
-              ],
-              footer: currentPage => ({
-                columns: [
-                  `Persoenlichkeitsnumeroskop fuer ${
-                    this.props.match.params.firstNames
-                  } ${this.props.match.params.lastName} mit Namensvergleich`,
-                  { text: currentPage, alignment: 'right' },
-                ],
-              }),
-              defaultStyle: {
-                font: 'MavenPro',
-              },
-              styles: {
-                h1: {
-                  fontSize: 22,
-                  bold: true,
-                },
-              },
-            };
-
-            // creating pdf and opening in new tab
-            pdfMake.createPdf(docDefinition).open();
-          }}
+          onSecondaryAction={this.createAnalysisPdf}
         />
         <div className="ResultPersonalDataContainer">
           <div className="ResultPersonalData">
