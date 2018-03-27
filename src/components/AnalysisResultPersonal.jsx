@@ -329,8 +329,6 @@ class AnalysisResultPersonal extends Component {
             descriptionText = item.descriptionText;
           } else if (item.type === 'customRow') {
             descriptionText = item.values[item.descriptionTextIndex];
-          } else {
-            console.log('NOooooooo discription');
           }
 
           // if description text is present => adding to content
@@ -340,7 +338,7 @@ class AnalysisResultPersonal extends Component {
             });
           }
         } else {
-          console.log('not in there');
+          console.log('Result element not in pdf');
           console.log(item);
           console.log(itemName);
           console.log(itemValue);

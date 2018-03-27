@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import { graphql } from 'react-apollo';
-import { Link, withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -9,13 +8,12 @@ import InputField from './InputField';
 import logo from '../logo.png';
 
 import { AUTH_TOKEN } from '../utils/AuthUtils';
-import { loginMutation } from '../graphql/Mutations';
-import '../styles/InputForm.css';
+import { setPasswordMutation } from '../graphql/Mutations';
 
 /**
  * Login Form component
  */
-class Login extends Component {
+class SetPassword extends Component {
   /**
    * default constructor
    * @param {*} props
@@ -27,27 +25,25 @@ class Login extends Component {
       errorMessage: null,
     };
 
-    // members for authentication
-    this.email = null;
+    // members for local state handling
     this.password = null;
+    this.passwordMatch = null;
   }
 
   /**
-   * attempts to login user
+   * sets user password
    */
-  loginUser = async () => {
-    console.log(`Login ${this.email} with ${this.password}`);
-    const result = await this.props.loginMutation({
+  registerUser = async () => {
+    console.log(`Setting new password to ${this.password}`);
+    const result = await this.props.setPasswordMutation({
       variables: {
-        email: this.email,
-        password: this.password,
+        token: 'todo: token from URL',
+        newPassword: this.password,
       },
     });
 
-    this.saveUserToken(result.data.login);
-
-    // redirecting to user home
-    this.props.history.push('/userHome');
+    console.log(result.data.setPassword);
+    this.saveUserToken(result.data.setPassword);
   };
 
   saveUserToken = (token) => {
@@ -72,35 +68,27 @@ class Login extends Component {
             </div>
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
-                <Panel title="Login">
-                  <InputField
-                    icon="wb-user"
-                    fieldName="Email-Adresse"
-                    onChange={(event) => {
-                      this.email = event.target.value;
-                    }}
-                  />
+                <Panel title="Neues Passwort setzten">
                   <InputField
                     icon="wb-lock"
-                    fieldName="Passwort"
+                    fieldName="Neues Password"
                     onChange={(event) => {
                       this.password = event.target.value;
                     }}
                   />
+                  <InputField
+                    icon="wb-lock"
+                    fieldName="Passwort wiederholen"
+                    onChange={(event) => {
+                      this.passwordMatch = event.target.value;
+                    }}
+                  />
                   <button
                     className="btn btn-primary btn-block"
-                    onClick={this.loginUser}
+                    onClick={this.registerUser}
                   >
-                    Login
+                    Passwort setzten
                   </button>
-                  <div className="InputForm__options">
-                    <Link to="/reset">
-                      <h6>Passwort zurücksetzen</h6>
-                    </Link>
-                    <Link to="/register">
-                      <h6>Registrieren</h6>
-                    </Link>
-                  </div>
                 </Panel>
                 <div>
                   <h5>{this.state.errorMessage}</h5>
@@ -114,4 +102,4 @@ class Login extends Component {
   }
 }
 
-export default graphql(loginMutation, { name: 'loginMutation' })(withRouter(Login));
+export default graphql(setPasswordMutation, { name: 'setPasswordMutation' })(SetPassword);
