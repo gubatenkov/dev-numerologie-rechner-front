@@ -329,8 +329,7 @@ class AnalysisResultPersonal extends Component {
             descriptionText = item.descriptionText;
           } else if (item.type === 'customRow') {
             descriptionText = item.values[item.descriptionTextIndex];
-          }
-          else {
+          } else {
             console.log('NOooooooo discription');
           }
 
