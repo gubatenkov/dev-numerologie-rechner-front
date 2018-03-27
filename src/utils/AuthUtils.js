@@ -1,4 +1,6 @@
-export default function isUserAuthenticated() {
-  console.log('Login Checked');
-  return true;
+export const AUTH_TOKEN = 'auth-token';
+
+export function isUserAuthenticated() {
+  console.log('Check Login');
+  return localStorage.getItem(AUTH_TOKEN);
 }

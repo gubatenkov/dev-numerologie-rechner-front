@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
 import InputField from './InputField';
 
 import logo from '../logo.png';
 import '../styles/AnalysisInput.css';
+import '../styles/InputForm.css';
 
 /* eslint-disable react/prefer-stateless-function */
 class AnalysisInput extends Component {
@@ -94,6 +95,11 @@ class AnalysisInput extends Component {
                   >
                     Starten
                   </button>
+                  <div className="InputForm__options">
+                    <Link to="/userHome">
+                      <h6>Anmelden</h6>
+                    </Link>
+                  </div>
                 </Panel>
               </div>
             </div>

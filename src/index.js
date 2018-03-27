@@ -10,18 +10,22 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
+import { setContext } from 'apollo-link-context';
 import 'react-notifications/lib/notifications.css';
 
 import introspectionQueryResultData from './utils/FragmentTypes.json';
 
 import AnalysisInput from './components/AnalysisInput';
 import Login from './components/Login';
+import Register from './components/Register';
+import ResetPassword from './components/ResetPassword';
+import SetPassword from './components/SetPassword';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
 import UserHome from './components/UserHome';
 import PrivateRoute from './utils/PrivateRoute';
 
 import registerServiceWorker from './utils/registerServiceWorker';
-import isUserAuthenticated from './utils/AuthUtils';
+import { isUserAuthenticated, AUTH_TOKEN } from './utils/AuthUtils';
 
 import './styles/bootstrap-extend.css';
 import './styles/bootstrap.css';
@@ -40,9 +44,25 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
 });
 
+// adding auth header
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem(AUTH_TOKEN);
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
+// creating http link
+const httpLink = createHttpLink({ uri: GRAPHQL_ENDPOINT });
+
 // creating client for graphQL connection
 const client = new ApolloClient({
-  link: createHttpLink({ uri: GRAPHQL_ENDPOINT }),
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache({ fragmentMatcher }),
 });
 
@@ -54,6 +74,9 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/reset" component={ResetPassword} />
+        <Route path="/setPassword" component={SetPassword} />
         <Route
           path="/resultPersonal/:firstNames/:lastName/:dateOfBirth"
           component={AnalysisResultPersonal}

@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 
 import { graphql } from 'react-apollo';
-import { Link, withRouter } from 'react-router-dom';
+
+import { Link } from 'react-router-dom';
 
 import Panel from './Panel';
 import InputField from './InputField';
 
 import logo from '../logo.png';
-
-import { AUTH_TOKEN } from '../utils/AuthUtils';
-import { loginMutation } from '../graphql/Mutations';
 import '../styles/InputForm.css';
+import { resetPasswordMutation } from '../graphql/Mutations';
 
 /**
  * Login Form component
  */
-class Login extends Component {
+class ResetPassword extends Component {
   /**
    * default constructor
    * @param {*} props
@@ -33,25 +32,15 @@ class Login extends Component {
   }
 
   /**
-   * attempts to login user
+   * attempts to reset password
    */
-  loginUser = async () => {
-    console.log(`Login ${this.email} with ${this.password}`);
-    const result = await this.props.loginMutation({
+  resetPassword = async () => {
+    console.log(`Reset password of ${this.email}`);
+    await this.props.resetPasswordMutation({
       variables: {
         email: this.email,
-        password: this.password,
       },
     });
-
-    this.saveUserToken(result.data.login);
-
-    // redirecting to user home
-    this.props.history.push('/userHome');
-  };
-
-  saveUserToken = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
   };
 
   /**
@@ -72,7 +61,7 @@ class Login extends Component {
             </div>
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
-                <Panel title="Login">
+                <Panel title="Passwort Zurücksetzen">
                   <InputField
                     icon="wb-user"
                     fieldName="Email-Adresse"
@@ -80,25 +69,15 @@ class Login extends Component {
                       this.email = event.target.value;
                     }}
                   />
-                  <InputField
-                    icon="wb-lock"
-                    fieldName="Passwort"
-                    onChange={(event) => {
-                      this.password = event.target.value;
-                    }}
-                  />
                   <button
                     className="btn btn-primary btn-block"
-                    onClick={this.loginUser}
+                    onClick={this.resetPassword}
                   >
-                    Login
+                    Zurücksetzen
                   </button>
                   <div className="InputForm__options">
-                    <Link to="/reset">
-                      <h6>Passwort zurücksetzen</h6>
-                    </Link>
-                    <Link to="/register">
-                      <h6>Registrieren</h6>
+                    <Link to="/login">
+                      <h6>Anmelden</h6>
                     </Link>
                   </div>
                 </Panel>
@@ -114,4 +93,6 @@ class Login extends Component {
   }
 }
 
-export default graphql(loginMutation, { name: 'loginMutation' })(withRouter(Login));
+export default graphql(resetPasswordMutation, {
+  name: 'resetPasswordMutation',
+})(ResetPassword);

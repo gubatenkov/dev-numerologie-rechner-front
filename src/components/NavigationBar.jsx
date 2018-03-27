@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 
+import { Link, withRouter } from 'react-router-dom';
+
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import '../styles/NavigationBar.css';
 import logo from '../logo.png';
+
+import { AUTH_TOKEN } from '../utils/AuthUtils';
 
 // dummy user until authentication is implemented
 // TODO remove this
@@ -12,6 +16,7 @@ const DUMMY_USER = {
   firstName: 'Christoph',
   lastName: 'Hechenblaikner',
   image: logo,
+  email: 'christoph.hech@gmail.com',
 };
 
 /**
@@ -28,7 +33,7 @@ class NavigationBar extends Component {
     // setting initial state
     // TODO get this from user data
     this.state = {
-      user: null,
+      user: DUMMY_USER,
     };
   }
 
@@ -47,43 +52,52 @@ class NavigationBar extends Component {
    * handler for logout click
    */
   handleLogout = () => {
-    this.setState({ user: null });
+    // removing token from local storage => logout
+    localStorage.removeItem(AUTH_TOKEN);
+
+    // clearing local user
+    this.setState({
+      user: null,
+    });
+
+    // navigating to input for user
+    this.props.history.push('/analysisInput');
   };
 
   /**
    * renders the navbar with brand, user name as dropdown and avatar
    */
   render() {
+    // getting auth token for login
+    const authToken = localStorage.getItem(AUTH_TOKEN);
+
     // defining content dependent on if user is logged in
-    const userContent = this.state.user ? (
-      <ul className="nav navbar-toolbar navbar-right">
-        <NavigationDropdownMenu
-          name={`${this.state.user.firstName} ${this.state.user.lastName}`}
-          navbar
-        >
-          <NavigationDropdownMenuItem>Paket ändern</NavigationDropdownMenuItem>
-          <NavigationDropdownMenuItem onClick={this.handleLogout}>
-            Abmelden
-          </NavigationDropdownMenuItem>
-        </NavigationDropdownMenu>
-        <li>
-          <a className="nav-link navbar-avatar">
-            <span className="avatar">
-              <img src={this.state.user.image} alt="..." />
-            </span>
-          </a>
-        </li>
-      </ul>
-    ) : (
-      <ul className="nav navbar-toolbar navbar-right">
-        <button
-          className="btn btn-default btn-block "
-          onClick={this.handleLogin}
-        >
-          Anmelden
-        </button>
-      </ul>
-    );
+    const userContent =
+      authToken && this.state.user ? (
+        <ul className="nav navbar-toolbar navbar-right">
+          <NavigationDropdownMenu name={`${this.state.user.email}`} navbar>
+            <NavigationDropdownMenuItem>
+              Paket ändern
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem onClick={this.handleLogout}>
+              Abmelden
+            </NavigationDropdownMenuItem>
+          </NavigationDropdownMenu>
+          <li>
+            <a className="nav-link navbar-avatar">
+              <span className="avatar">
+                <img src={this.state.user.image} alt="..." />
+              </span>
+            </a>
+          </li>
+        </ul>
+      ) : (
+        <ul className="nav navbar-toolbar navbar-right">
+          <Link className="btn btn-default btn-block " to="/login">
+            Anmelden
+          </Link>
+        </ul>
+      );
 
     return (
       <nav className="navbar navbar-inverse">
@@ -98,4 +112,4 @@ class NavigationBar extends Component {
   }
 }
 
-export default NavigationBar;
+export default withRouter(NavigationBar);
