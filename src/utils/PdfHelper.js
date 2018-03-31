@@ -2,7 +2,7 @@
  * converts a html element into a pdfmake syntax string
  * @param htmlElement the html element to be transformed
  */
-function convertHTMLElementToPDFSyntax(htmlElement) {
+export function convertHTMLElementToPDFSyntax(htmlElement) {
   // 3 = TEXT_NODE, 1 = VALID_ELEMENT_NODES
   if (htmlElement.nodeType === 3) {
     // making sure we get no empty text elements due to spaces
@@ -59,7 +59,7 @@ function convertHTMLElementToPDFSyntax(htmlElement) {
  * Converts html text into a collection of valid pdfmake syntax elements
  * @param htmlText html formatted string to be transofmed
  */
-export default function convertHTMLTextToPDFSyntax(htmlText) {
+export function convertHTMLTextToPDFSyntax(htmlText) {
   // removing line breaks from string
   const sanitizedText = htmlText.replace(/(\r\n|\n|\r)/gm, '');
 

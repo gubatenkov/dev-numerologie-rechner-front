@@ -1,7 +1,7 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from '../fonts/vfs_fonts';
 
-import convertHTMLTextToPDFSyntax from './PdfHelper';
+import { convertHTMLTextToPDFSyntax } from './PdfHelper';
 
 // setting fonts for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -19,6 +19,57 @@ pdfMake.fonts = {
     bolditalics: 'Roboto-MediumItalic.ttf',
   },
 };
+
+/**
+ * calculates the overview table for the numbers
+ * @param results the results of the analysis
+ * @param firstNames the first name
+ * @param lastName the last name
+ */
+function calculateResultOverviewTable(results, firstNames, lastName) {
+  // creating overview table data
+  const overviewTableBody = [];
+
+  // adding first row with name
+  overviewTableBody.push([
+    {
+      text: `${firstNames} ${lastName}`,
+      colSpan: 2,
+      alignment: 'center',
+    },
+    {},
+  ]);
+
+  // adding cells for date
+  results.forEach((resultItem) => {
+    resultItem.numbers.forEach((numberItem) => {
+      let value;
+      // assigning value based on type of result
+      if (numberItem.type === 'row') {
+        if (numberItem.result.type === 'number') {
+          value = numberItem.result.value;
+        } else if (numberItem.result.type === 'list') {
+          value = numberItem.result.list.join(',');
+        } else {
+          const matrix = numberItem.result.values;
+          value = {
+            table: {
+              body: [
+                [matrix[0], matrix[1], matrix[2]],
+                [matrix[3], matrix[4], matrix[5]],
+                [matrix[6], matrix[7], matrix[8]],
+              ],
+            },
+          };
+        }
+      } else {
+        value = numberItem.values[numberItem.valueIndex];
+      }
+      overviewTableBody.push([numberItem.id, value]);
+    });
+  });
+  return overviewTableBody;
+}
 
 /**
  * returns an array representation of the state of the component
@@ -47,6 +98,9 @@ export function createPDFFromAnalysisResult(
   firstNames,
   lastName,
 ) {
+  // getting result in array format
+  const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
+
   // defining pdf and default styling
   const docDefinition = {
     pageSize: 'A5',
@@ -79,7 +133,8 @@ export function createPDFFromAnalysisResult(
       },
       {
         table: {
-          body: [['1', '2', '3'], ['1', '2', '3']],
+          body: calculateResultOverviewTable(resultArray, firstNames, lastName),
+          alignment: 'center',
         },
         pageBreak: 'after',
       },
@@ -127,9 +182,6 @@ export function createPDFFromAnalysisResult(
       },
     },
   };
-
-  // getting result in array format
-  const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
 
   // pushing content to pdf
   resultArray.forEach((result) => {
