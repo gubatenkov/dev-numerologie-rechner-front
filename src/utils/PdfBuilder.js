@@ -1,6 +1,8 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from '../fonts/vfs_fonts';
 
+import convertHTMLTextToPDFSyntax from './PdfHelper';
+
 // setting fonts for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
@@ -53,7 +55,7 @@ export function createPDFFromAnalysisResult(
     content: [
       {
         text: analysisResult.personalAnalysis.analysisIntro.title,
-        style: 'h1',
+        style: 'H1',
       },
       {
         text: analysisResult.personalAnalysis.analysisIntro.text,
@@ -61,7 +63,7 @@ export function createPDFFromAnalysisResult(
       },
       {
         text: 'Übersichtsblatt der Zahlen',
-        style: 'h1',
+        style: 'H1',
       },
       {
         text: 'TODO: Table with numbers goes here. ',
@@ -79,14 +81,26 @@ export function createPDFFromAnalysisResult(
       fontSize: 8,
     },
     styles: {
-      h1: {
+      H1: {
         fontSize: 14,
         bold: true,
+        marginTop: 10,
       },
-      h2: {
+      H2: {
         fontSize: 12,
+        marginTop: 30,
+        marginBottom: 30,
       },
-      h3: {
+      H3: {
+        fontSize: 10,
+        marginTop: 30,
+        marginBottom: 10,
+      },
+      B: {
+        bold: true,
+      },
+      SUBTITLE: {
+        marginBottom: 10,
         fontSize: 10,
       },
     },
@@ -99,16 +113,13 @@ export function createPDFFromAnalysisResult(
   resultArray.forEach((result) => {
     // adding level intro
     if (result.introText) {
-      docDefinition.content.push(
-        {
-          text: result.introText.title,
-          style: 'h1',
-        },
-        {
-          text: result.introText.text,
-          pageBreak: 'after',
-        },
-      );
+      docDefinition.content.push({
+        text: result.introText.title,
+        style: 'H1',
+      });
+      docDefinition.content.push({
+        text: convertHTMLTextToPDFSyntax(result.introText.text),
+      });
     }
 
     // adding numbers
@@ -149,19 +160,19 @@ export function createPDFFromAnalysisResult(
         // adding heading for number
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
-          style: 'h1',
+          style: 'H1',
         });
 
         // adding subheading with name
         docDefinition.content.push({
           text: `mit Name ${firstNames} ${lastName}`,
-          style: 'h3',
+          style: 'SUBTITLE',
         });
 
         // adding number description if present
         if (item.numberDescription && item.numberDescription.description) {
           docDefinition.content.push({
-            text: item.numberDescription.description,
+            text: convertHTMLTextToPDFSyntax(item.numberDescription.description),
           });
         }
 
@@ -171,7 +182,7 @@ export function createPDFFromAnalysisResult(
           item.numberDescription.calculationDescription
         ) {
           docDefinition.content.push({
-            text: item.numberDescription.calculationDescription,
+            text: convertHTMLTextToPDFSyntax(item.numberDescription.calculationDescription),
           });
         }
 
@@ -188,7 +199,7 @@ export function createPDFFromAnalysisResult(
         // if description text is present => adding to content
         if (descriptionText) {
           docDefinition.content.push({
-            text: descriptionText,
+            text: convertHTMLTextToPDFSyntax(descriptionText),
           });
         }
       } else {
