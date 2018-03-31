@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
 import { graphql, compose } from 'react-apollo';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from '../fonts/vfs_fonts';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -13,27 +11,11 @@ import Panel from './Panel';
 import ResultTable from './ResultTable';
 import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
+import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
 
 import { personalResultsQuery } from '../graphql/Queries';
 
 import '../styles/AnalysisResultPersonal.css';
-
-// setting fonts for pdfmake
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-pdfMake.fonts = {
-  MavenPro: {
-    normal: 'MavenPro-Regular.ttf',
-    bold: 'MavenPro-Bold.ttf',
-    italics: 'MavenPro-Regular.ttf',
-    bolditalics: 'MavenPro-Regular.ttf',
-  },
-  Roboto: {
-    normal: 'Roboto-Regular.ttf',
-    bold: 'Roboto-Medium.ttf',
-    italics: 'Roboto-Italic.ttf',
-    bolditalics: 'Roboto-MediumItalic.ttf',
-  },
-};
 
 /**
  * result screen for personal analysis
@@ -186,168 +168,12 @@ class AnalysisResultPersonal extends Component {
    * creates a pdf for the analysis and opens it in a new tab
    */
   createAnalysisPdf = () => {
-    // defining pdf and default styling
-    const docDefinition = {
-      pageSize: 'A5',
-      pageOrientation: 'portrait',
-      pageMargins: [40, 60, 40, 60],
-      content: [
-        {
-          text: this.props.data.personalAnalysis.analysisIntro.title,
-          style: 'h1',
-        },
-        {
-          text: this.props.data.personalAnalysis.analysisIntro.text,
-          pageBreak: 'after',
-        },
-        {
-          text: 'Übersichtsblatt der Zahlen',
-          style: 'h1',
-        },
-        {
-          text: 'TODO: Table with numbers goes here. ',
-          pageBreak: 'after',
-        },
-      ],
-      footer: currentPage => ({
-        columns: [
-          `Persoenlichkeitsnumeroskop fuer ${
-            this.props.match.params.firstNames
-          } ${this.props.match.params.lastName} mit Namensvergleich`,
-          { text: currentPage, alignment: 'right' },
-        ],
-      }),
-      defaultStyle: {
-        font: 'MavenPro',
-        fontSize: 8,
-      },
-      styles: {
-        h1: {
-          fontSize: 14,
-          bold: true,
-        },
-        h2: {
-          fontSize: 12,
-        },
-        h3: {
-          fontSize: 10,
-        },
-      },
-    };
-
-    // getting result in array format
-    const resultArray = this.getResultArrayFormat(this.props.data.personalAnalysis);
-
-    // pushing content to pdf
-    resultArray.forEach((result) => {
-      // adding level intro
-      if (result.introText) {
-        docDefinition.content.push(
-          {
-            text: result.introText.title,
-            style: 'h1',
-          },
-          {
-            text: result.introText.text,
-            pageBreak: 'after',
-          },
-        );
-      }
-
-      // adding numbers
-      result.numbers.forEach((item) => {
-        /* if (item.type === 'customRow') {
-          return;
-        } */
-        // console.log(item);
-
-        let itemName = null;
-        let itemValue = null;
-
-        // determining name of element
-        if (
-          item.type === 'row' &&
-          (item.result.value || item.result.values || item.result.list)
-        ) {
-          itemName = item.name;
-          itemValue =
-            item.result.value || item.result.values || item.result.list;
-
-          // if item is matrix => not showing value in titel
-          if (item.result.type === 'matrix') {
-            itemValue = ' ';
-          }
-        } else if (
-          item.type === 'customRow' &&
-          item.values &&
-          item.nameIndex !== null &&
-          item.values[item.nameIndex] &&
-          item.valueIndex !== null
-        ) {
-          itemName = item.values[item.nameIndex];
-          itemValue = item.values[item.valueIndex];
-        }
-
-        // if item name set => adding name and name subtitle
-        if (itemName && itemValue) {
-          // adding heading for number
-          docDefinition.content.push({
-            text: `${itemName} ${itemValue}`,
-            style: 'h1',
-          });
-
-          // adding subheading with name
-          docDefinition.content.push({
-            text: `mit Name ${this.props.match.params.firstNames} ${
-              this.props.match.params.lastName
-            }`,
-            style: 'h3',
-          });
-
-          // adding number description if present
-          if (item.numberDescription && item.numberDescription.description) {
-            docDefinition.content.push({
-              text: item.numberDescription.description,
-            });
-          }
-
-          // adding number calculation description if present
-          if (
-            item.numberDescription &&
-            item.numberDescription.calculationDescription
-          ) {
-            docDefinition.content.push({
-              text: item.numberDescription.calculationDescription,
-            });
-          }
-
-          // pushing description text
-          let descriptionText = null;
-
-          // having to determine between standard and custom row
-          if (item.type === 'row') {
-            descriptionText = item.descriptionText;
-          } else if (item.type === 'customRow') {
-            descriptionText = item.values[item.descriptionTextIndex];
-          }
-
-          // if description text is present => adding to content
-          if (descriptionText) {
-            docDefinition.content.push({
-              text: descriptionText,
-            });
-          }
-        } else {
-          console.log('Result element not in pdf');
-          console.log(item);
-          console.log(itemName);
-          console.log(itemValue);
-        }
-      });
-    });
-
-    // creating pdf and opening in new tab
-    pdfMake.createPdf(docDefinition).open();
+    // making call to pdf util to generate and open pdf
+    createPDFFromAnalysisResult(
+      this.props.data,
+      this.props.match.params.firstNames,
+      this.props.match.params.lastName,
+    );
   };
 
   /**
