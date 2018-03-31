@@ -3,10 +3,10 @@ import convertHTMLTextToPDFSyntax from '../utils/PdfHelper';
 it('transforms html tags in formatted text string', () => {
   expect(convertHTMLTextToPDFSyntax('BEFORE_H<br>AFTER_BREAK<h1>HEADING</h1>AFTER_H<b>BOLD</b>')).toEqual([
     {
-      text: [{ text: 'BEFORE_H ' }, { text: '\n' }, { text: 'AFTER_BREAK ' }],
+      text: ['BEFORE_H ', { text: '\n' }, 'AFTER_BREAK '],
     },
     { text: 'HEADING', style: 'H1' },
-    { text: [{ text: 'AFTER_H ' }, { text: 'BOLD ', style: 'B' }] },
+    { text: ['AFTER_H ', { text: 'BOLD ', style: 'B' }] },
   ]);
 });
 
@@ -44,14 +44,14 @@ it('groups text and table/list elements correctly', () => {
       </UL>
       blaend`)).toEqual([
     {
-      text: [{ text: 'bla1 ' }],
+      text: ['bla1 '],
     },
     { text: 'heading_bla', style: 'H1' },
     {
       ul: ['first', 'second', 'third', 'fourth'],
     },
     {
-      text: [{ text: 'blaend ' }],
+      text: ['blaend '],
     },
   ]);
 });
@@ -62,11 +62,7 @@ it('filters empty text elements properly', () => {
     <b>bold</b>        \n
     end`)).toEqual([
     {
-      text: [
-        { text: 'start ' },
-        { text: 'bold ', style: 'B' },
-        { text: 'end ' },
-      ],
+      text: ['start ', { text: 'bold ', style: 'B' }, 'end '],
     },
   ]);
 });

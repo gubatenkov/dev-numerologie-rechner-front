@@ -10,7 +10,7 @@ function convertHTMLElementToPDFSyntax(htmlElement) {
     if (trimmedContent.length === 0) {
       return null;
     }
-    return { text: `${trimmedContent} ` };
+    return `${trimmedContent} `;
   }
 
   // breaks are nodes not in syntax. implicit with new paragraph
@@ -34,7 +34,13 @@ function convertHTMLElementToPDFSyntax(htmlElement) {
     };
   }
 
-  // TODO handle tables
+  // handling list items
+  if (htmlElement.nodeName === 'TABLE') {
+    return {
+      ul: Array.from(htmlElement.getElementsByTagName('LI')).map(child =>
+        child.textContent.trim()),
+    };
+  }
 
   // otherwise returning node with styling
   return {
