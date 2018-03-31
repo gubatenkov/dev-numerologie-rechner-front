@@ -104,6 +104,9 @@ export function createPDFFromAnalysisResult(
         marginBottom: 10,
         fontSize: 10,
       },
+      TABLE: {
+        margin: [0, 10, 0, 10],
+      },
     },
   };
 

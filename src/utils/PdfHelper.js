@@ -34,11 +34,16 @@ function convertHTMLElementToPDFSyntax(htmlElement) {
     };
   }
 
-  // handling list items
+  // handling table items
   if (htmlElement.nodeName === 'TABLE') {
+    // getting rows
+    const tableRows = Array.from(htmlElement.getElementsByTagName('TR'));
     return {
-      ul: Array.from(htmlElement.getElementsByTagName('LI')).map(child =>
-        child.textContent.trim()),
+      style: 'TABLE',
+      table: {
+        body: tableRows.map(row =>
+          Array.from(row.getElementsByTagName('TD')).map(col => col.textContent)),
+      },
     };
   }
 

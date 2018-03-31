@@ -66,3 +66,25 @@ it('filters empty text elements properly', () => {
     },
   ]);
 });
+
+it('transforms tables properly', () => {
+  expect(convertHTMLTextToPDFSyntax(`
+    <table>
+        <tr>
+            <td>0/0</td>
+            <td>0/1</td>
+            <td>0/2</td>
+        </tr>
+        <tr>
+            <td>1/0</td>
+            <td>1/1</td>
+            <td>1/2</td>
+    </tr>
+    </table>`)).toEqual([
+    {
+      table: {
+        body: [['0/0', '0/1', '0/2'], ['1/0', '1/1', '1/2']],
+      },
+    },
+  ]);
+});
