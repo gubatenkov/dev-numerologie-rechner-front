@@ -41,6 +41,7 @@ function convertHTMLElementToPDFSyntax(htmlElement) {
     return {
       style: 'TABLE',
       table: {
+        headerRows: 1,
         body: tableRows.map(row =>
           Array.from(row.getElementsByTagName('TD')).map(col => col.textContent)),
       },

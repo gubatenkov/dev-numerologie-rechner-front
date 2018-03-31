@@ -54,8 +54,19 @@ export function createPDFFromAnalysisResult(
     pageMargins: [40, 60, 40, 60],
     content: [
       {
+        toc: {
+          title: { text: 'Inhalt', style: 'H1' },
+          // textMargin: [0, 0, 0, 0],
+          // textStyle: {italics: true},
+          numberStyle: { bold: true },
+        },
+      },
+      {
         text: analysisResult.personalAnalysis.analysisIntro.title,
         style: 'H1',
+        tocItem: true,
+        tocMargin: [0, 15, 0, 0],
+        pageBreak: 'before',
       },
       {
         text: convertHTMLTextToPDFSyntax(analysisResult.personalAnalysis.analysisIntro.text),
@@ -64,18 +75,25 @@ export function createPDFFromAnalysisResult(
       {
         text: 'Übersichtsblatt der Zahlen',
         style: 'H1',
+        tocItem: true,
       },
       {
-        text: 'TODO: Table with numbers goes here. ',
+        table: {
+          body: [['1', '2', '3'], ['1', '2', '3']],
+        },
         pageBreak: 'after',
       },
     ],
     footer: currentPage => ({
       columns: [
-        `Persoenlichkeitsnumeroskop fuer ${firstNames} ${lastName} mit Namensvergleich`,
+        {
+          text: `Persoenlichkeitsnumeroskop fuer ${firstNames} ${lastName}`,
+          width: 'auto',
+        },
         { text: currentPage, alignment: 'right' },
       ],
       margin: [40, 0, 40, 0],
+      fontSize: 8,
     }),
     defaultStyle: {
       font: 'MavenPro',
@@ -120,6 +138,7 @@ export function createPDFFromAnalysisResult(
       docDefinition.content.push({
         text: result.introText.title,
         style: 'H1',
+        tocItem: true,
       });
       docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text));
     }
@@ -158,6 +177,8 @@ export function createPDFFromAnalysisResult(
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
           style: 'H1',
+          tocItem: true,
+          tocMargin: [15, 0, 0, 0],
         });
 
         // adding subheading with name
