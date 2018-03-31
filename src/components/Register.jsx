@@ -84,6 +84,7 @@ class Register extends Component {
                     }}
                   />
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Passwort"
                     onChange={(event) => {
@@ -91,6 +92,7 @@ class Register extends Component {
                     }}
                   />
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Passwort wiederholen"
                     onChange={(event) => {

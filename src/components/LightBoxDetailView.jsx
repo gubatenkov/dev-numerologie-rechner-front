@@ -123,6 +123,7 @@ class LightBoxDetailView extends Component {
     if (index > -1) {
       this.setState({
         currentSectionIndex: index,
+        currentElementIndex: 0,
       });
     }
   };
