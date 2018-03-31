@@ -75,6 +75,7 @@ export function createPDFFromAnalysisResult(
         `Persoenlichkeitsnumeroskop fuer ${firstNames} ${lastName} mit Namensvergleich`,
         { text: currentPage, alignment: 'right' },
       ],
+      margin: [40, 0, 40, 0],
     }),
     defaultStyle: {
       font: 'MavenPro',
@@ -88,9 +89,13 @@ export function createPDFFromAnalysisResult(
       },
       H2: {
         fontSize: 12,
+        marginTop: 10,
+        marginBottom: 10,
       },
       H3: {
         fontSize: 10,
+        marginTop: 10,
+        marginBottom: 10,
       },
       B: {
         bold: true,
@@ -113,18 +118,11 @@ export function createPDFFromAnalysisResult(
         text: result.introText.title,
         style: 'H1',
       });
-      docDefinition.content.push({
-        text: convertHTMLTextToPDFSyntax(result.introText.text),
-      });
+      docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text));
     }
 
     // adding numbers
     result.numbers.forEach((item) => {
-      /* if (item.type === 'customRow') {
-            return;
-          } */
-      // console.log(item);
-
       let itemName = null;
       let itemValue = null;
 
@@ -167,9 +165,7 @@ export function createPDFFromAnalysisResult(
 
         // adding number description if present
         if (item.numberDescription && item.numberDescription.description) {
-          docDefinition.content.push({
-            text: convertHTMLTextToPDFSyntax(item.numberDescription.description),
-          });
+          docDefinition.content.push(...convertHTMLTextToPDFSyntax(item.numberDescription.description));
         }
 
         // adding number calculation description if present
@@ -177,9 +173,7 @@ export function createPDFFromAnalysisResult(
           item.numberDescription &&
           item.numberDescription.calculationDescription
         ) {
-          docDefinition.content.push({
-            text: convertHTMLTextToPDFSyntax(item.numberDescription.calculationDescription),
-          });
+          docDefinition.content.push(...convertHTMLTextToPDFSyntax(item.numberDescription.calculationDescription));
         }
 
         // pushing description text
@@ -194,15 +188,8 @@ export function createPDFFromAnalysisResult(
 
         // if description text is present => adding to content
         if (descriptionText) {
-          docDefinition.content.push({
-            text: convertHTMLTextToPDFSyntax(descriptionText),
-          });
+          docDefinition.content.push(...convertHTMLTextToPDFSyntax(descriptionText));
         }
-      } else {
-        console.log('Result element not in pdf');
-        console.log(item);
-        console.log(itemName);
-        console.log(itemValue);
       }
     });
   });
