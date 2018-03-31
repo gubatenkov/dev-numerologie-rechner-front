@@ -58,7 +58,7 @@ export function createPDFFromAnalysisResult(
         style: 'H1',
       },
       {
-        text: analysisResult.personalAnalysis.analysisIntro.text,
+        text: convertHTMLTextToPDFSyntax(analysisResult.personalAnalysis.analysisIntro.text),
         pageBreak: 'after',
       },
       {
@@ -88,13 +88,9 @@ export function createPDFFromAnalysisResult(
       },
       H2: {
         fontSize: 12,
-        marginTop: 30,
-        marginBottom: 30,
       },
       H3: {
         fontSize: 10,
-        marginTop: 30,
-        marginBottom: 10,
       },
       B: {
         bold: true,

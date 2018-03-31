@@ -1,7 +1,7 @@
 function convertHTMLElementToPDFSyntax(htmlElement) {
   // 3 = TEXT_NODE, 1 = VALID_ELEMENT_NODES
   if (htmlElement.nodeType === 3) {
-    return { text: htmlElement.textContent.trim() };
+    return { text: `${htmlElement.textContent.trim()} ` };
   } else if (htmlElement.nodeType === 1) {
     // breaks are nodes not in syntax. implicit with new paragraph
     if (htmlElement.nodeName === 'BR') {
@@ -11,7 +11,7 @@ function convertHTMLElementToPDFSyntax(htmlElement) {
     // adding newline to titles if inline
     if (['H1', 'H2', 'H3'].includes(htmlElement.nodeName)) {
       return {
-        text: `\n \n ${htmlElement.textContent}\n`,
+        text: `\n ${htmlElement.textContent} \n`,
         style: htmlElement.nodeName,
       };
     }
@@ -22,7 +22,7 @@ function convertHTMLElementToPDFSyntax(htmlElement) {
 
     // otherwise returning node with styling
     return {
-      text: htmlElement.textContent,
+      text: `${htmlElement.textContent} `,
       style: htmlElement.nodeName,
     };
   }
