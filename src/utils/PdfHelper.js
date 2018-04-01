@@ -1,3 +1,8 @@
+// elements that need to be included top level in the result
+const TOP_LEVEL_ELEMENTS = ['UL', 'TABLE', 'H1', 'H2', 'H3'];
+// heading elements
+const HEADING_ELEMENTS = ['H1', 'H2', 'H3', 'H4'];
+
 /**
  * converts a html element into a pdfmake syntax string
  * @param htmlElement the html element to be transformed
@@ -29,7 +34,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
   }
 
   // adding newline to titles if inline
-  if (['H1', 'H2', 'H3', 'H4'].includes(htmlElement.nodeName)) {
+  if (HEADING_ELEMENTS.includes(htmlElement.nodeName)) {
     // defining text and style
     const resultDict = {
       text: `${htmlElement.textContent.trim()} \n`,
@@ -108,7 +113,7 @@ export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
     const currentElement = childElements[index];
 
     // if current element is top level element: push subresult (if present) and then list item
-    if (['UL', 'TABLE', 'H1', 'H2', 'H3'].includes(currentElement.nodeName)) {
+    if (TOP_LEVEL_ELEMENTS.includes(currentElement.nodeName)) {
       // if we have subresult => pushing
       if (currentSubResult.length > 0) {
         groupedElements.push({
@@ -139,6 +144,5 @@ export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
       }
     }
   }
-
   return groupedElements;
 }

@@ -37,6 +37,51 @@ const PAGE_MARGIN_RIGHT_CM = 3.5;
 const PAGE_MARGIN_TOP_CM = 2.5;
 const PAGE_MARGIN_BOTTOM_CM = 2.5;
 
+// styling for default classes
+const PDF_STYLES = {
+  H1: {
+    fontSize: 30,
+    bold: true,
+    marginTop: 10,
+    lineHeight: 1,
+    pageBreak: 'before',
+  },
+  H2: {
+    fontSize: 18,
+    bold: true,
+    marginTop: 10,
+    marginBottom: 10,
+    lineHeight: 1,
+  },
+  H3: {
+    fontSize: 12,
+    bold: true,
+    marginTop: 10,
+    marginBottom: 10,
+    lineHeight: 1,
+    color: CI_COLORS.BLACK,
+  },
+  H4: {
+    fontSize: 12,
+    color: CI_COLORS.GREY,
+  },
+  B: {
+    bold: true,
+  },
+  SUBTITLE: {
+    marginBottom: 10,
+    lineHeight: 1,
+  },
+  NUMBERDESCRIPTION: {
+    color: CI_COLORS.GREY,
+    fontSize: 12,
+  },
+  TABLE: {
+    margin: [0, 10, 0, 10],
+    fontSize: 10,
+  },
+};
+
 // setting fonts for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
@@ -90,7 +135,7 @@ function calculateResultOverviewTable(results, firstNames, lastName) {
       // assigning value based on type of result
       if (numberItem.type === 'row') {
         if (numberItem.result.type === 'number') {
-          value = numberItem.result.value;
+          ({ value } = numberItem.result);
         } else if (numberItem.result.type === 'list') {
           value = numberItem.result.list.join(',');
         } else {
@@ -165,7 +210,7 @@ export function createPDFFromAnalysisResult(
       },
       {
         text: analysisResult.personalAnalysis.analysisIntro.title,
-        style: 'H1',
+        style: ['H1'],
         tocItem: true,
         tocMargin: [0, 15, 0, 0],
         pageBreak: 'before',
@@ -175,7 +220,7 @@ export function createPDFFromAnalysisResult(
       ],
       {
         text: 'Übersichtsblatt der Zahlen',
-        style: 'H1',
+        style: ['H1'],
         tocItem: true,
         pageBreak: 'before',
       },
@@ -184,7 +229,6 @@ export function createPDFFromAnalysisResult(
           body: calculateResultOverviewTable(resultArray, firstNames, lastName),
         },
         style: 'TABLE',
-        alignment: 'center',
       },
     ],
     footer: currentPage => ({
@@ -208,75 +252,7 @@ export function createPDFFromAnalysisResult(
       fontSize: 12,
       lineHeight: 1.5,
     },
-    styles: {
-      H1: {
-        fontSize: 30,
-        bold: true,
-        marginTop: 10,
-        lineHeight: 1,
-        pageBreak: 'before',
-      },
-      H2: {
-        fontSize: 18,
-        bold: true,
-        marginTop: 10,
-        marginBottom: 10,
-        lineHeight: 1,
-      },
-      H3: {
-        fontSize: 12,
-        bold: true,
-        marginTop: 10,
-        marginBottom: 10,
-        lineHeight: 1,
-        color: CI_COLORS.BLACK,
-      },
-      H4: {
-        fontSize: 12,
-        color: CI_COLORS.GREY,
-      },
-      B: {
-        bold: true,
-      },
-      SUBTITLE: {
-        marginBottom: 10,
-        lineHeight: 1,
-      },
-      NUMBERDESCRIPTION: {
-        color: CI_COLORS.GREY,
-        fontSize: 12,
-      },
-      TABLE: {
-        margin: [0, 10, 0, 10],
-        fontSize: 10,
-      },
-      RED: {
-        color: CI_COLORS.RED,
-        markerColor: CI_COLORS.RED,
-      },
-      ORANGE: {
-        color: CI_COLORS.ORANGE,
-        markerColor: CI_COLORS.ORANGE,
-      },
-      YELLOW: {
-        color: CI_COLORS.YELLOW,
-      },
-      GREEN: {
-        color: CI_COLORS.GREEN,
-      },
-      BLUE: {
-        color: CI_COLORS.BLUE,
-      },
-      PURPLE: {
-        color: CI_COLORS.PURPLE,
-      },
-      SILVER: {
-        color: CI_COLORS.SILVER,
-      },
-      GREY: {
-        color: CI_COLORS.GREY,
-      },
-    },
+    styles: PDF_STYLES,
   };
 
   // pushing content to pdf
@@ -365,7 +341,7 @@ export function createPDFFromAnalysisResult(
 
         // having to determine between standard and custom row
         if (item.type === 'row') {
-          descriptionText = item.descriptionText;
+          ({ descriptionText } = item);
         } else if (item.type === 'customRow') {
           descriptionText = item.values[item.descriptionTextIndex];
         }
