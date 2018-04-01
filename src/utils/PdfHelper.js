@@ -47,11 +47,6 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
       resultDict.pageBreak = 'before';
     }
 
-    // h2 custom styles
-    if (htmlElement.nodeName === 'H1') {
-      resultDict.text = `\n \n ${resultDict.text}`;
-    }
-
     // returning result
     return resultDict;
   }
@@ -113,7 +108,7 @@ export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
     const currentElement = childElements[index];
 
     // if current element is top level element: push subresult (if present) and then list item
-    if (['UL', 'TABLE', 'H1', 'H2'].includes(currentElement.nodeName)) {
+    if (['UL', 'TABLE', 'H1', 'H2', 'H3'].includes(currentElement.nodeName)) {
       // if we have subresult => pushing
       if (currentSubResult.length > 0) {
         groupedElements.push({

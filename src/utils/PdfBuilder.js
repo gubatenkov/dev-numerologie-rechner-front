@@ -17,14 +17,14 @@ const CI_COLORS = {
 };
 
 // mapping of colors to levels
-const LEVEL_STYLES = {
-  Ausdrucksebene: 'RED',
-  Persönlichkeitsebene: 'GREEN',
-  Entfaltungspotenzial: 'BLUE',
-  'Seelische Ebene': 'PURPLE',
-  'Vibratorische Zyklen': 'SILVER',
-  'Herausforderungen und Höhepunkte': 'SILVER',
-  'Persönliches Jahr': 'SILVER',
+const LEVEL_COLORS = {
+  Ausdrucksebene: CI_COLORS.RED,
+  Persönlichkeitsebene: CI_COLORS.GREEN,
+  Entfaltungspotenzial: CI_COLORS.BLUE,
+  'Seelische Ebene': CI_COLORS.PURPLE,
+  'Vibratorische Zyklen': CI_COLORS.SILVER,
+  'Herausforderungen und Höhepunkte': CI_COLORS.SILVER,
+  'Persönliches Jahr': CI_COLORS.SILVER,
 };
 
 // constant for how many centimeters an inch is
@@ -252,9 +252,11 @@ export function createPDFFromAnalysisResult(
       },
       RED: {
         color: CI_COLORS.RED,
+        markerColor: CI_COLORS.RED,
       },
       ORANGE: {
         color: CI_COLORS.ORANGE,
+        markerColor: CI_COLORS.ORANGE,
       },
       YELLOW: {
         color: CI_COLORS.YELLOW,
@@ -280,19 +282,19 @@ export function createPDFFromAnalysisResult(
   // pushing content to pdf
   resultArray.forEach((result) => {
     // getting color for current level
-    const resultStyle = LEVEL_STYLES[result.name] || '';
+    const resultColor = LEVEL_COLORS[result.name] || '';
 
     // adding level intro
     if (result.introText) {
       docDefinition.content.push({
         text: result.introText.title,
-        style: ['H1', resultStyle],
+        style: ['H1', { color: resultColor }],
         pageBreak: 'before',
         tocItem: true,
       });
       docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text, {
-        h1: resultStyle,
-        h2: resultStyle,
+        h1: { color: resultColor },
+        h2: { color: resultColor },
       }));
     }
 
@@ -329,7 +331,7 @@ export function createPDFFromAnalysisResult(
         // adding heading for number
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
-          style: ['H2', resultStyle],
+          style: ['H2', { color: resultColor }],
           tocItem: true,
           tocMargin: [15, 0, 0, 0],
         });
@@ -337,7 +339,7 @@ export function createPDFFromAnalysisResult(
         // adding subheading with name
         docDefinition.content.push({
           text: `mit Name ${firstNames} ${lastName}`,
-          style: ['SUBTITLE', resultStyle],
+          style: ['SUBTITLE', { color: resultColor }],
         });
 
         // adding number description if present
@@ -371,8 +373,9 @@ export function createPDFFromAnalysisResult(
         // if description text is present => adding to content
         if (descriptionText) {
           docDefinition.content.push(...convertHTMLTextToPDFSyntax(descriptionText, {
-            h1: resultStyle,
-            h2: resultStyle
+            h1: { color: resultColor },
+            h2: { color: resultColor },
+            ul: { markerColor: resultColor },
           }));
         }
       }
