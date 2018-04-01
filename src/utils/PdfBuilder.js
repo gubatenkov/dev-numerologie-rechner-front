@@ -290,7 +290,10 @@ export function createPDFFromAnalysisResult(
         pageBreak: 'before',
         tocItem: true,
       });
-      docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text));
+      docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text, {
+        h1: resultStyle,
+        h2: resultStyle,
+      }));
     }
 
     // adding numbers
@@ -369,7 +372,7 @@ export function createPDFFromAnalysisResult(
         if (descriptionText) {
           docDefinition.content.push(...convertHTMLTextToPDFSyntax(descriptionText, {
             h1: resultStyle,
-            h2: resultStyle,
+            h2: resultStyle
           }));
         }
       }

@@ -41,10 +41,15 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
         : htmlElement.nodeName,
     };
 
-    // h1 is in toc
+    // h1 custom styles
     if (htmlElement.nodeName === 'H1') {
       resultDict.tocItem = true;
       resultDict.pageBreak = 'before';
+    }
+
+    // h2 custom styles
+    if (htmlElement.nodeName === 'H1') {
+      resultDict.text = `\n \n ${resultDict.text}`;
     }
 
     // returning result
