@@ -44,6 +44,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
           customStyles[htmlElement.nodeName.toLowerCase()],
         ]
         : htmlElement.nodeName,
+      headlineLevel: htmlElement.nodeName,
     };
 
     // h1 custom styles

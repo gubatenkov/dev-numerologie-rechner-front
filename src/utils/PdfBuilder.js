@@ -231,6 +231,28 @@ export function createPDFFromAnalysisResult(
         style: 'TABLE',
       },
     ],
+    pageBreakBefore(
+      currentNode,
+      followingNodesOnPage,
+      nodesOnNextPage,
+      previousNodesOnPage,
+    ) {
+      // heading is last element before footer
+      if (currentNode.headlineLevel && followingNodesOnPage.length === 3) {
+        return true;
+      }
+
+      // heading with subheadings is last element before footer
+      if (
+        currentNode.headlineLevel &&
+        followingNodesOnPage[0].headlineLevel &&
+        followingNodesOnPage.length === 4
+      ) {
+        return true;
+      }
+
+      return false;
+    },
     footer: currentPage => ({
       columns: [
         {
@@ -308,6 +330,7 @@ export function createPDFFromAnalysisResult(
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
           style: ['H2', { color: resultColor }],
+          headlineLevel: 'H2',
           tocItem: true,
           tocMargin: [15, 0, 0, 0],
         });
@@ -316,6 +339,7 @@ export function createPDFFromAnalysisResult(
         docDefinition.content.push({
           text: `mit Name ${firstNames} ${lastName}`,
           style: ['SUBTITLE', { color: resultColor }],
+          headlineLevel: 'SUBTITLE',
         });
 
         // adding number description if present
