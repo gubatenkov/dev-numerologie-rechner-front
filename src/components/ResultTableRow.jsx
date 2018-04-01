@@ -131,7 +131,7 @@ class ResultTableRow extends Component {
             cellValue = this.getTextRepresentation(value);
           }
           if (index === 0) {
-            cellStyle += 'tableRow__name';
+            cellStyle += 'tableRow__name table--bold';
           }
           return (
             <td className={cellStyle} key={rowItem.id + index + cellValue}>
