@@ -3,6 +3,40 @@ import pdfFonts from '../fonts/vfs_fonts';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
 
+// defining colors used in the pdf
+const CI_COLORS = {
+  RED: '#fb2c2c',
+  ORANGE: '#f88000',
+  YELLOW: '#e7c900',
+  GREEN: '#8ebe31',
+  BLUE: '#00b3d4',
+  PURPLE: '#bb00eb',
+  SILVER: '#afafaf',
+  GREY: '#969696',
+  BLACK: '#262626',
+};
+
+// mapping of colors to levels
+const LEVEL_STYLES = {
+  Ausdrucksebene: 'RED',
+  Persönlichkeitsebene: 'GREEN',
+  Entfaltungspotenzial: 'BLUE',
+  'Seelische Ebene': 'PURPLE',
+  'Vibratorische Zyklen': 'SILVER',
+  'Herausforderungen und Höhepunkte': 'SILVER',
+  'Persönliches Jahr': 'SILVER',
+};
+
+// constant for how many centimeters an inch is
+const INCH_IN_CM = 2.54;
+// current pixel density assumed for conversions in DPI
+const PIXEL_DENSITY = 72;
+// page margins
+const PAGE_MARGIN_LEFT_CM = 3.5;
+const PAGE_MARGIN_RIGHT_CM = 3.5;
+const PAGE_MARGIN_TOP_CM = 2.5;
+const PAGE_MARGIN_BOTTOM_CM = 2.5;
+
 // setting fonts for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
@@ -19,6 +53,15 @@ pdfMake.fonts = {
     bolditalics: 'Roboto-MediumItalic.ttf',
   },
 };
+
+/**
+ * converts centimeters to points for margins etc.
+ * @param centimeters the centimeter value to transform
+ * @return the point equivalent to centimeters
+ */
+function cmToPoints(centimeters) {
+  return centimeters / INCH_IN_CM * PIXEL_DENSITY;
+}
 
 /**
  * calculates the overview table for the numbers
@@ -103,15 +146,20 @@ export function createPDFFromAnalysisResult(
 
   // defining pdf and default styling
   const docDefinition = {
-    pageSize: 'A5',
+    pageSize: 'A4',
     pageOrientation: 'portrait',
-    pageMargins: [40, 60, 40, 60],
+    pageMargins: [
+      cmToPoints(PAGE_MARGIN_LEFT_CM),
+      cmToPoints(PAGE_MARGIN_TOP_CM),
+      cmToPoints(PAGE_MARGIN_RIGHT_CM),
+      cmToPoints(PAGE_MARGIN_BOTTOM_CM),
+    ],
     content: [
       {
         toc: {
           title: { text: 'Inhalt', style: 'H1' },
           // textMargin: [0, 0, 0, 0],
-          // textStyle: {italics: true},
+          textStyle: { lineHeight: 1.0 },
           numberStyle: { bold: true },
         },
       },
@@ -122,21 +170,21 @@ export function createPDFFromAnalysisResult(
         tocMargin: [0, 15, 0, 0],
         pageBreak: 'before',
       },
-      {
-        text: convertHTMLTextToPDFSyntax(analysisResult.personalAnalysis.analysisIntro.text),
-        pageBreak: 'after',
-      },
+      [
+        ...convertHTMLTextToPDFSyntax(analysisResult.personalAnalysis.analysisIntro.text),
+      ],
       {
         text: 'Übersichtsblatt der Zahlen',
         style: 'H1',
         tocItem: true,
+        pageBreak: 'before',
       },
       {
         table: {
           body: calculateResultOverviewTable(resultArray, firstNames, lastName),
-          alignment: 'center',
         },
-        pageBreak: 'after',
+        style: 'TABLE',
+        alignment: 'center',
       },
     ],
     footer: currentPage => ({
@@ -147,49 +195,99 @@ export function createPDFFromAnalysisResult(
         },
         { text: currentPage, alignment: 'right' },
       ],
-      margin: [40, 0, 40, 0],
+      margin: [
+        cmToPoints(PAGE_MARGIN_LEFT_CM),
+        10,
+        cmToPoints(PAGE_MARGIN_RIGHT_CM),
+        0,
+      ],
       fontSize: 8,
     }),
     defaultStyle: {
       font: 'MavenPro',
-      fontSize: 8,
+      fontSize: 12,
+      lineHeight: 1.5,
     },
     styles: {
       H1: {
-        fontSize: 14,
+        fontSize: 30,
         bold: true,
         marginTop: 10,
+        lineHeight: 1,
+        pageBreak: 'before',
       },
       H2: {
-        fontSize: 12,
+        fontSize: 18,
+        bold: true,
         marginTop: 10,
         marginBottom: 10,
+        lineHeight: 1,
       },
       H3: {
-        fontSize: 10,
+        fontSize: 12,
+        bold: true,
         marginTop: 10,
         marginBottom: 10,
+        lineHeight: 1,
+        color: CI_COLORS.BLACK,
+      },
+      H4: {
+        fontSize: 12,
+        color: CI_COLORS.GREY,
       },
       B: {
         bold: true,
       },
       SUBTITLE: {
         marginBottom: 10,
-        fontSize: 10,
+        lineHeight: 1,
+      },
+      NUMBERDESCRIPTION: {
+        color: CI_COLORS.GREY,
+        fontSize: 12,
       },
       TABLE: {
         margin: [0, 10, 0, 10],
+        fontSize: 10,
+      },
+      RED: {
+        color: CI_COLORS.RED,
+      },
+      ORANGE: {
+        color: CI_COLORS.ORANGE,
+      },
+      YELLOW: {
+        color: CI_COLORS.YELLOW,
+      },
+      GREEN: {
+        color: CI_COLORS.GREEN,
+      },
+      BLUE: {
+        color: CI_COLORS.BLUE,
+      },
+      PURPLE: {
+        color: CI_COLORS.PURPLE,
+      },
+      SILVER: {
+        color: CI_COLORS.SILVER,
+      },
+      GREY: {
+        color: CI_COLORS.GREY,
       },
     },
   };
 
   // pushing content to pdf
   resultArray.forEach((result) => {
+    // getting color for current level
+    const resultStyle = LEVEL_STYLES[result.name] || '';
+
     // adding level intro
     if (result.introText) {
       docDefinition.content.push({
         text: result.introText.title,
-        style: 'H1',
+        style: ['H1', resultStyle],
+        pageBreak: 'before',
         tocItem: true,
       });
       docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text));
@@ -228,7 +326,7 @@ export function createPDFFromAnalysisResult(
         // adding heading for number
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
-          style: 'H1',
+          style: ['H2', resultStyle],
           tocItem: true,
           tocMargin: [15, 0, 0, 0],
         });
@@ -236,12 +334,14 @@ export function createPDFFromAnalysisResult(
         // adding subheading with name
         docDefinition.content.push({
           text: `mit Name ${firstNames} ${lastName}`,
-          style: 'SUBTITLE',
+          style: ['SUBTITLE', resultStyle],
         });
 
         // adding number description if present
         if (item.numberDescription && item.numberDescription.description) {
-          docDefinition.content.push(...convertHTMLTextToPDFSyntax(item.numberDescription.description));
+          docDefinition.content.push(...convertHTMLTextToPDFSyntax(item.numberDescription.description, {
+            text: 'NUMBERDESCRIPTION',
+          }));
         }
 
         // adding number calculation description if present
@@ -249,7 +349,10 @@ export function createPDFFromAnalysisResult(
           item.numberDescription &&
           item.numberDescription.calculationDescription
         ) {
-          docDefinition.content.push(...convertHTMLTextToPDFSyntax(item.numberDescription.calculationDescription));
+          docDefinition.content.push(...convertHTMLTextToPDFSyntax(
+            item.numberDescription.calculationDescription,
+            { text: 'NUMBERDESCRIPTION' },
+          ));
         }
 
         // pushing description text
@@ -264,7 +367,10 @@ export function createPDFFromAnalysisResult(
 
         // if description text is present => adding to content
         if (descriptionText) {
-          docDefinition.content.push(...convertHTMLTextToPDFSyntax(descriptionText));
+          docDefinition.content.push(...convertHTMLTextToPDFSyntax(descriptionText, {
+            h1: resultStyle,
+            h2: resultStyle,
+          }));
         }
       }
     });

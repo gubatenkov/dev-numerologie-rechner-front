@@ -1,8 +1,10 @@
 /**
  * converts a html element into a pdfmake syntax string
  * @param htmlElement the html element to be transformed
+ * @param customStyle a dictionary of html tags (or "text" for non-tag elements) to stylings
+ * that should be applied in addition to HTML tag based styling
  */
-export function convertHTMLElementToPDFSyntax(htmlElement) {
+export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
   // 3 = TEXT_NODE, 1 = VALID_ELEMENT_NODES
   if (htmlElement.nodeType === 3) {
     // making sure we get no empty text elements due to spaces
@@ -10,6 +12,14 @@ export function convertHTMLElementToPDFSyntax(htmlElement) {
     if (trimmedContent.length === 0) {
       return null;
     }
+    // if custom style is set => returning text with custom style
+    if (customStyles.text) {
+      return {
+        text: `${trimmedContent} `,
+        style: customStyles.text,
+      };
+    }
+    // returning plain text
     return `${trimmedContent} `;
   }
 
@@ -19,11 +29,26 @@ export function convertHTMLElementToPDFSyntax(htmlElement) {
   }
 
   // adding newline to titles if inline
-  if (['H1', 'H2', 'H3'].includes(htmlElement.nodeName)) {
-    return {
-      text: `${htmlElement.textContent.trim()}`,
-      style: htmlElement.nodeName,
+  if (['H1', 'H2', 'H3', 'H4'].includes(htmlElement.nodeName)) {
+    // defining text and style
+    const resultDict = {
+      text: `${htmlElement.textContent.trim()} \n`,
+      style: customStyles[htmlElement.nodeName.toLowerCase()]
+        ? [
+          htmlElement.nodeName,
+          customStyles[htmlElement.nodeName.toLowerCase()],
+        ]
+        : htmlElement.nodeName,
     };
+
+    // h1 is in toc
+    if (htmlElement.nodeName === 'H1') {
+      resultDict.tocItem = true;
+      resultDict.pageBreak = 'before';
+    }
+
+    // returning result
+    return resultDict;
   }
 
   // handling list items
@@ -31,6 +56,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement) {
     return {
       ul: Array.from(htmlElement.getElementsByTagName('LI')).map(child =>
         child.textContent.trim()),
+      style: customStyles.ul ? ['LIST', customStyles.ul] : 'LIST',
     };
   }
 
@@ -39,7 +65,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement) {
     // getting rows
     const tableRows = Array.from(htmlElement.getElementsByTagName('TR'));
     return {
-      style: 'TABLE',
+      style: customStyles.table ? ['TABLE', customStyles.table] : 'TABLE',
       table: {
         headerRows: 1,
         body: tableRows.map(row =>
@@ -48,7 +74,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement) {
     };
   }
 
-  // otherwise returning node with styling
+  // otherwise returning node with styling set to its tag name => can be styled externally any ways
   return {
     text: `${htmlElement.textContent.trim()} `,
     style: htmlElement.nodeName,
@@ -58,8 +84,10 @@ export function convertHTMLElementToPDFSyntax(htmlElement) {
 /**
  * Converts html text into a collection of valid pdfmake syntax elements
  * @param htmlText html formatted string to be transofmed
+ * @param customStyle a custom style string applied to elements in addition to the ones based on
+ * the html string. NOTE: not dominacne of custom stlyes and HTML stlyes is guaranteed
  */
-export function convertHTMLTextToPDFSyntax(htmlText) {
+export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
   // removing line breaks from string
   const sanitizedText = htmlText.replace(/(\r\n|\n|\r)/gm, '');
 
@@ -79,8 +107,8 @@ export function convertHTMLTextToPDFSyntax(htmlText) {
     // getting current item
     const currentElement = childElements[index];
 
-    // if current element is list of table: push subresult (if present) and then list item
-    if (['UL', 'TABLE', 'H1', 'H2', 'H3'].includes(currentElement.nodeName)) {
+    // if current element is top level element: push subresult (if present) and then list item
+    if (['UL', 'TABLE', 'H1', 'H2'].includes(currentElement.nodeName)) {
       // if we have subresult => pushing
       if (currentSubResult.length > 0) {
         groupedElements.push({
@@ -92,10 +120,13 @@ export function convertHTMLTextToPDFSyntax(htmlText) {
       currentSubResult = [];
 
       // pushing list or table itself
-      groupedElements.push(convertHTMLElementToPDFSyntax(currentElement));
+      groupedElements.push(convertHTMLElementToPDFSyntax(currentElement, customStyles));
     } else {
       // pushing current element to sub result if not null
-      const newElement = convertHTMLElementToPDFSyntax(currentElement);
+      const newElement = convertHTMLElementToPDFSyntax(
+        currentElement,
+        customStyles,
+      );
       if (newElement) {
         currentSubResult.push(newElement);
       }
