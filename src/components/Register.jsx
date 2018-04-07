@@ -9,9 +9,10 @@ import InputField from './InputField';
 
 import logo from '../logo.png';
 
-import { AUTH_TOKEN } from '../utils/AuthUtils';
+import { AUTH_TOKEN, postJsonData } from '../utils/AuthUtils';
 import { signupMutation } from '../graphql/Mutations';
 import '../styles/InputForm.css';
+import '../styles/Register.css';
 
 /**
  * Login Form component
@@ -38,19 +39,24 @@ class Register extends Component {
    * attempts to register user
    */
   registerUser = async () => {
-    console.log(`Register ${this.email} with ${this.password} and ${this.passwordMatch}`);
-    const result = await this.props.signupMutation({
-      variables: {
+    // sending request to server
+    try {
+      const response = await postJsonData('/register', {
         email: this.email,
         password: this.password,
-      },
-    });
+      });
 
-    console.log(result.data.signup);
-    this.saveUserToken(result.data.signup);
+      // saving received token
+      this.saveUserToken(response.token);
 
-    // redirecting to user home
-    this.props.history.push('/userHome');
+      // redirecting to user home
+      this.props.history.push('/userHome');
+    } catch (error) {
+      this.setState({
+        errorMessage:
+          'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut. ',
+      });
+    }
   };
 
   saveUserToken = (token) => {
@@ -111,7 +117,7 @@ class Register extends Component {
                     </Link>
                   </div>
                 </Panel>
-                <div>
+                <div className="Register__error">
                   <h5>{this.state.errorMessage}</h5>
                 </div>
               </div>

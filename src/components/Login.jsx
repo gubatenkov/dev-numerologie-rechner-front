@@ -8,9 +8,10 @@ import InputField from './InputField';
 
 import logo from '../logo.png';
 
-import { AUTH_TOKEN } from '../utils/AuthUtils';
+import { AUTH_TOKEN, postJsonData } from '../utils/AuthUtils';
 import { loginMutation } from '../graphql/Mutations';
 import '../styles/InputForm.css';
+import '../styles/Login.css';
 
 /**
  * Login Form component
@@ -36,18 +37,23 @@ class Login extends Component {
    * attempts to login user
    */
   loginUser = async () => {
-    console.log(`Login ${this.email} with ${this.password}`);
-    const result = await this.props.loginMutation({
-      variables: {
+    // sending request to server
+    try {
+      const response = await postJsonData('/login', {
         email: this.email,
         password: this.password,
-      },
-    });
+      });
 
-    this.saveUserToken(result.data.login);
+      // saving received token
+      this.saveUserToken(response.token);
 
-    // redirecting to user home
-    this.props.history.push('/userHome');
+      // redirecting to user home
+      this.props.history.push('/userHome');
+    } catch (error) {
+      this.setState({
+        errorMessage: 'Login fehlgeschlagen. Bitte versuchen Sie es erneut. ',
+      });
+    }
   };
 
   saveUserToken = (token) => {
@@ -81,6 +87,7 @@ class Login extends Component {
                     }}
                   />
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Passwort"
                     onChange={(event) => {
@@ -102,7 +109,7 @@ class Login extends Component {
                     </Link>
                   </div>
                 </Panel>
-                <div>
+                <div className="Login__error">
                   <h5>{this.state.errorMessage}</h5>
                 </div>
               </div>

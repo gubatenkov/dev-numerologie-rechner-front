@@ -98,7 +98,7 @@ class UserHome extends Component {
 
     return (
       <div>
-        <NavigationBar />
+        <NavigationBar user={{ email: this.props.data.currentUser.email }} />
         <TitleBar
           primaryActionTitle="Anfrage an Berater"
           secondaryActionTitle="Neue Analyse"

@@ -9,11 +9,13 @@ class InputField extends Component {
     icon: PropTypes.string,
     fieldName: PropTypes.string.isRequired,
     onChange: PropTypes.func,
+    type: PropTypes.string,
   };
 
   static defaultProps = {
     icon: null,
     onChange: () => {},
+    type: 'text',
   };
 
   render() {
@@ -26,7 +28,7 @@ class InputField extends Component {
             </span>
           )}
           <input
-            type="text"
+            type={this.props.type}
             className="form-control"
             placeholder={this.props.fieldName}
             onChange={this.props.onChange}

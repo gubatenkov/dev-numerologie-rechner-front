@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { Link, withRouter } from 'react-router-dom';
 
@@ -10,42 +11,19 @@ import logo from '../logo.png';
 
 import { AUTH_TOKEN } from '../utils/AuthUtils';
 
-// dummy user until authentication is implemented
-// TODO remove this
-const DUMMY_USER = {
-  firstName: 'Christoph',
-  lastName: 'Hechenblaikner',
-  image: logo,
-  email: 'christoph.hech@gmail.com',
-};
-
 /**
  * the navigation bar for the application on top
  */
 class NavigationBar extends Component {
-  /**
-   * default constructor
-   */
-  constructor(props) {
-    // calling super constructor
-    super(props);
+  static propTypes = {
+    user: PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      image: PropTypes.string,
+    }),
+  };
 
-    // setting initial state
-    // TODO get this from user data
-    this.state = {
-      user: DUMMY_USER,
-    };
-  }
-
-  /**
-   * handler for login button click
-   */
-  handleLogin = () => {
-    // setting user state
-    // TODO remove once authentication works
-    this.setState({
-      user: DUMMY_USER,
-    });
+  static defaultProps = {
+    user: null,
   };
 
   /**
@@ -54,11 +32,6 @@ class NavigationBar extends Component {
   handleLogout = () => {
     // removing token from local storage => logout
     localStorage.removeItem(AUTH_TOKEN);
-
-    // clearing local user
-    this.setState({
-      user: null,
-    });
 
     // navigating to input for user
     this.props.history.push('/analysisInput');
@@ -73,11 +46,11 @@ class NavigationBar extends Component {
 
     // defining content dependent on if user is logged in
     const userContent =
-      authToken && this.state.user ? (
+      authToken && this.props.user ? (
         <ul className="nav navbar-toolbar navbar-right">
-          <NavigationDropdownMenu name={`${this.state.user.email}`} navbar>
+          <NavigationDropdownMenu name={`${this.props.user.email}`} navbar>
             <NavigationDropdownMenuItem>
-              Paket ändern
+              Meine Analysen
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem onClick={this.handleLogout}>
               Abmelden
@@ -86,7 +59,7 @@ class NavigationBar extends Component {
           <li>
             <a className="nav-link navbar-avatar">
               <span className="avatar">
-                <img src={this.state.user.image} alt="..." />
+                <img src={logo} alt={logo} />
               </span>
             </a>
           </li>
