@@ -25,7 +25,7 @@ import UserHome from './components/UserHome';
 import PrivateRoute from './utils/PrivateRoute';
 
 import registerServiceWorker from './utils/registerServiceWorker';
-import { isUserAuthenticated, AUTH_TOKEN } from './utils/AuthUtils';
+import { isUserAuthenticated, getUserAuthData } from './utils/AuthUtils';
 
 import './styles/bootstrap-extend.css';
 import './styles/bootstrap.css';
@@ -35,8 +35,8 @@ import './styles/font-awesome/font-awesome.min.css';
 import './styles/theme.css';
 
 // graphql endpoint url
-const GRAPHQL_HOST =
-  'https://dev-numerologie-rechner.herokuapp.com'; /* 'http://localhost:4000'; */
+// const GRAPHQL_HOST = 'http://localhost:4000';
+const GRAPHQL_HOST = 'https://dev-numerologie-rechner.herokuapp.com';
 const GRAPHQL_ENDPOINT = `${GRAPHQL_HOST}/graphql`;
 
 // creating fragment matcher
@@ -47,7 +47,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 // adding auth header
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = localStorage.getItem(AUTH_TOKEN);
+  const { token } = getUserAuthData();
   // return the headers to the context so httpLink can read them
   return {
     headers: {
