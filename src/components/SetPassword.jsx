@@ -61,6 +61,7 @@ class SetPassword extends Component {
               <div className="col-lg-4">
                 <Panel title="Neues Passwort setzten">
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Neues Password"
                     onChange={(event) => {
@@ -68,6 +69,7 @@ class SetPassword extends Component {
                     }}
                   />
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Passwort wiederholen"
                     onChange={(event) => {
