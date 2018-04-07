@@ -8,7 +8,7 @@ import InputField from './InputField';
 
 import logo from '../logo.png';
 
-import { AUTH_TOKEN, postJsonData } from '../utils/AuthUtils';
+import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 import { loginMutation } from '../graphql/Mutations';
 import '../styles/InputForm.css';
 import '../styles/Login.css';
@@ -45,7 +45,7 @@ class Login extends Component {
       });
 
       // saving received token
-      this.saveUserToken(response.token);
+      setUserAuthData({ email: this.email, token: response.token });
 
       // redirecting to user home
       this.props.history.push('/userHome');
@@ -54,10 +54,6 @@ class Login extends Component {
         errorMessage: 'Login fehlgeschlagen. Bitte versuchen Sie es erneut. ',
       });
     }
-  };
-
-  saveUserToken = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
   };
 
   /**

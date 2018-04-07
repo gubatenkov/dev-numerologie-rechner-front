@@ -7,7 +7,7 @@ import InputField from './InputField';
 
 import logo from '../logo.png';
 
-import { AUTH_TOKEN } from '../utils/AuthUtils';
+// import { setUserAuthData } from '../utils/AuthUtils';
 import { setPasswordMutation } from '../graphql/Mutations';
 
 /**
@@ -35,19 +35,10 @@ class SetPassword extends Component {
    */
   registerUser = async () => {
     console.log(`Setting new password to ${this.password}`);
-    const result = await this.props.setPasswordMutation({
-      variables: {
-        token: 'todo: token from URL',
-        newPassword: this.password,
-      },
-    });
 
-    console.log(result.data.setPassword);
-    this.saveUserToken(result.data.setPassword);
-  };
+    // TODO implement
 
-  saveUserToken = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
+    // setUserAuthData(result.data.setPassword);
   };
 
   /**
