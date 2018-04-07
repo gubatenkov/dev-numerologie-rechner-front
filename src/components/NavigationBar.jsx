@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withApollo } from 'react-apollo';
 
 import { Link, withRouter } from 'react-router-dom';
 
@@ -35,12 +36,19 @@ class NavigationBar extends Component {
 
     // navigating to input for user
     this.props.history.push('/analysisInput');
+
+    // clearing apollo client cache
+    this.props.client.resetStore();
+
+    window.location.reload();
   };
 
   /**
    * renders the navbar with brand, user name as dropdown and avatar
    */
   render() {
+    console.log(this.props);
+
     // getting auth token for login
     const authToken = localStorage.getItem(AUTH_TOKEN);
 
@@ -85,4 +93,4 @@ class NavigationBar extends Component {
   }
 }
 
-export default withRouter(NavigationBar);
+export default withApollo(withRouter(NavigationBar));
