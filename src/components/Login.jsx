@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
@@ -9,7 +8,6 @@ import InputField from './InputField';
 import logo from '../logo.png';
 
 import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
-import { loginMutation } from '../graphql/Mutations';
 import '../styles/InputForm.css';
 import '../styles/Login.css';
 
@@ -117,4 +115,4 @@ class Login extends Component {
   }
 }
 
-export default graphql(loginMutation, { name: 'loginMutation' })(withRouter(Login));
+export default withRouter(Login);

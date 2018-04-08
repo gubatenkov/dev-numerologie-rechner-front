@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 
-import { graphql } from 'react-apollo';
-
-import { Link } from 'react-router-dom';
+import { postJsonData } from '../utils/AuthUtils';
 
 import Panel from './Panel';
 import InputField from './InputField';
 
 import logo from '../logo.png';
 import '../styles/InputForm.css';
-import { resetPasswordMutation } from '../graphql/Mutations';
 
 /**
  * Login Form component
@@ -28,19 +26,26 @@ class ResetPassword extends Component {
 
     // members for authentication
     this.email = null;
-    this.password = null;
   }
 
   /**
    * attempts to reset password
    */
   resetPassword = async () => {
-    console.log(`Reset password of ${this.email}`);
-    await this.props.resetPasswordMutation({
-      variables: {
+    // sending request to server
+    try {
+      await postJsonData('/reset-password', {
         email: this.email,
-      },
-    });
+      });
+
+      // redirecting to user home
+      this.props.history.push('/login');
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        errorMessage: 'Passwort setzen fehlgeschlagen.',
+      });
+    }
   };
 
   /**
@@ -93,6 +98,4 @@ class ResetPassword extends Component {
   }
 }
 
-export default graphql(resetPasswordMutation, {
-  name: 'resetPasswordMutation',
-})(ResetPassword);
+export default withRouter(ResetPassword);

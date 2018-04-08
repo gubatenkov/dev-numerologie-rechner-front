@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import { graphql } from 'react-apollo';
-
 import { Link, withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
@@ -10,7 +8,6 @@ import InputField from './InputField';
 import logo from '../logo.png';
 
 import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
-import { signupMutation } from '../graphql/Mutations';
 import '../styles/InputForm.css';
 import '../styles/Register.css';
 
@@ -125,4 +122,4 @@ class Register extends Component {
   }
 }
 
-export default graphql(signupMutation, { name: 'signupMutation' })(withRouter(Register));
+export default withRouter(Register);
