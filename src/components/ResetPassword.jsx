@@ -43,7 +43,7 @@ class ResetPassword extends Component {
     } catch (error) {
       console.log(error);
       this.setState({
-        errorMessage: 'Passwort setzen fehlgeschlagen.',
+        errorMessage: 'Passwort zurücksetzen fehlgeschlagen.',
       });
     }
   };
@@ -83,6 +83,9 @@ class ResetPassword extends Component {
                   <div className="InputForm__options">
                     <Link to="/login">
                       <h6>Anmelden</h6>
+                    </Link>
+                    <Link to="/register">
+                      <h6>Registrieren</h6>
                     </Link>
                   </div>
                 </Panel>

@@ -105,6 +105,9 @@ class Register extends Component {
                     Registrieren
                   </button>
                   <div className="InputForm__options">
+                    <Link to="/reset">
+                      <h6>Passwort zurücksetzen</h6>
+                    </Link>
                     <Link to="/login">
                       <h6>Anmelden</h6>
                     </Link>

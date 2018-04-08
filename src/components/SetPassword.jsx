@@ -32,8 +32,6 @@ class SetPassword extends Component {
    * sets user password
    */
   registerUser = async () => {
-    console.log(`Setting new password to ${this.password}`);
-
     // sending request to server
     try {
       await postJsonData('/set-password', {
