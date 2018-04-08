@@ -59,27 +59,3 @@ export const saveAnalysisMutation = gql`
     }
   }
 `;
-
-export const loginMutation = gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password)
-  }
-`;
-
-export const signupMutation = gql`
-  mutation signup($email: String!, $password: String!) {
-    signup(email: $email, password: $password)
-  }
-`;
-
-export const resetPasswordMutation = gql`
-  mutation resetPassword($email: String!) {
-    resetPassword(email: $email)
-  }
-`;
-
-export const setPasswordMutation = gql`
-  mutation setPassword($token: String!, $newPassword: String!) {
-    setPassword(token: $token, newPassword: $newPassword)
-  }
-`;

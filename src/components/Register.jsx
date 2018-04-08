@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import { graphql } from 'react-apollo';
-
 import { Link, withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
@@ -9,9 +7,9 @@ import InputField from './InputField';
 
 import logo from '../logo.png';
 
-import { AUTH_TOKEN } from '../utils/AuthUtils';
-import { signupMutation } from '../graphql/Mutations';
+import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 import '../styles/InputForm.css';
+import '../styles/Register.css';
 
 /**
  * Login Form component
@@ -38,23 +36,24 @@ class Register extends Component {
    * attempts to register user
    */
   registerUser = async () => {
-    console.log(`Register ${this.email} with ${this.password} and ${this.passwordMatch}`);
-    const result = await this.props.signupMutation({
-      variables: {
+    // sending request to server
+    try {
+      const response = await postJsonData('/register', {
         email: this.email,
         password: this.password,
-      },
-    });
+      });
 
-    console.log(result.data.signup);
-    this.saveUserToken(result.data.signup);
+      // saving received token
+      setUserAuthData({ email: this.email, token: response.token });
 
-    // redirecting to user home
-    this.props.history.push('/userHome');
-  };
-
-  saveUserToken = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
+      // redirecting to user home
+      this.props.history.push('/userHome');
+    } catch (error) {
+      this.setState({
+        errorMessage:
+          'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut. ',
+      });
+    }
   };
 
   /**
@@ -106,12 +105,15 @@ class Register extends Component {
                     Registrieren
                   </button>
                   <div className="InputForm__options">
+                    <Link to="/reset">
+                      <h6>Passwort zurücksetzen</h6>
+                    </Link>
                     <Link to="/login">
                       <h6>Anmelden</h6>
                     </Link>
                   </div>
                 </Panel>
-                <div>
+                <div className="Register__error">
                   <h5>{this.state.errorMessage}</h5>
                 </div>
               </div>
@@ -123,4 +125,4 @@ class Register extends Component {
   }
 }
 
-export default graphql(signupMutation, { name: 'signupMutation' })(withRouter(Register));
+export default withRouter(Register);

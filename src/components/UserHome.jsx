@@ -92,7 +92,11 @@ class UserHome extends Component {
    * default component render
    */
   render() {
-    if (this.props.data.loading) {
+    if (
+      this.props.data.loading ||
+      !this.props.data ||
+      !this.props.data.currentUser
+    ) {
       return <LoadingIndicator />;
     }
 

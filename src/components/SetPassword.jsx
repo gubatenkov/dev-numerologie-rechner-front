@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-
-import { graphql } from 'react-apollo';
+import { withRouter } from 'react-router-dom';
+import { postJsonData } from '../utils/AuthUtils';
 
 import Panel from './Panel';
 import InputField from './InputField';
 
 import logo from '../logo.png';
-
-import { AUTH_TOKEN } from '../utils/AuthUtils';
-import { setPasswordMutation } from '../graphql/Mutations';
 
 /**
  * Login Form component
@@ -28,32 +25,34 @@ class SetPassword extends Component {
     // members for local state handling
     this.password = null;
     this.passwordMatch = null;
+    this.token = this.props.match.params.token;
   }
 
   /**
    * sets user password
    */
   registerUser = async () => {
-    console.log(`Setting new password to ${this.password}`);
-    const result = await this.props.setPasswordMutation({
-      variables: {
-        token: 'todo: token from URL',
-        newPassword: this.password,
-      },
-    });
+    // sending request to server
+    try {
+      await postJsonData('/set-password', {
+        password: this.password,
+        token: this.token,
+      });
 
-    console.log(result.data.setPassword);
-    this.saveUserToken(result.data.setPassword);
-  };
-
-  saveUserToken = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
+      // redirecting to user home
+      this.props.history.push('/login');
+    } catch (error) {
+      this.setState({
+        errorMessage: 'Passwort setzen fehlgeschlagen.',
+      });
+    }
   };
 
   /**
    * default render method
    */
   render() {
+    console.log(this.token);
     return (
       <div className="page-register-v3 layout-full">
         <div className="page vertical-align">
@@ -70,6 +69,7 @@ class SetPassword extends Component {
               <div className="col-lg-4">
                 <Panel title="Neues Passwort setzten">
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Neues Password"
                     onChange={(event) => {
@@ -77,6 +77,7 @@ class SetPassword extends Component {
                     }}
                   />
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Passwort wiederholen"
                     onChange={(event) => {
@@ -102,4 +103,4 @@ class SetPassword extends Component {
   }
 }
 
-export default graphql(setPasswordMutation, { name: 'setPasswordMutation' })(SetPassword);
+export default withRouter(SetPassword);

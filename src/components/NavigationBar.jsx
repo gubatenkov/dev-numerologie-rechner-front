@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withApollo } from 'react-apollo';
 
 import { Link, withRouter } from 'react-router-dom';
 
@@ -8,60 +9,24 @@ import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import '../styles/NavigationBar.css';
 import logo from '../logo.png';
 
-import { AUTH_TOKEN } from '../utils/AuthUtils';
-
-// dummy user until authentication is implemented
-// TODO remove this
-const DUMMY_USER = {
-  firstName: 'Christoph',
-  lastName: 'Hechenblaikner',
-  image: logo,
-  email: 'christoph.hech@gmail.com',
-};
+import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
 
 /**
  * the navigation bar for the application on top
  */
 class NavigationBar extends Component {
   /**
-   * default constructor
-   */
-  constructor(props) {
-    // calling super constructor
-    super(props);
-
-    // setting initial state
-    // TODO get this from user data
-    this.state = {
-      user: DUMMY_USER,
-    };
-  }
-
-  /**
-   * handler for login button click
-   */
-  handleLogin = () => {
-    // setting user state
-    // TODO remove once authentication works
-    this.setState({
-      user: DUMMY_USER,
-    });
-  };
-
-  /**
    * handler for logout click
    */
   handleLogout = () => {
     // removing token from local storage => logout
-    localStorage.removeItem(AUTH_TOKEN);
-
-    // clearing local user
-    this.setState({
-      user: null,
-    });
+    deleteUserAuthData();
 
     // navigating to input for user
     this.props.history.push('/analysisInput');
+
+    // reloading to clear cache
+    window.location.reload();
   };
 
   /**
@@ -69,15 +34,17 @@ class NavigationBar extends Component {
    */
   render() {
     // getting auth token for login
-    const authToken = localStorage.getItem(AUTH_TOKEN);
+    const authUser = getUserAuthData();
 
     // defining content dependent on if user is logged in
     const userContent =
-      authToken && this.state.user ? (
+      authUser.token && authUser.email ? (
         <ul className="nav navbar-toolbar navbar-right">
-          <NavigationDropdownMenu name={`${this.state.user.email}`} navbar>
-            <NavigationDropdownMenuItem>
-              Paket ändern
+          <NavigationDropdownMenu name={`${authUser.email}`} navbar>
+            <NavigationDropdownMenuItem
+              onClick={() => this.props.history.push('/userHome')}
+            >
+              Meine Analysen
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem onClick={this.handleLogout}>
               Abmelden
@@ -86,7 +53,7 @@ class NavigationBar extends Component {
           <li>
             <a className="nav-link navbar-avatar">
               <span className="avatar">
-                <img src={this.state.user.image} alt="..." />
+                <img src={logo} alt={logo} />
               </span>
             </a>
           </li>
@@ -112,4 +79,4 @@ class NavigationBar extends Component {
   }
 }
 
-export default withRouter(NavigationBar);
+export default withApollo(withRouter(NavigationBar));

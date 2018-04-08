@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { graphql } from 'react-apollo';
 import { Link, withRouter } from 'react-router-dom';
 
 import Panel from './Panel';
@@ -8,9 +7,9 @@ import InputField from './InputField';
 
 import logo from '../logo.png';
 
-import { AUTH_TOKEN } from '../utils/AuthUtils';
-import { loginMutation } from '../graphql/Mutations';
+import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 import '../styles/InputForm.css';
+import '../styles/Login.css';
 
 /**
  * Login Form component
@@ -36,22 +35,23 @@ class Login extends Component {
    * attempts to login user
    */
   loginUser = async () => {
-    console.log(`Login ${this.email} with ${this.password}`);
-    const result = await this.props.loginMutation({
-      variables: {
+    // sending request to server
+    try {
+      const response = await postJsonData('/login', {
         email: this.email,
         password: this.password,
-      },
-    });
+      });
 
-    this.saveUserToken(result.data.login);
+      // saving received token
+      setUserAuthData({ email: this.email, token: response.token });
 
-    // redirecting to user home
-    this.props.history.push('/userHome');
-  };
-
-  saveUserToken = (token) => {
-    localStorage.setItem(AUTH_TOKEN, token);
+      // redirecting to user home
+      this.props.history.push('/userHome');
+    } catch (error) {
+      this.setState({
+        errorMessage: 'Login fehlgeschlagen. Bitte versuchen Sie es erneut. ',
+      });
+    }
   };
 
   /**
@@ -81,6 +81,7 @@ class Login extends Component {
                     }}
                   />
                   <InputField
+                    type="password"
                     icon="wb-lock"
                     fieldName="Passwort"
                     onChange={(event) => {
@@ -102,7 +103,7 @@ class Login extends Component {
                     </Link>
                   </div>
                 </Panel>
-                <div>
+                <div className="Login__error">
                   <h5>{this.state.errorMessage}</h5>
                 </div>
               </div>
@@ -114,4 +115,4 @@ class Login extends Component {
   }
 }
 
-export default graphql(loginMutation, { name: 'loginMutation' })(withRouter(Login));
+export default withRouter(Login);
