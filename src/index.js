@@ -76,7 +76,7 @@ ReactDOM.render(
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/reset" component={ResetPassword} />
-        <Route path="/setPassword" component={SetPassword} />
+        <Route path="/input-set-password/:token?" component={SetPassword} />
         <Route
           path="/resultPersonal/:firstNames/:lastName/:dateOfBirth"
           component={AnalysisResultPersonal}
