@@ -96,8 +96,11 @@ class AnalysisInput extends Component {
                     Starten
                   </button>
                   <div className="InputForm__options">
-                    <Link to="/userHome" target="_blank">
+                    <Link to="/userHome">
                       <h6>Anmelden</h6>
+                    </Link>
+                    <Link to="/register">
+                      <h6>Registrieren</h6>
                     </Link>
                   </div>
                 </Panel>

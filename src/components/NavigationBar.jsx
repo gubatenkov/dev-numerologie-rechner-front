@@ -60,7 +60,7 @@ class NavigationBar extends Component {
         </ul>
       ) : (
         <ul className="nav navbar-toolbar navbar-right">
-          <Link className="btn btn-default btn-block " to="/login">
+          <Link className="btn btn-default btn-block " to="/login" target="_blank">
             Anmelden
           </Link>
         </ul>
