@@ -1,7 +1,7 @@
 const AUTH_TOKEN = 'auth-token';
 const AUTH_EMAIL = 'auth-email';
 
-const AUTH_URL = 'http://localhost:4000/auth';
+const AUTH_URL = 'https://dev-numerologie-rechner.herokuapp.com/auth';
 
 /**
  * checks if user is authenticated
