@@ -1,7 +1,13 @@
+import dotenv from 'dotenv';
+
+// loading env
+dotenv.config();
+
 const AUTH_TOKEN = 'auth-token';
 const AUTH_EMAIL = 'auth-email';
 
-const AUTH_URL = 'https://dev-numerologie-rechner.herokuapp.com/auth';
+const AUTH_HOST = process.env.BACKEND_HOST || 'http://localhost:4000';
+const AUTH_URL = `${AUTH_HOST}/auth`;
 
 /**
  * checks if user is authenticated
