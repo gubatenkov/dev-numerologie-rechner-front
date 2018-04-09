@@ -35,7 +35,7 @@ import './styles/font-awesome/font-awesome.min.css';
 import './styles/theme.css';
 
 // graphql endpoint url
-const GRAPHQL_HOST = 'http://localhost:4000';
+const GRAPHQL_HOST = process.env.BACKEND_HOST || 'http://localhost:4000';
 // const GRAPHQL_HOST = 'https://dev-numerologie-rechner.herokuapp.com';
 const GRAPHQL_ENDPOINT = `${GRAPHQL_HOST}/graphql`;
 
