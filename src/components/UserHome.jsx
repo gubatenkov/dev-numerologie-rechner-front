@@ -117,10 +117,13 @@ class UserHome extends Component {
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.currentUser.analyses}
             />
-            <CreditWidget
-              credits={this.props.data.currentUser.credits}
-              handleBuyCredits={() => console.log('buy credits!')}
-            />
+            {this.props.data.currentUser.credits &&
+              this.props.data.currentUser.credits.length > 0 && (
+                <CreditWidget
+                  credits={this.props.data.currentUser.credits}
+                  handleBuyCredits={() => console.log('buy credits!')}
+                />
+              )}
             <AdArea />
           </div>
         </div>
