@@ -220,6 +220,7 @@ class AnalysisBrowser extends Component {
             <tr>
               <th>Name</th>
               <th>Typ</th>
+              <th />
               <th>Aktionen</th>
             </tr>
           </thead>
@@ -231,6 +232,9 @@ class AnalysisBrowser extends Component {
                   key={group.id}
                   group={group}
                   index={index}
+                  elementsInGroup={
+                    this.props.analyses.filter(analysis => analysis.group.id === group.id).length
+                  }
                   clickHandler={(clickIndex) => {
                     // if index is not already set -> setting new index
                     // else resetting

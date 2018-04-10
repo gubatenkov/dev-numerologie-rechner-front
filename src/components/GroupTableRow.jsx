@@ -13,6 +13,7 @@ class GroupTableRow extends Component {
       name: PropTypes.string.isRequired,
       isDefault: PropTypes.bool.isRequired,
     }).isRequired,
+    elementsInGroup: PropTypes.number.isRequired,
     clickHandler: PropTypes.func,
     renameHandler: PropTypes.func,
     deleteHandler: PropTypes.func,
@@ -60,9 +61,12 @@ class GroupTableRow extends Component {
           {this.props.group.name}
         </td>
         <td className="GroupTableRow--groupTypeCell">Gruppe</td>
+        <td className="GroupTableRow--groupTypeCell">
+          {`${this.props.elementsInGroup} Analysen`}
+        </td>
         <td className="GroupTableRow--groupActionCell">
           <button
-            className="btn btn-primary btn-outline btn-sm"
+            className="btn btn-primary btn-outline"
             onClick={this.handleRenameClick}
             disabled={isDefaultGroup}
           >
@@ -70,7 +74,7 @@ class GroupTableRow extends Component {
           </button>
           <button
             onClick={this.handleDeleteClick}
-            className="btn btn-danger btn-outline btn-sm"
+            className="btn btn-danger btn-outline "
             disabled={isDefaultGroup}
           >
             Löschen
