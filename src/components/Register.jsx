@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
 
+import {
+  NotificationManager,
+  NotificationContainer,
+} from 'react-notifications';
+
 import Panel from './Panel';
 import InputField from './InputField';
 
@@ -49,10 +54,7 @@ class Register extends Component {
       // redirecting to user home
       this.props.history.push('/userHome');
     } catch (error) {
-      this.setState({
-        errorMessage:
-          'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut. ',
-      });
+      NotificationManager.error('Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
     }
   };
 
@@ -120,6 +122,7 @@ class Register extends Component {
             </div>
           </div>
         </div>
+        <NotificationContainer />
       </div>
     );
   }

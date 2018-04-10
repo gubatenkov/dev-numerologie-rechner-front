@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
+import {
+  NotificationManager,
+  NotificationContainer,
+} from 'react-notifications';
+
 import { postJsonData } from '../utils/AuthUtils';
 
 import Panel from './Panel';
@@ -20,10 +25,6 @@ class ResetPassword extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      errorMessage: null,
-    };
-
     // members for authentication
     this.email = null;
   }
@@ -38,13 +39,12 @@ class ResetPassword extends Component {
         email: this.email,
       });
 
-      // redirecting to user home
-      this.props.history.push('/login');
+      NotificationManager.success('Ein Email mit einer Anleitung zum Zurücksetzten des Passworts wurde versendet.');
+
+      // redirecting to user home after 3 seconds
+      setTimeout(() => this.props.history.push('/login'), 3000);
     } catch (error) {
-      console.log(error);
-      this.setState({
-        errorMessage: 'Passwort zurücksetzen fehlgeschlagen.',
-      });
+      NotificationManager.error('Rücksetzen fehlgeschlagen. Bitte versuchen Sie es erneut.');
     }
   };
 
@@ -89,13 +89,11 @@ class ResetPassword extends Component {
                     </Link>
                   </div>
                 </Panel>
-                <div>
-                  <h5>{this.state.errorMessage}</h5>
-                </div>
               </div>
             </div>
           </div>
         </div>
+        <NotificationContainer />
       </div>
     );
   }
