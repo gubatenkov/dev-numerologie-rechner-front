@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { graphql, compose } from 'react-apollo';
 import {
-  NotificationContainer,
   NotificationManager,
+  NotificationContainer,
 } from 'react-notifications';
 
 import '../styles/UserHome.css';

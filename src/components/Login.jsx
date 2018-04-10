@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
+import {
+  NotificationManager,
+  NotificationContainer,
+} from 'react-notifications';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -21,10 +25,6 @@ class Login extends Component {
    */
   constructor(props) {
     super(props);
-
-    this.state = {
-      errorMessage: null,
-    };
 
     // members for authentication
     this.email = null;
@@ -48,9 +48,7 @@ class Login extends Component {
       // redirecting to user home
       this.props.history.push('/userHome');
     } catch (error) {
-      this.setState({
-        errorMessage: 'Login fehlgeschlagen. Bitte versuchen Sie es erneut. ',
-      });
+      NotificationManager.error('Login fehlgeschlagen. Bitte versuchen Sie es erneut.');
     }
   };
 
@@ -103,13 +101,11 @@ class Login extends Component {
                     </Link>
                   </div>
                 </Panel>
-                <div className="Login__error">
-                  <h5>{this.state.errorMessage}</h5>
-                </div>
               </div>
             </div>
           </div>
         </div>
+        <NotificationContainer />
       </div>
     );
   }
