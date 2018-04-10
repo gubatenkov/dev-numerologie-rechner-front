@@ -10,3 +10,7 @@
 .GroupTableRow--groupActionCell button {
     margin-right: 1em;
 }
+
+.GroupTableRow--groupActionCell {
+    white-space: nowrap !important;
+}

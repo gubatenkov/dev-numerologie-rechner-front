@@ -31,6 +31,7 @@ class AnalysisTableRow extends Component {
           {this.props.analysis.name}
         </td>
         <td className="AnalysisTableRow--analysisTypeCell">Analyse</td>
+        <td />
         <td className="AnalysisTableRow--analysisActionCell">
           {' '}
           <button
