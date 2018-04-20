@@ -27,35 +27,28 @@ class AnalysisInput extends Component {
     this.firstNames = null;
     this.lastNames = null;
     this.dateOfBirth = null;
+    this.firstNamesComfort = null;
+    this.lastNameComfort = null;
+
+    this.state = {
+      comfortNameFieldsShown: false,
+    };
   }
-
-  /**
-   * handles changes to the first name field
-   */
-  handleFirstNamesValueChanged = (event) => {
-    // storing change
-    this.firstNames = event.target.value;
-  };
-
-  /**
-   * handles changes to the last name field
-   */
-  handleLastNameValueChanged = (event) => {
-    this.lastNames = event.target.value;
-  };
-
-  /**
-   * handes changes of the date of birth
-   */
-  handleDateOfBirthChange = (event) => {
-    this.dateOfBirth = event.target.value;
-  };
 
   /**
    * starts the analysis upon button click
    */
   startAnalysis = () => {
-    this.props.history.push(`/resultPersonal/${this.firstNames}/${this.lastNames}/${this.dateOfBirth}`);
+    if (this.firstNamesComfort && this.lastNameComfort) {
+      this.props.history.push(`/resultPersonal/${[this.firstNames, this.firstNamesComfort]}/${[
+        this.lastNames,
+        this.lastNameComfort,
+      ]}/${this.dateOfBirth}`);
+    } else {
+      this.props.history.push(`/resultPersonal/${this.firstNames}/${this.lastNames}/${
+        this.dateOfBirth
+      }`);
+    }
   };
 
   render() {
@@ -77,18 +70,43 @@ class AnalysisInput extends Component {
                   <InputField
                     icon="wb-user"
                     fieldName="Vorname(n)"
-                    onChange={this.handleFirstNamesValueChanged}
+                    onChange={(event) => {
+                      this.firstNames = event.target.value;
+                    }}
                   />
                   <InputField
                     icon="wb-user"
                     fieldName="Nachname"
-                    onChange={this.handleLastNameValueChanged}
+                    onChange={(event) => {
+                      this.lastNames = event.target.value;
+                    }}
                   />
                   <InputField
                     icon="wb-calendar"
                     fieldName="Geburtsdatum"
-                    onChange={this.handleDateOfBirthChange}
+                    onChange={(event) => {
+                      this.dateOfBirth = event.target.value;
+                    }}
                   />
+                  {this.state.comfortNameFieldsShown && (
+                    <div>
+                      <h6>Wohlfühlname</h6>
+                      <InputField
+                        icon="wb-user"
+                        fieldName="Vorname(n)"
+                        onChange={(event) => {
+                          this.firstNamesComfort = event.target.value;
+                        }}
+                      />
+                      <InputField
+                        icon="wb-user"
+                        fieldName="Nachname"
+                        onChange={(event) => {
+                          this.lastNameComfort = event.target.value;
+                        }}
+                      />
+                    </div>
+                  )}
                   <button
                     className="btn btn-primary btn-block"
                     onClick={this.startAnalysis}
@@ -102,6 +120,23 @@ class AnalysisInput extends Component {
                     <Link to="/register">
                       <h6>Registrieren</h6>
                     </Link>
+                    <a
+                      role="button"
+                      onClick={() =>
+                        this.setState({
+                          comfortNameFieldsShown: !this.state
+                            .comfortNameFieldsShown,
+                        })
+                      }
+                    >
+                      <h6>
+                        {`Vergleichsnamen ${
+                          this.state.comfortNameFieldsShown
+                            ? 'ausblenden'
+                            : 'einblenden'
+                        }`}
+                      </h6>
+                    </a>
                   </div>
                 </Panel>
               </div>
