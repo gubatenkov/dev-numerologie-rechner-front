@@ -1,9 +1,7 @@
-import { GRAPHQL_HOST } from '../utils/Config';
+import { AUTH_ENDPOINT } from '../utils/Config';
 
 const AUTH_TOKEN = 'auth-token';
 const AUTH_EMAIL = 'auth-email';
-
-const AUTH_URL = `${GRAPHQL_HOST}/auth`;
 
 /**
  * checks if user is authenticated
@@ -45,7 +43,7 @@ export function deleteUserAuthData() {
  * @returns the json response or a json error
  */
 export async function postJsonData(url, data) {
-  const response = await fetch(AUTH_URL + url, {
+  const response = await fetch(AUTH_ENDPOINT + url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
