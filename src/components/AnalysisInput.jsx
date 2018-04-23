@@ -45,7 +45,7 @@ class AnalysisInput extends Component {
         this.lastNameComfort,
       ]}/${this.dateOfBirth}`);
     } else {
-      this.props.history.push(`/resultPersonalCompare/${this.firstNames}/${this.lastNames}/${
+      this.props.history.push(`/resultPersonal/${this.firstNames}/${this.lastNames}/${
         this.dateOfBirth
       }`);
     }

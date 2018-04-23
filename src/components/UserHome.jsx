@@ -60,19 +60,33 @@ class UserHome extends Component {
    * @param groupId: the id of the group of the new analysis
    */
   async saveAnalysis(name, groupId) {
+    // one or more names?
+    let nameInputs = [];
+    if (this.props.computedMatch.params.lastName.split(',').length > 1) {
+      const firstNames = this.props.computedMatch.params.firstNames.split(',');
+      const lastNames = this.props.computedMatch.params.lastName.split(',');
+      nameInputs = firstNames.map((item, index) => ({
+        firstNames: item,
+        lastName: lastNames[index],
+        dateOfBirth: this.props.computedMatch.params.dateOfBirth,
+      }));
+    } else {
+      nameInputs = [
+        {
+          firstNames: this.props.computedMatch.params.firstNames,
+          lastName: this.props.computedMatch.params.lastName,
+          dateOfBirth: this.props.computedMatch.params.dateOfBirth,
+        },
+      ];
+    }
+
     try {
       // performing mutation call
       await this.props.saveAnalysis({
         variables: {
           name,
           group: groupId,
-          inputs: [
-            {
-              firstNames: this.props.computedMatch.params.firstNames,
-              lastName: this.props.computedMatch.params.lastName,
-              dateOfBirth: this.props.computedMatch.params.dateOfBirth,
-            },
-          ],
+          inputs: nameInputs,
         },
         update: (store, { data: { saveAnalysis } }) => {
           // gettint the query from the local cache and adding group
@@ -132,11 +146,26 @@ class UserHome extends Component {
           onClose={() => this.setState({ saveDialogOpen: false })}
           onSave={(group) => {
             // constructing name for analysis
-            const analysisName = `${
-              this.props.computedMatch.params.firstNames
-            } ${this.props.computedMatch.params.lastName}, ${
-              this.props.computedMatch.params.dateOfBirth
-            }`;
+            let analysisName;
+            if (
+              this.props.computedMatch.params.lastName.split(',').length > 1
+            ) {
+              // gettin names
+              const firstName = this.props.computedMatch.params.firstNames.split(',')[0];
+              const firstNameComfort = this.props.computedMatch.params.firstNames.split(',')[1];
+              const lastName = this.props.computedMatch.params.lastName.split(',')[0];
+              const lastNameComfort = this.props.computedMatch.params.lastName.split(',')[1];
+              const { dateOfBirth } = this.props.computedMatch.params;
+
+              // constructing name
+              analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
+            } else {
+              // constructing name
+              analysisName = `${this.props.computedMatch.params.firstNames} ${
+                this.props.computedMatch.params.lastName
+              }, ${this.props.computedMatch.params.dateOfBirth}`;
+            }
+
             // saving analysis
             this.saveAnalysis(analysisName, group.id);
 

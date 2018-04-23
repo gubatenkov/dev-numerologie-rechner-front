@@ -203,7 +203,7 @@ class AnalysisResultPersonalCompare extends Component {
           primaryActionTitle="Speichern"
           onPrimaryAction={() => {
             this.props.history.push(`/userHome/saveAnalysis/${this.props.match.params.firstNames}/${
-                this.props.match.params.lastName
+                this.props.match.params.lastNames
               }/${this.props.match.params.dateOfBirth}`);
           }}
           badgeTitle="Kurztext"
