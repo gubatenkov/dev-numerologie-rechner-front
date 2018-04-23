@@ -68,7 +68,7 @@ class ResultTableRow extends Component {
             <tr
               key={
                 resultItem.name +
-                resultItem.id +
+                resultItem.numberId +
                 rowIndex +
                 resultItem.result.values[rowIndex]
               }
@@ -124,7 +124,7 @@ class ResultTableRow extends Component {
     const lastIndex = rowItem.values.length - 1;
     return (
       <tr
-        key={rowItem.id}
+        key={rowItem.numberId}
         className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
         {rowItem.values.map((value, index) => {
@@ -139,7 +139,10 @@ class ResultTableRow extends Component {
             cellStyle += 'tableRow__name table--bold';
           }
           return (
-            <td className={cellStyle} key={rowItem.id + index + cellValue}>
+            <td
+              className={cellStyle}
+              key={rowItem.numberId + index + cellValue}
+            >
               {cellValue}
             </td>
           );
@@ -166,7 +169,7 @@ class ResultTableRow extends Component {
     console.log(rowValues);
 
     return (
-      <tr key={rowItem.id}>
+      <tr key={rowItem.numberId}>
         {rowValues.map((value, index) => {
           // defining style of cell
           let cellStyle = '';
@@ -174,7 +177,7 @@ class ResultTableRow extends Component {
             cellStyle += 'tableRow__name table--bold';
           }
           return (
-            <td className={cellStyle} key={rowItem.id + index + value}>
+            <td className={cellStyle} key={rowItem.numberId + index + value}>
               {value}
             </td>
           );
@@ -202,11 +205,11 @@ class ResultTableRow extends Component {
     if (!compareItem) {
       return (
         <tr
-          key={rowItem.id}
+          key={rowItem.numberId}
           className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
         >
           <td className="table--bold tableRow__name">{rowItem.name}</td>
-          <td className="tableRow__id ">{rowItem.id}</td>
+          <td className="tableRow__id ">{rowItem.numberId}</td>
           <td className="table--bold">{contentColumn}</td>
           <td className="tableRow__text">
             {this.getTextRepresentation(rowItem.descriptionText)}
@@ -227,10 +230,10 @@ class ResultTableRow extends Component {
 
     return (
       <tr
-        key={compareItem.id}
+        key={compareItem.numberId}
         className={compareItem.highlighted ? 'tableRow--highlighted' : ''}
       >
-        <td className="table--bold tableRow__name">{rowItem.id}</td>
+        <td className="table--bold tableRow__name">{rowItem.numberId}</td>
         <td className="table--bold tableRow__comparevalue">{contentColumn}</td>
         <td className="table--bold tableRow__comparevalue">
           {contentColumnCompare}
