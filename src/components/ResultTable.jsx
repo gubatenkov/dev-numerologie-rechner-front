@@ -23,6 +23,10 @@ class ResultTable extends Component {
    * renders the heading of the table
    */
   renderHeadings() {
+    // if comparison => render compare headers
+    if (this.props.dataCompare) {
+      return this.renderCompareHeadings();
+    }
     // determining last header element to align properly
     const lastIndex = this.props.data.headings.length - 1;
     return (
@@ -51,6 +55,40 @@ class ResultTable extends Component {
     );
   }
 
+  renderCompareHeadings() {
+    if (this.props.data.numbers.length < 1) {
+      return null;
+    }
+
+    // getting compare headers
+    const compareIndices = this.props.data.numbers[0].compareIndices;
+
+    // filtering given headers
+    const filteredHeaderData = this.props.data.headings.filter((item, index) =>
+      compareIndices.includes(index));
+
+    const filteredHeaderCompareData = this.props.dataCompare.headings.filter((item, index) => compareIndices.includes(index));
+    filteredHeaderCompareData.shift();
+
+    const headers = filteredHeaderData.concat(filteredHeaderCompareData);
+
+    // rendering headers
+    return (
+      <thead>
+        <tr>
+          {headers.map((heading, index) => (
+            <th
+              className={index === 0 ? 'tableRow__name' : ''}
+              key={heading || this.props.data.name + index}
+            >
+              {heading}
+            </th>
+          ))}
+        </tr>
+      </thead>
+    );
+  }
+
   /**
    * default render method rendering content objects based on their type
    */
@@ -60,8 +98,7 @@ class ResultTable extends Component {
         key={`ResultTable ${this.props.data.name}`}
         className="ResultTable table table-striped ResultTable--non-selectable ResultTable--non-printable"
       >
-        {this.props.data.headings &&
-          this.renderHeadings(this.props.data.headings)}
+        {this.props.data.headings && this.renderHeadings()}
         <tbody>
           {this.props.data.numbers.map((item, index) => (
             <ResultTableRow

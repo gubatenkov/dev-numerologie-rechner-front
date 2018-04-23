@@ -80,6 +80,7 @@ export const analysisPartsFragment = gql`
         valueIndex
         descriptionTextIndex
         highlighted
+        compareIndices
       }
     }
   }

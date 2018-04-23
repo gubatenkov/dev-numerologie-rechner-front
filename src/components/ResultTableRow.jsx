@@ -115,6 +115,11 @@ class ResultTableRow extends Component {
    * renders the cells of a custom item
    */
   renderCustomRow(rowItem, compareItem = null) {
+    // if compare item => rendering compare row
+    if (compareItem) {
+      return this.renderCustomRowCompare(rowItem, compareItem);
+    }
+
     // determining last element to align properly
     const lastIndex = rowItem.values.length - 1;
     return (
@@ -139,6 +144,42 @@ class ResultTableRow extends Component {
             </td>
           );
         })}
+      </tr>
+    );
+  }
+
+  renderCustomRowCompare(rowItem, compareItem) {
+    // getting compare indices
+    const { compareIndices } = rowItem;
+
+    // removing name and description from values
+    const rowValuesItem = rowItem.values.filter((item, index) =>
+      compareIndices.includes(index));
+
+    const rowValueCompare = compareItem.values.filter((item, index) =>
+      compareIndices.includes(index));
+    rowValueCompare.shift();
+
+    // concatinating values for both
+    const rowValues = rowValuesItem.concat(rowValueCompare);
+
+    console.log(rowValues);
+
+    return (
+      <tr key={rowItem.id}>
+        {rowValues.map((value, index) => {
+          // defining style of cell
+          let cellStyle = '';
+          if (index === 0) {
+            cellStyle += 'tableRow__name table--bold';
+          }
+          return (
+            <td className={cellStyle} key={rowItem.id + index + value}>
+              {value}
+            </td>
+          );
+        })}
+        <td className="tableRow__detailsCompare"> Details </td>
       </tr>
     );
   }
