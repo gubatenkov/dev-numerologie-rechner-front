@@ -292,12 +292,27 @@ class AnalysisBrowser extends Component {
                         }}
                         showHandler={() => {
                           // getting input of analysis = names and dob
-                          const analysisInput = analysis.inputs[0];
+                          if (analysis.inputs.length > 1) {
+                            // getting normal and comfort input
+                            const input = analysis.inputs[0];
+                            const comfortInput = analysis.inputs[1];
 
-                          // navigating to analysis results
-                          this.props.history.push(`/resultPersonal/${analysisInput.firstNames}/${
-                              analysisInput.lastName
-                            }/${analysisInput.dateOfBirth}`);
+                            // navigating to result
+                            this.props.history.push(`/resultPersonalCompare/${[
+                                input.firstNames,
+                                comfortInput.firstNames,
+                              ]}/${[input.lastName, comfortInput.lastName]}/${
+                                input.dateOfBirth
+                              }`);
+                          } else {
+                            // only one input here => navigating to results
+                            const analysisInput = analysis.inputs[0];
+
+                            // navigating to analysis results
+                            this.props.history.push(`/resultPersonal/${analysisInput.firstNames}/${
+                                analysisInput.lastName
+                              }/${analysisInput.dateOfBirth}`);
+                          }
                         }}
                       />
                     )));
