@@ -114,7 +114,7 @@ class ResultTableRow extends Component {
   /**
    * renders the cells of a custom item
    */
-  renderCustomRow(rowItem) {
+  renderCustomRow(rowItem, compareItem = null) {
     // determining last element to align properly
     const lastIndex = rowItem.values.length - 1;
     return (
@@ -146,7 +146,7 @@ class ResultTableRow extends Component {
   /**
    * renders a default cell
    */
-  renderDefaultRow(rowItem) {
+  renderDefaultRow(rowItem, compareItem = null) {
     // rendering content based on number type
     let contentColumn;
     if (rowItem.result.type === TYPE_ID_NUMBER) {
@@ -157,30 +157,57 @@ class ResultTableRow extends Component {
       contentColumn = this.renderResultMatrix(rowItem);
     }
 
+    // if no compare item => returning standard row
+    if (!compareItem) {
+      return (
+        <tr
+          key={rowItem.id}
+          className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
+        >
+          <td className="table--bold tableRow__name">{rowItem.name}</td>
+          <td className="tableRow__id ">{rowItem.id}</td>
+          <td className="table--bold">{contentColumn}</td>
+          <td className="tableRow__text">
+            {this.getTextRepresentation(rowItem.descriptionText)}
+          </td>
+        </tr>
+      );
+    }
+
+    // getting compare item data
+    let contentColumnCompare;
+    if (compareItem.result.type === TYPE_ID_NUMBER) {
+      contentColumnCompare = compareItem.result.value;
+    } else if (compareItem.result.type === TYPE_ID_LIST) {
+      contentColumnCompare = this.renderResultList(compareItem);
+    } else if (compareItem.result.type === TYPE_ID_MATRIX) {
+      contentColumnCompare = this.renderResultMatrix(compareItem);
+    }
+
     return (
       <tr
-        key={rowItem.id}
-        className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
+        key={compareItem.id}
+        className={compareItem.highlighted ? 'tableRow--highlighted' : ''}
       >
-        <td className="table--bold tableRow__name">{rowItem.name}</td>
-        <td className="tableRow__id ">{rowItem.id}</td>
-        <td className="table--bold">{contentColumn}</td>
-        <td className="tableRow__text">
-          {this.getTextRepresentation(rowItem.descriptionText)}
+        <td className="table--bold tableRow__name">{rowItem.id}</td>
+        <td className="table--bold tableRow__comparevalue">{contentColumn}</td>
+        <td className="table--bold tableRow__comparevalue">
+          {contentColumnCompare}
         </td>
+        <td className="tableRow__detailsCompare"> Details </td>
       </tr>
     );
   }
 
   render() {
     // getting item from passed props
-    const { item } = this.props;
+    const { item, compareItem } = this.props;
 
     // render custom or default row based on type
     if (item.type === ROW_TYPE_ID_CUSTOM) {
-      return this.renderCustomRow(item);
+      return this.renderCustomRow(item, compareItem);
     }
-    return this.renderDefaultRow(item);
+    return this.renderDefaultRow(item, compareItem);
   }
 }
 

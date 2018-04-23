@@ -1,0 +1,18 @@
+.resultCompareNameTable {
+    width: 100%;
+    margin-bottom: 10px;
+    padding-left: 30px
+}
+
+.resultCompareNameTable td {
+    padding-left: .572rem
+}
+
+.resultCompareNameTable__nameValue {
+    width: 20%;
+    text-align: center;
+}
+
+.resultCompareNameTable__spacer {
+    width: 30%;
+}
