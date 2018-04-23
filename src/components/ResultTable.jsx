@@ -102,7 +102,7 @@ class ResultTable extends Component {
         <tbody>
           {this.props.data.numbers.map((item, index) => (
             <ResultTableRow
-              key={`ResultTableRow ${item.id}`}
+              key={`ResultTableRow ${item.numberId}`}
               item={item}
               compareItem={
                 this.props.dataCompare
