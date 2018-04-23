@@ -40,7 +40,7 @@ class AnalysisInput extends Component {
    */
   startAnalysis = () => {
     if (this.firstNamesComfort && this.lastNameComfort) {
-      this.props.history.push(`/resultPersonal/${[this.firstNames, this.firstNamesComfort]}/${[
+      this.props.history.push(`/resultPersonalCompare/${[this.firstNames, this.firstNamesComfort]}/${[
         this.lastNames,
         this.lastNameComfort,
       ]}/${this.dateOfBirth}`);

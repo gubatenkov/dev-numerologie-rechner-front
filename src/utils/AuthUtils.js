@@ -1,9 +1,9 @@
+import { GRAPHQL_HOST } from '../utils/Config';
+
 const AUTH_TOKEN = 'auth-token';
 const AUTH_EMAIL = 'auth-email';
 
-// const AUTH_HOST = process.env.BACKEND_HOST || 'http://localhost:4000';
-const AUTH_HOST = 'https://dev-numerologie-rechner.herokuapp.com';
-const AUTH_URL = `${AUTH_HOST}/auth`;
+const AUTH_URL = `${GRAPHQL_HOST}/auth`;
 
 /**
  * checks if user is authenticated

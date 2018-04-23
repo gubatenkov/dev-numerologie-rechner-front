@@ -44,7 +44,7 @@ export const analysisPartsFragment = gql`
     numbers {
       ... on DefaultAnalysisResultItem {
         name
-        id
+        numberId
         highlighted
         descriptionText
         numberDescription {
@@ -74,12 +74,13 @@ export const analysisPartsFragment = gql`
       }
       ... on CustomAnalysisResultItem {
         type
-        id
+        numberId
         values
         nameIndex
         valueIndex
         descriptionTextIndex
         highlighted
+        compareIndices
       }
     }
   }
