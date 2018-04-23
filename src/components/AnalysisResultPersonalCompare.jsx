@@ -19,7 +19,7 @@ import '../styles/AnalysisResultPersonal.css';
 import '../styles/AnalysisResultPersonalCompare.css';
 
 /**
- * result screen for personal analysis
+ * result screen for personal analysis comparison
  */
 class AnalysisResultPersonalCompare extends Component {
   static propTypes = {
@@ -181,7 +181,7 @@ class AnalysisResultPersonalCompare extends Component {
    * default render
    */
   render() {
-    console.log(this.props);
+    // NOTE !! since two queries => not in props.data any more!!
     if (
       this.props.personalQuery.loading ||
       this.props.personalQueryCompare.loading
@@ -376,7 +376,6 @@ export default compose(
         dateOfBirth: params.match.params.dateOfBirth,
       },
     }),
-    fetchPolicy: 'no-cache',
   }),
   graphql(personalResultsQuery, {
     name: 'personalQuery',
@@ -387,6 +386,5 @@ export default compose(
         dateOfBirth: params.match.params.dateOfBirth,
       },
     }),
-    fetchPolicy: 'no-cache',
   }),
 )(withRouter(AnalysisResultPersonalCompare));

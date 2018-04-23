@@ -64,7 +64,9 @@ const httpLink = createHttpLink({ uri: GRAPHQL_ENDPOINT });
 // creating client for graphQL connection
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache({ fragmentMatcher }),
+  cache: new InMemoryCache({
+    fragmentMatcher,
+  }),
 });
 
 // <PrivateRoute path="/analysisInput"
