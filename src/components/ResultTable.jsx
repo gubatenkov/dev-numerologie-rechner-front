@@ -23,10 +23,6 @@ class ResultTable extends Component {
    * renders the heading of the table
    */
   renderHeadings() {
-    // if comparison => render compare headers
-    if (this.props.dataCompare) {
-      return this.renderCompareHeadings();
-    }
     // determining last header element to align properly
     const lastIndex = this.props.data.headings.length - 1;
     return (
@@ -55,40 +51,6 @@ class ResultTable extends Component {
     );
   }
 
-  renderCompareHeadings() {
-    if (this.props.data.numbers.length < 1) {
-      return null;
-    }
-
-    // getting compare headers
-    const compareIndices = this.props.data.numbers[0].compareIndices;
-
-    // filtering given headers
-    const filteredHeaderData = this.props.data.headings.filter((item, index) =>
-      compareIndices.includes(index));
-
-    const filteredHeaderCompareData = this.props.dataCompare.headings.filter((item, index) => compareIndices.includes(index));
-    filteredHeaderCompareData.shift();
-
-    const headers = filteredHeaderData.concat(filteredHeaderCompareData);
-
-    // rendering headers
-    return (
-      <thead>
-        <tr>
-          {headers.map((heading, index) => (
-            <th
-              className={index === 0 ? 'tableRow__name' : ''}
-              key={heading || this.props.data.name + index}
-            >
-              {heading}
-            </th>
-          ))}
-        </tr>
-      </thead>
-    );
-  }
-
   /**
    * default render method rendering content objects based on their type
    */
@@ -104,11 +66,6 @@ class ResultTable extends Component {
             <ResultTableRow
               key={`ResultTableRow ${item.numberId}`}
               item={item}
-              compareItem={
-                this.props.dataCompare
-                  ? this.props.dataCompare.numbers[index]
-                  : null
-              }
               rowIndex={index}
               onTextDetailClick={this.handleTextDetailClick}
             />

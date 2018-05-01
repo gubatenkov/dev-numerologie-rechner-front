@@ -1,0 +1,32 @@
+.ResultTable {
+    table-layout: fixed;
+}
+
+.ResultTable--highlighted {
+    background-color: #FFC0BF;
+}
+
+/*prevents user from selecting results*/
+.ResultTable--non-selectable {
+    user-select: none;
+}
+
+/*text displayed if results are printed without rights to do so*/
+.ResultTable--printWatermark {
+    display: none;
+}
+
+/*prevents printing of result information*/
+@media print {    
+    .ResultTable--printWatermark {
+        display: block;
+    }
+
+    .ResultTable--non-printable, .ResultTable--non-printable * {
+        display: none !important;
+    }
+}
+
+.ResultTable--centered {
+    text-align: center;
+}

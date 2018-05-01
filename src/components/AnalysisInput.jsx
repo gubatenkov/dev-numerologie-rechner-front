@@ -67,6 +67,7 @@ class AnalysisInput extends Component {
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
                 <Panel title="Akademie Bios Analyse">
+                  <h6>Wohlfühlname</h6>
                   <InputField
                     icon="wb-user"
                     fieldName="Vorname(n)"
@@ -90,7 +91,7 @@ class AnalysisInput extends Component {
                   />
                   {this.state.comfortNameFieldsShown && (
                     <div>
-                      <h6>Wohlfühlname</h6>
+                      <h6>Geburtsname / Alternativer Name</h6>
                       <InputField
                         icon="wb-user"
                         fieldName="Vorname(n)"

@@ -1,0 +1,25 @@
+.tableRow__comparevalue {
+    width: 30%;
+    text-align: center;
+}
+
+.tableRow__comparevalue table {
+    margin: auto;
+}
+
+.tableRow__detailsCompare {
+    text-align: right;
+    padding-right: 30px !important;
+}
+
+.tableRow__customCompareRowName {
+    width: 20%;
+}
+
+.tableRow__customCompareGroup {
+    text-align: center;
+}
+
+.tableRow__customCompareEntry {
+    text-align: center;
+}

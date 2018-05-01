@@ -8,7 +8,7 @@ import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
-import ResultTable from './ResultTable';
+import ResultTableCompare from './ResultTableCompare';
 import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
 import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
@@ -189,9 +189,6 @@ class AnalysisResultPersonalCompare extends Component {
       return <LoadingIndicator />;
     }
 
-    console.log(this.props.personalQuery);
-    console.log(this.props.personalQueryCompare);
-
     // render table, table shows spinner
     return (
       <div>
@@ -260,7 +257,7 @@ class AnalysisResultPersonalCompare extends Component {
               id="ExpressionResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={this.props.personalQuery.personalAnalysis.expressionLevel}
                 dataCompare={
                   this.props.personalQueryCompare.personalAnalysis
@@ -278,7 +275,7 @@ class AnalysisResultPersonalCompare extends Component {
               id="PersonalResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={this.props.personalQuery.personalAnalysis.personalLevel}
                 dataCompare={
                   this.props.personalQueryCompare.personalAnalysis.personalLevel
@@ -294,7 +291,7 @@ class AnalysisResultPersonalCompare extends Component {
               id="DevelopmentResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={
                   this.props.personalQuery.personalAnalysis.developmentLevel
                 }
@@ -311,7 +308,7 @@ class AnalysisResultPersonalCompare extends Component {
               id="SoulResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={this.props.personalQuery.personalAnalysis.soulLevel}
                 dataCompare={
                   this.props.personalQueryCompare.personalAnalysis.soulLevel
@@ -325,7 +322,7 @@ class AnalysisResultPersonalCompare extends Component {
               id="TimeResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={this.props.personalQuery.personalAnalysis.vibratoryCycles}
                 dataCompare={
                   this.props.personalQueryCompare.personalAnalysis
@@ -334,7 +331,7 @@ class AnalysisResultPersonalCompare extends Component {
                 dataKey="vibratoryCycles"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
-              <ResultTable
+              <ResultTableCompare
                 data={this.props.personalQuery.personalAnalysis.challengesHighs}
                 dataCompare={
                   this.props.personalQueryCompare.personalAnalysis
@@ -343,7 +340,7 @@ class AnalysisResultPersonalCompare extends Component {
                 dataKey="challengesHighs"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
-              <ResultTable
+              <ResultTableCompare
                 data={this.props.personalQuery.personalAnalysis.personalYear}
                 dataCompare={
                   this.props.personalQueryCompare.personalAnalysis.personalYear

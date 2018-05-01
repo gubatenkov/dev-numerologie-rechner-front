@@ -2,48 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import '../styles/ResultTableRow.css';
+import '../styles/ResultTableCompareRow.css';
 
-// identifiers for row types
-export const ROW_TYPE_ID_CUSTOM = 'customRow';
-
-// identifiers for results
-export const TYPE_ID_NUMBER = 'number';
-export const TYPE_ID_LIST = 'list';
-export const TYPE_ID_MATRIX = 'matrix';
-
-// chars in description preview
-const LENGTH_DESCRIPITON_PREVIEW = 50;
+import {
+  ROW_TYPE_ID_CUSTOM,
+  TYPE_ID_NUMBER,
+  TYPE_ID_LIST,
+  TYPE_ID_MATRIX,
+} from './ResultTableRow';
 
 /**
  * row rendering a single row item of an analysis result
  */
-class ResultTableRow extends Component {
+class ResultTableCompareRow extends Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
+    compareItem: PropTypes.object.isRequired,
     onTextDetailClick: PropTypes.func.isRequired,
     rowIndex: PropTypes.number.isRequired,
   };
-
-  /**
-   * returns the row representation of the text passed by the server
-   */
-  getTextRepresentation(rowText) {
-    let rowTextRepresentation = null;
-    if (rowText && rowText && rowText.length > 0) {
-      // removing html tags for preview
-      rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, '');
-      rowTextRepresentation = [
-        `${rowTextRepresentation.substring(
-          0,
-          LENGTH_DESCRIPITON_PREVIEW,
-        )}...  `,
-        <a role="link" key="readIndicator" onClick={this.handleMoreClick}>
-          Lesen
-        </a>,
-      ];
-    }
-    return rowTextRepresentation;
-  }
 
   /**
    * handles clicks on the more link of the description text
@@ -112,36 +89,38 @@ class ResultTableRow extends Component {
   }
 
   /**
-   * renders the cells of a custom item
+   * renders the custom compare row
    */
-  renderCustomRow(rowItem) {
-    // determining last element to align properly
-    const lastIndex = rowItem.values.length - 1;
+  renderCustomRowCompare(rowItem, compareItem) {
+    // getting compare indices
+    const { compareIndices } = rowItem;
+
+    // removing name and description from values
+    const rowValuesItem = rowItem.values.filter((item, index) =>
+      compareIndices.includes(index));
+
+    const rowValueCompare = compareItem.values.filter((item, index) =>
+      compareIndices.includes(index));
+    rowValueCompare.shift();
+
+    // concatinating values for both
+    const rowValues = rowValuesItem.concat(rowValueCompare);
+
     return (
-      <tr
-        key={rowItem.numberId}
-        className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
-      >
-        {rowItem.values.map((value, index) => {
+      <tr key={rowItem.numberId} className="">
+        {rowValues.map((value, index) => {
           // defining style of cell
-          let cellStyle = '';
-          let cellValue = value;
-          if (index === lastIndex) {
-            cellStyle += 'tableRow__text';
-            cellValue = this.getTextRepresentation(value);
-          }
+          let cellStyle = 'tableRow__customCompareEntry';
           if (index === 0) {
-            cellStyle += 'tableRow__name table--bold';
+            cellStyle += 'table--bold';
           }
           return (
-            <td
-              className={cellStyle}
-              key={rowItem.numberId + index + cellValue}
-            >
-              {cellValue}
+            <td className={cellStyle} key={rowItem.numberId + index + value}>
+              {value}
             </td>
           );
         })}
+        <td className="tableRow__detailsCompare"> Details </td>
       </tr>
     );
   }
@@ -149,7 +128,7 @@ class ResultTableRow extends Component {
   /**
    * renders a default cell
    */
-  renderDefaultRow(rowItem) {
+  renderDefaultRowCompare(rowItem, compareItem) {
     // rendering content based on number type
     let contentColumn;
     if (rowItem.result.type === TYPE_ID_NUMBER) {
@@ -160,32 +139,43 @@ class ResultTableRow extends Component {
       contentColumn = this.renderResultMatrix(rowItem);
     }
 
-    // returning standard row
+    // getting compare item data
+    let contentColumnCompare;
+    if (compareItem.result.type === TYPE_ID_NUMBER) {
+      contentColumnCompare = compareItem.result.value;
+    } else if (compareItem.result.type === TYPE_ID_LIST) {
+      contentColumnCompare = this.renderResultList(compareItem);
+    } else if (compareItem.result.type === TYPE_ID_MATRIX) {
+      contentColumnCompare = this.renderResultMatrix(compareItem);
+    }
+
     return (
       <tr
-        key={rowItem.numberId}
-        className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
+        key={compareItem.numberId}
+        className={compareItem.highlighted ? 'tableRow--highlighted' : ''}
       >
-        <td className="table--bold tableRow__name">{rowItem.name}</td>
-        <td className="tableRow__id ">{rowItem.numberId}</td>
-        <td className="table--bold">{contentColumn}</td>
-        <td className="tableRow__text">
-          {this.getTextRepresentation(rowItem.descriptionText)}
+        <td className="table--bold tableRow__nameCompare">
+          {rowItem.numberId}
         </td>
+        <td className="table--bold tableRow__comparevalue">{contentColumn}</td>
+        <td className="table--bold tableRow__comparevalue">
+          {contentColumnCompare}
+        </td>
+        <td className="tableRow__detailsCompare"> Details </td>
       </tr>
     );
   }
 
   render() {
     // getting item from passed props
-    const { item } = this.props;
+    const { item, compareItem } = this.props;
 
     // render custom or default row based on type
     if (item.type === ROW_TYPE_ID_CUSTOM) {
-      return this.renderCustomRow(item);
+      return this.renderCustomRowCompare(item, compareItem);
     }
-    return this.renderDefaultRow(item);
+    return this.renderDefaultRowCompare(item, compareItem);
   }
 }
 
-export default ResultTableRow;
+export default ResultTableCompareRow;
