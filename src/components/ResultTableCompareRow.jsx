@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import '../styles/ResultTableRow.css';
 import '../styles/ResultTableCompareRow.css';
@@ -101,10 +102,16 @@ class ResultTableCompareRow extends Component {
 
     const rowValueCompare = compareItem.values.filter((item, index) =>
       compareIndices.includes(index));
-    rowValueCompare.shift();
 
-    // concatinating values for both
-    const rowValues = rowValuesItem.concat(rowValueCompare);
+    // comparing if values are equal => if so not displaying comparing
+    let rowValues;
+    if (_.isEqual(rowValuesItem, rowValueCompare)) {
+      rowValues = rowValuesItem.concat(Array(rowValueCompare.length - 1).fill('-'));
+    } else {
+      // concatinating values for both
+      rowValueCompare.shift();
+      rowValues = rowValuesItem.concat(rowValueCompare);
+    }
 
     return (
       <tr key={rowItem.numberId} className="">
@@ -159,7 +166,9 @@ class ResultTableCompareRow extends Component {
         </td>
         <td className="table--bold tableRow__comparevalue">{contentColumn}</td>
         <td className="table--bold tableRow__comparevalue">
-          {contentColumnCompare}
+          {_.isEqual(contentColumn, contentColumnCompare)
+            ? ' - '
+            : contentColumnCompare}
         </td>
         <td className="tableRow__detailsCompare"> Details </td>
       </tr>
