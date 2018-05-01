@@ -37,7 +37,11 @@ class ResultTableRow extends Component {
           0,
           LENGTH_DESCRIPITON_PREVIEW,
         )}...  `,
-        <a role="link" key="readIndicator" onClick={this.handleMoreClick}>
+        <a
+          role="link"
+          key="readIndicator"
+          onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
+        >
           Lesen
         </a>,
       ];
@@ -48,9 +52,7 @@ class ResultTableRow extends Component {
   /**
    * handles clicks on the more link of the description text
    */
-  handleMoreClick = () => {
-    this.props.onTextDetailClick(this.props.rowIndex);
-  };
+  handleMoreClick = () => {};
 
   /**
    * renders a result matrix as content of the table

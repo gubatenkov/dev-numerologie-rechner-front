@@ -127,7 +127,15 @@ class ResultTableCompareRow extends Component {
             </td>
           );
         })}
-        <td className="tableRow__detailsCompare"> Details </td>
+        <td className="tableRow__detailsCompare">
+          <a
+            role="link"
+            key="readIndicator"
+            onClick={this.props.onTextDetailClick}
+          >
+            Details
+          </a>
+        </td>
       </tr>
     );
   }
@@ -170,7 +178,15 @@ class ResultTableCompareRow extends Component {
             ? ' - '
             : contentColumnCompare}
         </td>
-        <td className="tableRow__detailsCompare"> Details </td>
+        <td className="tableRow__detailsCompare">
+          <a
+            role="link"
+            key="readIndicator"
+            onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
+          >
+            Details
+          </a>
+        </td>
       </tr>
     );
   }

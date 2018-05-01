@@ -12,6 +12,11 @@
     padding-right: 30px !important;
 }
 
+.tableRow__detailsCompare a {
+    color: blue !important;
+    cursor: pointer;
+}
+
 .tableRow__customCompareRowName {
     width: 20%;
 }

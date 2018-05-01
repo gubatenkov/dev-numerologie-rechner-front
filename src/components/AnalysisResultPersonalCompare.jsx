@@ -63,19 +63,13 @@ class AnalysisResultPersonalCompare extends Component {
   }
 
   /**
-   * handles close of detail view
-   */
-  handleCloseDetail = () => {
-    this.setState({
-      resultTextDetailViewOpen: false,
-    });
-  };
-
-  /**
    *  handles clicks on detail links
    */
   handleItemDetailClick = (dataKey, index) => {
-    const analysisResult = this.props.data.personalAnalysis;
+    // getting both results
+    const analysisResult = this.props.personalQuery.personalAnalysis;
+    // TODO get compare
+
     // getting index of elemnent represented by dataKey in state
     const dataIndex = this.getResultArrayFormat(analysisResult).indexOf(analysisResult[dataKey]);
 
@@ -86,7 +80,7 @@ class AnalysisResultPersonalCompare extends Component {
 
     // calculating index in filtered data passed to details component
     // indeNew = index - #of items removed by filtering before passed to detail component
-    const sectionUpToIndex = this.props.data.personalAnalysis[
+    const sectionUpToIndex = this.props.personalQuery.personalAnalysis[
       dataKey
     ].numbers.slice(0, index);
     const removedElementsToIndexCount =
@@ -171,7 +165,7 @@ class AnalysisResultPersonalCompare extends Component {
   createAnalysisPdf = () => {
     // making call to pdf util to generate and open pdf
     createPDFFromAnalysisResult(
-      this.props.data,
+      this.props.personalQuery,
       this.props.match.params.firstNames,
       this.props.match.params.lastNames,
     );
@@ -353,8 +347,9 @@ class AnalysisResultPersonalCompare extends Component {
         </div>
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
-          onClose={this.handleCloseDetail}
+          onClose={() => this.setState({ resultTextDetailViewOpen: false })}
           data={this.convertResultsToDetailsDataFormat(this.props.personalQuery.personalAnalysis)}
+          compareData={this.convertResultsToDetailsDataFormat(this.props.personalQueryCompare.personalAnalysis)}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />

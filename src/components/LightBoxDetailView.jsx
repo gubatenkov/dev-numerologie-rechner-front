@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import '../styles/LightBoxDetailView.css';
 
@@ -20,6 +21,13 @@ class LightBoxDetailView extends Component {
         elementContent: PropTypes.string.isRequired,
       })),
     })).isRequired,
+    compareData: PropTypes.arrayOf(PropTypes.shape({
+      sectionName: PropTypes.string.isRequired,
+      sectionElements: PropTypes.arrayOf(PropTypes.shape({
+        elementTitle: PropTypes.string.isRequired,
+        elementContent: PropTypes.string.isRequired,
+      })),
+    })),
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     sectionIndex: PropTypes.number,
@@ -161,8 +169,16 @@ class LightBoxDetailView extends Component {
     const currentElement = this.props.data[this.state.currentSectionIndex]
       .sectionElements[this.state.currentElementIndex];
 
-    // if for ome reason, the current element is invalid > rendering nothing
-    if (!currentElement) {
+    // getting current compare element if persent
+    let currentCompareElement;
+    if (this.props.compareData) {
+      currentCompareElement = this.props.compareData[
+        this.state.currentSectionIndex
+      ].sectionElements[this.state.currentElementIndex];
+    }
+
+    // if for some reason, the current element is invalid > rendering nothing
+    if (!currentElement || (this.props.compareData && !currentCompareElement)) {
       return null;
     }
 
@@ -221,7 +237,7 @@ class LightBoxDetailView extends Component {
               <i className="icon wb-chevron-left" />
             </button>
           </div>
-          <div className="col-8">
+          <div className={this.props.compareData ? 'col-4' : 'col-8'}>
             <Panel
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}
@@ -236,7 +252,28 @@ class LightBoxDetailView extends Component {
                 Die Resultate können nur mit Druckpaket ausgedruckt werden.
               </h3>,
             </Panel>
+            )
           </div>
+          {this.props.compareData && (
+            <div className="col-4">
+              <Panel
+                className="LightBoxDetailView__Panel"
+                title={currentCompareElement.elementTitle}
+              >
+                <div
+                  className="LightBoxDetailView__text LightBoxDetailView--non-printable"
+                  dangerouslySetInnerHTML={{
+                    __html: _.isEqual(currentCompareElement, currentElement)
+                      ? 'Gleich wie links.'
+                      : currentCompareElement.elementContent,
+                  }}
+                />
+                <h3 className="LightBoxDetailView--printWatermark">
+                  Die Resultate können nur mit Druckpaket ausgedruckt werden.
+                </h3>,
+              </Panel>
+            </div>
+          )}
           <div className="LightBoxDetailView__ButtonArea">
             <button
               className="LightBoxDetailView__NavigationButton"
@@ -248,8 +285,7 @@ class LightBoxDetailView extends Component {
         </div>
         <div className="LightBoxDetailView__BottomActions">
           <button className="btn btn-default" onClick={this.props.onClose}>
-            {' '}
-            Schließen{' '}
+            Schließen
           </button>
         </div>
       </div>
