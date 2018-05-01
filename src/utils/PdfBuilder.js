@@ -153,7 +153,7 @@ function calculateResultOverviewTable(results, firstNames, lastName) {
       } else {
         value = numberItem.values[numberItem.valueIndex];
       }
-      overviewTableBody.push([numberItem.id, value]);
+      overviewTableBody.push([numberItem.numberId, value]);
     });
   });
   return overviewTableBody;
