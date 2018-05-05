@@ -114,6 +114,7 @@ const PDF_STYLES = {
   TABLE: {
     margin: [0, 10, 0, 10],
     fontSize: 10,
+    alignment: 'center',
   },
   TITLEPAGE_TITLE: {
     alignment: 'center',
@@ -226,25 +227,47 @@ function calculateResultOverviewTable(results, firstNames, lastName) {
       // assigning value based on type of result
       if (numberItem.type === 'row') {
         if (numberItem.result.type === 'number') {
-          ({ value } = numberItem.result);
+          value = { text: numberItem.result.value, alignment: 'center' };
         } else if (numberItem.result.type === 'list') {
-          value = numberItem.result.list.join(',');
+          value = {
+            text: numberItem.result.list.join(','),
+            alignment: 'center',
+          };
         } else {
-          const matrix = numberItem.result.values;
+          const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
           value = {
             table: {
+              heights: 40,
+              widths: [40, 40, 40],
               body: [
-                [matrix[0], matrix[1], matrix[2]],
-                [matrix[3], matrix[4], matrix[5]],
-                [matrix[6], matrix[7], matrix[8]],
+                [
+                  { text: matrix[0], alignment: 'center' },
+                  { text: matrix[1], alignment: 'center' },
+                  { text: matrix[2], alignment: 'center' },
+                ],
+                [
+                  { text: matrix[3], alignment: 'center' },
+                  { text: matrix[4], alignment: 'center' },
+                  { text: matrix[5], alignment: 'center' },
+                ],
+                [
+                  { text: matrix[6], alignment: 'center' },
+                  { text: matrix[7], alignment: 'center' },
+                  { text: matrix[8], alignment: 'center' },
+                ],
               ],
+              alignment: 'center',
             },
           };
         }
       } else {
         value = numberItem.values[numberItem.valueIndex];
       }
-      overviewTableBody.push([numberItem.numberId, value]);
+      // pushing value onto table body object
+      overviewTableBody.push([
+        { text: numberItem.numberId, alignment: 'center' },
+        value,
+      ]);
     });
   });
   return overviewTableBody;
@@ -356,10 +379,20 @@ export function createPDFFromAnalysisResult(
         pageBreak: 'before',
       },
       {
-        table: {
-          body: calculateResultOverviewTable(resultArray, firstNames, lastName),
-        },
-        style: 'TABLE',
+        columns: [
+          { width: '*', text: '' },
+          {
+            width: 'auto',
+            table: {
+              body: calculateResultOverviewTable(
+                resultArray,
+                firstNames,
+                lastName,
+              ),
+            },
+          },
+          { width: '*', text: '' },
+        ],
       },
     ],
     pageBreakBefore(currentNode, followingNodesOnPage) {
@@ -409,7 +442,7 @@ export function createPDFFromAnalysisResult(
       return {
         columns: [
           {
-            text: `Persönlichkeitsnumeroskop fuer ${firstNames} ${lastName}`,
+            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName}`,
             width: 'auto',
           },
           { text: currentPage, alignment: 'right' },
@@ -488,8 +521,8 @@ export function createPDFFromAnalysisResult(
         // adding heading for number
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
-          style: ['H2', { color: resultColor }],
-          headlineLevel: 'H2',
+          style: ['H1', { color: resultColor }],
+          headlineLevel: 'H1',
           tocItem: true,
           tocMargin: [15, 0, 0, 0],
         });
