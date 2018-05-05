@@ -183,11 +183,16 @@ export function getResultArrayFormat(data) {
  */
 export function createPDFFromAnalysisResult(
   analysisResult,
+  analysisCompareResult = null,
   firstNames,
   lastName,
 ) {
-  // getting result in array format
+  // getting result and compare results in array format
   const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
+  let compareResultArray;
+  if (analysisCompareResult) {
+    compareResultArray = getResultArrayFormat(analysisCompareResult.personalAnalysis);
+  }
 
   // defining pdf and default styling
   const docDefinition = {
@@ -278,7 +283,7 @@ export function createPDFFromAnalysisResult(
   };
 
   // pushing content to pdf
-  resultArray.forEach((result) => {
+  resultArray.forEach((result, index) => {
     // getting color for current level
     const resultColor = LEVEL_COLORS[result.name] || '';
 
@@ -323,6 +328,9 @@ export function createPDFFromAnalysisResult(
         itemName = item.values[item.nameIndex];
         itemValue = item.values[item.valueIndex];
       }
+
+      // getting compare item
+      const compareItem = compareResultArray ? compareResultArray[index] : null;
 
       // if item name set => adding name and name subtitle
       if (itemName && itemValue) {
