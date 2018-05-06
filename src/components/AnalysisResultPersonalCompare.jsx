@@ -166,8 +166,11 @@ class AnalysisResultPersonalCompare extends Component {
     // making call to pdf util to generate and open pdf
     createPDFFromAnalysisResult(
       this.props.personalQuery,
-      this.props.match.params.firstNames,
-      this.props.match.params.lastNames,
+      this.props.match.params.firstNames.split(',')[0],
+      this.props.match.params.lastNames.split(',')[0],
+      this.props.personalQueryCompare,
+      this.props.match.params.firstNames.split(',')[1],
+      this.props.match.params.lastNames.split(',')[1],
     );
   };
 
