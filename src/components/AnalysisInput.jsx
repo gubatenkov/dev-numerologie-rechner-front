@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
+import yup from 'yup';
+import moment from 'moment';
+import {
+  NotificationManager,
+  NotificationContainer,
+} from 'react-notifications';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -8,6 +14,36 @@ import InputField from './InputField';
 import logo from '../logo.png';
 import '../styles/AnalysisInput.css';
 import '../styles/InputForm.css';
+
+// defining model for validation
+const inputSchemaPersonal = yup.object({
+  firstNames: yup
+    .string()
+    .trim()
+    .required(),
+  lastName: yup
+    .string()
+    .trim()
+    .required(),
+});
+const inputSchemaPersonalCompare = yup.object({
+  firstNames: yup
+    .string()
+    .trim()
+    .required(),
+  lastName: yup
+    .string()
+    .trim()
+    .required(),
+  firstNamesCompare: yup
+    .string()
+    .trim()
+    .required(),
+  lastNameCompare: yup
+    .string()
+    .trim()
+    .required(),
+});
 
 /* eslint-disable react/prefer-stateless-function */
 class AnalysisInput extends Component {
@@ -36,9 +72,53 @@ class AnalysisInput extends Component {
   }
 
   /**
+   * validates the input and displays a notification
+   * in case of faulty input
+   */
+  validateInput = async () => {
+    let valid;
+    if (this.firstNamesComfort || this.lastNameComfort) {
+      // validating input
+      valid = await inputSchemaPersonalCompare.isValid({
+        firstNames: this.firstNames,
+        lastName: this.lastNames,
+        firstNamesCompare: this.firstNamesComfort,
+        lastNameCompare: this.lastNameComfort,
+      });
+    } else {
+      // validating input
+      valid = await inputSchemaPersonal.isValid({
+        firstNames: this.firstNames,
+        lastName: this.lastNames,
+      });
+    }
+
+    // setting error message
+    if (!valid) {
+      NotificationManager.error('Vor- und Nachname müssen (für alle Namen) angegeben werden.');
+      return false;
+    }
+
+    // validating dateOfBirth
+    const date = moment(this.dateOfBirth, 'DD.MM.YYYY', true);
+    if (!date.isValid()) {
+      NotificationManager.error('Es muss ein Datum im Format DD.MM.YYY eingegeben werden.');
+      return false;
+    }
+
+    return true;
+  };
+
+  /**
    * starts the analysis upon button click
    */
-  startAnalysis = () => {
+  startAnalysis = async () => {
+    // if input is not valid => skipping
+    if (!await this.validateInput()) {
+      return;
+    }
+
+    // navigating to right analysis screen
     if (this.firstNamesComfort && this.lastNameComfort) {
       this.props.history.push(`/resultPersonalCompare/${[this.firstNames, this.firstNamesComfort]}/${[
         this.lastNames,
@@ -144,6 +224,7 @@ class AnalysisInput extends Component {
             </div>
           </div>
         </div>
+        <NotificationContainer />
       </div>
     );
   }
