@@ -394,13 +394,12 @@ export function createPDFFromAnalysisResult(
 
       // if current page is in level rage => setting corresponding background image
       if (currentLevelName) {
-        return null;
-        /* [
+        return [
           {
             image: LEVEL_BG_IMAGES[currentLevelName],
             width: 600,
           },
-        ]; */
+        ];
       }
 
       return null;
@@ -563,7 +562,7 @@ export function createPDFFromAnalysisResult(
     }
 
     // adding numbers
-    result.numbers.forEach((item, index) => {
+    result.numbers.forEach((item, resultIndex) => {
       const { itemName, itemValue } = extractNameAndValueFromItem(item);
 
       // getting compare item
@@ -571,7 +570,7 @@ export function createPDFFromAnalysisResult(
       let compareItemName = null;
       let compareItemValue = null;
       if (compareResult) {
-        compareItem = compareResult.numbers[index];
+        compareItem = compareResult.numbers[resultIndex];
         const extractedResult = extractNameAndValueFromItem(compareItem);
         compareItemName = extractedResult.itemName;
         compareItemValue = extractedResult.itemValue;
