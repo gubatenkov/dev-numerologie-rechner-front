@@ -185,8 +185,8 @@ function extractTableValueFromItem(numberItem) {
       const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
       value = {
         table: {
-          heights: 45,
-          widths: [45, 45, 45],
+          heights: 40,
+          widths: [40, 40, 40],
           body: [
             [
               { text: matrix[0], alignment: 'center' },
@@ -397,7 +397,8 @@ export function createPDFFromAnalysisResult(
         return [
           {
             image: LEVEL_BG_IMAGES[currentLevelName],
-            width: 600,
+            absolutePosition: { x: 550, y: 350 },
+            width: 50,
           },
         ];
       }
