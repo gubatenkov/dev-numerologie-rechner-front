@@ -168,73 +168,126 @@ function cmToPoints(centimeters) {
 }
 
 /**
+ * extracts from the number item a value suitable for display in the overview table
+ */
+function extractTableValueFromItem(numberItem) {
+  let value;
+  // assigning value based on type of result
+  if (numberItem.type === 'row') {
+    if (numberItem.result.type === 'number') {
+      value = { text: numberItem.result.value, alignment: 'center' };
+    } else if (numberItem.result.type === 'list') {
+      value = {
+        text: numberItem.result.list.join(','),
+        alignment: 'center',
+      };
+    } else {
+      const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
+      value = {
+        table: {
+          heights: 45,
+          widths: [45, 45, 45],
+          body: [
+            [
+              { text: matrix[0], alignment: 'center' },
+              { text: matrix[1], alignment: 'center' },
+              { text: matrix[2], alignment: 'center' },
+            ],
+            [
+              { text: matrix[3], alignment: 'center' },
+              { text: matrix[4], alignment: 'center' },
+              { text: matrix[5], alignment: 'center' },
+            ],
+            [
+              { text: matrix[6], alignment: 'center' },
+              { text: matrix[7], alignment: 'center' },
+              { text: matrix[8], alignment: 'center' },
+            ],
+          ],
+          alignment: 'center',
+        },
+      };
+    }
+  } else {
+    value = {
+      text: numberItem.values[numberItem.valueIndex],
+      alignment: 'center',
+    };
+  }
+
+  return value;
+}
+
+/**
  * calculates the overview table for the numbers
  * @param results the results of the analysis
  * @param firstNames the first name
  * @param lastName the last name
  */
-function calculateResultOverviewTable(results, firstNames, lastName) {
+function calculateResultOverviewTable(
+  results,
+  firstNames,
+  lastName,
+  compareResults = null,
+  compareFirstNames = null,
+  compareLastName = null,
+) {
   // creating overview table data
   const overviewTableBody = [];
 
   // adding first row with name
-  overviewTableBody.push([
-    {
-      text: `${firstNames} ${lastName}`,
-      colSpan: 2,
-      alignment: 'center',
-    },
-    {},
-  ]);
+  if (!compareResults) {
+    overviewTableBody.push([
+      {
+        text: `${firstNames} ${lastName}`,
+        colSpan: 2,
+        alignment: 'center',
+      },
+      {},
+    ]);
+  } else {
+    overviewTableBody.push([
+      {},
+      {
+        text: `${firstNames} ${lastName}`,
+        alignment: 'center',
+      },
+      {
+        text: `${compareFirstNames} ${compareLastName}`,
+        alignment: 'center',
+      },
+    ]);
+  }
 
   // adding cells for date
-  results.forEach((resultItem) => {
-    resultItem.numbers.forEach((numberItem) => {
-      let value;
-      // assigning value based on type of result
-      if (numberItem.type === 'row') {
-        if (numberItem.result.type === 'number') {
-          value = { text: numberItem.result.value, alignment: 'center' };
-        } else if (numberItem.result.type === 'list') {
-          value = {
-            text: numberItem.result.list.join(','),
-            alignment: 'center',
-          };
-        } else {
-          const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
-          value = {
-            table: {
-              heights: 40,
-              widths: [40, 40, 40],
-              body: [
-                [
-                  { text: matrix[0], alignment: 'center' },
-                  { text: matrix[1], alignment: 'center' },
-                  { text: matrix[2], alignment: 'center' },
-                ],
-                [
-                  { text: matrix[3], alignment: 'center' },
-                  { text: matrix[4], alignment: 'center' },
-                  { text: matrix[5], alignment: 'center' },
-                ],
-                [
-                  { text: matrix[6], alignment: 'center' },
-                  { text: matrix[7], alignment: 'center' },
-                  { text: matrix[8], alignment: 'center' },
-                ],
-              ],
-              alignment: 'center',
-            },
-          };
-        }
-      } else {
-        value = numberItem.values[numberItem.valueIndex];
-      }
+  results.forEach((resultItem, resultIndex) => {
+    // getting compare item
+    const compareResult = compareResults ? compareResults[resultIndex] : null;
+    resultItem.numbers.forEach((numberItem, numberIndex) => {
+      // getting table value for item
+      const value = extractTableValueFromItem(numberItem);
+
+      // getting compare value for item
+      const compareNumberItem = compareResult
+        ? compareResult.numbers[numberIndex]
+        : null;
+      const compareValue = compareNumberItem
+        ? extractTableValueFromItem(compareNumberItem)
+        : null;
+
       // pushing value onto table body object
-      overviewTableBody.push([
-        { text: numberItem.numberId, alignment: 'center' },
-        value,
-      ]);
+      if (compareValue) {
+        overviewTableBody.push([
+          { text: numberItem.numberId, alignment: 'center' },
+          value,
+          compareValue,
+        ]);
+      } else {
+        overviewTableBody.push([
+          { text: numberItem.numberId, alignment: 'center' },
+          value,
+        ]);
+      }
     });
   });
   return overviewTableBody;
@@ -341,12 +394,13 @@ export function createPDFFromAnalysisResult(
 
       // if current page is in level rage => setting corresponding background image
       if (currentLevelName) {
-        return [
+        return null;
+        /* [
           {
             image: LEVEL_BG_IMAGES[currentLevelName],
             width: 600,
           },
-        ];
+        ]; */
       }
 
       return null;
@@ -399,6 +453,9 @@ export function createPDFFromAnalysisResult(
                 resultArray,
                 firstNames,
                 lastName,
+                resultCompareArray,
+                compareFirstNames,
+                compareLastName,
               ),
             },
           },
