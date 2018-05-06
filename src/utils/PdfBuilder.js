@@ -2,6 +2,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from '../fonts/vfs_fonts';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
+import { COVER_IMAGE_BY_LZ, LEVEL_BG_IMAGES } from './Images';
 
 // defining colors used in the pdf
 const CI_COLORS = {
@@ -14,6 +15,7 @@ const CI_COLORS = {
   SILVER: '#afafaf',
   GREY: '#969696',
   BLACK: '#262626',
+  WHITE: '#FFFFFF',
 };
 
 // mapping of colors to levels
@@ -79,6 +81,16 @@ const PDF_STYLES = {
   TABLE: {
     margin: [0, 10, 0, 10],
     fontSize: 10,
+    alignment: 'center',
+  },
+  TITLEPAGE_TITLE: {
+    alignment: 'center',
+    margin: [0, 520, 0, 0],
+    color: CI_COLORS.WHITE,
+  },
+  TITLEPAGE_NAME: {
+    alignment: 'center',
+    color: CI_COLORS.WHITE,
   },
 };
 
@@ -99,6 +111,53 @@ pdfMake.fonts = {
   },
 };
 
+// the level location information in the created document
+// this is needed to keep track of the position of the layers in the document
+const levelPositionInformation = {
+  Ausdrucksebene: {
+    startIndex: null,
+    endIndex: null,
+    startPage: null,
+    endPage: null,
+  },
+  Persönlichkeitsebene: {
+    startIndex: null,
+    endIndex: null,
+    startPage: null,
+    endPage: null,
+  },
+  Entfaltungspotenzial: {
+    startIndex: null,
+    endIndex: null,
+    startPage: null,
+    endPage: null,
+  },
+  'Seelische Ebene': {
+    startIndex: null,
+    endIndex: null,
+    startPage: null,
+    endPage: null,
+  },
+  'Vibratorische Zyklen': {
+    startIndex: null,
+    endIndex: null,
+    startPage: null,
+    endPage: null,
+  },
+  'Herausforderungen und Höhepunkte': {
+    startIndex: null,
+    endIndex: null,
+    startPage: null,
+    endPage: null,
+  },
+  'Persönliches Jahr': {
+    startIndex: null,
+    endIndex: null,
+    startPage: null,
+    endPage: null,
+  },
+};
+
 /**
  * converts centimeters to points for margins etc.
  * @param centimeters the centimeter value to transform
@@ -109,51 +168,126 @@ function cmToPoints(centimeters) {
 }
 
 /**
+ * extracts from the number item a value suitable for display in the overview table
+ */
+function extractTableValueFromItem(numberItem) {
+  let value;
+  // assigning value based on type of result
+  if (numberItem.type === 'row') {
+    if (numberItem.result.type === 'number') {
+      value = { text: numberItem.result.value, alignment: 'center' };
+    } else if (numberItem.result.type === 'list') {
+      value = {
+        text: numberItem.result.list.join(','),
+        alignment: 'center',
+      };
+    } else {
+      const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
+      value = {
+        table: {
+          heights: 40,
+          widths: [40, 40, 40],
+          body: [
+            [
+              { text: matrix[0], alignment: 'center' },
+              { text: matrix[1], alignment: 'center' },
+              { text: matrix[2], alignment: 'center' },
+            ],
+            [
+              { text: matrix[3], alignment: 'center' },
+              { text: matrix[4], alignment: 'center' },
+              { text: matrix[5], alignment: 'center' },
+            ],
+            [
+              { text: matrix[6], alignment: 'center' },
+              { text: matrix[7], alignment: 'center' },
+              { text: matrix[8], alignment: 'center' },
+            ],
+          ],
+          alignment: 'center',
+        },
+      };
+    }
+  } else {
+    value = {
+      text: numberItem.values[numberItem.valueIndex],
+      alignment: 'center',
+    };
+  }
+
+  return value;
+}
+
+/**
  * calculates the overview table for the numbers
  * @param results the results of the analysis
  * @param firstNames the first name
  * @param lastName the last name
  */
-function calculateResultOverviewTable(results, firstNames, lastName) {
+function calculateResultOverviewTable(
+  results,
+  firstNames,
+  lastName,
+  compareResults = null,
+  compareFirstNames = null,
+  compareLastName = null,
+) {
   // creating overview table data
   const overviewTableBody = [];
 
   // adding first row with name
-  overviewTableBody.push([
-    {
-      text: `${firstNames} ${lastName}`,
-      colSpan: 2,
-      alignment: 'center',
-    },
-    {},
-  ]);
+  if (!compareResults) {
+    overviewTableBody.push([
+      {
+        text: `${firstNames} ${lastName}`,
+        colSpan: 2,
+        alignment: 'center',
+      },
+      {},
+    ]);
+  } else {
+    overviewTableBody.push([
+      {},
+      {
+        text: `${firstNames} ${lastName}`,
+        alignment: 'center',
+      },
+      {
+        text: `${compareFirstNames} ${compareLastName}`,
+        alignment: 'center',
+      },
+    ]);
+  }
 
   // adding cells for date
-  results.forEach((resultItem) => {
-    resultItem.numbers.forEach((numberItem) => {
-      let value;
-      // assigning value based on type of result
-      if (numberItem.type === 'row') {
-        if (numberItem.result.type === 'number') {
-          ({ value } = numberItem.result);
-        } else if (numberItem.result.type === 'list') {
-          value = numberItem.result.list.join(',');
-        } else {
-          const matrix = numberItem.result.values;
-          value = {
-            table: {
-              body: [
-                [matrix[0], matrix[1], matrix[2]],
-                [matrix[3], matrix[4], matrix[5]],
-                [matrix[6], matrix[7], matrix[8]],
-              ],
-            },
-          };
-        }
+  results.forEach((resultItem, resultIndex) => {
+    // getting compare item
+    const compareResult = compareResults ? compareResults[resultIndex] : null;
+    resultItem.numbers.forEach((numberItem, numberIndex) => {
+      // getting table value for item
+      const value = extractTableValueFromItem(numberItem);
+
+      // getting compare value for item
+      const compareNumberItem = compareResult
+        ? compareResult.numbers[numberIndex]
+        : null;
+      const compareValue = compareNumberItem
+        ? extractTableValueFromItem(compareNumberItem)
+        : null;
+
+      // pushing value onto table body object
+      if (compareValue) {
+        overviewTableBody.push([
+          { text: numberItem.numberId, alignment: 'center' },
+          value,
+          compareValue,
+        ]);
       } else {
-        value = numberItem.values[numberItem.valueIndex];
+        overviewTableBody.push([
+          { text: numberItem.numberId, alignment: 'center' },
+          value,
+        ]);
       }
-      overviewTableBody.push([numberItem.numberId, value]);
     });
   });
   return overviewTableBody;
@@ -176,6 +310,42 @@ export function getResultArrayFormat(data) {
 }
 
 /**
+ * extracts item name and value from
+ */
+function extractNameAndValueFromItem(item) {
+  let itemName = null;
+  let itemValue = null;
+
+  // determining name of element
+  if (
+    item.type === 'row' &&
+    (item.result.value || item.result.values || item.result.list)
+  ) {
+    itemName = item.name;
+    itemValue = item.result.value || item.result.values || item.result.list;
+
+    // if item is matrix => not showing value in titel
+    if (item.result.type === 'matrix') {
+      itemValue = ' ';
+    }
+  } else if (
+    item.type === 'customRow' &&
+    item.values &&
+    item.nameIndex !== null &&
+    item.values[item.nameIndex] &&
+    item.valueIndex !== null
+  ) {
+    itemName = item.values[item.nameIndex];
+    itemValue = item.values[item.valueIndex];
+  }
+
+  return {
+    itemName,
+    itemValue,
+  };
+}
+
+/**
  * build a pdf document from the analysis result given and opens it in new tab
  * @param analysisResult the analysis result with subsections
  * @param ristNames the first names of the analysis
@@ -183,20 +353,58 @@ export function getResultArrayFormat(data) {
  */
 export function createPDFFromAnalysisResult(
   analysisResult,
-  analysisCompareResult = null,
   firstNames,
   lastName,
+  compareAnalysisResult = null,
+  compareFirstNames = null,
+  compareLastName = null,
 ) {
-  // getting result and compare results in array format
+  // getting result in array format
   const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
-  let compareResultArray;
-  if (analysisCompareResult) {
-    compareResultArray = getResultArrayFormat(analysisCompareResult.personalAnalysis);
+  let resultCompareArray = null;
+  if (compareAnalysisResult) {
+    resultCompareArray = getResultArrayFormat(compareAnalysisResult.personalAnalysis);
   }
+
+  // getting lz to determine title image
+  const lzValue = analysisResult.personalAnalysis.personalLevel.numbers.filter(item => item.numberId === 'LZ')[0].result.value;
+  const titleImage = COVER_IMAGE_BY_LZ[lzValue] || COVER_IMAGE_BY_LZ[0];
 
   // defining pdf and default styling
   const docDefinition = {
     pageSize: 'A4',
+    background(page) {
+      // first pages => title page with background image
+      if (page === 1) {
+        return [
+          {
+            image: titleImage,
+            width: 600,
+          },
+        ];
+      }
+
+      // checking if the page is in a range of level pages => background image
+      let currentLevelName = null;
+      Object.entries(levelPositionInformation).forEach(([key, value]) => {
+        if (page >= value.startPage && page <= value.endPage) {
+          currentLevelName = key;
+        }
+      });
+
+      // if current page is in level rage => setting corresponding background image
+      if (currentLevelName) {
+        return [
+          {
+            image: LEVEL_BG_IMAGES[currentLevelName],
+            absolutePosition: { x: 550, y: 350 },
+            width: 50,
+          },
+        ];
+      }
+
+      return null;
+    },
     pageOrientation: 'portrait',
     pageMargins: [
       cmToPoints(PAGE_MARGIN_LEFT_CM),
@@ -205,6 +413,11 @@ export function createPDFFromAnalysisResult(
       cmToPoints(PAGE_MARGIN_BOTTOM_CM),
     ],
     content: [
+      {
+        text: 'Persönlichkeitsnumeroskop',
+        style: ['H1', 'TITLEPAGE_TITLE'],
+        pageBreak: 'after',
+      },
       {
         toc: {
           title: { text: 'Inhalt', style: 'H1' },
@@ -226,22 +439,31 @@ export function createPDFFromAnalysisResult(
       {
         text: 'Übersichtsblatt der Zahlen',
         style: ['H1'],
+        marginBottom: 20,
         tocItem: true,
         pageBreak: 'before',
       },
       {
-        table: {
-          body: calculateResultOverviewTable(resultArray, firstNames, lastName),
-        },
-        style: 'TABLE',
+        columns: [
+          { width: '*', text: '' },
+          {
+            width: 'auto',
+            table: {
+              body: calculateResultOverviewTable(
+                resultArray,
+                firstNames,
+                lastName,
+                resultCompareArray,
+                compareFirstNames,
+                compareLastName,
+              ),
+            },
+          },
+          { width: '*', text: '' },
+        ],
       },
     ],
-    pageBreakBefore(
-      currentNode,
-      followingNodesOnPage,
-      nodesOnNextPage,
-      previousNodesOnPage,
-    ) {
+    pageBreakBefore(currentNode, followingNodesOnPage) {
       // heading is last element before footer
       if (currentNode.headlineLevel && followingNodesOnPage.length === 3) {
         return true;
@@ -258,22 +480,50 @@ export function createPDFFromAnalysisResult(
 
       return false;
     },
-    footer: currentPage => ({
-      columns: [
-        {
-          text: `Persoenlichkeitsnumeroskop fuer ${firstNames} ${lastName}`,
-          width: 'auto',
-        },
-        { text: currentPage, alignment: 'right' },
-      ],
-      margin: [
-        cmToPoints(PAGE_MARGIN_LEFT_CM),
-        10,
-        cmToPoints(PAGE_MARGIN_RIGHT_CM),
-        0,
-      ],
-      fontSize: 8,
-    }),
+    header: (currentPage) => {
+      if (currentPage === 1) {
+        // first page in created document (page numbers are final) =>
+        // getting information about the start pages of the different levels
+        const levelEntries = Object.entries(levelPositionInformation);
+        levelEntries.forEach(([key, value]) => {
+          // setting start page correlating with start index
+          levelPositionInformation[key].startPage =
+            docDefinition.content[value.startIndex].positions[0].pageNumber;
+
+          // setting stop page correlating with start index
+          levelPositionInformation[key].endPage =
+            docDefinition.content[value.endIndex].positions[0].pageNumber;
+        });
+      }
+    },
+    footer: (currentPage) => {
+      // no footer of first page
+      if (currentPage === 1) {
+        return {
+          text: `${firstNames} ${lastName}`,
+          style: ['H2', 'TITLEPAGE_NAME'],
+          pageBreak: 'after',
+        };
+      }
+
+      // returning footer with name
+      return {
+        columns: [
+          {
+            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName}`,
+            width: 'auto',
+          },
+          { text: currentPage, alignment: 'right' },
+        ],
+        margin: [
+          cmToPoints(PAGE_MARGIN_LEFT_CM),
+          10,
+          cmToPoints(PAGE_MARGIN_RIGHT_CM),
+          0,
+        ],
+        fontSize: 10,
+      };
+    },
     defaultStyle: {
       font: 'MavenPro',
       fontSize: 12,
@@ -286,6 +536,17 @@ export function createPDFFromAnalysisResult(
   resultArray.forEach((result, index) => {
     // getting color for current level
     const resultColor = LEVEL_COLORS[result.name] || '';
+
+    // getting compare result
+    let compareResult = null;
+    if (resultCompareArray) {
+      compareResult = resultCompareArray[index];
+    }
+
+    // saving information about first element of level -> the index saved will be the first index
+    // of this level
+    levelPositionInformation[result.name].startIndex =
+      docDefinition.content.length;
 
     // adding level intro
     if (result.introText) {
@@ -302,53 +563,39 @@ export function createPDFFromAnalysisResult(
     }
 
     // adding numbers
-    result.numbers.forEach((item) => {
-      let itemName = null;
-      let itemValue = null;
-
-      // determining name of element
-      if (
-        item.type === 'row' &&
-        (item.result.value || item.result.values || item.result.list)
-      ) {
-        itemName = item.name;
-        itemValue = item.result.value || item.result.values || item.result.list;
-
-        // if item is matrix => not showing value in titel
-        if (item.result.type === 'matrix') {
-          itemValue = ' ';
-        }
-      } else if (
-        item.type === 'customRow' &&
-        item.values &&
-        item.nameIndex !== null &&
-        item.values[item.nameIndex] &&
-        item.valueIndex !== null
-      ) {
-        itemName = item.values[item.nameIndex];
-        itemValue = item.values[item.valueIndex];
-      }
+    result.numbers.forEach((item, resultIndex) => {
+      const { itemName, itemValue } = extractNameAndValueFromItem(item);
 
       // getting compare item
-      const compareItem = compareResultArray ? compareResultArray[index] : null;
+      let compareItem = null;
+      let compareItemName = null;
+      let compareItemValue = null;
+      if (compareResult) {
+        compareItem = compareResult.numbers[resultIndex];
+        const extractedResult = extractNameAndValueFromItem(compareItem);
+        compareItemName = extractedResult.itemName;
+        compareItemValue = extractedResult.itemValue;
+      }
 
       // if item name set => adding name and name subtitle
       if (itemName && itemValue) {
         // adding heading for number
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
-          style: ['H2', { color: resultColor }],
-          headlineLevel: 'H2',
+          style: ['H1', { color: resultColor }],
+          headlineLevel: 'H1',
           tocItem: true,
           tocMargin: [15, 0, 0, 0],
         });
 
-        // adding subheading with name
-        docDefinition.content.push({
-          text: `mit Name ${firstNames} ${lastName}`,
-          style: ['SUBTITLE', { color: resultColor }],
-          headlineLevel: 'SUBTITLE',
-        });
+        // adding subheading with name if compare is present
+        if (compareItem) {
+          docDefinition.content.push({
+            text: `mit Name ${firstNames} ${lastName}`,
+            style: ['SUBTITLE', { color: resultColor }],
+            headlineLevel: 'SUBTITLE',
+          });
+        }
 
         // adding number description if present
         if (item.numberDescription && item.numberDescription.description) {
@@ -386,8 +633,51 @@ export function createPDFFromAnalysisResult(
             ul: { markerColor: resultColor },
           }));
         }
+
+        if (compareItem) {
+          // adding heading for number
+          docDefinition.content.push({
+            text: `${compareItemName} ${compareItemValue}`,
+            style: ['H1', { color: resultColor }],
+            headlineLevel: 'H1',
+            tocItem: true,
+            tocMargin: [15, 0, 0, 0],
+          });
+
+          // adding subheading with name if compare is present
+          docDefinition.content.push({
+            text: `mit Name ${compareFirstNames} ${compareLastName}`,
+            style: ['SUBTITLE', { color: resultColor }],
+            headlineLevel: 'SUBTITLE',
+          });
+
+          // pushing description text
+          let compareDescriptionText = null;
+
+          // having to determine between standard and custom row
+          if (item.type === 'row') {
+            compareDescriptionText = compareItem.descriptionText;
+          } else if (item.type === 'customRow') {
+            compareDescriptionText =
+              compareItem.values[compareItem.descriptionTextIndex];
+          }
+
+          // if description text is present => adding to content
+          if (compareDescriptionText) {
+            docDefinition.content.push(...convertHTMLTextToPDFSyntax(compareDescriptionText, {
+              h1: { color: resultColor },
+              h2: { color: resultColor },
+              ul: { markerColor: resultColor },
+            }));
+          }
+        }
       }
     });
+
+    // saving information about last element of level -> the index saved will be the last index
+    // of this level
+    levelPositionInformation[result.name].endIndex =
+      docDefinition.content.length - 1;
   });
 
   // creating pdf and opening in new tab
