@@ -41,30 +41,37 @@ const PAGE_MARGIN_BOTTOM_CM = 2.5;
 
 // styling for default classes
 const PDF_STYLES = {
-  H1: {
+  H0: {
     fontSize: 30,
     bold: true,
     marginTop: 10,
     lineHeight: 1,
     pageBreak: 'before',
   },
-  H2: {
+  H1: {
     fontSize: 18,
     bold: true,
     marginTop: 10,
-    marginBottom: 10,
+    lineHeight: 1,
+    pageBreak: 'before',
+  },
+  H2: {
+    fontSize: 12,
+    bold: true,
+    marginTop: 24,
+    marginBottom: 12,
     lineHeight: 1,
   },
   H3: {
-    fontSize: 12,
+    fontSize: 10,
     bold: true,
     marginTop: 10,
-    marginBottom: 10,
     lineHeight: 1,
     color: CI_COLORS.BLACK,
   },
   H4: {
-    fontSize: 12,
+    fontSize: 8,
+    marginTop: 8,
     color: CI_COLORS.GREY,
   },
   B: {
@@ -81,6 +88,10 @@ const PDF_STYLES = {
   TABLE: {
     margin: [0, 10, 0, 10],
     fontSize: 10,
+    alignment: 'left',
+  },
+  TBALE_HEADING: {
+    bold: true,
     alignment: 'center',
   },
   TITLEPAGE_TITLE: {
@@ -199,11 +210,11 @@ function extractTableValueFromItem(numberItem) {
   // assigning value based on type of result
   if (numberItem.type === 'row') {
     if (numberItem.result.type === 'number') {
-      value = { text: numberItem.result.value, alignment: 'center' };
+      value = { text: numberItem.result.value, alignment: 'left' };
     } else if (numberItem.result.type === 'list') {
       value = {
         text: numberItem.result.list.join(','),
-        alignment: 'center',
+        alignment: 'left',
       };
     } else {
       const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
@@ -228,7 +239,7 @@ function extractTableValueFromItem(numberItem) {
               { text: matrix[8], alignment: 'center' },
             ],
           ],
-          alignment: 'center',
+          alignment: 'left',
         },
       };
     }
@@ -441,18 +452,17 @@ export function createPDFFromAnalysisResult(
       {
         text: 'Persönlichkeitsnumeroskop',
         absolutePosition: { x: 103, y: 501 },
-        style: ['TITLEPAGE_TITLE_SHADOW'],
+        style: 'TITLEPAGE_TITLE_SHADOW',
       },
       {
         text: 'Persönlichkeitsnumeroskop',
         absolutePosition: { x: 102, y: 500 },
-        style: ['TITLEPAGE_TITLE'],
+        style: 'TITLEPAGE_TITLE',
         pageBreak: 'after',
       },
       {
         toc: {
           title: { text: 'Inhalt', style: 'H1' },
-          // textMargin: [0, 0, 0, 0],
           textStyle: { lineHeight: 1.0 },
           numberStyle: { bold: true },
         },
@@ -469,7 +479,7 @@ export function createPDFFromAnalysisResult(
       ],
       {
         text: 'Übersichtsblatt der Zahlen',
-        style: ['H1'],
+        style: ['H1', { alignment: 'center' }],
         marginBottom: 20,
         tocItem: true,
         pageBreak: 'before',
@@ -583,13 +593,13 @@ export function createPDFFromAnalysisResult(
     if (result.introText) {
       docDefinition.content.push({
         text: result.introText.title,
-        style: ['H1', { color: resultColor }],
+        style: ['H0', { color: resultColor, alignment: 'center' }],
         pageBreak: 'before',
         tocItem: true,
+        tocStyle: { color: resultColor },
       });
       docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text, {
         h1: { color: resultColor },
-        h2: { color: resultColor },
       }));
     }
 
@@ -618,8 +628,13 @@ export function createPDFFromAnalysisResult(
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
           style: ['H1', { color: resultColor }],
+          marginBottom:
+            compareItem && !areResultValuesEqual(compareItemValue, itemValue)
+              ? 0
+              : 20,
           headlineLevel: 'H1',
           tocItem: true,
+          tocStyle: { color: resultColor },
           tocMargin: [15, 0, 0, 0],
         });
 
@@ -634,9 +649,17 @@ export function createPDFFromAnalysisResult(
 
         // adding number description if present
         if (item.numberDescription && item.numberDescription.description) {
-          docDefinition.content.push(...convertHTMLTextToPDFSyntax(item.numberDescription.description, {
-            text: 'NUMBERDESCRIPTION',
-          }));
+          docDefinition.content.push({
+            stack: [
+              ...convertHTMLTextToPDFSyntax(
+                item.numberDescription.description,
+                {
+                  text: 'NUMBERDESCRIPTION',
+                },
+              ),
+            ],
+            marginBottom: 20,
+          });
         }
 
         // adding number calculation description if present
@@ -644,10 +667,15 @@ export function createPDFFromAnalysisResult(
           item.numberDescription &&
           item.numberDescription.calculationDescription
         ) {
-          docDefinition.content.push(...convertHTMLTextToPDFSyntax(
-            item.numberDescription.calculationDescription,
-            { text: 'NUMBERDESCRIPTION' },
-          ));
+          docDefinition.content.push({
+            stack: [
+              ...convertHTMLTextToPDFSyntax(
+                item.numberDescription.calculationDescription,
+                { text: 'NUMBERDESCRIPTION' },
+              ),
+            ],
+            marginBottom: 20,
+          });
         }
 
         // pushing description text
@@ -664,7 +692,6 @@ export function createPDFFromAnalysisResult(
         if (descriptionText) {
           docDefinition.content.push(...convertHTMLTextToPDFSyntax(descriptionText, {
             h1: { color: resultColor },
-            h2: { color: resultColor },
             ul: { markerColor: resultColor },
           }));
         }
@@ -676,6 +703,7 @@ export function createPDFFromAnalysisResult(
             style: ['H1', { color: resultColor }],
             headlineLevel: 'H1',
             tocItem: true,
+            tocStyle: { color: resultColor },
             tocMargin: [15, 0, 0, 0],
           });
 
@@ -684,6 +712,7 @@ export function createPDFFromAnalysisResult(
             text: `mit Name ${compareFirstNames} ${compareLastName}`,
             style: ['SUBTITLE', { color: resultColor }],
             headlineLevel: 'SUBTITLE',
+            marginBottom: 20,
           });
 
           // pushing description text
@@ -701,7 +730,6 @@ export function createPDFFromAnalysisResult(
           if (compareDescriptionText) {
             docDefinition.content.push(...convertHTMLTextToPDFSyntax(compareDescriptionText, {
               h1: { color: resultColor },
-              h2: { color: resultColor },
               ul: { markerColor: resultColor },
             }));
           }

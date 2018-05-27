@@ -1,7 +1,7 @@
 // elements that need to be included top level in the result
 const TOP_LEVEL_ELEMENTS = ['UL', 'TABLE', 'H1', 'H2', 'H3'];
 // heading elements
-const HEADING_ELEMENTS = ['H1', 'H2', 'H3', 'H4'];
+const HEADING_ELEMENTS = ['H0', 'H1', 'H2', 'H3', 'H4'];
 
 /**
  * converts a html element into a pdfmake syntax string
@@ -49,8 +49,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
 
     // h1 custom styles
     if (htmlElement.nodeName === 'H1') {
-      resultDict.tocItem = true;
-      resultDict.pageBreak = 'before';
+      resultDict.tocItem = false;
     }
 
     // returning result
@@ -74,8 +73,14 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
       style: customStyles.table ? ['TABLE', customStyles.table] : 'TABLE',
       table: {
         headerRows: 1,
-        body: tableRows.map(row =>
-          Array.from(row.getElementsByTagName('TD')).map(col => col.textContent)),
+        body: tableRows.map((row, rowIndex) =>
+          Array.from(row.getElementsByTagName('TD')).map((col, colIndex) => ({
+            text: col.textContent,
+            style: {
+              bold: colIndex === 0 || rowIndex === 0,
+              alignment: rowIndex === 0 ? 'center' : 'left',
+            },
+          }))),
       },
     };
   }
