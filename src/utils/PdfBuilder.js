@@ -84,6 +84,7 @@ const PDF_STYLES = {
   NUMBERDESCRIPTION: {
     color: CI_COLORS.GREY,
     fontSize: 12,
+    bold: true,
   },
   TABLE: {
     margin: [0, 10, 0, 10],
