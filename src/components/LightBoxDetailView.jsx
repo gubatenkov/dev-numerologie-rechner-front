@@ -252,7 +252,6 @@ class LightBoxDetailView extends Component {
                 Die Resultate können nur mit Druckpaket ausgedruckt werden.
               </h3>,
             </Panel>
-            )
           </div>
           {this.props.compareData && (
             <div className="col-4">

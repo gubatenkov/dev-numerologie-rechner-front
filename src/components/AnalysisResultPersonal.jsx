@@ -62,15 +62,6 @@ class AnalysisResultPersonal extends Component {
   }
 
   /**
-   * handles close of detail view
-   */
-  handleCloseDetail = () => {
-    this.setState({
-      resultTextDetailViewOpen: false,
-    });
-  };
-
-  /**
    *  handles clicks on detail links
    */
   handleItemDetailClick = (dataKey, index) => {
@@ -304,7 +295,7 @@ class AnalysisResultPersonal extends Component {
         </div>
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
-          onClose={this.handleCloseDetail}
+          onClose={() => this.setState({ resultTextDetailViewOpen: false })}
           data={this.convertResultsToDetailsDataFormat(this.props.data.personalAnalysis)}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
