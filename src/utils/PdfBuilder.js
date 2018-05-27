@@ -355,6 +355,7 @@ export function createPDFFromAnalysisResult(
   analysisResult,
   firstNames,
   lastName,
+  fileName = null,
   compareAnalysisResult = null,
   compareFirstNames = null,
   compareLastName = null,
@@ -681,5 +682,5 @@ export function createPDFFromAnalysisResult(
   });
 
   // creating pdf and opening in new tab
-  pdfMake.createPdf(docDefinition).open();
+  pdfMake.createPdf(docDefinition).download(fileName);
 }

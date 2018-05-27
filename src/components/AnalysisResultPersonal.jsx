@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
-import { graphql, compose } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
+
+import {
+  NotificationManager,
+  NotificationContainer,
+} from 'react-notifications';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -12,6 +17,10 @@ import ResultTable from './ResultTable';
 import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
 import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
+
+
+
+import { getUserAuthData } from '../utils/AuthUtils';
 
 import { personalResultsQuery } from '../graphql/Queries';
 
@@ -158,13 +167,42 @@ class AnalysisResultPersonal extends Component {
   /**
    * creates a pdf for the analysis and opens it in a new tab
    */
-  createAnalysisPdf = () => {
-    // making call to pdf util to generate and open pdf
-    createPDFFromAnalysisResult(
-      this.props.data,
-      this.props.match.params.firstNames,
-      this.props.match.params.lastName,
-    );
+  createAnalysisPdf = async () => {
+    // checking if logged in => otherwise redirecting to login
+    const authUser = getUserAuthData();
+    if (!authUser || !authUser.token || !authUser.email) {
+      this.props.history.push('/login');
+      return;
+    }
+
+    // todo: start activity indicator
+
+    // getting long texts used for pdf (if allowed)
+    try {
+      const result = await this.props.client.query({
+        query: personalResultsQuery,
+        variables: {
+          firstNames: this.props.match.params.firstNames,
+          lastName: this.props.match.params.lastName,
+          dateOfBirth: this.props.match.params.dateOfBirth,
+          longTexts: true,
+        },
+      });
+
+      // creating pdf and downloading with custom name
+      createPDFFromAnalysisResult(
+        result.data,
+        this.props.match.params.firstNames,
+        this.props.match.params.lastName,
+        `Persönlichkeitsnumeroskop_${this.props.match.params.firstNames}_${
+          this.props.match.params.lastName
+        }.pdf`,
+      );
+    } catch (error) {
+      NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
+    }
+
+    // todo: stop activity indicator
   };
 
   /**
@@ -300,6 +338,7 @@ class AnalysisResultPersonal extends Component {
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />
+        <NotificationContainer />
       </div>
     );
   }
@@ -311,6 +350,7 @@ export default compose(graphql(personalResultsQuery, {
       firstNames: params.match.params.firstNames,
       lastName: params.match.params.lastName,
       dateOfBirth: params.match.params.dateOfBirth,
+      longTexts: false,
     },
   }),
-}))(withRouter(AnalysisResultPersonal));
+}))(withApollo(withRouter(AnalysisResultPersonal)));

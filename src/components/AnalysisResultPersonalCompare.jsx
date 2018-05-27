@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
-import { graphql, compose } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
+
+import {
+  NotificationManager,
+  NotificationContainer,
+} from 'react-notifications';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -12,6 +17,8 @@ import ResultTableCompare from './ResultTableCompare';
 import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
 import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
+
+import { getUserAuthData } from '../utils/AuthUtils';
 
 import { personalResultsQuery } from '../graphql/Queries';
 
@@ -162,16 +169,62 @@ class AnalysisResultPersonalCompare extends Component {
   /**
    * creates a pdf for the analysis and opens it in a new tab
    */
-  createAnalysisPdf = () => {
-    // making call to pdf util to generate and open pdf
-    createPDFFromAnalysisResult(
-      this.props.personalQuery,
-      this.props.match.params.firstNames.split(',')[0],
-      this.props.match.params.lastNames.split(',')[0],
-      this.props.personalQueryCompare,
-      this.props.match.params.firstNames.split(',')[1],
-      this.props.match.params.lastNames.split(',')[1],
-    );
+  /**
+   * creates a pdf for the analysis and opens it in a new tab
+   */
+  createAnalysisPdf = async () => {
+    // checking if logged in => otherwise redirecting to login
+    const authUser = getUserAuthData();
+    if (!authUser || !authUser.token || !authUser.email) {
+      this.props.history.push('/login');
+      return;
+    }
+
+    // todo: start activity indicator
+
+    // getting long texts used for pdf (if allowed)
+    try {
+      const result = await this.props.client.query({
+        query: personalResultsQuery,
+        variables: {
+          firstNames: this.props.match.params.firstNames.split(',')[0],
+          lastName: this.props.match.params.lastNames.split(',')[0],
+          dateOfBirth: this.props.match.params.dateOfBirth,
+          longTexts: true,
+        },
+      });
+
+      const resultCompare = await this.props.client.query({
+        query: personalResultsQuery,
+        variables: {
+          firstNames: this.props.match.params.firstNames.split(',')[1],
+          lastName: this.props.match.params.lastNames.split(',')[1],
+          dateOfBirth: this.props.match.params.dateOfBirth,
+          longTexts: true,
+        },
+      });
+
+      // extracting names
+      const firstName = this.props.match.params.firstNames.split(',')[0];
+      const firstNameCompare = this.props.match.params.firstNames.split(',')[1];
+      const lastName = this.props.match.params.lastNames.split(',')[0];
+      const lastNameCompare = this.props.match.params.lastNames.split(',')[1];
+
+      // creating pdf and downloading with custom name
+      createPDFFromAnalysisResult(
+        result.data,
+        firstName,
+        lastName,
+        `Namensvergleich_${firstName}_${lastName}_${firstNameCompare}_${lastNameCompare}.pdf`,
+        resultCompare.data,
+        firstNameCompare,
+        lastNameCompare,
+      );
+    } catch (error) {
+      NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
+    }
+
+    // todo: stop activity indicator
   };
 
   /**
@@ -356,6 +409,7 @@ class AnalysisResultPersonalCompare extends Component {
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />
+        <NotificationContainer />
       </div>
     );
   }
@@ -369,6 +423,7 @@ export default compose(
         firstNames: params.match.params.firstNames.split(',')[1],
         lastName: params.match.params.lastNames.split(',')[1],
         dateOfBirth: params.match.params.dateOfBirth,
+        longTexts: false,
       },
     }),
   }),
@@ -379,7 +434,8 @@ export default compose(
         firstNames: params.match.params.firstNames.split(',')[0],
         lastName: params.match.params.lastNames.split(',')[0],
         dateOfBirth: params.match.params.dateOfBirth,
+        longTexts: false,
       },
     }),
   }),
-)(withRouter(AnalysisResultPersonalCompare));
+)(withApollo(withRouter(AnalysisResultPersonalCompare)));

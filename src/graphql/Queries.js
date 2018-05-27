@@ -4,6 +4,7 @@ export const currentUserQuery = gql`
   query currentUser {
     currentUser {
       email
+      canPrint
       groups {
         id
         name
@@ -91,11 +92,13 @@ export const personalResultsQuery = gql`
     $firstNames: String!
     $lastName: String!
     $dateOfBirth: String!
+    $longTexts: Boolean!
   ) {
     personalAnalysis(
       firstNames: $firstNames
       lastName: $lastName
       dateOfBirth: $dateOfBirth
+      longTexts: $longTexts
     ) {
       analysisIntro {
         title
