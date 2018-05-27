@@ -102,7 +102,7 @@ class AnalysisInput extends Component {
     // validating dateOfBirth
     const date = moment(this.dateOfBirth, 'DD.MM.YYYY', true);
     if (!date.isValid()) {
-      NotificationManager.error('Es muss ein Datum im Format DD.MM.YYY eingegeben werden.');
+      NotificationManager.error('Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.');
       return false;
     }
 
