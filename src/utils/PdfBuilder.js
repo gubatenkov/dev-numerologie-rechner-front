@@ -168,6 +168,20 @@ function cmToPoints(centimeters) {
 }
 
 /**
+ * Tests if the values for two result items are equal
+ */
+function areResultValuesEqual(resultValue, compareResultValue) {
+  if (resultValue === compareResultValue) {
+    return true;
+  }
+
+  if (Array.isArray(resultValue) && Array.isArray(compareResultValue)) {
+    return resultValue.every(item => compareResultValue.includes(item));
+  }
+  return false;
+}
+
+/**
  * extracts from the number item a value suitable for display in the overview table
  */
 function extractTableValueFromItem(numberItem) {
@@ -511,7 +525,7 @@ export function createPDFFromAnalysisResult(
       return {
         columns: [
           {
-            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName}`,
+            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - (c) Akademie Bios`,
             width: 'auto',
           },
           { text: currentPage, alignment: 'right' },
@@ -578,8 +592,12 @@ export function createPDFFromAnalysisResult(
         compareItemValue = extractedResult.itemValue;
       }
 
+      // checking if item is empty
+      const itemEmpty =
+        !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
+
       // if item name set => adding name and name subtitle
-      if (itemName && itemValue) {
+      if (itemName && !itemEmpty) {
         // adding heading for number
         docDefinition.content.push({
           text: `${itemName} ${itemValue}`,
@@ -590,7 +608,7 @@ export function createPDFFromAnalysisResult(
         });
 
         // adding subheading with name if compare is present
-        if (compareItem) {
+        if (compareItem && !areResultValuesEqual(compareItemValue, itemValue)) {
           docDefinition.content.push({
             text: `mit Name ${firstNames} ${lastName}`,
             style: ['SUBTITLE', { color: resultColor }],
@@ -635,7 +653,7 @@ export function createPDFFromAnalysisResult(
           }));
         }
 
-        if (compareItem) {
+        if (compareItem && !areResultValuesEqual(compareItemValue, itemValue)) {
           // adding heading for number
           docDefinition.content.push({
             text: `${compareItemName} ${compareItemValue}`,
