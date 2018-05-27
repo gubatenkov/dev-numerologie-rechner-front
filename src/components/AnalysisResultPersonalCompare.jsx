@@ -48,6 +48,8 @@ class AnalysisResultPersonalCompare extends Component {
     // setting initial state based on calculations
     this.state = {
       resultTextDetailViewOpen: false,
+      loading: false,
+      loadingText: null,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
     };
@@ -180,7 +182,11 @@ class AnalysisResultPersonalCompare extends Component {
       return;
     }
 
-    // todo: start activity indicator
+    // setting activity indicator
+    this.setState({
+      loading: true,
+      loadingText: 'Berechne detaillierte Auswertung und erstelle PDF...',
+    });
 
     // getting long texts used for pdf (if allowed)
     try {
@@ -224,7 +230,11 @@ class AnalysisResultPersonalCompare extends Component {
       NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
     }
 
-    // todo: stop activity indicator
+    // removing loading indicator
+    this.setState({
+      loading: false,
+      loadingText: null,
+    });
   };
 
   /**
@@ -236,7 +246,13 @@ class AnalysisResultPersonalCompare extends Component {
       this.props.personalQuery.loading ||
       this.props.personalQueryCompare.loading
     ) {
-      return <LoadingIndicator />;
+      return (
+        <LoadingIndicator text="Berechne Auswertung für Namensvergleich..." />
+      );
+    }
+
+    if (this.state.loading) {
+      return <LoadingIndicator text={this.state.loadingText} />;
     }
 
     // render table, table shows spinner

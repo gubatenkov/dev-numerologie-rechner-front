@@ -7,4 +7,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.LoadingIndicator__text {
+    margin-top: 20px;
 }

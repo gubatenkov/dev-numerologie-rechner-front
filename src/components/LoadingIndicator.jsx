@@ -15,6 +15,7 @@ class LoadingIndicator extends Component {
           name="double-bounce"
           fadeIn="none"
         />
+        <h4 className="LoadingIndicator__text">{this.props.text}</h4>
       </div>
     );
   }

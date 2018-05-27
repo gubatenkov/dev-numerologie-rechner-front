@@ -18,8 +18,6 @@ import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
 import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
 
-
-
 import { getUserAuthData } from '../utils/AuthUtils';
 
 import { personalResultsQuery } from '../graphql/Queries';
@@ -49,6 +47,8 @@ class AnalysisResultPersonal extends Component {
     // setting initial state based on calculations
     this.state = {
       resultTextDetailViewOpen: false,
+      loading: false,
+      loadingText: null,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
     };
@@ -175,7 +175,11 @@ class AnalysisResultPersonal extends Component {
       return;
     }
 
-    // todo: start activity indicator
+    // setting activity indicator
+    this.setState({
+      loading: true,
+      loadingText: 'Berechne detaillierte Auswertung und erstelle PDF...',
+    });
 
     // getting long texts used for pdf (if allowed)
     try {
@@ -202,15 +206,24 @@ class AnalysisResultPersonal extends Component {
       NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
     }
 
-    // todo: stop activity indicator
+    // removing loading indicator
+    this.setState({
+      loading: false,
+      loadingText: null,
+    });
   };
 
   /**
    * default render
    */
   render() {
+    // if data is loading => showing loading indicator with standard text
     if (this.props.data.loading) {
-      return <LoadingIndicator />;
+      return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
+    }
+
+    if (this.state.loading) {
+      return <LoadingIndicator text={this.state.loadingText} />;
     }
 
     // render table, table shows spinner
