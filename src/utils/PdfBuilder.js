@@ -85,12 +85,22 @@ const PDF_STYLES = {
   },
   TITLEPAGE_TITLE: {
     alignment: 'center',
-    margin: [0, 520, 0, 0],
     color: CI_COLORS.WHITE,
+    fontSize: 31,
+    bold: true,
+  },
+  TITLEPAGE_TITLE_SHADOW: {
+    alignment: 'center',
+    color: '#555555',
+    fontSize: 31,
+    bold: true,
   },
   TITLEPAGE_NAME: {
     alignment: 'center',
     color: CI_COLORS.WHITE,
+    fontSize: 25,
+    bold: true,
+    marginTop: 10,
   },
 };
 
@@ -430,7 +440,13 @@ export function createPDFFromAnalysisResult(
     content: [
       {
         text: 'Persönlichkeitsnumeroskop',
-        style: ['H1', 'TITLEPAGE_TITLE'],
+        absolutePosition: { x: 103, y: 501 },
+        style: ['TITLEPAGE_TITLE_SHADOW'],
+      },
+      {
+        text: 'Persönlichkeitsnumeroskop',
+        absolutePosition: { x: 102, y: 500 },
+        style: ['TITLEPAGE_TITLE'],
         pageBreak: 'after',
       },
       {
@@ -516,7 +532,7 @@ export function createPDFFromAnalysisResult(
       if (currentPage === 1) {
         return {
           text: `${firstNames} ${lastName}`,
-          style: ['H2', 'TITLEPAGE_NAME'],
+          style: ['TITLEPAGE_NAME'],
           pageBreak: 'after',
         };
       }
