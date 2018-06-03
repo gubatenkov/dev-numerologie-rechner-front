@@ -160,6 +160,10 @@ class AnalysisResultPersonal extends Component {
               }  |  ${numberItem.values[1]}. Höhepunkt = ${
                 numberItem.values[3]
               }  (${numberItem.values[4]})`;
+            } else if (['PJ', 'PJ (+1)'].includes(numberItem.numberId)) {
+              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
+                numberItem.values[numberItem.valueIndex]
+              } (${numberItem.values[3]})`;
             } else {
               elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
                 numberItem.values[numberItem.valueIndex]
