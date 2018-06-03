@@ -237,7 +237,7 @@ class LightBoxDetailView extends Component {
               <i className="icon wb-chevron-left" />
             </button>
           </div>
-          <div className={this.props.compareData ? 'col-4' : 'col-8'}>
+          <div className={this.props.compareData ? 'col-4' : 'col-6'}>
             <Panel
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}

@@ -152,10 +152,21 @@ class AnalysisResultPersonal extends Component {
               elementContent: numberItem.descriptionText,
             };
           } else if (numberItem.type === 'customRow') {
-            return {
-              elementTitle: `${numberItem.values[numberItem.nameIndex]} = ${
+            // sad special treatment for HF/HP
+            let elementTitle;
+            if (numberItem.numberId.startsWith('HF/HP')) {
+              elementTitle = `${numberItem.values[1]}. Herausforderung = ${
+                numberItem.values[2]
+              }  |  ${numberItem.values[1]}. Höhepunkt = ${
+                numberItem.values[3]
+              }  (${numberItem.values[4]})`;
+            } else {
+              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
                 numberItem.values[numberItem.valueIndex]
-              }`,
+              }`;
+            }
+            return {
+              elementTitle,
               elementContent: numberItem.values[numberItem.descriptionTextIndex],
             };
           }
