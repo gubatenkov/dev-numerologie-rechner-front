@@ -159,7 +159,7 @@ class AnalysisResultPersonal extends Component {
                 numberItem.values[2]
               }  |  ${numberItem.values[1]}. Höhepunkt = ${
                 numberItem.values[3]
-              }  (${numberItem.values[4]})`;
+              } (${numberItem.values[4]})`;
             } else if (['PJ', 'PJ (+1)'].includes(numberItem.numberId)) {
               elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
                 numberItem.values[numberItem.valueIndex]

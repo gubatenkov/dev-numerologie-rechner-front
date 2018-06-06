@@ -55,7 +55,7 @@ const PDF_STYLES = {
   },
   H2: {
     fontSize: 16,
-    marginTop: 16,
+    marginTop: 24,
     marginBottom: 10,
     lineHeight: 1,
   },
@@ -63,8 +63,9 @@ const PDF_STYLES = {
     fontSize: 12,
     bold: true,
     marginTop: 12,
+    marginBottom: 5,
     lineHeight: 1,
-    color: CI_COLORS.GREY,
+    color: CI_COLORS.BLACK,
   },
   H4: {
     fontSize: 16,
@@ -382,8 +383,22 @@ function extractNameAndValueFromItem(item) {
     if (item.numberId.startsWith('HF/HP')) {
       itemName = `${item.values[1]}. Herausforderung = ${item.values[2]} | ${
         item.values[1]
-      }. Höhepunkt =`;
-      itemValue = item.values[3];
+      }. Höhepunkt = ${item.values[3]}`;
+      itemValue = ` (${item.values[4]})`;
+    } else if (['PJ', 'PJ (+1)'].includes(item.numberId)) {
+      itemName = `${item.values[item.nameIndex]} = ${
+        item.values[item.valueIndex]
+      }  (${item.values[3]})`;
+      itemValue = ' ';
+    } else if (item.numberId === 'VZ-B') {
+      itemName = 'Vibratorische Zyklen - Bildungszyklus';
+      itemValue = item.values[item.valueIndex];
+    } else if (item.numberId === 'VZ-P') {
+      itemName = 'Vibratorische Zyklen - Produktivitätszyklus';
+      itemValue = item.values[item.valueIndex];
+    } else if (item.numberId === 'VZ-E') {
+      itemName = 'Vibratorische Zyklen - Erntezyklus';
+      itemValue = item.values[item.valueIndex];
     } else {
       itemName = item.values[item.nameIndex];
       itemValue = item.values[item.valueIndex];
@@ -674,7 +689,7 @@ export function createPDFFromAnalysisResult(
                 },
               ),
             ],
-            marginBottom: 20,
+            marginBottom: 10,
           });
         }
 
@@ -690,7 +705,7 @@ export function createPDFFromAnalysisResult(
                 { text: 'NUMBERDESCRIPTION' },
               ),
             ],
-            marginBottom: 20,
+            marginBottom: 10,
           });
         }
 
