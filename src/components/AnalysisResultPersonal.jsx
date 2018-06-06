@@ -209,7 +209,7 @@ class AnalysisResultPersonal extends Component {
       });
 
       // creating pdf and downloading with custom name
-      createPDFFromAnalysisResult(
+      await createPDFFromAnalysisResult(
         result.data,
         this.props.match.params.firstNames,
         this.props.match.params.lastName,
@@ -218,6 +218,7 @@ class AnalysisResultPersonal extends Component {
         }.pdf`,
       );
     } catch (error) {
+      console.log(error);
       NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
     }
 

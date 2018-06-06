@@ -369,8 +369,16 @@ function extractNameAndValueFromItem(item) {
     item.values[item.nameIndex] &&
     item.valueIndex !== null
   ) {
-    itemName = item.values[item.nameIndex];
-    itemValue = item.values[item.valueIndex];
+    // sad special treatment of hf/hp
+    if (item.numberId.startsWith('HF/HP')) {
+      itemName = `${item.values[1]}. Herausforderung = ${item.values[2]} | ${
+        item.values[1]
+      }. Höhepunkt =`;
+      itemValue = item.values[3];
+    } else {
+      itemName = item.values[item.nameIndex];
+      itemValue = item.values[item.valueIndex];
+    }
   }
 
   return {
