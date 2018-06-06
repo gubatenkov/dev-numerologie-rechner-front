@@ -221,6 +221,7 @@ function extractTableValueFromItem(numberItem) {
         table: {
           heights: 40,
           widths: [40, 40, 40],
+          dontBreakRows: true,
           body: [
             [
               { text: matrix[0], alignment: 'center' },
@@ -245,11 +246,21 @@ function extractTableValueFromItem(numberItem) {
   } else {
     value = {
       text: numberItem.values[numberItem.valueIndex],
-      alignment: 'center',
+      alignment: 'left',
     };
   }
 
   return value;
+}
+
+/**
+ * extracts the number name from an item dependent on the type
+ */
+function extractTableNameFromItem(numberItem) {
+  if (numberItem.type === 'row') {
+    return numberItem.name;
+  }
+  return numberItem.values[numberItem.nameIndex];
 }
 
 /**
@@ -300,6 +311,7 @@ function calculateResultOverviewTable(
     resultItem.numbers.forEach((numberItem, numberIndex) => {
       // getting table value for item
       const value = extractTableValueFromItem(numberItem);
+      const name = extractTableNameFromItem(numberItem);
 
       // getting compare value for item
       const compareNumberItem = compareResult
@@ -312,15 +324,12 @@ function calculateResultOverviewTable(
       // pushing value onto table body object
       if (compareValue) {
         overviewTableBody.push([
-          { text: numberItem.numberId, alignment: 'center' },
+          { text: name, alignment: 'left' },
           value,
           compareValue,
         ]);
       } else {
-        overviewTableBody.push([
-          { text: numberItem.numberId, alignment: 'center' },
-          value,
-        ]);
+        overviewTableBody.push([{ text: name, alignment: 'left' }, value]);
       }
     });
   });
@@ -558,15 +567,15 @@ export function createPDFFromAnalysisResult(
       return {
         columns: [
           {
-            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - (c) Akademie Bios`,
+            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - www.psychologischenumerologie.eu`,
             width: 'auto',
           },
           { text: currentPage, alignment: 'right' },
         ],
         margin: [
-          cmToPoints(PAGE_MARGIN_LEFT_CM),
+          cmToPoints(PAGE_MARGIN_LEFT_CM / 2),
           10,
-          cmToPoints(PAGE_MARGIN_RIGHT_CM),
+          cmToPoints(PAGE_MARGIN_RIGHT_CM / 2),
           0,
         ],
         fontSize: 10,
