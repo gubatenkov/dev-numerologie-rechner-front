@@ -71,7 +71,7 @@ class AnalysisInput extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // setting background dynamically
     document.body.style.backgroundColor = '#00b3d4';
   }

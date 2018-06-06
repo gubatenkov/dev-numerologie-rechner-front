@@ -29,7 +29,7 @@ class ResetPassword extends Component {
     this.email = null;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // setting background dynamically
     document.body.style.backgroundColor = '#00b3d4';
   }

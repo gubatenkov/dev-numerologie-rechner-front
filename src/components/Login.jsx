@@ -31,9 +31,9 @@ class Login extends Component {
     this.password = null;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // setting background dynamically
-    document.body.root.style.backgroundColor = '#00b3d4';
+    document.body.style.backgroundColor = '#00b3d4';
   }
 
   componentWillUnmount() {

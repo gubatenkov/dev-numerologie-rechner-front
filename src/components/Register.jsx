@@ -37,7 +37,7 @@ class Register extends Component {
     this.passwordMatch = null;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // setting background dynamically
     document.body.style.backgroundColor = '#00b3d4';
   }
