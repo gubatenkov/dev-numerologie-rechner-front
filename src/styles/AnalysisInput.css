@@ -1,3 +1,8 @@
 .logo {
     margin: 40px;
 }
+
+
+.linkText {
+    cursor: pointer;
+}

@@ -77,7 +77,6 @@ class AnalysisResultPersonalCompare extends Component {
   handleItemDetailClick = (dataKey, index) => {
     // getting both results
     const analysisResult = this.props.personalQuery.personalAnalysis;
-    // TODO get compare
 
     // getting index of elemnent represented by dataKey in state
     const dataIndex = this.getResultArrayFormat(analysisResult).indexOf(analysisResult[dataKey]);
@@ -104,6 +103,7 @@ class AnalysisResultPersonalCompare extends Component {
       resultTextDetailViewElementIndex: index - removedElementsToIndexCount,
     });
   };
+  
 
   /**
    * handles the navigation to a specific item

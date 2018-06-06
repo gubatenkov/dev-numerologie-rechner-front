@@ -41,6 +41,7 @@
 .LightBoxDetailView__Panel {
     height: 100%;
     overflow-y: auto;
+    width: 600px;
 }
 
 .LightBoxDetailView__Panel .panel-title {
@@ -72,26 +73,27 @@
 }
 
 .LightBoxDetailView__text {
-    line-height: 200%;
+    line-height: 170%;
     font-size: 16px;
 
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 2%;
+    margin-right: 2%;
     margin-top: 2%;
     user-select: none;
 }
 
 .LightBoxDetailView__text h1 {
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .LightBoxDetailView__text h2 {
-    margin-top: 1em !important;
-    font-size: 18px;
+    margin-top: 50px !important;
+    font-size: 20px;
 }
 
 .LightBoxDetailView__text h3 {
-    margin-top: 1em !important;
+    line-height: 170%;
+    margin-top: 20px !important;
     font-size: 16px;
 }
 

@@ -209,7 +209,7 @@ class AnalysisInput extends Component {
                       })
                     }
                   >
-                    <h6>
+                    <h6 className="linkText">
                       {`Vergleichsnamen ${
                         this.state.comfortNameFieldsShown
                           ? 'ausblenden'
