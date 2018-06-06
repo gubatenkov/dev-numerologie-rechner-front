@@ -31,6 +31,16 @@ class Login extends Component {
     this.password = null;
   }
 
+  componentWillMount() {
+    // setting background dynamically
+    document.body.root.style.backgroundColor = '#00b3d4';
+  }
+
+  componentWillUnmount() {
+    // unsetting background dynamically
+    document.body.style.backgroundColor = null;
+  }
+
   /**
    * attempts to login user
    */
@@ -61,16 +71,18 @@ class Login extends Component {
         <div className="page vertical-align">
           <div className="page-content">
             <div className="text-center">
-              <img
-                className="brand-img logo"
-                height="150"
-                src={logo}
-                alt="logo"
-              />
+              <a href="https://www.psychologischenumerologie.eu/">
+                <img
+                  className="brand-img logo"
+                  height="150"
+                  src={logo}
+                  alt="logo"
+                />
+              </a>
             </div>
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
-                <Panel title="Login">
+                <Panel title="Anmelden">
                   <InputField
                     icon="wb-user"
                     fieldName="Email-Adresse"
@@ -90,7 +102,7 @@ class Login extends Component {
                     className="btn btn-primary btn-block"
                     onClick={this.loginUser}
                   >
-                    Login
+                    Anmelden
                   </button>
                   <div className="InputForm__options">
                     <Link to="/reset">

@@ -71,6 +71,16 @@ class AnalysisInput extends Component {
     };
   }
 
+  componentWillMount() {
+    // setting background dynamically
+    document.body.style.backgroundColor = '#00b3d4';
+  }
+
+  componentWillUnmount() {
+    // unsetting background dynamically
+    document.body.style.backgroundColor = null;
+  }
+
   /**
    * validates the input and displays a notification
    * in case of faulty input
@@ -137,16 +147,18 @@ class AnalysisInput extends Component {
         <div className="page vertical-align">
           <div className="page-content">
             <div className="text-center">
-              <img
-                className="brand-img logo"
-                height="150"
-                src={logo}
-                alt="logo"
-              />
+              <a href="https://www.psychologischenumerologie.eu/">
+                <img
+                  className="brand-img logo"
+                  height="150"
+                  src={logo}
+                  alt="logo"
+                />
+              </a>
             </div>
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
-                <Panel title="Akademie Bios Analyse">
+                <Panel title="Numerologische Analyse">
                   <h6>Wohlfühlname</h6>
                   <InputField
                     icon="wb-user"
@@ -188,6 +200,23 @@ class AnalysisInput extends Component {
                       />
                     </div>
                   )}
+                  <a
+                    role="button"
+                    onClick={() =>
+                      this.setState({
+                        comfortNameFieldsShown: !this.state
+                          .comfortNameFieldsShown,
+                      })
+                    }
+                  >
+                    <h6>
+                      {`Vergleichsnamen ${
+                        this.state.comfortNameFieldsShown
+                          ? 'ausblenden'
+                          : 'einblenden'
+                      }`}
+                    </h6>
+                  </a>
                   <button
                     className="btn btn-primary btn-block"
                     onClick={this.startAnalysis}
@@ -201,23 +230,6 @@ class AnalysisInput extends Component {
                     <Link to="/register">
                       <h6>Registrieren</h6>
                     </Link>
-                    <a
-                      role="button"
-                      onClick={() =>
-                        this.setState({
-                          comfortNameFieldsShown: !this.state
-                            .comfortNameFieldsShown,
-                        })
-                      }
-                    >
-                      <h6>
-                        {`Vergleichsnamen ${
-                          this.state.comfortNameFieldsShown
-                            ? 'ausblenden'
-                            : 'einblenden'
-                        }`}
-                      </h6>
-                    </a>
                   </div>
                 </Panel>
               </div>

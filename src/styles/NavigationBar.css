@@ -11,3 +11,7 @@
 .btn {
     cursor: default !important;
 }
+
+.navbar__brand img {
+    width: 70px;
+}

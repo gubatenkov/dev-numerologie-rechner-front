@@ -60,7 +60,11 @@ class NavigationBar extends Component {
         </ul>
       ) : (
         <ul className="nav navbar-toolbar navbar-right">
-          <Link className="btn btn-default btn-block " to="/login" target="_blank">
+          <Link
+            className="btn btn-default btn-block "
+            to="/login"
+            target="_blank"
+          >
             Anmelden
           </Link>
         </ul>
@@ -69,7 +73,11 @@ class NavigationBar extends Component {
     return (
       <nav className="navbar navbar-inverse">
         <div className="container-fluid">
-          <div className="navbar__brand">Akademie Bios</div>
+          <div className="navbar__brand">
+            <a href="https://www.psychologischenumerologie.eu/">
+              <img src={logo} alt={logo} />
+            </a>
+          </div>
           <div className="collapse navbar-collapse navbar-collapse-toolbar">
             <ul className="nav navbar-toolbar navbar-right">{userContent}</ul>
           </div>

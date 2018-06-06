@@ -50,7 +50,6 @@ class TitleBar extends Component {
               {this.props.badgeTitle}
             </span>
           )}
-          ;
           <h1 className="page-title">{this.props.title}</h1>
         </div>
         <div className="barContainer__rightElements">

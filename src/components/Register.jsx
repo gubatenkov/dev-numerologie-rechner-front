@@ -37,6 +37,16 @@ class Register extends Component {
     this.passwordMatch = null;
   }
 
+  componentWillMount() {
+    // setting background dynamically
+    document.body.style.backgroundColor = '#00b3d4';
+  }
+
+  componentWillUnmount() {
+    // unsetting background dynamically
+    document.body.style.backgroundColor = null;
+  }
+
   /**
    * attempts to register user
    */
@@ -67,12 +77,14 @@ class Register extends Component {
         <div className="page vertical-align">
           <div className="page-content">
             <div className="text-center">
-              <img
-                className="brand-img logo"
-                height="150"
-                src={logo}
-                alt="logo"
-              />
+              <a href="https://www.psychologischenumerologie.eu/">
+                <img
+                  className="brand-img logo"
+                  height="150"
+                  src={logo}
+                  alt="logo"
+                />
+              </a>
             </div>
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
