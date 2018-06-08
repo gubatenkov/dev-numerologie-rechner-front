@@ -145,10 +145,9 @@ class AnalysisResultPersonalCompare extends Component {
       sectionName: item.name,
       sectionElements: item.numbers
         // filtering elements that are not suitable for displaying as detail view
-        .filter((numberItem, numberIndex) => (
+        .filter((numberItem, numberIndex) =>
           this.doesElementHaveDescription(numberItem) ||
-            this.doesElementHaveDescription(compareDataArray[itemIndex].numbers[numberIndex])
-        ))
+            this.doesElementHaveDescription(compareDataArray[itemIndex].numbers[numberIndex]))
         // mapping those elements to data for detail
         .map((numberItem) => {
           if (numberItem.type === 'row') {
@@ -245,6 +244,12 @@ class AnalysisResultPersonalCompare extends Component {
         lastNameCompare,
       );
     } catch (error) {
+      console.log(error);
+      // removing loading indicator
+      this.setState({
+        loading: false,
+        loadingText: null,
+      });
       NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
     }
 

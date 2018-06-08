@@ -219,6 +219,11 @@ class AnalysisResultPersonal extends Component {
       );
     } catch (error) {
       console.log(error);
+      // removing loading indicator
+      this.setState({
+        loading: false,
+        loadingText: null,
+      });
       NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
     }
 
