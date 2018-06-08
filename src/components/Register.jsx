@@ -81,7 +81,7 @@ class Register extends Component {
               <a href="https://www.psychologischenumerologie.eu/">
                 <img
                   className="brand-img logo"
-                  height="150"
+                  height="250"
                   src={logo}
                   alt="logo"
                 />

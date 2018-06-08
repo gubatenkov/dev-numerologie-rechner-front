@@ -111,7 +111,7 @@ const PDF_STYLES = {
     color: CI_COLORS.WHITE,
     fontSize: 25,
     bold: true,
-    marginTop: 10,
+    marginTop: -5,
   },
 };
 

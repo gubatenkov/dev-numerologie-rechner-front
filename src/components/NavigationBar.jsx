@@ -7,7 +7,7 @@ import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import '../styles/NavigationBar.css';
-import logo from '../logo.png';
+import logo from '../logo_image.png';
 
 import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
 
@@ -53,7 +53,7 @@ class NavigationBar extends Component {
           <li>
             <a className="nav-link navbar-avatar">
               <span className="avatar">
-                <img src={logo} alt={logo} />
+                <img height="50" src={logo} alt={logo} />
               </span>
             </a>
           </li>
