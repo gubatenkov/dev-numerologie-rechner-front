@@ -103,7 +103,6 @@ class AnalysisResultPersonalCompare extends Component {
       resultTextDetailViewElementIndex: index - removedElementsToIndexCount,
     });
   };
-  
 
   /**
    * handles the navigation to a specific item
@@ -139,13 +138,17 @@ class AnalysisResultPersonalCompare extends Component {
    * by the detail component
    * @param resultData the state to be transformed
    */
-  convertResultsToDetailsDataFormat(resultData) {
+  convertResultsToDetailsDataFormat(resultData, compareData) {
     // transforming into items where results are numbers and a text to display is present
-    return this.getResultArrayFormat(resultData).map(item => ({
+    const compareDataArray = this.getResultArrayFormat(compareData);
+    return this.getResultArrayFormat(resultData).map((item, itemIndex) => ({
       sectionName: item.name,
       sectionElements: item.numbers
         // filtering elements that are not suitable for displaying as detail view
-        .filter(numberItem => this.doesElementHaveDescription(numberItem))
+        .filter((numberItem, numberIndex) => (
+          this.doesElementHaveDescription(numberItem) ||
+            this.doesElementHaveDescription(compareDataArray[itemIndex].numbers[numberIndex])
+        ))
         // mapping those elements to data for detail
         .map((numberItem) => {
           if (numberItem.type === 'row') {
@@ -156,10 +159,25 @@ class AnalysisResultPersonalCompare extends Component {
               elementContent: numberItem.descriptionText,
             };
           } else if (numberItem.type === 'customRow') {
-            return {
-              elementTitle: `${numberItem.values[numberItem.nameIndex]} = ${
+            // sad special treatment for HF/HP
+            let elementTitle;
+            if (numberItem.numberId.startsWith('HF/HP')) {
+              elementTitle = `${numberItem.values[1]}. Herausforderung = ${
+                numberItem.values[2]
+              }  |  ${numberItem.values[1]}. Höhepunkt = ${
+                numberItem.values[3]
+              } (${numberItem.values[4]})`;
+            } else if (['PJ', 'PJ (+1)'].includes(numberItem.numberId)) {
+              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
                 numberItem.values[numberItem.valueIndex]
-              }`,
+              } (${numberItem.values[3]})`;
+            } else {
+              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
+                numberItem.values[numberItem.valueIndex]
+              }`;
+            }
+            return {
+              elementTitle,
               elementContent: numberItem.values[numberItem.descriptionTextIndex],
             };
           }
@@ -420,8 +438,14 @@ class AnalysisResultPersonalCompare extends Component {
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          data={this.convertResultsToDetailsDataFormat(this.props.personalQuery.personalAnalysis)}
-          compareData={this.convertResultsToDetailsDataFormat(this.props.personalQueryCompare.personalAnalysis)}
+          data={this.convertResultsToDetailsDataFormat(
+            this.props.personalQuery.personalAnalysis,
+            this.props.personalQueryCompare.personalAnalysis,
+          )}
+          compareData={this.convertResultsToDetailsDataFormat(
+            this.props.personalQueryCompare.personalAnalysis,
+            this.props.personalQuery.personalAnalysis,
+          )}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />
