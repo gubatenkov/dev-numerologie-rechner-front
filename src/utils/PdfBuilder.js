@@ -220,9 +220,9 @@ function extractTableValueFromItem(numberItem) {
       const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
       value = {
         table: {
+          dontBreakRows: true,
           heights: 40,
           widths: [40, 40, 40],
-          dontBreakRows: true,
           body: [
             [
               { text: matrix[0], alignment: 'center' },
@@ -521,6 +521,7 @@ export function createPDFFromAnalysisResult(
           {
             width: 'auto',
             table: {
+              dontBreakRows: true,
               body: calculateResultOverviewTable(
                 resultArray,
                 firstNames,
