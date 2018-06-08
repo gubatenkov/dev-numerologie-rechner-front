@@ -29,6 +29,7 @@ class Register extends Component {
 
     this.state = {
       errorMessage: null,
+      readyToSubmit: false,
     };
 
     // members for authentication
@@ -112,8 +113,20 @@ class Register extends Component {
                       this.passwordMatch = event.target.value;
                     }}
                   />
+                  <div className="Register__checkbox">
+                    <input
+                      type="checkbox"
+                      onChange={event =>
+                        this.setState({
+                          readyToSubmit: event.target.checked,
+                        })
+                      }
+                    />
+                    <h6>Ich akzeptiere die AGB.</h6>
+                  </div>
                   <button
                     className="btn btn-primary btn-block"
+                    disabled={!this.state.readyToSubmit}
                     onClick={this.registerUser}
                   >
                     Registrieren
