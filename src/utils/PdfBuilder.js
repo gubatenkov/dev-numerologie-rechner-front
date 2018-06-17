@@ -3,6 +3,7 @@ import pdfFonts from '../fonts/vfs_fonts';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
 import { COVER_IMAGE_BY_LZ, LEVEL_BG_IMAGES } from './Images';
+import { COPYRIGHT_NOTICE, LEGAL_NOTICE } from './PdfTexts';
 
 // defining colors used in the pdf
 const CI_COLORS = {
@@ -773,6 +774,31 @@ export function createPDFFromAnalysisResult(
     // of this level
     levelPositionInformation[result.name].endIndex =
       docDefinition.content.length - 1;
+  });
+
+  // adding legal text at end of pdf
+  docDefinition.content.push({
+    text: 'Urheberrechtshinweis',
+    style: ['H1'],
+    tocItem: true,
+    pageBreak: 'before',
+    marginBottom: 10,
+  });
+
+  docDefinition.content.push({
+    text: COPYRIGHT_NOTICE,
+  });
+
+  // adding legal text at end of pdf
+  docDefinition.content.push({
+    text: 'Haftungsausschluss',
+    style: ['H1'],
+    tocItem: true,
+    marginBottom: 10,
+  });
+
+  docDefinition.content.push({
+    text: LEGAL_NOTICE,
   });
 
   // creating pdf and opening in new tab
