@@ -17,9 +17,12 @@ import AnalysisBrowser from './AnalysisBrowser';
 import CreditWidget from './CreditWidget';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
+import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
 
 import { currentUserQuery } from '../graphql/Queries';
-import { saveAnalysisMutation } from '../graphql/Mutations';
+import { saveAnalysisMutation, deleteUserMutation } from '../graphql/Mutations';
+
+import { deleteUserAuthData } from '../utils/AuthUtils';
 
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
@@ -40,6 +43,7 @@ class UserHome extends Component {
       }),
     }).isRequired,
     saveAnalysis: PropTypes.func.isRequired,
+    deleteUser: PropTypes.func.isRequired,
   };
   /**
    * default constructor
@@ -51,8 +55,34 @@ class UserHome extends Component {
     this.state = {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
+      userDeletionDialogOpen: false,
     };
   }
+
+  /**
+   * handler for logout click
+   */
+  handleLogout = () => {
+    // removing token from local storage => logout
+    deleteUserAuthData();
+
+    // navigating to input for user
+    this.props.history.push('/analysisInput');
+
+    // reloading to clear cache
+    window.location.reload();
+  };
+
+  /**
+   * handler for deleting the current user
+   */
+  handleDeleteUser = async () => {
+    // deleting user from server
+    await this.props.deleteUser();
+
+    // logging user out
+    this.handleLogout();
+  };
 
   /**
    * saves the analysis passed to user home
@@ -116,11 +146,18 @@ class UserHome extends Component {
 
     return (
       <div>
-        <NavigationBar />
+        <NavigationBar
+          handleDeleteUser={() =>
+            this.setState({ userDeletionDialogOpen: true })
+          }
+        />
         <TitleBar
           primaryActionTitle="Anfrage an Berater"
           secondaryActionTitle="Neue Analyse"
           onSecondaryAction={() => this.props.history.push('/analysisInput')}
+          onPrimaryAction={() =>
+            NotificationManager.error('Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.')
+          }
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeLeftAdArea">
@@ -174,6 +211,21 @@ class UserHome extends Component {
           }}
           groups={this.props.data.currentUser.groups}
         />
+        <ConfirmUserDeletionDialog
+          isOpen={this.state.userDeletionDialogOpen}
+          onClose={() =>
+            this.setState({
+              userDeletionDialogOpen: false,
+            })
+          }
+          onAction={() => {
+            // dismissing dialog
+            this.setState({userDeletionDialogOpen: false});
+
+            // deleting user
+            this.handleDeleteUser();
+          }}
+        />
         <NotificationContainer />
       </div>
     );
@@ -183,4 +235,5 @@ class UserHome extends Component {
 export default compose(
   graphql(currentUserQuery),
   graphql(saveAnalysisMutation, { name: 'saveAnalysis' }),
+  graphql(deleteUserMutation, { name: 'deleteUser' }),
 )(withRouter(UserHome));

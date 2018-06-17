@@ -349,7 +349,7 @@ class AnalysisBrowser extends Component {
               >
                 Gruppe
               </NavigationDropdownMenuItem>
-              <NavigationDropdownMenuItem onClick={() => {}}>
+              <NavigationDropdownMenuItem onClick={() => this.props.history.push('/analysisInput')}>
                 Analyse
               </NavigationDropdownMenuItem>
             </NavigationDropdownMenu>,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withApollo } from 'react-apollo';
+import PropTypes from 'prop-types';
 
 import { Link, withRouter } from 'react-router-dom';
 
@@ -15,6 +15,14 @@ import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
  * the navigation bar for the application on top
  */
 class NavigationBar extends Component {
+  static propTypes = {
+    handleDeleteUser: PropTypes.func,
+  };
+
+  static defaultProps = {
+    handleDeleteUser: null,
+  };
+
   /**
    * handler for logout click
    */
@@ -27,6 +35,14 @@ class NavigationBar extends Component {
 
     // reloading to clear cache
     window.location.reload();
+  };
+
+  /**
+   * opens a url passed in a new tab
+   */
+  openLinkInNewTab = (url) => {
+    const win = window.open(url);
+    win.focus();
   };
 
   /**
@@ -45,6 +61,23 @@ class NavigationBar extends Component {
               onClick={() => this.props.history.push('/userHome')}
             >
               Meine Analysen
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem
+              onClick={() =>
+                this.openLinkInNewTab('https://www.psychologischenumerologie.eu/datenschutz/#tab-con-0 ')
+              }
+            >
+              Datenschutzerklärung
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem
+              onClick={() =>
+                this.openLinkInNewTab('https://www.psychologischenumerologie.eu/impressum/ ')
+              }
+            >
+              Impressum
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem onClick={this.props.handleDeleteUser}>
+              Account löschen
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem onClick={this.handleLogout}>
               Abmelden
@@ -87,4 +120,4 @@ class NavigationBar extends Component {
   }
 }
 
-export default withApollo(withRouter(NavigationBar));
+export default withRouter(NavigationBar);

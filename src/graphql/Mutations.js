@@ -59,3 +59,9 @@ export const saveAnalysisMutation = gql`
     }
   }
 `;
+
+export const deleteUserMutation = gql`
+  mutation deleteUser {
+    deleteUser
+  }
+`;
