@@ -10,6 +10,10 @@ import {
 
 import '../styles/UserHome.css';
 
+// importing ad banners
+import BANNER_NEWLETTER from '../images/banner_numerologie_ausbildung-newsletter.gif';
+import BANNER_BOOKS from '../images/banner_numerologie-buecher-1-2.gif';
+
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
@@ -161,7 +165,7 @@ class UserHome extends Component {
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeLeftAdArea">
-            <AdArea />
+            <AdArea banner={BANNER_BOOKS} />
           </div>
           <div className="UserHomeContent">
             <AnalysisBrowser
@@ -175,7 +179,7 @@ class UserHome extends Component {
                   handleBuyCredits={() => console.log('buy credits!')}
                 />
               )}
-            <AdArea />
+            <AdArea banner={BANNER_NEWLETTER} />
           </div>
         </div>
         <SaveAnalysisDialog
@@ -220,7 +224,7 @@ class UserHome extends Component {
           }
           onAction={() => {
             // dismissing dialog
-            this.setState({userDeletionDialogOpen: false});
+            this.setState({ userDeletionDialogOpen: false });
 
             // deleting user
             this.handleDeleteUser();

@@ -127,6 +127,7 @@ class Register extends Component {
                       <a
                         href="https://www.psychologischenumerologie.eu/datenschutz/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         Datenschutzerklärung
                       </a>{' '}
@@ -134,6 +135,7 @@ class Register extends Component {
                       <a
                         href="https://www.psychologischenumerologie.eu/nutzungsbedingungen/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         Nutzungsbedingungen
                       </a>{' '}
@@ -141,6 +143,7 @@ class Register extends Component {
                       <a
                         href="https://www.psychologischenumerologie.eu/agb/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         AGBs
                       </a>{' '}
@@ -216,6 +219,7 @@ class Register extends Component {
                       <a
                         href="https://www.psychologischenumerologie.eu/datenschutz/"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         Datenschutzerklärung.
                       </a>

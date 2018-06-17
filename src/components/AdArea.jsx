@@ -9,7 +9,7 @@ class AdArea extends Component {
   render() {
     return (
       <div className="AdArea">
-        <h3>Werbung</h3>
+        <img className="AdArea__Banner" src={this.props.banner} alt="logo" />
       </div>
     );
   }
