@@ -17,6 +17,7 @@ import BANNER_BOOKS from '../images/banner_books.gif';
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
+import AdAreaItem from './AdAreaItem';
 import AnalysisBrowser from './AnalysisBrowser';
 import CreditWidget from './CreditWidget';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
@@ -166,8 +167,14 @@ class UserHome extends Component {
         <div className="UserHomeContentArea">
           <div className="UserHomeLeftAdArea">
             <AdArea horizontal={false}>
-              <img src={BANNER_BOOKS} alt="ad" />
-              <img src={BANNER_BOOKS} alt="ad" />
+              <AdAreaItem
+                link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-1/"
+                image={BANNER_BOOKS}
+              />
+              <AdAreaItem
+                link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-2/"
+                image={BANNER_BOOKS}
+              />
             </AdArea>
           </div>
           <div className="UserHomeContent">
@@ -183,8 +190,14 @@ class UserHome extends Component {
                 />
               )}
             <AdArea horizontal>
-              <img src={BANNER_NEWLETTER} alt="ad" />
-              <img src={BANNER_NEWLETTER} alt="ad" />
+              <AdAreaItem
+                link="https://www.psychologischenumerologie.eu/newsletter/"
+                image={BANNER_NEWLETTER}
+              />
+              <AdAreaItem
+                link="https://www.psychologischenumerologie.eu/events/list/"
+                image={BANNER_NEWLETTER}
+              />
             </AdArea>
           </div>
         </div>
