@@ -162,6 +162,7 @@ class Register extends Component {
                       <h6>Anmelden</h6>
                     </Link>
                     <h6>
+                      <br />
                       <b>Datenschutz-Hinweis:</b> <br />Für den Service des
                       Psychologische Numerologie Rechners nutzen wir den Hosting
                       Server Heroku. Heroku ist eine Tochtergesellschaft der
