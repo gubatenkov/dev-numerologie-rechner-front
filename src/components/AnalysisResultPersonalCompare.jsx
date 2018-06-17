@@ -250,7 +250,10 @@ class AnalysisResultPersonalCompare extends Component {
         loading: false,
         loadingText: null,
       });
-      NotificationManager.error('Sie sind nicht berechtigt eine Druckversion zu erstellen. Bitte kontaktieren Sie info@akademiebios.eu um eine ausführliche PDF Version zu erhalten. ');
+      NotificationManager.error('Das Erstellen eines fertigen Numeroskops mit wahlweise kurzen oder langen Texten mit ca. 60 bzw. 100 Seiten als PDF (kostenpflichtig) zum Ausdrucken oder Weiterleiten ist noch nicht möglich. Diese Eigenschaft wird erst ab Herbst 2018 freigeschalten. Wir informieren Sie darüber in unseremPsychologische Numerologie Newsletter. Klicken Sie hier um sich für den Newsletter anzumelden.', '', 5000, () => {
+        const win = window.open('https://www.psychologischenumerologie.eu/newsletter/', '_blank');
+        win.focus();
+      });
     }
 
     // removing loading indicator
