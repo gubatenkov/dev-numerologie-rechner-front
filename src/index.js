@@ -73,7 +73,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <BrowserRouter>
+    <BrowserRouter basename='/rechner'>
       <Switch>
         <Route path="/login" component={withTracker(Login)} />
         <Route path="/register" component={withTracker(Register)} />
