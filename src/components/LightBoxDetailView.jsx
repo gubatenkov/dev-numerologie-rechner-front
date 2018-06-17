@@ -237,7 +237,7 @@ class LightBoxDetailView extends Component {
               <i className="icon wb-chevron-left" />
             </button>
           </div>
-          <div className={this.props.compareData ? 'col-4' : ''}>
+          <div className={this.props.compareData ? '' : ''}>
             <Panel
               className="LightBoxDetailView__Panel"
               title={currentElement.elementTitle}
@@ -250,11 +250,11 @@ class LightBoxDetailView extends Component {
               />
               <h3 className="LightBoxDetailView--printWatermark">
                 Die Resultate können nur mit Druckpaket ausgedruckt werden.
-              </h3>,
+              </h3>
             </Panel>
           </div>
           {this.props.compareData && (
-            <div className="col-4">
+            <div className="">
               <Panel
                 className="LightBoxDetailView__Panel"
                 title={currentCompareElement.elementTitle}
@@ -269,7 +269,7 @@ class LightBoxDetailView extends Component {
                 />
                 <h3 className="LightBoxDetailView--printWatermark">
                   Die Resultate können nur mit Druckpaket ausgedruckt werden.
-                </h3>,
+                </h3>
               </Panel>
             </div>
           )}
