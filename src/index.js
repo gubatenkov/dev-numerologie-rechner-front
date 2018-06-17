@@ -13,6 +13,8 @@ import {
 import { setContext } from 'apollo-link-context';
 import 'react-notifications/lib/notifications.css';
 
+import withTracker from './utils/tracking/withTracker';
+
 import introspectionQueryResultData from './utils/FragmentTypes.json';
 
 import AnalysisInput from './components/AnalysisInput';
@@ -73,26 +75,29 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <BrowserRouter>
       <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/reset" component={ResetPassword} />
-        <Route path="/input-set-password/:token?" component={SetPassword} />
+        <Route path="/login" component={withTracker(Login)} />
+        <Route path="/register" component={withTracker(Register)} />
+        <Route path="/reset" component={withTracker(ResetPassword)} />
+        <Route
+          path="/input-set-password/:token?"
+          component={withTracker(SetPassword)}
+        />
         <Route
           path="/resultPersonal/:firstNames/:lastName/:dateOfBirth"
-          component={AnalysisResultPersonal}
+          component={withTracker(AnalysisResultPersonal)}
         />
         <Route
           path="/resultPersonalCompare/:firstNames/:lastNames/:dateOfBirth"
-          component={AnalysisResultPersonalCompare}
+          component={withTracker(AnalysisResultPersonalCompare)}
         />
-        <Route path="/analysisInput" component={AnalysisInput} />
+        <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
         <PrivateRoute
           path="/userHome/:userAction?/:firstNames?/:lastName?/:dateOfBirth?"
           isAuthenticated={isUserAuthenticated}
           loginPath="/login"
-          component={UserHome}
+          component={withTracker(UserHome)}
         />
-        <Route path="/" component={AnalysisInput} />
+        <Route path="/" component={withTracker(AnalysisInput)} />
       </Switch>
     </BrowserRouter>
   </ApolloProvider>,
