@@ -85,6 +85,11 @@
 
 .LightBoxDetailView__text h1 {
     font-size: 24px;
+    margin-top: 50px;
+}
+
+.LightBoxDetailView__text h1:first-child {
+    margin-top: 0px !important;
 }
 
 .LightBoxDetailView__text h2 {

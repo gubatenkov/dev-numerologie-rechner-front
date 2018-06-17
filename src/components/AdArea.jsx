@@ -8,8 +8,8 @@ import '../styles/AdArea.css';
 class AdArea extends Component {
   render() {
     return (
-      <div className="AdArea">
-        <img className="AdArea__Banner" src={this.props.banner} alt="logo" />
+      <div className={this.props.horizontal ? 'AdArea--horizontal' : 'AdArea'}>
+        {this.props.children}
       </div>
     );
   }

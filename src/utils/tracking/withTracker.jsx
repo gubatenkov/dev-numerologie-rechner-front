@@ -18,8 +18,10 @@ const withTracker = (WrappedComponent, options = {}) => {
 
   const HOC = class extends Component {
     componentDidMount() {
+      // making sure no parametesr are tracked to GA
       const page = this.props.location.pathname;
-      trackPage(page);
+      const loggingPath = page.split('/').length > 0 ? page.split('/')[1] : '/';
+      trackPage(loggingPath);
     }
 
     componentWillReceiveProps(nextProps) {

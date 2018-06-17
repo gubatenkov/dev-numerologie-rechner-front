@@ -11,8 +11,8 @@ import {
 import '../styles/UserHome.css';
 
 // importing ad banners
-import BANNER_NEWLETTER from '../images/banner_numerologie_ausbildung-newsletter.gif';
-import BANNER_BOOKS from '../images/banner_numerologie-buecher-1-2.gif';
+import BANNER_NEWLETTER from '../images/banner_newletter.gif';
+import BANNER_BOOKS from '../images/banner_books.gif';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -165,7 +165,10 @@ class UserHome extends Component {
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeLeftAdArea">
-            <AdArea banner={BANNER_BOOKS} />
+            <AdArea horizontal={false}>
+              <img src={BANNER_BOOKS} alt="ad" />
+              <img src={BANNER_BOOKS} alt="ad" />
+            </AdArea>
           </div>
           <div className="UserHomeContent">
             <AnalysisBrowser
@@ -179,7 +182,10 @@ class UserHome extends Component {
                   handleBuyCredits={() => console.log('buy credits!')}
                 />
               )}
-            <AdArea banner={BANNER_NEWLETTER} />
+            <AdArea horizontal>
+              <img src={BANNER_NEWLETTER} alt="ad" />
+              <img src={BANNER_NEWLETTER} alt="ad" />
+            </AdArea>
           </div>
         </div>
         <SaveAnalysisDialog
