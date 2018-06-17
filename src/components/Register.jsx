@@ -122,7 +122,30 @@ class Register extends Component {
                         })
                       }
                     />
-                    <h6>Ich akzeptiere die AGB.</h6>
+                    <h6>
+                      Ja, ich habe die{' '}
+                      <a
+                        href="https://www.psychologischenumerologie.eu/datenschutz/"
+                        target="_blank"
+                      >
+                        Datenschutzerklärung
+                      </a>{' '}
+                      inkl. den Datenschutz-Hinweisen anbei unten, die{' '}
+                      <a
+                        href="https://www.psychologischenumerologie.eu/nutzungsbedingungen/"
+                        target="_blank"
+                      >
+                        Nutzungsbedingungen
+                      </a>{' '}
+                      und die{' '}
+                      <a
+                        href="https://www.psychologischenumerologie.eu/agb/"
+                        target="_blank"
+                      >
+                        AGBs
+                      </a>{' '}
+                      gelesen und erkläre mich damit ausdrücklich einverstanden.
+                    </h6>
                   </div>
                   <button
                     className="btn btn-primary btn-block"
@@ -138,6 +161,64 @@ class Register extends Component {
                     <Link to="/login">
                       <h6>Anmelden</h6>
                     </Link>
+                    <h6>
+                      <b>Datenschutz-Hinweis:</b> <br />Für den Service des
+                      Psychologische Numerologie Rechners nutzen wir den Hosting
+                      Server Heroku. Heroku ist eine Tochtergesellschaft der
+                      salesforce.com (USA). Heroku speichert bei der Nutzung
+                      Server-Logfiles. Bei der Registrierung zum Rechner wird
+                      Ihre Email-Adresse für die Account-Erstellung bei Heroku
+                      gespeichert. Sie erhalten von uns eine Bestätigungsemail
+                      mit Link, den Sie anklicken müssen, um die Registrierung
+                      abzuschließen (Double-opt in). Dies stellt sicher, dass
+                      niemand anderer außer Ihnen Ihre Email-Adresse zur
+                      Account-Erstellung verwendet. Ihre im Zuge der Nutzung
+                      eingegebenen Daten wie Vorname, Nachname, Geburtsdatum
+                      werden ebenfalls in Ihrem Account auf Heroku gespeichert.
+                      Dies alles geschieht nur solange sie den Service aktiv
+                      nutzen und Ihren Account nicht selbst löschen. Nach einer
+                      Inaktivität von 2 Jahren werden Ihr Account und alle Ihre
+                      eingegebenen Daten automatisch gelöscht. Um eine
+                      unbeabsichtigte Löschung zu vermeiden, erhalten Sie von
+                      uns vor der Löschung eine Hinweis-Email dazu. Diese
+                      Verarbeitung erfolgt gemäß Art. 6 Abs. 1 lit. b DSGVO zur
+                      Vertragserfüllung unseres Services.
+                      <br />
+                      <br />{' '}
+                      <b>
+                        Sie dürfen die obigen personenbezogenen Daten von
+                        anderen Menschen in den Psychologische Numerologie
+                        Rechner nur dann eingeben, wenn Sie deren ausdrückliche
+                        Zustimmung vorher eingeholt haben.
+                      </b>{' '}
+                      <br />
+                      <br />
+                      Die von Heroku bereitgestellten Server und Datenbanken
+                      stehen in Deutschland/Europa und unterliegen den
+                      europäischen Datenschutzbestimmungen. Für den Fall, dass
+                      personenbezogene Daten in die USA übertragen werden, haben
+                      sich Heroku und Salesforce dem EU-US Privacy Shield
+                      unterworfen. <br />
+                      <br />Die Webseiten des Psychologische Numerologie
+                      Rechners nutzen die Funktionen des Webanalysedienstes
+                      Google Analytics der Google LLC (USA). Dabei wird Ihre IP
+                      ausschließlich mit der Erweiterung "_anonymizeIp()"
+                      erfasst, die eine Anonymisierung der IP-Adresse durch
+                      Kürzung sicherstellt und eine direkte
+                      Personenbeziehbarkeit ausschließt. Nur in Ausnahmefällen
+                      wird die volle IP-Adresse an einen Server von Google in
+                      den USA übertragen und dort gekürzt, wobei sich Google dem
+                      EU-US Privacy Shield unterworfen hat. In diesen
+                      Ausnahmefällen erfolgt diese Verarbeitung gemäß Art. 6
+                      Abs. 1 lit. f DSGVO. <br />
+                      <br />Nähere Informationen findest Du in unserer{' '}
+                      <a
+                        href="https://www.psychologischenumerologie.eu/datenschutz/"
+                        target="_blank"
+                      >
+                        Datenschutzerklärung.
+                      </a>
+                    </h6>
                   </div>
                 </Panel>
                 <div className="Register__error">
