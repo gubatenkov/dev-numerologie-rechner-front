@@ -15,7 +15,6 @@
 
 ## Testing
 - run ```yarn test``` to run test cases in ```./tests```
-- TODO
 
 ## Theme, icons and creative elements
 - TODO
