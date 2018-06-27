@@ -1,6 +1,6 @@
 {
   "name": "akademie-bios-frontend",
-  "homepage" : "http://localhost:3000/rechner",
+  "homepage" : "https://prd-numerologie-rechner-front.herokuapp.com/rechner",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
