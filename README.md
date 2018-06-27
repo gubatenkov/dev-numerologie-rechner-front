@@ -17,7 +17,7 @@
 - run ```yarn test``` to run test cases in ```./tests```
 
 ## Theme, icons and creative elements
-- TODO
+    - TODO
 
 ## Attribution: 
 This application uses: 
