@@ -44,7 +44,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
 });
 
-// adding auth header
+// adding auth header to all requests
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const { token } = getUserAuthData();
