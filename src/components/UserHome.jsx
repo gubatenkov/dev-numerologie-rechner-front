@@ -11,8 +11,9 @@ import {
 import '../styles/UserHome.css';
 
 // importing ad banners
-import BANNER_NEWLETTER from '../images/banner_newletter.gif';
-import BANNER_BOOKS from '../images/banner_books.gif';
+import BANNER_BOTTOM from '../images/banner_numerologie_ausbildung.gif';
+import BANNER_BOOK_1 from '../images/banner_numerologie-buecher-1.png';
+import BANNER_BOOK_2 from '../images/banner_numerologie-buecher-2.png';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -169,11 +170,11 @@ class UserHome extends Component {
             <AdArea horizontal={false}>
               <AdAreaItem
                 link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-1/"
-                image={BANNER_BOOKS}
+                image={BANNER_BOOK_1}
               />
               <AdAreaItem
                 link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-2/"
-                image={BANNER_BOOKS}
+                image={BANNER_BOOK_2}
               />
             </AdArea>
           </div>
@@ -191,12 +192,8 @@ class UserHome extends Component {
               )}
             <AdArea horizontal>
               <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/newsletter/"
-                image={BANNER_NEWLETTER}
-              />
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/events/list/"
-                image={BANNER_NEWLETTER}
+                link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"
+                image={BANNER_BOTTOM}
               />
             </AdArea>
           </div>
