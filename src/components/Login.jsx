@@ -70,15 +70,8 @@ class Login extends Component {
       <div className="page-register-v3 layout-full">
         <div className="page vertical-align">
           <div className="page-content">
-            <div className="text-center">
-              <a href="https://www.psychologischenumerologie.eu/">
-                <img
-                  className="brand-img logo"
-                  height="250"
-                  src={logo}
-                  alt="logo"
-                />
-              </a>
+            <div className="text-center" style={{padding: 50 + 'px'}}>
+              <h1>Psychologische Numerologie Rechner</h1>
             </div>
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
