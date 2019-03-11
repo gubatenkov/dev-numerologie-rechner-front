@@ -245,6 +245,17 @@ class AnalysisResultPersonal extends Component {
     });
   };
 
+  //rerender on size change
+  resize = () => this.forceUpdate()
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize)
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize)
+  }
+
   /**
    * default render
    */
@@ -257,6 +268,39 @@ class AnalysisResultPersonal extends Component {
     if (this.state.loading) {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
+
+    const breakpoints = {
+      desktop: 992, //bootstrap small laptops
+    };
+    
+      // render table, table shows spinner
+      var showSideMenu = true
+      if(window.innerWidth >= breakpoints.desktop ) {
+        showSideMenu = true
+      } else {
+        showSideMenu = false
+      };
+
+      console.log("Sidemenushow = " + showSideMenu + " because width = " + window.innerWidth)
+    
+      let sideMenu = showSideMenu ? <ContentNavigation 
+      contentItems={[
+        'Ausdrucksebene',
+        'Persönlichkeitsebene',
+        'Entfaltungspotential',
+        'Seelische Ebene',
+        'Zeitliche Ebene',
+      ]}
+      contentItemAnchors={[
+        'ExpressionResult',
+        'PersonalResult',
+        'DevelopmentResult',
+        'SoulResult',
+        'TimeResult',
+      ]}
+      onItemClick={this.navigateToElementHandler}
+      autoAdapt
+    /> : null;
 
     // render table, table shows spinner
     return (
@@ -288,24 +332,7 @@ class AnalysisResultPersonal extends Component {
         </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
-            <ContentNavigation
-              contentItems={[
-                'Ausdrucksebene',
-                'Persönlichkeitsebene',
-                'Entfaltungspotential',
-                'Seelische Ebene',
-                'Zeitliche Ebene',
-              ]}
-              contentItemAnchors={[
-                'ExpressionResult',
-                'PersonalResult',
-                'DevelopmentResult',
-                'SoulResult',
-                'TimeResult',
-              ]}
-              onItemClick={this.navigateToElementHandler}
-              autoAdapt
-            />
+          {sideMenu}
           </div>
           <div className="ResultContent">
             <Panel
