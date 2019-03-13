@@ -48,6 +48,7 @@ export const analysisPartsFragment = gql`
         numberId
         highlighted
         descriptionText
+        onlyInPro
         numberDescription {
           description
           calculationDescription
@@ -82,6 +83,7 @@ export const analysisPartsFragment = gql`
         descriptionTextIndex
         highlighted
         compareIndices
+        onlyInPro
       }
     }
   }
