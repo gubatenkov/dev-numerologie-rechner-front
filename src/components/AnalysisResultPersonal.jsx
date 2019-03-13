@@ -324,7 +324,24 @@ class AnalysisResultPersonal extends Component {
         </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
-          { sideMenu }
+          { <ContentNavigation 
+      contentItems={[
+        'Ausdrucksebene',
+        'Persönlichkeitsebene',
+        'Entfaltungspotential',
+        'Seelische Ebene',
+        'Zeitliche Ebene',
+      ]}
+      contentItemAnchors={[
+        'ExpressionResult',
+        'PersonalResult',
+        'DevelopmentResult',
+        'SoulResult',
+        'TimeResult',
+      ]}
+      onItemClick={this.navigateToElementHandler}
+      autoAdapt
+    />  }
           </div>
           <div className="ResultContent">
             <Panel
