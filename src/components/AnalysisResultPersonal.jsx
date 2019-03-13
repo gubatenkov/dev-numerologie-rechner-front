@@ -283,7 +283,7 @@ class AnalysisResultPersonal extends Component {
 
       console.log("Sidemenushow = " + showSideMenu + " because width = " + window.innerWidth)
     
-      let sideMenu = showSideMenu ? <ContentNavigation 
+      var sideMenuTemp =  <ContentNavigation 
       contentItems={[
         'Ausdrucksebene',
         'Persönlichkeitsebene',
@@ -300,7 +300,9 @@ class AnalysisResultPersonal extends Component {
       ]}
       onItemClick={this.navigateToElementHandler}
       autoAdapt
-    /> : null;
+    /> 
+
+    let sideMenu = showSideMenu ? sideMenuTemp : null;
 
     // render table, table shows spinner
     return (
