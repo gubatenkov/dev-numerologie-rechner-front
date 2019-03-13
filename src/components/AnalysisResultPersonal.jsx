@@ -245,17 +245,7 @@ class AnalysisResultPersonal extends Component {
     });
   };
 
-  //rerender on size change
-  resize = () => this.forceUpdate()
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize)
-  }
   
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize)
-  }
-
   /**
    * default render
    */
@@ -334,7 +324,7 @@ class AnalysisResultPersonal extends Component {
         </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
-          {sideMenu}
+          { sideMenu }
           </div>
           <div className="ResultContent">
             <Panel
