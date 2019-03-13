@@ -245,7 +245,6 @@ class AnalysisResultPersonal extends Component {
     });
   };
 
-  
   /**
    * default render
    */
@@ -259,7 +258,6 @@ class AnalysisResultPersonal extends Component {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
 
-  
     // render table, table shows spinner
     return (
       <div>
@@ -290,24 +288,24 @@ class AnalysisResultPersonal extends Component {
         </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
-           <ContentNavigation 
-      contentItems={[
-        'Ausdrucksebene',
-        'Persönlichkeitsebene',
-        'Entfaltungspotential',
-        'Seelische Ebene',
-        'Zeitliche Ebene',
-      ]}
-      contentItemAnchors={[
-        'ExpressionResult',
-        'PersonalResult',
-        'DevelopmentResult',
-        'SoulResult',
-        'TimeResult',
-      ]}
-      onItemClick={this.navigateToElementHandler}
-      autoAdapt
-    />  
+            <ContentNavigation
+              contentItems={[
+                'Ausdrucksebene',
+                'Persönlichkeitsebene',
+                'Entfaltungspotential',
+                'Seelische Ebene',
+                'Zeitliche Ebene',
+              ]}
+              contentItemAnchors={[
+                'ExpressionResult',
+                'PersonalResult',
+                'DevelopmentResult',
+                'SoulResult',
+                'TimeResult',
+              ]}
+              onItemClick={this.navigateToElementHandler}
+              autoAdapt
+            />
           </div>
           <div className="ResultContent">
             <Panel
