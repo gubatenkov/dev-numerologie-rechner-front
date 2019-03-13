@@ -259,41 +259,7 @@ class AnalysisResultPersonal extends Component {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
 
-    const breakpoints = {
-      desktop: 992, //bootstrap small laptops
-    };
-    
-      // render table, table shows spinner
-      var showSideMenu = true
-      if(window.innerWidth >= breakpoints.desktop ) {
-        showSideMenu = true
-      } else {
-        showSideMenu = false
-      };
-
-      console.log("Sidemenushow = " + showSideMenu + " because width = " + window.innerWidth)
-    
-      var sideMenuTemp =  <ContentNavigation 
-      contentItems={[
-        'Ausdrucksebene',
-        'Persönlichkeitsebene',
-        'Entfaltungspotential',
-        'Seelische Ebene',
-        'Zeitliche Ebene',
-      ]}
-      contentItemAnchors={[
-        'ExpressionResult',
-        'PersonalResult',
-        'DevelopmentResult',
-        'SoulResult',
-        'TimeResult',
-      ]}
-      onItemClick={this.navigateToElementHandler}
-      autoAdapt
-    /> 
-
-    let sideMenu = showSideMenu ? sideMenuTemp : null;
-
+  
     // render table, table shows spinner
     return (
       <div>
@@ -324,7 +290,7 @@ class AnalysisResultPersonal extends Component {
         </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
-          { <ContentNavigation 
+           <ContentNavigation 
       contentItems={[
         'Ausdrucksebene',
         'Persönlichkeitsebene',
@@ -341,7 +307,7 @@ class AnalysisResultPersonal extends Component {
       ]}
       onItemClick={this.navigateToElementHandler}
       autoAdapt
-    />  }
+    />  
           </div>
           <div className="ResultContent">
             <Panel
