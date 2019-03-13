@@ -245,6 +245,17 @@ class AnalysisResultPersonal extends Component {
     });
   };
 
+
+  resize = () => this.forceUpdate()
+
+componentDidMount() {
+  window.addEventListener('resize', this.resize)
+}
+
+componentWillUnmount() {
+  window.removeEventListener('resize', this.resize)
+}
+
   /**
    * default render
    */
@@ -257,6 +268,27 @@ class AnalysisResultPersonal extends Component {
     if (this.state.loading) {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
+
+    let sideMenu = <ContentNavigation
+    contentItems={[
+      'Ausdrucksebene',
+      'Persönlichkeitsebene',
+      'Entfaltungspotential',
+      'Seelische Ebene',
+      'Zeitliche Ebene',
+    ]}
+    contentItemAnchors={[
+      'ExpressionResult',
+      'PersonalResult',
+      'DevelopmentResult',
+      'SoulResult',
+      'TimeResult',
+    ]}
+    onItemClick={this.navigateToElementHandler}
+    autoAdapt
+  />
+
+  let showSideMenu = window.innerWidth >= 992
 
     // render table, table shows spinner
     return (
@@ -288,24 +320,7 @@ class AnalysisResultPersonal extends Component {
         </div>
         <div className="ContentArea">
           <div className="ResultContentOverview">
-            <ContentNavigation
-              contentItems={[
-                'Ausdrucksebene',
-                'Persönlichkeitsebene',
-                'Entfaltungspotential',
-                'Seelische Ebene',
-                'Zeitliche Ebene',
-              ]}
-              contentItemAnchors={[
-                'ExpressionResult',
-                'PersonalResult',
-                'DevelopmentResult',
-                'SoulResult',
-                'TimeResult',
-              ]}
-              onItemClick={this.navigateToElementHandler}
-              autoAdapt
-            />
+            {showSideMenu? sideMenu: null}
           </div>
           <div className="ResultContent">
             <Panel
