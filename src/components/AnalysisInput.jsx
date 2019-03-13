@@ -14,6 +14,7 @@ import InputField from './InputField';
 import logo from '../logo.png';
 import '../styles/AnalysisInput.css';
 import '../styles/InputForm.css';
+import queryString from 'querystring'
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({
@@ -74,6 +75,23 @@ class AnalysisInput extends Component {
   componentDidMount() {
     // setting background dynamically
     document.body.style.backgroundColor = '#00b3d4';
+    const querString = this.props.location.search.replace('?', '')
+    console.log("Params " + querString)
+    const values = queryString.parse(querString)
+    const firstNameParam = values.firstNames
+    const lastNameParam = values.lastNames
+    const dateOfBirthParam = values.dateOfBirth
+ 
+    if(firstNameParam != null && lastNameParam != null && dateOfBirthParam != null) {
+      this.firstNames = firstNameParam
+      this.firstNamesComfort = firstNameParam
+      this.lastNames = lastNameParam
+      this.lastNameComfort = lastNameParam
+      this.dateOfBirth = dateOfBirthParam
+      this.startAnalysis()
+    }
+
+
   }
 
   componentWillUnmount() {
