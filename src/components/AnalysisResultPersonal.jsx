@@ -269,7 +269,10 @@ componentWillUnmount() {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
 
-    let sideMenu = <ContentNavigation
+    let sideMenu = 
+    <div className="ResultContentOverview">
+          
+    <ContentNavigation
     contentItems={[
       'Ausdrucksebene',
       'Persönlichkeitsebene',
@@ -286,7 +289,7 @@ componentWillUnmount() {
     ]}
     onItemClick={this.navigateToElementHandler}
     autoAdapt
-  />
+  /></div>
 
   let showSideMenu = window.innerWidth >= 992
 
@@ -319,9 +322,9 @@ componentWillUnmount() {
           </div>
         </div>
         <div className="ContentArea">
-          <div className="ResultContentOverview">
+          
             {showSideMenu? sideMenu: null}
-          </div>
+          
           <div className="ResultContent">
             <Panel
               title={this.props.data.personalAnalysis.expressionLevel.name}
