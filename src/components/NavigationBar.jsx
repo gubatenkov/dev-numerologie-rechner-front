@@ -96,7 +96,7 @@ class NavigationBar extends Component {
           <Link
             className="btn btn-default btn-block "
             to="/login"
-            target="_blank"
+            target="_self"
           >
             Anmelden
           </Link>
