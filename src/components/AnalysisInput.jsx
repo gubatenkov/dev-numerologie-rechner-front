@@ -84,9 +84,7 @@ class AnalysisInput extends Component {
  
     if(firstNameParam != null && lastNameParam != null && dateOfBirthParam != null) {
       this.firstNames = firstNameParam
-      this.firstNamesComfort = firstNameParam
       this.lastNames = lastNameParam
-      this.lastNameComfort = lastNameParam
       this.dateOfBirth = dateOfBirthParam
       this.startAnalysis()
     }
