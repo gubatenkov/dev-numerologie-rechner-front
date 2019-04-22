@@ -182,6 +182,7 @@ class ResultTableRow extends Component {
         <td className="table--bold tableRow__name">{rowItem.name}</td>
         <td className="tableRow__id ">{rowItem.numberId}</td>
         <td className="table--bold">{contentColumn}</td>
+        <td className="tableRow__text ">{rowItem.bookReference}</td>
         <td className="tableRow__text">
           {
             !rowItem.onlyInPro ? this.getTextRepresentation(rowItem.descriptionText) :

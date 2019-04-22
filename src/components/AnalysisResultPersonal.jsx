@@ -245,16 +245,15 @@ class AnalysisResultPersonal extends Component {
     });
   };
 
-
   resize = () => this.forceUpdate()
 
-componentDidMount() {
-  window.addEventListener('resize', this.resize)
-}
+  componentDidMount() {
+    window.addEventListener('resize', this.resize)
+  }
 
-componentWillUnmount() {
-  window.removeEventListener('resize', this.resize)
-}
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize)
+  }
 
   /**
    * default render
@@ -269,29 +268,33 @@ componentWillUnmount() {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
 
+    if (this.props.data.error) {
+      return <LoadingIndicator text={this.props.data.error.message} />;
+    }
+
     let sideMenu = 
     <div className="ResultContentOverview">
-          
-    <ContentNavigation
-    contentItems={[
-      'Ausdrucksebene',
-      'Persönlichkeitsebene',
-      'Entfaltungspotential',
-      'Seelische Ebene',
-      'Zeitliche Ebene',
-    ]}
-    contentItemAnchors={[
-      'ExpressionResult',
-      'PersonalResult',
-      'DevelopmentResult',
-      'SoulResult',
-      'TimeResult',
-    ]}
-    onItemClick={this.navigateToElementHandler}
-    autoAdapt
-  /></div>
+      <ContentNavigation
+        contentItems={[
+          'Ausdrucksebene',
+          'Persönlichkeitsebene',
+          'Entfaltungspotential',
+          'Seelische Ebene',
+          'Zeitliche Ebene',
+        ]}
+        contentItemAnchors={[
+          'ExpressionResult',
+          'PersonalResult',
+          'DevelopmentResult',
+          'SoulResult',
+          'TimeResult',
+        ]}
+        onItemClick={this.navigateToElementHandler}
+        autoAdapt
+      />
+    </div>
 
-  let showSideMenu = window.innerWidth >= 992
+    let showSideMenu = window.innerWidth >= 992
 
     // render table, table shows spinner
     return (
@@ -322,9 +325,7 @@ componentWillUnmount() {
           </div>
         </div>
         <div className="ContentArea">
-          
-            {showSideMenu? sideMenu: null}
-          
+          {showSideMenu? sideMenu: null}
           <div className="ResultContent">
             <Panel
               title={this.props.data.personalAnalysis.expressionLevel.name}

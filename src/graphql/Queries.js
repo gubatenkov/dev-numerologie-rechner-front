@@ -48,6 +48,7 @@ export const analysisPartsFragment = gql`
         numberId
         highlighted
         descriptionText
+        bookReference
         onlyInPro
         numberDescription {
           description
@@ -81,6 +82,7 @@ export const analysisPartsFragment = gql`
         nameIndex
         valueIndex
         descriptionTextIndex
+        bookReferenceIndex
         highlighted
         compareIndices
         onlyInPro
