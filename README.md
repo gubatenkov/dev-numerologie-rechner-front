@@ -23,4 +23,4 @@
 This application uses: 
 - TODO
 
-Thanks for providing these great libraries as open source 🙏 ️❤️
+Thanks for providing these great libraries as open source 🙏 ️❤️ 
