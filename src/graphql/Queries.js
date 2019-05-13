@@ -4,6 +4,8 @@ export const currentUserQuery = gql`
   query currentUser {
     currentUser {
       email
+      wpAccessToken
+      wpTokenExpiredAt
       canPrint
       groups {
         id
@@ -13,6 +15,7 @@ export const currentUserQuery = gql`
       analyses {
         id
         name
+        usedCreditType
         group {
           id
         }
@@ -23,11 +26,8 @@ export const currentUserQuery = gql`
         }
       }
       credits {
-        type {
-          name
-          description
-        }
-        value
+        type
+        total
       }
     }
   }

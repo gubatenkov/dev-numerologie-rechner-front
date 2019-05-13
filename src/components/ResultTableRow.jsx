@@ -187,14 +187,14 @@ class ResultTableRow extends Component {
         <td className="table--bold tableRow__name">{rowItem.name}</td>
         <td className="tableRow__id ">{rowItem.numberId}</td>
         <td className="table--bold">{contentColumn}</td>
-        <td className="tableRow__text ">
-          <span dangerouslySetInnerHTML={{ __html: rowItem.bookReference }}></span>
-        </td>
         <td className="tableRow__text">
           {
             !rowItem.onlyInPro ? this.getTextRepresentation(rowItem.descriptionText) :
               <Interweave content={rowItem.descriptionText}/>
           }
+        </td>
+        <td className="tableRow__text ">
+          <span dangerouslySetInnerHTML={{ __html: rowItem.bookReference }}></span>
         </td>
       </tr>
     );

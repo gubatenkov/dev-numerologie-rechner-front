@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
-import { graphql, compose } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
 import { NotificationManager } from 'react-notifications';
 import _ from 'lodash';
 
@@ -11,18 +11,24 @@ import GroupTableRow from './GroupTableRow';
 import AnalysisTableRow from './AnalysisTableRow';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
+import LoadingIndicator from './LoadingIndicator';
 
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
 import ConfirmGroupDeletionDialog from './dialogs/ConfirmGroupDeletionDialog';
 import ConfirmAnalysisDeletionDialog from './dialogs/ConfirmAnalysisDeletionDialog';
 import RenameGroupDialog from './dialogs/RenameGroupDialog';
+import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
+import DownloadPdfDialog from './dialogs/DownloadPdfDialog';
 
-import { currentUserQuery } from '../graphql/Queries';
+import { getUserAuthData } from '../utils/AuthUtils';
+import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
+import { currentUserQuery, personalResultsQuery } from '../graphql/Queries';
 import {
   deleteGroupMutation,
   createGroupMutation,
   renameGroupMutation,
   deleteAnalysisMutation,
+  useCreditMutation,
 } from '../graphql/Mutations';
 
 import '../styles/AnalysisBrowser.css';
@@ -66,8 +72,13 @@ class AnalysisBrowser extends Component {
       expandedIndex: -1,
       confirmGroupDeletionDialogOpen: false,
       confirmAnalysisDeletionDialogOpen: false,
+      confirmUseCreditDialogOpen: false,
       createGroupDialogOpen: false,
       renameGroupDialopOpen: false,
+      downloadDialogOpen: false,
+      creditToBeUsed: false,
+      loading: false,
+      loadingText: null,
     };
   }
 
@@ -79,6 +90,8 @@ class AnalysisBrowser extends Component {
 
   // analysis about to be deleted (yet to be confirmed)
   analysisToBeDeleted = null;
+
+  pdfToBeDownloaded = null;
 
   /**
    * handler for the creation of a group
@@ -208,11 +221,121 @@ class AnalysisBrowser extends Component {
   };
 
   /**
+   * creates a pdf for the analysis and opens it in a new tab
+   */
+  createAnalysisPdf = async () => {
+    // checking if logged in => otherwise redirecting to login
+    const authUser = getUserAuthData();
+    if (!authUser || !authUser.token || !authUser.email) {
+      this.props.history.push('/login');
+      return;
+    }
+
+    // setting activity indicator
+    this.setState({
+      loading: true,
+      loadingText: 'Berechne detaillierte Auswertung und erstelle PDF...',
+    });
+
+    // getting long texts used for pdf (if allowed)
+    try {
+      const [name, dateOfBirth] = this.pdfToBeDownloaded.split(', ');
+      const [firstNames, lastName] = name.split(' ');
+      const result = await this.props.client.query({
+        query: personalResultsQuery,
+        variables: {
+          firstNames,
+          lastName,
+          dateOfBirth,
+          longTexts: true,
+        },
+      });
+
+      // creating pdf and downloading with custom name
+      await createPDFFromAnalysisResult(
+        result.data,
+        firstNames,
+        lastName,
+        `Persönlichkeitsnumeroskop_${firstNames}_${
+          lastName
+        }.pdf`,
+      );
+    } catch (error) {
+      console.log(error);
+      // removing loading indicator
+      this.setState({
+        loading: false,
+        loadingText: null,
+      });
+      NotificationManager.error(
+        'Das Erstellen eines fertigen Numeroskops mit wahlweise kurzen oder langen Texten mit ca. 60 bzw. 100 Seiten als PDF (kostenpflichtig) zum Ausdrucken oder Weiterleiten ist noch nicht möglich. Diese Eigenschaft wird erst ab Herbst 2018 freigeschalten. Wir informieren Sie darüber in unseremPsychologische Numerologie Newsletter. Klicken Sie hier um sich für den Newsletter anzumelden.',
+        '',
+        5000,
+        () => {
+          const win = window.open(
+            'https://www.psychologischenumerologie.eu/newsletter/',
+            '_blank',
+          );
+          win.focus();
+        },
+      );
+    }
+
+    // removing loading indicator
+    this.setState({
+      loading: false,
+      loadingText: null,
+    });
+  };
+
+  async useCredit() {
+    try {
+      const { analysisId, type } = this.state.creditToBeUsed;
+      const useCredit = await this.props.useCredit({
+        variables: {
+          analysisId, type
+        },
+        update: (store, { data: { useCredit: analysis } }) => {
+          // getting the query from the local cache and deleting analysis
+          // const data = store.readQuery({ query: currentUserQuery });
+
+          // getting index of item to delete
+          // const analysisIndex = _.findIndex(
+          //   data.currentUser.analyses,
+          //   item => item.id === analysis.id,
+          // );
+          // console.log(analysisIndex);
+
+          // deleting item if present
+          // if (analysisIndex > -1) {
+          //   data.currentUser.analyses.splice(analysisIndex, 1);
+          // }
+
+          // writing object back to cache
+          // store.writeQuery({ query: currentUserQuery, data });
+        },
+      });
+      NotificationManager.success(`Credit successfuly used. You can download PDF now.`);
+    }
+    catch (error) {
+      NotificationManager.error('Error using credit.');
+    }
+  }
+
+  hadnleOnUseCredit = (analysisId, type) => {
+    this.setState({
+      confirmUseCreditDialogOpen: true,
+      creditToBeUsed: { analysisId, type },
+    });
+  }
+
+  /**
    * default render method rendering panel and table of groups and analyses
    */
   render() {
     // determining content of panel based on if there is data or not
     let panelContent = null;
+
     if (this.props.groups.length > 0) {
       panelContent = (
         <table className="table table-striped table-hover AnalysisBrowser--table">
@@ -314,6 +437,13 @@ class AnalysisBrowser extends Component {
                               }/${analysisInput.dateOfBirth}`);
                           }
                         }}
+                        onUseCredit={(type) => {
+                          this.hadnleOnUseCredit(analysis.id, type);
+                        }}
+                        onPdfDownload={() => {
+                          this.setState({ downloadDialogOpen: true });
+                          this.pdfToBeDownloaded = analysis.name;
+                        }}
                       />
                     )));
               }
@@ -333,6 +463,11 @@ class AnalysisBrowser extends Component {
     }
     return (
       <div>
+        {
+          this.state.loading
+          &&
+          <LoadingIndicator text={this.state.loadingText} />
+        }
         <Panel
           title="Analysen"
           actions={[
@@ -416,6 +551,31 @@ class AnalysisBrowser extends Component {
           }}
           group={this.groupToBeRenamed}
         />
+        <ConfirmUseCreditDialog
+          isOpen={this.state.confirmUseCreditDialogOpen}
+          onClose={() => {
+            this.setState({
+              confirmUseCreditDialogOpen: false,
+              creditToBeUsed: null,
+            });
+          }}
+          onAction={() => {
+            this.setState({ confirmUseCreditDialogOpen: false });
+            this.useCredit();
+          }}
+        />
+        <DownloadPdfDialog
+          isOpen={this.state.downloadDialogOpen}
+          onClose={() => {
+            this.setState({
+              downloadDialogOpen: false,
+            });
+          }}
+          onAction={() => {
+            this.setState({ downloadDialogOpen: false, });
+            this.createAnalysisPdf();
+          }}
+        />
       </div>
     );
   }
@@ -426,4 +586,5 @@ export default compose(
   graphql(createGroupMutation, { name: 'createGroup' }),
   graphql(renameGroupMutation, { name: 'renameGroup' }),
   graphql(deleteAnalysisMutation, { name: 'deleteAnalysis' }),
-)(withRouter(AnalysisBrowser));
+  graphql(useCreditMutation, { name: 'useCredit' }),
+)(withApollo(withRouter(AnalysisBrowser)));

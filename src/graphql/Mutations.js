@@ -65,3 +65,13 @@ export const deleteUserMutation = gql`
     deleteUser
   }
 `;
+
+export const useCreditMutation = gql`
+  mutation useCredit($analysisId: Int!, $type: String!) {
+    useCredit(analysisId: $analysisId type: $type) {
+      id
+      name
+      usedCreditType
+    }
+  }
+`;

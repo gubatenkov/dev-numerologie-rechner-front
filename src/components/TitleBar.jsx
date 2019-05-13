@@ -43,6 +43,7 @@ class TitleBar extends Component {
               </button>
             </Link>
           )}
+          {this.props.renderLeftButtons && this.props.renderLeftButtons()}
         </div>
         <div className="barTitle">
           {this.props.badgeTitle && (

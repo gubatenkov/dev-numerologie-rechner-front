@@ -19,9 +19,10 @@
     "prettier": "^1.10.2",
     "prettier-eslint": "^8.8.1",
     "prop-types": "^15.6.0",
-    "react": "^16.2.0",
+    "react": "^16.8.6",
     "react-apollo": "^2.0.4",
-    "react-dom": "^16.2.0",
+    "react-bootstrap": "^1.0.0-beta.8",
+    "react-dom": "^16.8.6",
     "react-ga": "^2.5.3",
     "react-notifications": "^1.4.3",
     "react-router-dom": "^4.2.2",
@@ -31,8 +32,8 @@
     "yup": "^0.24.1"
   },
   "scripts": {
-    "start": "REACT_APP_BACKEND_HOST='https://localhost:4000' REACT_APP_BODY_ONLOAD='' react-scripts start",
-    "build": "react-scripts build", 
+    "start": "REACT_APP_BACKEND_HOST='http://localhost:4000' REACT_APP_BODY_ONLOAD='' react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

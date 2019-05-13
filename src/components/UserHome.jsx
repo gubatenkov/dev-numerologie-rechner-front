@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
@@ -7,6 +7,7 @@ import {
   NotificationManager,
   NotificationContainer,
 } from 'react-notifications';
+import Button from 'react-bootstrap/Button';
 
 import '../styles/UserHome.css';
 
@@ -20,10 +21,11 @@ import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
 import AdAreaItem from './AdAreaItem';
 import AnalysisBrowser from './AnalysisBrowser';
-import CreditWidget from './CreditWidget';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
 import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
+import CreditsInfoButton from './CreditsInfoButton';
+import CreditsBuyModal from './CreditsBuyModal';
 
 import { currentUserQuery } from '../graphql/Queries';
 import { saveAnalysisMutation, deleteUserMutation } from '../graphql/Mutations';
@@ -62,6 +64,8 @@ class UserHome extends Component {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
       userDeletionDialogOpen: false,
+      isBuyModalOpen: false,
+      isBuyProcessing: false,
     };
   }
 
@@ -138,6 +142,18 @@ class UserHome extends Component {
     }
   }
 
+  toggleBuyModal = () => {
+    this.setState({
+      isBuyModalOpen: !this.state.isBuyModalOpen,
+    });
+  }
+
+  handleBuy = () => {
+    this.setState({
+      isBuyProcessing: true,
+    });
+  }
+
   /**
    * default component render
    */
@@ -145,10 +161,13 @@ class UserHome extends Component {
     if (
       this.props.data.loading ||
       !this.props.data ||
-      !this.props.data.currentUser
+      !this.props.data.currentUser ||
+      this.state.isBuyProcessing
     ) {
       return <LoadingIndicator />;
     }
+
+    const { isBuyModalOpen } = this.state;
 
     return (
       <div>
@@ -164,6 +183,21 @@ class UserHome extends Component {
           onPrimaryAction={() =>
             NotificationManager.error('Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.')
           }
+          renderLeftButtons={() => (
+            <Fragment>
+              <CreditsInfoButton
+                credits={this.props.data.currentUser.credits}
+              />
+              <Button
+                variant="success"
+                onClick={this.toggleBuyModal}
+              >
+                <i className="fa fa-icon fa-shopping-cart" />
+                {' '}
+                Guthaben kaufen
+              </Button>
+            </Fragment>
+          )}
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeLeftAdArea">
@@ -183,13 +217,6 @@ class UserHome extends Component {
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.currentUser.analyses}
             />
-            {this.props.data.currentUser.credits &&
-              this.props.data.currentUser.credits.length > 0 && (
-                <CreditWidget
-                  credits={this.props.data.currentUser.credits}
-                  handleBuyCredits={() => console.log('buy credits!')}
-                />
-              )}
             <AdArea horizontal>
               <AdAreaItem
                 link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"
@@ -247,6 +274,13 @@ class UserHome extends Component {
           }}
         />
         <NotificationContainer />
+
+        <CreditsBuyModal
+          wpAccessToken={this.props.data.currentUser.wpAccessToken}
+          show={isBuyModalOpen}
+          onHide={this.toggleBuyModal}
+          onBuy={this.handleBuy}
+        />
       </div>
     );
   }
