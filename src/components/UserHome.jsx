@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { graphql, compose } from 'react-apollo';
 import {
   NotificationManager,
@@ -158,6 +158,14 @@ class UserHome extends Component {
    * default component render
    */
   render() {
+    if (
+      !this.props.data.loading
+      &&
+      this.props.data.error
+    ) {
+      return <Redirect to="/login" />
+    }
+
     if (
       this.props.data.loading ||
       !this.props.data ||

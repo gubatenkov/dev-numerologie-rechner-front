@@ -1,5 +1,16 @@
 import gql from 'graphql-tag';
 
+export const currentWindowToken = gql`
+  query windowToken($windowToken: String!) {
+    windowToken(windowToken: $windowToken) {
+      id
+      userId
+      wpOrderId
+      windowToken
+    }
+  }
+`;
+
 export const currentUserQuery = gql`
   query currentUser {
     currentUser {

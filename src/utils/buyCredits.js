@@ -5,17 +5,21 @@ const CREDIT_PERSONAL_LONG_WPID  = 365;
 const baseUrl = 'https://www.bios-naturshop.eu';
 const loginUri = `${baseUrl}/?remote_login=true`;
 
-const loadIframe = (productId, wpAccessToken) => {
+function buildUrl(productId, quantity, wpAccessToken, addParams = '') {
+  const redirectUri = encodeURIComponent(`${baseUrl}/warenkorb/?add-to-cart=${productId}&quantity=${quantity}`);
+  return `${loginUri}${addParams}&access_token=${wpAccessToken}&redirect_uri=${redirectUri}`;
+}
+
+const loadIframe = (url) => {
   return new Promise((resolve) => {
     const ifrm = document.createElement('iframe');
     const id = 'ifrm' + Date.now();
-    const redirectUri = `${baseUrl}/warenkorb/?add-to-cart=${productId}`
     ifrm.setAttribute('id', id);
     document.body.appendChild(ifrm);
     ifrm.setAttribute('style', 'display: none;');
     ifrm.setAttribute(
       'src',
-      `${loginUri}&access_token=${wpAccessToken}&redirect_uri=${redirectUri}`
+      url
     );
 
     ifrm.onload = () => {
@@ -25,25 +29,31 @@ const loadIframe = (productId, wpAccessToken) => {
   });
 }
 
-async function addToCart(items) {
+async function addToCart(items, windowToken) {
   let params;
   while (params = items.pop()) {
-    await loadIframe(...params);
+    if (items.length === 0) {
+      const url = buildUrl(...params, `&window_token=${windowToken}`);
+      const win = window.open(url, '_blank');
+      win.focus();
+    }
+    else {
+      const url = buildUrl(...params);
+      await loadIframe(url);
+    }
   }
   return null;
 }
 
-export default function buyCredits(personalShorts, personalLongs, wpAccessToken) {
+export default function buyCredits(personalShorts = 0, personalLongs = 0, wpAccessToken, windowToken) {
   const items = [];
-  for (let i = 0; i < personalLongs; i++) {
-    items.push([CREDIT_PERSONAL_LONG_WPID, wpAccessToken]);
+  if (personalShorts > 0) {
+    items.push([CREDIT_PERSONAL_LONG_WPID, personalShorts, wpAccessToken]);
   }
-  for (let i = 0; i < personalShorts; i++) {
-    items.push([CREDIT_PERSONAL_SHORT_WPID, wpAccessToken]);
+  if (personalLongs > 0) {
+    items.push([CREDIT_PERSONAL_SHORT_WPID, personalLongs, wpAccessToken]);
   }
-  addToCart([...items])
-    .then(() => {
-      const win = window.open(`${baseUrl}/warenkorb`, '_blank');
-      win.focus();
-    })
+
+  addToCart([...items], windowToken)
+    .then(() => {})
 }

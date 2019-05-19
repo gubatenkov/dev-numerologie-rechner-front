@@ -75,3 +75,13 @@ export const useCreditMutation = gql`
     }
   }
 `;
+
+export const createWindowTokenMutation = gql`
+  mutation createWindowToken {
+    windowToken: createWindowToken {
+      id
+      userId
+      windowToken
+    }
+  }
+`;
