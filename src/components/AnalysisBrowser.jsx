@@ -289,33 +289,24 @@ class AnalysisBrowser extends Component {
   };
 
   async useCredit() {
+    this.setState({
+      loading: true,
+      loadingText: 'Waiting to use credit...',
+    });
     try {
       const { analysisId, type } = this.state.creditToBeUsed;
-      const useCredit = await this.props.useCredit({
+      await this.props.useCredit({
         variables: {
           analysisId, type
         },
-        update: (store, { data: { useCredit: analysis } }) => {
-          // getting the query from the local cache and deleting analysis
-          // const data = store.readQuery({ query: currentUserQuery });
-
-          // getting index of item to delete
-          // const analysisIndex = _.findIndex(
-          //   data.currentUser.analyses,
-          //   item => item.id === analysis.id,
-          // );
-          // console.log(analysisIndex);
-
-          // deleting item if present
-          // if (analysisIndex > -1) {
-          //   data.currentUser.analyses.splice(analysisIndex, 1);
-          // }
-
-          // writing object back to cache
-          // store.writeQuery({ query: currentUserQuery, data });
-        },
+        update: (store, { data: { useCredit: analysis } }) => {},
       });
+      this.props.onUsedCredit();
       NotificationManager.success(`Credit successfuly used. You can download PDF now.`);
+      this.setState({
+        loading: false,
+        loadingText: null,
+      });
     }
     catch (error) {
       NotificationManager.error('Error using credit.');
@@ -323,10 +314,17 @@ class AnalysisBrowser extends Component {
   }
 
   hadnleOnUseCredit = (analysisId, type) => {
-    this.setState({
-      confirmUseCreditDialogOpen: true,
-      creditToBeUsed: { analysisId, type },
-    });
+    const { credits } = this.props;
+    const filtered = credits.filter((c) => c.type === type);
+    if (filtered.length === 1 && filtered[0].total > 0) {
+      this.setState({
+        confirmUseCreditDialogOpen: true,
+        creditToBeUsed: { analysisId, type },
+      });
+    }
+    else {
+      this.props.onInsuficientCredits();
+    }
   }
 
   /**

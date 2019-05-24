@@ -142,6 +142,12 @@ class UserHome extends Component {
     }
   }
 
+  handleUsedCredit = () => {
+    if (this.props.data && this.props.data.refetch) {
+      this.props.data.refetch()
+    }
+  }
+
   toggleBuyModal = () => {
     this.setState({
       isBuyModalOpen: !this.state.isBuyModalOpen,
@@ -224,6 +230,9 @@ class UserHome extends Component {
             <AnalysisBrowser
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.currentUser.analyses}
+              credits={this.props.data.currentUser.credits}
+              onInsuficientCredits={this.toggleBuyModal}
+              onUsedCredit={this.handleUsedCredit}
             />
             <AdArea horizontal>
               <AdAreaItem
@@ -284,6 +293,7 @@ class UserHome extends Component {
         <NotificationContainer />
 
         <CreditsBuyModal
+          credits={this.props.data.currentUser.credits}
           wpAccessToken={this.props.data.currentUser.wpAccessToken}
           show={isBuyModalOpen}
           onHide={this.toggleBuyModal}

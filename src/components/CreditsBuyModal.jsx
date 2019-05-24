@@ -15,7 +15,7 @@ import {
 const PRICE_PERSONAL_SHORT = 25;
 const PRICE_PERSONAL_LONG = 49;
 
-const CreditsBuyModal = ({ wpAccessToken, show, onHide, onBuy, createWindowToken }) => {
+const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWindowToken }) => {
   const [personalShorts, setPersonalShorts] = useState(1);
   const [personalLongs, setPersonalLongs] = useState(1);
   const [windowToken, setWindowToken] = useState(null);
@@ -41,7 +41,13 @@ const CreditsBuyModal = ({ wpAccessToken, show, onHide, onBuy, createWindowToken
       {isWaitingCallback && <CreditsBuyWait onSuccess={handleBuySuccess} windowToken={windowToken} />}
       <Modal show={show} onHide={onHide} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Buy credits</Modal.Title>
+          <Modal.Title>
+            {
+              !isSuccess && (!credits || credits.length === 0)
+                ? 'Insuficient credits'
+                : 'Buy credits'
+            }
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isSuccess && (
@@ -49,6 +55,11 @@ const CreditsBuyModal = ({ wpAccessToken, show, onHide, onBuy, createWindowToken
               <strong>Success!</strong> You have successfully purchased credits.
               You can close this window now.
             </Alert>
+          )}
+          {!isSuccess && (!credits || credits.length === 0) && (
+            <p>The printing of a numeroscope PDF is a premium service.<br />
+            Currently you don't have credits to do so. You have following
+            options to buy credits:</p>
           )}
           <Table>
             <thead>

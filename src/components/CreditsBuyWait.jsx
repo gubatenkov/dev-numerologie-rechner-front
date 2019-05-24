@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Query } from 'react-apollo';
 import { currentWindowToken } from '../graphql/Queries';
 import LoadingIndicator from './LoadingIndicator';
@@ -24,19 +24,16 @@ function useInterval(callback, delay) {
 }
 
 const Wait = ({ onSuccess, data, loading, refetch }) => {
-  let [count, setCount] = useState(1);
-
   if (data && data.windowToken && data.windowToken.wpOrderId) {
     onSuccess();
   }
 
   useInterval(() => {
     refetch();
-    setCount(count + 1);
   }, 1000 * 10);
 
   return (
-    <LoadingIndicator text={`Waiting for purchase to come through. ${count}`} />
+    <LoadingIndicator text={`Waiting for purchase to come through.`} />
   );
 };
 
