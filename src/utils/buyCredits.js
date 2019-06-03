@@ -5,7 +5,7 @@ const baseUrl = 'https://www.bios-naturshop.eu';
 const loginUri = `${baseUrl}/?remote_login=true`;
 
 function addToCart(ids, wpAccessToken, windowToken) {
-  const redirectUri = encodeURIComponent(`${baseUrl}/?add_to_cart_multiple=${ids}`);
+  const redirectUri = encodeURIComponent(`${baseUrl}/warenkorb/?add_to_cart_multiple=${ids}`);
   const url = `${loginUri}&window_token=${windowToken}&access_token=${wpAccessToken}&redirect_uri=${redirectUri}`;
   const win = window.open(url, '_blank');
   win.focus();

@@ -1,10 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
+
+import BuyButton from './AnalysisBuyButton';
 
 import '../styles/AnalysisTableRow.css';
 
-const LONG_TYPE = 'persoenlichkeit_lang';
+const SHORT_TYPE = 'persoenlichkeit_kurz';
+const LONG_TYPE  = 'persoenlichkeit_lang';
 
 /**
  * table view rendering a group passed as props
@@ -28,7 +30,7 @@ class AnalysisTableRow extends Component {
    * default render -> renders the table row with analysis information
    */
   render() {
-    const { analysis } = this.props;
+    const { analysis, credits } = this.props;
     return (
       <tr key={analysis.id}>
         <td className="AnalysisTableRow--analysisNameCell">
@@ -45,35 +47,34 @@ class AnalysisTableRow extends Component {
           >
             Anzeigen
           </button>
-          <Button variant="secondary" size="sm" disabled>
-            <i className="fa fa-icon fa-shopping-cart" />
-            {' '}
-            Kurz PDF | <strong>Buy</strong>
-          </Button>
-          <Button
-            variant={analysis.usedCreditType === LONG_TYPE ? 'success' : 'secondary'}
-            size="sm"
-            onClick={() => {
-              if (analysis.usedCreditType === LONG_TYPE) {
+          {/* <BuyButton
+            type={SHORT_TYPE}
+            usedType={analysis.usedCreditType}
+            typeMessage="Kurz PDF"
+            credits={credits}
+            onBuy={(type) => {
+              if (analysis.usedCreditType === type) {
                 this.props.onPdfDownload();
               }
               else {
-                this.props.onUseCredit('persoenlichkeit_lang');
+                this.props.onUseCredit(type);
               }
             }}
-          >
-            {
-              analysis.usedCreditType === LONG_TYPE
-                ? <i className="fa fa-icon fa-check-circle-o" />
-                : <i className="fa fa-icon fa-shopping-cart" />
-            }
-            {' '}
-            Lange PDF {
-              analysis.usedCreditType === LONG_TYPE
-                ? null
-                : <Fragment> | <strong>Buy</strong></Fragment>
-            }
-          </Button>
+          /> */}
+          <BuyButton
+            type={LONG_TYPE}
+            usedType={analysis.usedCreditType}
+            typeMessage="Lange PDF"
+            credits={credits}
+            onBuy={(type) => {
+              if (analysis.usedCreditType === type) {
+                this.props.onPdfDownload();
+              }
+              else {
+                this.props.onUseCredit(type);
+              }
+            }}
+          />
           <button
             className="btn btn-danger btn-outline btn-sm"
             disabled={!!analysis.usedCreditType}

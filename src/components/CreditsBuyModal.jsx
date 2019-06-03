@@ -12,6 +12,8 @@ import {
   createWindowTokenMutation,
 } from '../graphql/Mutations';
 
+import '../styles/CreditsBuyModal.css';
+
 const PRICE_PERSONAL_SHORT = 25;
 const PRICE_PERSONAL_LONG = 49;
 
@@ -45,7 +47,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWi
             {
               !isSuccess && (!credits || credits.length === 0)
                 ? 'Insuficient credits'
-                : 'Buy credits'
+                : 'Guthaben kaufen'
             }
           </Modal.Title>
         </Modal.Header>
@@ -64,31 +66,33 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWi
           <Table>
             <thead>
               <tr>
-                <td>Analysis type</td>
-                <td>Kurz Preis</td>
-                <td>Kurz PDF</td>
+                <td>Analyseart</td>
+                <td>Preis pro Stück</td>
+                <td className="buyModalNumberCell">Anzahl</td>
                 <td>Lang Preis</td>
-                <td>Lang PDF</td>
+                <td className="buyModalNumberCell">Anzahl</td>
                 <td>Gesamt</td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Personal, Personal Comp</td>
+                <td>Persönlichkeitsnumeroskop kurz als PDF</td>
                 <td>€ {PRICE_PERSONAL_SHORT}</td>
-                <td>
+                <td className="buyModalNumberCell">
                   <input
+                    className="buyModalNumber"
                     type="number"
-                    size={4}
+                    size={2}
                     value={personalShorts}
                     onChange={(e) => setPersonalShorts(e.target.value)}
                   />
                 </td>
                 <td>€ {PRICE_PERSONAL_LONG}</td>
-                <td>
+                <td className="buyModalNumberCell">
                   <input
+                    className="buyModalNumber"
                     type="number"
-                    size={4}
+                    size={2}
                     value={personalLongs}
                     onChange={(e) => setPersonalLongs(e.target.value)}
                   />
@@ -104,11 +108,11 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWi
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={onHide}>
-            Close
+            Abbrechen
           </Button>
           {!isSuccess && (
             <Button variant="primary" onClick={initiateBuy}>
-              Buy
+              Kaufen
             </Button>
           )}
         </Modal.Footer>

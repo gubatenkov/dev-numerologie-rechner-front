@@ -44,27 +44,27 @@ export default ({ credits: rawCredits }) => {
       overlay={
         <Popover
           id="credits-popover"
-          title="Credits"
+          title="Guthaben"
         >
           <Table>
             <thead>
               <tr>
-                <th>Analysis type</th>
+                <th>Analyseart</th>
                 <th>Kurz PDF</th>
                 <th>Lang PDF</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Personal, Personal Comp</td>
+                <td>Persönlichkeitsnumeroskop kurz als PDF</td>
                 <td>{credits.personalShorts}</td>
                 <td>{credits.personalLongs}</td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td>Partnership</td>
                 <td>{credits.partnerShorts}</td>
                 <td>{credits.partnerLongs}</td>
-              </tr>
+              </tr> */}
             </tbody>
           </Table>
         </Popover>
