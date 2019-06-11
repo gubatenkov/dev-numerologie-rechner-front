@@ -17,7 +17,7 @@ import '../styles/CreditsBuyModal.css';
 const PRICE_PERSONAL_SHORT = 25;
 const PRICE_PERSONAL_LONG = 49;
 
-const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWindowToken }) => {
+const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPurchase, onBuy, createWindowToken }) => {
   const [personalShorts, setPersonalShorts] = useState(1);
   const [personalLongs, setPersonalLongs] = useState(1);
   const [windowToken, setWindowToken] = useState(null);
@@ -36,6 +36,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWi
   const handleBuySuccess = () => {
     setWaitingCallback(false);
     setSuccess(true);
+    onSuccessfulPurchase();
   }
 
   return (
@@ -80,6 +81,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWi
                 <td>€ {PRICE_PERSONAL_SHORT}</td>
                 <td className="buyModalNumberCell">
                   <input
+                    disabled={isSuccess}
                     className="buyModalNumber"
                     type="number"
                     size={2}
@@ -90,6 +92,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onBuy, createWi
                 <td>€ {PRICE_PERSONAL_LONG}</td>
                 <td className="buyModalNumberCell">
                   <input
+                    disabled={isSuccess}
                     className="buyModalNumber"
                     type="number"
                     size={2}

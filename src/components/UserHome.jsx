@@ -160,6 +160,10 @@ class UserHome extends Component {
     });
   }
 
+  handleSuccessfulPurchase = () => {
+    this.props.data.refetch();
+  }
+
   /**
    * default component render
    */
@@ -298,6 +302,7 @@ class UserHome extends Component {
           show={isBuyModalOpen}
           onHide={this.toggleBuyModal}
           onBuy={this.handleBuy}
+          onSuccessfulPurchase={this.handleSuccessfulPurchase}
         />
       </div>
     );

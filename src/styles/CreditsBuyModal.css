@@ -1,7 +1,13 @@
 .buyModalNumberCell {
   padding-right: 40px !important;
 }
-.buyModalNumber {
+input.buyModalNumber {
   width: 45px;
   text-align: center;
+}
+input.buyModalNumber:disabled {
+  background-color: #f3f3f3;
+}
+.modal {
+  z-index: 1900 !important;
 }

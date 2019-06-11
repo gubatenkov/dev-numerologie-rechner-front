@@ -122,7 +122,7 @@ class ResultTableRow extends Component {
   renderCustomRow(rowItem) {
     // determining last element to align properly
     const lastIndex = rowItem.values.length - 1;
-    const { bookReferenceIndex } = rowItem;
+    const { descriptionTextIndex } = rowItem;
     return (
       <tr
         key={rowItem.numberId}
@@ -131,7 +131,7 @@ class ResultTableRow extends Component {
         {rowItem.values.map((value, index) => {
 
           if (rowItem.onlyInPro) {
-            return <td key={index} className={"tableRow__text"}><Interweave content={value}/></td>;
+            return <td key={index} className="tableRow__text"><Interweave content={value}/></td>;
           }
 
 
@@ -142,22 +142,18 @@ class ResultTableRow extends Component {
             cellStyle += "tableRow__text";
             cellValue = this.getTextRepresentation(value);
           }
+          if (index === descriptionTextIndex) {
+            cellValue = this.getTextRepresentation(value);
+          }
           if (index === 0) {
             cellStyle += "tableRow__name table--bold";
           }
-
 
           return (
             <td
               className={cellStyle}
               key={rowItem.numberId + index + cellValue}
-            >
-              {
-                index === bookReferenceIndex
-                  ? <span dangerouslySetInnerHTML={{ __html: cellValue }}></span>
-                  : cellValue
-              }
-            </td>
+            >{cellValue}</td>
           );
         })}
       </tr>
