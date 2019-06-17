@@ -102,20 +102,9 @@ export const analysisPartsFragment = gql`
   }
 `;
 
-export const personalResultsQuery = gql`
-  query personalAnalysis(
-    $firstNames: String!
-    $lastName: String!
-    $dateOfBirth: String!
-    $longTexts: Boolean!
-  ) {
-    personalAnalysis(
-      firstNames: $firstNames
-      lastName: $lastName
-      dateOfBirth: $dateOfBirth
-      longTexts: $longTexts
-    ) {
-      analysisIntro {
+export const personalAnalysisFragment = gql`
+  fragment PersonalAnalysisResultParts on PersonalAnalysisResult {
+    analysisIntro {
         title
         text
       }
@@ -140,7 +129,42 @@ export const personalResultsQuery = gql`
       personalYear {
         ...AnalysisParts
       }
-    }
   }
   ${analysisPartsFragment}
+`;
+
+export const personalResultsQuery = gql`
+  query personalAnalysis(
+    $firstNames: String!
+    $lastName: String!
+    $dateOfBirth: String!
+  ) {
+    personalAnalysis(
+      firstNames: $firstNames
+      lastName: $lastName
+      dateOfBirth: $dateOfBirth
+    ) {
+      ...PersonalAnalysisResultParts
+    }
+  }
+  ${personalAnalysisFragment}
+`;
+
+export const personalResultsByIdQuery = gql`
+  query personalAnalysisResultById(
+    $id: Int!
+    $longTexts: Boolean!
+  ) {
+    personalAnalysis: personalAnalysisResultById(
+      id: $id
+      longTexts: $longTexts
+    ) {
+      analysis {
+        id
+        name
+      }
+      ...PersonalAnalysisResultParts
+    }
+  }
+  ${personalAnalysisFragment}
 `;

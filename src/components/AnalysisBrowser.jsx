@@ -22,7 +22,7 @@ import DownloadPdfDialog from './dialogs/DownloadPdfDialog';
 
 import { getUserAuthData } from '../utils/AuthUtils';
 import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
-import { currentUserQuery, personalResultsQuery } from '../graphql/Queries';
+import { currentUserQuery, personalResultsByIdQuery } from '../graphql/Queries';
 import {
   deleteGroupMutation,
   createGroupMutation,
@@ -239,14 +239,12 @@ class AnalysisBrowser extends Component {
 
     // getting long texts used for pdf (if allowed)
     try {
-      const [name, dateOfBirth] = this.pdfToBeDownloaded.split(', ');
+      const [name, dateOfBirth] = this.pdfToBeDownloaded.name.split(', ');
       const [firstNames, lastName] = name.split(' ');
       const result = await this.props.client.query({
-        query: personalResultsQuery,
+        query: personalResultsByIdQuery,
         variables: {
-          firstNames,
-          lastName,
-          dateOfBirth,
+          id: this.pdfToBeDownloaded.id,
           longTexts: true,
         },
       });
@@ -427,13 +425,7 @@ class AnalysisBrowser extends Component {
                                 input.dateOfBirth
                               }`);
                           } else {
-                            // only one input here => navigating to results
-                            const analysisInput = analysis.inputs[0];
-
-                            // navigating to analysis results
-                            this.props.history.push(`/resultPersonal/${analysisInput.firstNames}/${
-                                analysisInput.lastName
-                              }/${analysisInput.dateOfBirth}`);
+                            this.props.history.push(`/resultPersonal/${analysis.id}`);
                           }
                         }}
                         onUseCredit={(type) => {
@@ -441,7 +433,7 @@ class AnalysisBrowser extends Component {
                         }}
                         onPdfDownload={() => {
                           this.setState({ downloadDialogOpen: true });
-                          this.pdfToBeDownloaded = analysis.name;
+                          this.pdfToBeDownloaded = analysis;
                         }}
                       />
                     )));

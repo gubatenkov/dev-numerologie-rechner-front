@@ -23,6 +23,7 @@ import Register from './components/Register';
 import ResetPassword from './components/ResetPassword';
 import SetPassword from './components/SetPassword';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
+import AnalysisResultPersonalById from './components/AnalysisResultPersonalById';
 import AnalysisResultPersonalCompare from './components/AnalysisResultPersonalCompare';
 import UserHome from './components/UserHome';
 import PrivateRoute from './utils/PrivateRoute';
@@ -83,6 +84,12 @@ ReactDOM.render(
           component={withTracker(SetPassword)}
         />
         <Route
+          exact
+          path="/resultPersonal/:analysisId"
+          component={withTracker(AnalysisResultPersonalById)}
+        />
+        <Route
+          exact
           path="/resultPersonal/:firstNames/:lastName/:dateOfBirth"
           component={withTracker(AnalysisResultPersonal)}
         />
