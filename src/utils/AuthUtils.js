@@ -53,7 +53,12 @@ export async function postJsonData(url, data) {
 
   if (!response.ok) {
     const jsonResponse = await response.json();
-    throw new Error(jsonResponse.message || 'Unknown error');
+    const error = (
+      typeof jsonResponse.error === 'string'
+        ? jsonResponse.error
+        : jsonResponse.error.join('; ')
+    );
+    throw new Error(error || 'Unknown error');
   }
 
   return response.json();

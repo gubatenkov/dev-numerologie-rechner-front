@@ -65,7 +65,7 @@ class Register extends Component {
       // redirecting to user home
       this.props.history.push('/userHome');
     } catch (error) {
-      NotificationManager.error('Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
+      NotificationManager.error(error.message || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
     }
   };
 
