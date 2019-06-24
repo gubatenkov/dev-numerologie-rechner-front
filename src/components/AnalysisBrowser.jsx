@@ -116,6 +116,7 @@ class AnalysisBrowser extends Component {
       // error occured -> displaying notification
       NotificationManager.error(error.graphQLErrors[0].message);
     }
+    this.setState({ loading: false, });
   };
 
   /**
@@ -137,6 +138,7 @@ class AnalysisBrowser extends Component {
       // error occured -> displaying notification
       NotificationManager.error('Die Gruppe konnte nicht umbenannt werden');
     }
+    this.setState({ loading: false, });
   };
 
   /**
@@ -178,6 +180,7 @@ class AnalysisBrowser extends Component {
     } catch (error) {
       NotificationManager.error('Gruppe konnte nicht gelöscht werden.');
     }
+    this.setState({ loading: false, });
   };
 
   /**
@@ -197,13 +200,13 @@ class AnalysisBrowser extends Component {
 
           // getting index of item to delete
           const analysisIndex = _.findIndex(
-            data.currentUser.analyses,
+            data.analyses,
             item => item.id === deleteAnalysis.id,
           );
 
           // deleting item if present
           if (analysisIndex > -1) {
-            data.currentUser.analyses.splice(analysisIndex, 1);
+            data.analyses.splice(analysisIndex, 1);
           }
 
           // writing object back to cache
@@ -218,6 +221,7 @@ class AnalysisBrowser extends Component {
     } catch (error) {
       NotificationManager.error('Analyse konnte nicht gelöscht werden.');
     }
+    this.setState({ loading: false, });
   };
 
   /**
@@ -239,8 +243,6 @@ class AnalysisBrowser extends Component {
 
     // getting long texts used for pdf (if allowed)
     try {
-      const [name, dateOfBirth] = this.pdfToBeDownloaded.name.split(', ');
-      const [firstNames, lastName] = name.split(' ');
       const result = await this.props.client.query({
         query: personalResultsByIdQuery,
         variables: {
@@ -248,16 +250,36 @@ class AnalysisBrowser extends Component {
           longTexts: true,
         },
       });
+      const { analysis } = result.data;
 
       // creating pdf and downloading with custom name
-      await createPDFFromAnalysisResult(
-        result.data,
-        firstNames,
-        lastName,
-        `Persönlichkeitsnumeroskop_${firstNames}_${
-          lastName
-        }.pdf`,
-      );
+      if (analysis.personalAnalysisResults.length > 1) {
+        const [personalAnalysisResult, personalAnalysisResultCompare] = analysis.personalAnalysisResults
+        createPDFFromAnalysisResult(
+          { personalAnalysis: personalAnalysisResult },
+          personalAnalysisResult.firstNames,
+          personalAnalysisResult.lastName,
+          `Namensvergleich_${
+            personalAnalysisResult.firstName}_${personalAnalysisResult.lastName
+          }_${
+            personalAnalysisResultCompare.firstName}_${personalAnalysisResultCompare.lastName
+          }.pdf`,
+          { personalAnalysis: personalAnalysisResultCompare },
+          personalAnalysisResultCompare.firstNames,
+          personalAnalysisResultCompare.lastName,
+        );
+      }
+      else {
+        const [personalAnalysisResult] = analysis.personalAnalysisResults
+        await createPDFFromAnalysisResult(
+          { personalAnalysis: personalAnalysisResult },
+          personalAnalysisResult.firstNames,
+          personalAnalysisResult.lastName,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
+            personalAnalysisResult.lastName
+          }.pdf`,
+        );
+      }
     } catch (error) {
       console.log(error);
       // removing loading indicator
@@ -301,14 +323,14 @@ class AnalysisBrowser extends Component {
       });
       this.props.onUsedCredit();
       NotificationManager.success(`Credit successfuly used. You can download PDF now.`);
-      this.setState({
-        loading: false,
-        loadingText: null,
-      });
     }
     catch (error) {
       NotificationManager.error('Error using credit.');
     }
+    this.setState({
+      loading: false,
+      loadingText: null,
+    });
   }
 
   hadnleOnUseCredit = (analysisId, type) => {
@@ -411,22 +433,7 @@ class AnalysisBrowser extends Component {
                           });
                         }}
                         showHandler={() => {
-                          // getting input of analysis = names and dob
-                          if (analysis.inputs.length > 1) {
-                            // getting normal and comfort input
-                            const input = analysis.inputs[0];
-                            const comfortInput = analysis.inputs[1];
-
-                            // navigating to result
-                            this.props.history.push(`/resultPersonalCompare/${[
-                                input.firstNames,
-                                comfortInput.firstNames,
-                              ]}/${[input.lastName, comfortInput.lastName]}/${
-                                input.dateOfBirth
-                              }`);
-                          } else {
-                            this.props.history.push(`/resultPersonal/${analysis.id}`);
-                          }
+                          this.props.history.push(`/resultPersonal/${analysis.id}`);
                         }}
                         onUseCredit={(type) => {
                           this.hadnleOnUseCredit(analysis.id, type);
@@ -493,7 +500,7 @@ class AnalysisBrowser extends Component {
           }}
           onAction={() => {
             // hiding dialog, deleting group and clearing to be deleted group
-            this.setState({ confirmGroupDeletionDialogOpen: false });
+            this.setState({ confirmGroupDeletionDialogOpen: false, loading: true });
             this.deleteGroup(this.groupToBeDeleted.id);
             this.groupToBeDeleted = null;
           }}
@@ -507,7 +514,7 @@ class AnalysisBrowser extends Component {
           }}
           onAction={() => {
             // hiding dialog, deleting analysis and clearing to be deleted group
-            this.setState({ confirmAnalysisDeletionDialogOpen: false });
+            this.setState({ confirmAnalysisDeletionDialogOpen: false, loading: true });
             this.deleteAnalysis(this.analysisToBeDeleted.id);
             this.analysisToBeDeleted = null;
           }}
@@ -520,7 +527,7 @@ class AnalysisBrowser extends Component {
             this.createGroup(groupName);
 
             // hiding dialog
-            this.setState({ createGroupDialogOpen: false });
+            this.setState({ createGroupDialogOpen: false, loading: true, });
           }}
           groups={this.props.groups.map(item => item.name)}
         />
@@ -538,7 +545,7 @@ class AnalysisBrowser extends Component {
             this.renameGroup(newName, id);
 
             // hiding dialog
-            this.setState({ renameGroupDialopOpen: false });
+            this.setState({ renameGroupDialopOpen: false, loading: true, });
           }}
           group={this.groupToBeRenamed}
         />

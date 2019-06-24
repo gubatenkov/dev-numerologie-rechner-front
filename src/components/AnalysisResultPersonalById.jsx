@@ -6,7 +6,9 @@ import { graphql, compose, withApollo } from 'react-apollo';
 
 import { personalResultsByIdQuery } from '../graphql/Queries';
 
+import LoadingIndicator from './LoadingIndicator';
 import AnalysisResultPersonalRender from './AnalysisResultPersonalRender';
+import AnalysisResultPersonalCompareRender from './AnalysisResultPersonalCompareRender';
 
 class AnalysisResultPersonalById extends Component {
   static propTypes = {
@@ -21,7 +23,35 @@ class AnalysisResultPersonalById extends Component {
   };
 
   render() {
-    return <AnalysisResultPersonalRender {...this.props} />;
+    if (this.props.data.loading) {
+      return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
+    }
+
+    if (this.props.data.error) {
+      return <LoadingIndicator text={this.props.data.error.message} />;
+    }
+
+    const { data } = this.props;
+    const { analysis: baseAnalysis } = data;
+    const { personalAnalysisResults, ...analysis } = baseAnalysis;
+
+    if (personalAnalysisResults.length === 2) {
+      return <AnalysisResultPersonalCompareRender
+        {...this.props}
+        error={data.error}
+        loading={data.loading}
+        analysis={analysis}
+        personalAnalysisResults={personalAnalysisResults}
+      />;
+    }
+
+    const [personalAnalysisResult] = personalAnalysisResults;
+    return <AnalysisResultPersonalRender
+      error={data.error}
+      loading={data.loading}
+      analysis={analysis}
+      personalAnalysisResult={personalAnalysisResult}
+    />;
   }
 }
 

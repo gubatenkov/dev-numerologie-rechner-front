@@ -7,19 +7,27 @@ import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
-import ResultTable from './ResultTable';
+import ResultTableCompare from './ResultTableCompare';
 import LightBoxDetailView from './LightBoxDetailView';
 import LoadingIndicator from './LoadingIndicator';
 
 import '../styles/AnalysisResultPersonal.css';
+import '../styles/AnalysisResultPersonalCompare.css';
 
 /**
- * result screen for personal analysis
+ * result screen for personal analysis comparison
  */
-class AnalysisResultPersonalRender extends Component {
+class AnalysisResultPersonalCompare extends Component {
   static propTypes = {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
+    }).isRequired,
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        firstNames: PropTypes.string,
+        lastNames: PropTypes.string,
+        dateOfBirth: PropTypes.string,
+      }).isRequired,
     }).isRequired,
   };
 
@@ -56,9 +64,11 @@ class AnalysisResultPersonalRender extends Component {
    *  handles clicks on detail links
    */
   handleItemDetailClick = (dataKey, index) => {
-    const analysisResult = this.props.personalAnalysisResult;
+    // getting both results
+    const [personalAnalysisResult] = this.props.personalAnalysisResults;
+
     // getting index of elemnent represented by dataKey in state
-    const dataIndex = this.getResultArrayFormat(analysisResult).indexOf(analysisResult[dataKey]);
+    const dataIndex = this.getResultArrayFormat(personalAnalysisResult).indexOf(personalAnalysisResult[dataKey]);
 
     // if data is not here -> skip
     if (dataIndex < 0) {
@@ -67,7 +77,7 @@ class AnalysisResultPersonalRender extends Component {
 
     // calculating index in filtered data passed to details component
     // indeNew = index - #of items removed by filtering before passed to detail component
-    const sectionUpToIndex = this.props.personalAnalysisResult[
+    const sectionUpToIndex = personalAnalysisResult[
       dataKey
     ].numbers.slice(0, index);
     const removedElementsToIndexCount =
@@ -117,13 +127,16 @@ class AnalysisResultPersonalRender extends Component {
    * by the detail component
    * @param resultData the state to be transformed
    */
-  convertResultsToDetailsDataFormat(resultData) {
+  convertResultsToDetailsDataFormat(resultData, compareData) {
     // transforming into items where results are numbers and a text to display is present
-    return this.getResultArrayFormat(resultData).map(item => ({
+    const compareDataArray = this.getResultArrayFormat(compareData);
+    return this.getResultArrayFormat(resultData).map((item, itemIndex) => ({
       sectionName: item.name,
       sectionElements: item.numbers
         // filtering elements that are not suitable for displaying as detail view
-        .filter(numberItem => this.doesElementHaveDescription(numberItem))
+        .filter((numberItem, numberIndex) =>
+          this.doesElementHaveDescription(numberItem) ||
+            this.doesElementHaveDescription(compareDataArray[itemIndex].numbers[numberIndex]))
         // mapping those elements to data for detail
         .map((numberItem) => {
           if (numberItem.type === 'row') {
@@ -161,58 +174,22 @@ class AnalysisResultPersonalRender extends Component {
     }));
   }
 
-  resize = () => this.forceUpdate()
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize)
-  }
-
   /**
    * default render
    */
   render() {
-    // if data is loading => showing loading indicator with standard text
     if (this.props.loading) {
-      return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
+      return (
+        <LoadingIndicator text="Berechne Auswertung für Namensvergleich..." />
+      );
     }
 
     if (this.state.loading) {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
 
-    if (this.props.error) {
-      return <LoadingIndicator text={this.props.error.message} />;
-    }
-
-    let sideMenu = 
-    <div className="ResultContentOverview">
-      <ContentNavigation
-        contentItems={[
-          'Ausdrucksebene',
-          'Persönlichkeitsebene',
-          'Entfaltungspotential',
-          'Seelische Ebene',
-          'Zeitliche Ebene',
-        ]}
-        contentItemAnchors={[
-          'ExpressionResult',
-          'PersonalResult',
-          'DevelopmentResult',
-          'SoulResult',
-          'TimeResult',
-        ]}
-        onItemClick={this.navigateToElementHandler}
-        autoAdapt
-      />
-    </div>
-
-    let showSideMenu = window.innerWidth >= 992;
-
-    const { analysis, personalAnalysisResult } = this.props;
+    const { analysis } = this.props;
+    const [personalAnalysisResult, personalAnalysisResultCompare] = this.props.personalAnalysisResults;
 
     // render table, table shows spinner
     return (
@@ -228,53 +205,101 @@ class AnalysisResultPersonalRender extends Component {
               : null
           }
           onPrimaryAction={() => {
-            this.props.history.push(`/userHome/saveAnalysis/${personalAnalysisResult.firstNames}/${
-              personalAnalysisResult.lastName
+            this.props.history.push(`/userHome/saveAnalysis/${
+              personalAnalysisResult.firstNames},${
+              personalAnalysisResultCompare.firstNames}/${
+                personalAnalysisResult.lastName},${
+                personalAnalysisResultCompare.lastName
               }/${personalAnalysisResult.dateOfBirth}`);
           }}
           badgeTitle="Kurztext"
         />
         <div className="ResultPersonalDataContainer">
-          <div className="ResultPersonalData">
-            <h4>
-              {`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-            </h4>
-            <h4>{personalAnalysisResult.dateOfBirth}</h4>
-          </div>
+          <h4>{personalAnalysisResult.dateOfBirth}</h4>
         </div>
         <div className="ContentArea">
-          {showSideMenu? sideMenu: null}
+          <div className="ResultContentOverview">
+            <ContentNavigation
+              contentItems={[
+                'Ausdrucksebene',
+                'Persönlichkeitsebene',
+                'Entfaltungspotential',
+                'Seelische Ebene',
+                'Zeitliche Ebene',
+              ]}
+              contentItemAnchors={[
+                'ExpressionResult',
+                'PersonalResult',
+                'DevelopmentResult',
+                'SoulResult',
+                'TimeResult',
+              ]}
+              onItemClick={this.navigateToElementHandler}
+              autoAdapt
+            />
+          </div>
           <div className="ResultContent">
+            <table className="resultCompareNameTable">
+              <tbody>
+                <tr>
+                  <td className="resultCompareNameTable__spacer" />
+                  <td className="table--bold resultCompareNameTable__nameValue">
+                    {`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+                  </td>
+                  <td className="table--bold resultCompareNameTable__nameValue">
+                    {`${personalAnalysisResultCompare.firstNames} ${personalAnalysisResultCompare.lastName}`}
+                  </td>
+                  <td className="resultCompareNameTable__spacer" />
+                </tr>
+              </tbody>
+            </table>
             <Panel
-              title={personalAnalysisResult.expressionLevel.name}
+              title={
+                personalAnalysisResult.expressionLevel.name
+              }
               id="ExpressionResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={personalAnalysisResult.expressionLevel}
+                dataCompare={
+                  personalAnalysisResultCompare.expressionLevel
+                }
                 dataKey="expressionLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
 
             <Panel
-              title={personalAnalysisResult.personalLevel.name}
+              title={
+                personalAnalysisResult.personalLevel.name
+              }
               id="PersonalResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={personalAnalysisResult.personalLevel}
+                dataCompare={
+                  personalAnalysisResultCompare.personalLevel
+                }
                 dataKey="personalLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
             <Panel
-              title={personalAnalysisResult.developmentLevel.name}
+              title={
+                personalAnalysisResult.developmentLevel.name
+              }
               id="DevelopmentResult"
               className="panelResult"
             >
-              <ResultTable
-                data={personalAnalysisResult.developmentLevel}
+              <ResultTableCompare
+                data={
+                  personalAnalysisResult.developmentLevel
+                }
+                dataCompare={
+                  personalAnalysisResultCompare.developmentLevel
+                }
                 dataKey="developmentLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
@@ -284,8 +309,11 @@ class AnalysisResultPersonalRender extends Component {
               id="SoulResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={personalAnalysisResult.soulLevel}
+                dataCompare={
+                  personalAnalysisResultCompare.soulLevel
+                }
                 dataKey="soulLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
@@ -295,18 +323,29 @@ class AnalysisResultPersonalRender extends Component {
               id="TimeResult"
               className="panelResult"
             >
-              <ResultTable
+              <ResultTableCompare
                 data={personalAnalysisResult.vibratoryCycles}
+                dataCompare={
+                  personalAnalysisResultCompare
+                    .vibratoryCycles
+                }
                 dataKey="vibratoryCycles"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
-              <ResultTable
+              <ResultTableCompare
                 data={personalAnalysisResult.challengesHighs}
+                dataCompare={
+                  personalAnalysisResultCompare
+                    .challengesHighs
+                }
                 dataKey="challengesHighs"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
-              <ResultTable
+              <ResultTableCompare
                 data={personalAnalysisResult.personalYear}
+                dataCompare={
+                  personalAnalysisResultCompare.personalYear
+                }
                 dataKey="personalYear"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
@@ -316,7 +355,14 @@ class AnalysisResultPersonalRender extends Component {
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          data={this.convertResultsToDetailsDataFormat(personalAnalysisResult)}
+          data={this.convertResultsToDetailsDataFormat(
+            personalAnalysisResult,
+            personalAnalysisResultCompare,
+          )}
+          compareData={this.convertResultsToDetailsDataFormat(
+            personalAnalysisResultCompare,
+            personalAnalysisResult,
+          )}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />
@@ -325,4 +371,4 @@ class AnalysisResultPersonalRender extends Component {
   }
 }
 
-export default withRouter(AnalysisResultPersonalRender);
+export default withRouter(AnalysisResultPersonalCompare);

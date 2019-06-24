@@ -66,6 +66,7 @@ class UserHome extends Component {
       userDeletionDialogOpen: false,
       isBuyModalOpen: false,
       isBuyProcessing: false,
+      loading: false,
     };
   }
 
@@ -131,10 +132,12 @@ class UserHome extends Component {
         update: (store, { data: { saveAnalysis } }) => {
           // gettint the query from the local cache and adding group
           const data = store.readQuery({ query: currentUserQuery });
-          data.currentUser.analyses.push(saveAnalysis);
+          data.analyses.push(saveAnalysis);
           store.writeQuery({ query: currentUserQuery, data });
         },
       });
+      this.setState({ loading: false, });
+      this.props.history.push('/userHome');
       NotificationManager.success(`Die Analyse ${name} wurde erfolgreich erstellt.`);
     } catch (error) {
       // error occured -> displaying notification
@@ -189,6 +192,7 @@ class UserHome extends Component {
 
     return (
       <div>
+        {this.state.loading && <LoadingIndicator />}
         <NavigationBar
           handleDeleteUser={() =>
             this.setState({ userDeletionDialogOpen: true })
@@ -233,7 +237,7 @@ class UserHome extends Component {
           <div className="UserHomeContent">
             <AnalysisBrowser
               groups={this.props.data.currentUser.groups}
-              analyses={this.props.data.currentUser.analyses}
+              analyses={this.props.data.analyses}
               credits={this.props.data.currentUser.credits}
               onInsuficientCredits={this.toggleBuyModal}
               onUsedCredit={this.handleUsedCredit}
@@ -275,7 +279,7 @@ class UserHome extends Component {
             this.saveAnalysis(analysisName, group.id);
 
             // hiding dialog
-            this.setState({ saveDialogOpen: false });
+            this.setState({ saveDialogOpen: false, loading: true, });
           }}
           groups={this.props.data.currentUser.groups}
         />

@@ -23,22 +23,22 @@ export const currentUserQuery = gql`
         name
         isDefault
       }
-      analyses {
-        id
-        name
-        usedCreditType
-        group {
-          id
-        }
-        inputs {
-          firstNames
-          lastName
-          dateOfBirth
-        }
-      }
       credits {
         type
         total
+      }
+    }
+    analyses {
+      id
+      name
+      usedCreditType
+      group {
+        id
+      }
+      inputs {
+        firstNames
+        lastName
+        dateOfBirth
       }
     }
   }
@@ -104,45 +104,43 @@ export const analysisPartsFragment = gql`
 
 export const personalAnalysisFragment = gql`
   fragment PersonalAnalysisResultParts on PersonalAnalysisResult {
+    firstNames
+    lastName
+    dateOfBirth
+    longTexts
     analysisIntro {
-        title
-        text
-      }
-      expressionLevel {
-        ...AnalysisParts
-      }
-      personalLevel {
-        ...AnalysisParts
-      }
-      developmentLevel {
-        ...AnalysisParts
-      }
-      soulLevel {
-        ...AnalysisParts
-      }
-      vibratoryCycles {
-        ...AnalysisParts
-      }
-      challengesHighs {
-        ...AnalysisParts
-      }
-      personalYear {
-        ...AnalysisParts
-      }
+      title
+      text
+    }
+    expressionLevel {
+      ...AnalysisParts
+    }
+    personalLevel {
+      ...AnalysisParts
+    }
+    developmentLevel {
+      ...AnalysisParts
+    }
+    soulLevel {
+      ...AnalysisParts
+    }
+    vibratoryCycles {
+      ...AnalysisParts
+    }
+    challengesHighs {
+      ...AnalysisParts
+    }
+    personalYear {
+      ...AnalysisParts
+    }
   }
   ${analysisPartsFragment}
 `;
 
 export const personalResultsQuery = gql`
-  query personalAnalysis(
-    $firstNames: String!
-    $lastName: String!
-    $dateOfBirth: String!
-  ) {
-    personalAnalysis(
-      firstNames: $firstNames
-      lastName: $lastName
-      dateOfBirth: $dateOfBirth
+  query personalAnalysesByNames( $inputs: [AnalysisInput!]! ) {
+    personalAnalyses: personalAnalysesByNames(
+      inputs: $inputs
     ) {
       ...PersonalAnalysisResultParts
     }
@@ -151,19 +149,21 @@ export const personalResultsQuery = gql`
 `;
 
 export const personalResultsByIdQuery = gql`
-  query personalAnalysisResultById(
+  query analysis(
     $id: Int!
     $longTexts: Boolean!
   ) {
-    personalAnalysis: personalAnalysisResultById(
-      id: $id
-      longTexts: $longTexts
-    ) {
-      analysis {
-        id
-        name
+    analysis(id: $id) {
+      id
+      name
+      inputs {
+        firstNames
+        lastName
+        dateOfBirth
       }
-      ...PersonalAnalysisResultParts
+      personalAnalysisResults(longTexts: $longTexts) {
+        ...PersonalAnalysisResultParts
+      }
     }
   }
   ${personalAnalysisFragment}

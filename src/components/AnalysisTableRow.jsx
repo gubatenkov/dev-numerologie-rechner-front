@@ -5,7 +5,7 @@ import BuyButton from './AnalysisBuyButton';
 
 import '../styles/AnalysisTableRow.css';
 
-const SHORT_TYPE = 'persoenlichkeit_kurz';
+// const SHORT_TYPE = 'persoenlichkeit_kurz';
 const LONG_TYPE  = 'persoenlichkeit_lang';
 
 /**
