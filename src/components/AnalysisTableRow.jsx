@@ -5,7 +5,7 @@ import BuyButton from './AnalysisBuyButton';
 
 import '../styles/AnalysisTableRow.css';
 
-// const SHORT_TYPE = 'persoenlichkeit_kurz';
+const SHORT_TYPE = 'persoenlichkeit_kurz';
 const LONG_TYPE  = 'persoenlichkeit_lang';
 
 /**
@@ -47,28 +47,28 @@ class AnalysisTableRow extends Component {
           >
             Anzeigen
           </button>
-          {/* <BuyButton
+          <BuyButton
             type={SHORT_TYPE}
             usedType={analysis.usedCreditType}
             typeMessage="Kurz PDF"
             credits={credits}
             onBuy={(type) => {
-              if (analysis.usedCreditType === type) {
+              if (analysis.usedCreditTypes.includes(type)) {
                 this.props.onPdfDownload();
               }
               else {
                 this.props.onUseCredit(type);
               }
             }}
-          /> */}
+          />
           <BuyButton
             type={LONG_TYPE}
             usedType={analysis.usedCreditType}
             typeMessage="Lange PDF"
             credits={credits}
             onBuy={(type) => {
-              if (analysis.usedCreditType === type) {
-                this.props.onPdfDownload();
+              if (analysis.usedCreditTypes.includes(type)) {
+                this.props.onPdfDownload(true);
               }
               else {
                 this.props.onUseCredit(type);

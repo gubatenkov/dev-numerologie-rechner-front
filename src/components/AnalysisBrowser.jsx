@@ -247,7 +247,7 @@ class AnalysisBrowser extends Component {
         query: personalResultsByIdQuery,
         variables: {
           id: this.pdfToBeDownloaded.id,
-          longTexts: true,
+          longTexts: this.pdfToBeDownloaded.longTexts || false,
         },
       });
       const { analysis } = result.data;
@@ -255,7 +255,7 @@ class AnalysisBrowser extends Component {
       // creating pdf and downloading with custom name
       if (analysis.personalAnalysisResults.length > 1) {
         const [personalAnalysisResult, personalAnalysisResultCompare] = analysis.personalAnalysisResults
-        createPDFFromAnalysisResult(
+        await createPDFFromAnalysisResult(
           { personalAnalysis: personalAnalysisResult },
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
@@ -270,7 +270,7 @@ class AnalysisBrowser extends Component {
         );
       }
       else {
-        const [personalAnalysisResult] = analysis.personalAnalysisResults
+        const [personalAnalysisResult] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           { personalAnalysis: personalAnalysisResult },
           personalAnalysisResult.firstNames,
@@ -438,9 +438,9 @@ class AnalysisBrowser extends Component {
                         onUseCredit={(type) => {
                           this.hadnleOnUseCredit(analysis.id, type);
                         }}
-                        onPdfDownload={() => {
+                        onPdfDownload={(longTexts) => {
                           this.setState({ downloadDialogOpen: true });
-                          this.pdfToBeDownloaded = analysis;
+                          this.pdfToBeDownloaded = { ...analysis, longTexts };
                         }}
                       />
                     )));

@@ -32,6 +32,7 @@ export const currentUserQuery = gql`
       id
       name
       usedCreditType
+      usedCreditTypes
       group {
         id
       }
