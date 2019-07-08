@@ -140,9 +140,10 @@ class ResultTableRow extends Component {
           let cellValue = value;
           if (index === lastIndex) {
             cellStyle += "tableRow__text";
-            cellValue = this.getTextRepresentation(value);
+            cellValue = <span dangerouslySetInnerHTML={{ __html: value }}></span>;
           }
           if (index === descriptionTextIndex) {
+            cellStyle += "tableRow__text";
             cellValue = this.getTextRepresentation(value);
           }
           if (index === 0) {

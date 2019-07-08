@@ -584,7 +584,7 @@ export function createPDFFromAnalysisResult(
       return {
         columns: [
           {
-            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - www.psychologischenumerologie.eu`,
+            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - https://www.psychologischenumerologie.eu`,
             width: 'auto',
           },
           { text: currentPage, alignment: 'right' },
