@@ -52,6 +52,7 @@ const PDF_STYLES = {
     fontSize: 20,
     bold: true,
     marginTop: 40,
+    marginBottom: 20,
     lineHeight: 1,
   },
   H2: {
@@ -584,7 +585,7 @@ export function createPDFFromAnalysisResult(
       return {
         columns: [
           {
-            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - https://www.psychologischenumerologie.eu`,
+            text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - www.psychologischenumerologie.eu`,
             width: 'auto',
           },
           { text: currentPage, alignment: 'right' },

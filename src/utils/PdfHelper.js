@@ -74,13 +74,19 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
       table: {
         headerRows: 1,
         body: tableRows.map((row, rowIndex) =>
-          Array.from(row.getElementsByTagName('TD')).map((col, colIndex) => ({
-            text: col.textContent,
-            style: {
-              bold: colIndex === 0 || rowIndex === 0,
-              alignment: rowIndex === 0 ? 'center' : 'left',
-            },
-          }))),
+          Array.from(row.getElementsByTagName('TD')).map((col, colIndex) => {
+            const stack = [];
+            col.childNodes.forEach(node => {
+              stack.push(convertHTMLElementToPDFSyntax(node));
+            });
+            return {
+              stack,
+              style: {
+                bold: colIndex === 0 || rowIndex === 0,
+                alignment: rowIndex === 0 ? 'center' : 'left',
+              },
+            };
+          })),
       },
     };
   }

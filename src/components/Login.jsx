@@ -71,7 +71,7 @@ class Login extends Component {
         <div className="page vertical-align">
           <div className="page-content">
             <div className="text-center" style={{padding: 50 + 'px', color: 'white'}}>
-              <h1>Psychologische Numerologie Rechner</h1>
+              <h1 className="Login__title">Psychologische Numerologie Rechner</h1>
             </div>
             <div className="row justify-content-md-center">
               <div className="col-lg-4">
