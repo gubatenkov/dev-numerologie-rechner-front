@@ -247,11 +247,17 @@ function extractTableValueFromItem(numberItem) {
       };
     }
   } else {
+    let textValue = numberItem.values[numberItem.valueIndex];
+    if (numberItem.numberId.startsWith('HF/HP')) {
+      textValue = `${numberItem.values[2]} / ${numberItem.values[3]}`;
+    }
     value = {
-      text: numberItem.values[numberItem.valueIndex],
+      text: textValue,
       alignment: 'left',
     };
   }
+
+  value.bold = numberItem.highlighted;
 
   return value;
 }
@@ -332,7 +338,11 @@ function calculateResultOverviewTable(
           compareValue,
         ]);
       } else {
-        overviewTableBody.push([{ text: name, alignment: 'left' }, value]);
+        overviewTableBody.push([{
+          text: name,
+          bold: numberItem.highlighted,
+          alignment: 'left'
+        }, value]);
       }
     });
   });

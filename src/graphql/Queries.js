@@ -152,6 +152,7 @@ export const personalResultsQuery = gql`
 export const personalResultsByIdQuery = gql`
   query analysis(
     $id: Int!
+    $isPdf: Boolean!
     $longTexts: Boolean!
   ) {
     analysis(id: $id) {
@@ -162,7 +163,7 @@ export const personalResultsByIdQuery = gql`
         lastName
         dateOfBirth
       }
-      personalAnalysisResults(longTexts: $longTexts) {
+      personalAnalysisResults(isPdf: $isPdf longTexts: $longTexts) {
         ...PersonalAnalysisResultParts
       }
     }

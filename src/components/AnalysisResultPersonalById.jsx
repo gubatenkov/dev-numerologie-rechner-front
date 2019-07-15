@@ -58,6 +58,7 @@ class AnalysisResultPersonalById extends Component {
 export default compose(graphql(personalResultsByIdQuery, {
   options: params => ({ variables: {
       id: parseInt(params.match.params.analysisId, 10),
+      isPdf: false,
       longTexts: false,
     },
   }),

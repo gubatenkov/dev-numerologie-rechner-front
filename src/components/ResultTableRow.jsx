@@ -29,24 +29,25 @@ class ResultTableRow extends Component {
    * returns the row representation of the text passed by the server
    */
   getTextRepresentation(rowText, showFullText = false) {
-
     let rowTextRepresentation = null;
-    if (rowText && rowText && rowText.length > 0) {
+    if (rowText && rowText.length > 0) {
       // removing html tags for preview
       rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, "");
-      rowTextRepresentation = [
-        `${rowTextRepresentation.substring(
-          0,
-          LENGTH_DESCRIPITON_PREVIEW
-        )}...  `,
-        <a
-          role="link"
-          key="readIndicator"
-          onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
-        >
-          Lesen
-        </a>
-      ];
+      if (rowTextRepresentation.length > LENGTH_DESCRIPITON_PREVIEW) {
+        rowTextRepresentation = [
+          `${rowTextRepresentation.substring(
+            0,
+            LENGTH_DESCRIPITON_PREVIEW
+          )}...  `,
+          <a
+            role="link"
+            key="readIndicator"
+            onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
+          >
+            Lesen
+          </a>
+        ];
+      }
     }
     return rowTextRepresentation;
   }

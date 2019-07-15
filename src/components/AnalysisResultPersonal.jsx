@@ -56,6 +56,7 @@ export default compose(graphql(personalResultsQuery, {
       firstNames: params.match.params.firstNames,
       lastName: params.match.params.lastName,
       dateOfBirth: params.match.params.dateOfBirth,
+      isPdf: false,
     }]},
   }),
 }))(withApollo(withRouter(AnalysisResultPersonal)));

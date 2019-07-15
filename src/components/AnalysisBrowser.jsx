@@ -247,6 +247,7 @@ class AnalysisBrowser extends Component {
         query: personalResultsByIdQuery,
         variables: {
           id: this.pdfToBeDownloaded.id,
+          isPdf: true,
           longTexts: this.pdfToBeDownloaded.longTexts || false,
         },
       });
