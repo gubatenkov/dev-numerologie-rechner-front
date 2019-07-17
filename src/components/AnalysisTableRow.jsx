@@ -30,7 +30,7 @@ class AnalysisTableRow extends Component {
    * default render -> renders the table row with analysis information
    */
   render() {
-    const { analysis, credits } = this.props;
+    const { analysis } = this.props;
     return (
       <tr key={analysis.id}>
         <td className="AnalysisTableRow--analysisNameCell">
@@ -49,9 +49,8 @@ class AnalysisTableRow extends Component {
           </button>
           <BuyButton
             type={SHORT_TYPE}
-            usedType={analysis.usedCreditType}
+            usedTypes={analysis.usedCreditTypes}
             typeMessage="Kurz PDF"
-            credits={credits}
             onBuy={(type) => {
               if (analysis.usedCreditTypes.includes(type)) {
                 this.props.onPdfDownload();
@@ -63,9 +62,8 @@ class AnalysisTableRow extends Component {
           />
           <BuyButton
             type={LONG_TYPE}
-            usedType={analysis.usedCreditType}
+            usedTypes={analysis.usedCreditTypes}
             typeMessage="Lange PDF"
-            credits={credits}
             onBuy={(type) => {
               if (analysis.usedCreditTypes.includes(type)) {
                 this.props.onPdfDownload(true);

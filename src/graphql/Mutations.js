@@ -47,6 +47,7 @@ export const saveAnalysisMutation = gql`
       id
       name
       usedCreditType
+      usedCreditTypes
       inputs {
         id
         lastName
@@ -73,6 +74,7 @@ export const useCreditMutation = gql`
       id
       name
       usedCreditType
+      usedCreditTypes
     }
   }
 `;

@@ -420,7 +420,6 @@ class AnalysisBrowser extends Component {
                       <AnalysisTableRow
                         key={analysis.id}
                         analysis={analysis}
-                        credits={this.props.credits}
                         deleteHandler={(analysisId) => {
                           // getting analysis to be deleted
                           this.analysisToBeDeleted = _.find(

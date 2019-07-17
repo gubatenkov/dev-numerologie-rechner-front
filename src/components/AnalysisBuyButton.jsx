@@ -1,10 +1,8 @@
 import React, { Fragment } from 'react';
 import Button from 'react-bootstrap/Button';
 
-export default ({ credits, type, typeMessage, usedType, onBuy }) => {
-  const isTypeIncluded = usedType && usedType.includes(type);
-  const filtered = credits.filter((c) => c.type === type);
-  const isBuyTextVisible = !filtered[0] || filtered[0].total === 0;
+export default ({ type, typeMessage, usedTypes, onBuy }) => {
+  const isTypeIncluded = usedTypes && usedTypes.includes(type);
   return (
     <Button
       variant={isTypeIncluded ? 'success' : 'secondary'}
@@ -17,7 +15,11 @@ export default ({ credits, type, typeMessage, usedType, onBuy }) => {
           : <i className="fa fa-icon fa-shopping-cart" />
       }{' '}
       {typeMessage}{' '}
-      {isBuyTextVisible && <Fragment> | <strong>Buy</strong></Fragment>}
+      {
+        isTypeIncluded
+          ? <Fragment> | <strong>Get</strong></Fragment>
+          : <Fragment> | <strong>Buy</strong></Fragment>
+      }
     </Button>
   );
 }
