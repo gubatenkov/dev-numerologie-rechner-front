@@ -17,8 +17,8 @@ export default ({ type, typeMessage, usedTypes, onBuy }) => {
       {typeMessage}{' '}
       {
         isTypeIncluded
-          ? <Fragment> | <strong>Get</strong></Fragment>
-          : <Fragment> | <strong>Buy</strong></Fragment>
+          ? <Fragment> | <strong>Herunterladen</strong></Fragment>
+          : <Fragment> | <strong>Kaufen</strong></Fragment>
       }
     </Button>
   );

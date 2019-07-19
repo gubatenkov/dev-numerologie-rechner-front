@@ -55,8 +55,8 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
         <Modal.Body>
           {isSuccess && (
             <Alert variant="success">
-              <strong>Success!</strong> You have successfully purchased credits.
-              You can close this window now.
+              <strong>Gratuliere!</strong> Der Guthaben-Kauf war erfolgreich!
+              Sie können dieses Fenster nun schließen.
             </Alert>
           )}
           {!isSuccess && (!credits || credits.length === 0) && (
@@ -68,16 +68,16 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
             <thead>
               <tr>
                 <td>Analyseart</td>
-                <td>Preis pro Stück</td>
+                <td>Preis kurze Version</td>
                 <td className="buyModalNumberCell">Anzahl</td>
-                <td>Lang Preis</td>
+                <td>Preis lange Version</td>
                 <td className="buyModalNumberCell">Anzahl</td>
                 <td>Gesamt</td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Persönlichkeitsnumeroskop kurz als PDF</td>
+                <td>Persönlichkeitsnumeroskop</td>
                 <td>€ {PRICE_PERSONAL_SHORT}</td>
                 <td className="buyModalNumberCell">
                   <input

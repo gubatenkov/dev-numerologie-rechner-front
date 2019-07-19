@@ -24,12 +24,12 @@ class ConfirmUseCreditDialog extends Component {
     return (
       <Dialog
         {...this.props}
-        title="Use credit"
+        title="Guthaben verwenden"
         cancelTitle="Abbrechen"
-        actionTitle="Use"
+        actionTitle="Ja, bitte Guthaben verwenden"
       >
         <p>
-          {`You about to use your credit, are you sure? `}
+          {`Sie sind dabei, einen Guthaben-Punkt für die Erstellung eines Numeroskop-PDFs zu verwenden. Möchten Sie dies? `}
         </p>
       </Dialog>
     );

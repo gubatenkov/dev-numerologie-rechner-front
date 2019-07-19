@@ -50,7 +50,7 @@ class AnalysisTableRow extends Component {
           <BuyButton
             type={SHORT_TYPE}
             usedTypes={analysis.usedCreditTypes}
-            typeMessage="Kurz PDF"
+            typeMessage="Kurzes PDF"
             onBuy={(type) => {
               if (analysis.usedCreditTypes.includes(type)) {
                 this.props.onPdfDownload();
@@ -63,7 +63,7 @@ class AnalysisTableRow extends Component {
           <BuyButton
             type={LONG_TYPE}
             usedTypes={analysis.usedCreditTypes}
-            typeMessage="Lange PDF"
+            typeMessage="Langes PDF"
             onBuy={(type) => {
               if (analysis.usedCreditTypes.includes(type)) {
                 this.props.onPdfDownload(true);

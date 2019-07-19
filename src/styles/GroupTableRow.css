@@ -1,10 +1,10 @@
 .GroupTableRow--groupNameCell {
     font-weight: bold;
-    width: 40%;
+    width: 30%;
 }
 
 .GroupTableRow--groupTypeCell {
-    width: 30%;
+    width: 15%;
 }
 
 .GroupTableRow--groupActionCell button {
@@ -13,4 +13,5 @@
 
 .GroupTableRow--groupActionCell {
     white-space: nowrap !important;
+    text-align: right;
 }

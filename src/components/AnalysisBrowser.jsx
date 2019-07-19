@@ -18,7 +18,6 @@ import ConfirmGroupDeletionDialog from './dialogs/ConfirmGroupDeletionDialog';
 import ConfirmAnalysisDeletionDialog from './dialogs/ConfirmAnalysisDeletionDialog';
 import RenameGroupDialog from './dialogs/RenameGroupDialog';
 import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
-import DownloadPdfDialog from './dialogs/DownloadPdfDialog';
 
 import { getUserAuthData } from '../utils/AuthUtils';
 import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
@@ -75,7 +74,6 @@ class AnalysisBrowser extends Component {
       confirmUseCreditDialogOpen: false,
       createGroupDialogOpen: false,
       renameGroupDialopOpen: false,
-      downloadDialogOpen: false,
       creditToBeUsed: false,
       loading: false,
       loadingText: null,
@@ -90,8 +88,6 @@ class AnalysisBrowser extends Component {
 
   // analysis about to be deleted (yet to be confirmed)
   analysisToBeDeleted = null;
-
-  pdfToBeDownloaded = null;
 
   /**
    * handler for the creation of a group
@@ -227,7 +223,7 @@ class AnalysisBrowser extends Component {
   /**
    * creates a pdf for the analysis and opens it in a new tab
    */
-  createAnalysisPdf = async () => {
+  createAnalysisPdf = async (pdfToBeDownloaded) => {
     // checking if logged in => otherwise redirecting to login
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
@@ -246,9 +242,9 @@ class AnalysisBrowser extends Component {
       const result = await this.props.client.query({
         query: personalResultsByIdQuery,
         variables: {
-          id: this.pdfToBeDownloaded.id,
+          id: pdfToBeDownloaded.id,
           isPdf: true,
-          longTexts: this.pdfToBeDownloaded.longTexts || false,
+          longTexts: pdfToBeDownloaded.longTexts || false,
         },
       });
       const { analysis } = result.data;
@@ -312,7 +308,7 @@ class AnalysisBrowser extends Component {
   async useCredit() {
     this.setState({
       loading: true,
-      loadingText: 'Waiting to use credit...',
+      loadingText: 'Die Numeroskop-Berechnung wird durchgeführt und das Guthaben verwendet.',
     });
     try {
       const { analysisId, type } = this.state.creditToBeUsed;
@@ -323,7 +319,7 @@ class AnalysisBrowser extends Component {
         update: (store, { data: { useCredit: analysis } }) => {},
       });
       this.props.onUsedCredit();
-      NotificationManager.success(`Credit successfuly used. You can download PDF now.`);
+      NotificationManager.success(`Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.`);
     }
     catch (error) {
       NotificationManager.error('Error using credit.');
@@ -439,8 +435,7 @@ class AnalysisBrowser extends Component {
                           this.hadnleOnUseCredit(analysis.id, type);
                         }}
                         onPdfDownload={(longTexts) => {
-                          this.setState({ downloadDialogOpen: true });
-                          this.pdfToBeDownloaded = { ...analysis, longTexts };
+                          this.createAnalysisPdf({ ...analysis, longTexts });
                         }}
                       />
                     )));
@@ -560,18 +555,6 @@ class AnalysisBrowser extends Component {
           onAction={() => {
             this.setState({ confirmUseCreditDialogOpen: false });
             this.useCredit();
-          }}
-        />
-        <DownloadPdfDialog
-          isOpen={this.state.downloadDialogOpen}
-          onClose={() => {
-            this.setState({
-              downloadDialogOpen: false,
-            });
-          }}
-          onAction={() => {
-            this.setState({ downloadDialogOpen: false, });
-            this.createAnalysisPdf();
           }}
         />
       </div>
