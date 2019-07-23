@@ -44,13 +44,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
       {isWaitingCallback && <CreditsBuyWait onSuccess={handleBuySuccess} windowToken={windowToken} />}
       <Modal show={show} onHide={onHide} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>
-            {
-              !isSuccess && (!credits || credits.length === 0)
-                ? 'Insuficient credits'
-                : 'Guthaben kaufen'
-            }
-          </Modal.Title>
+          <Modal.Title>Guthaben kaufen</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isSuccess && (
@@ -59,10 +53,14 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
               Sie können dieses Fenster nun schließen.
             </Alert>
           )}
-          {!isSuccess && (!credits || credits.length === 0) && (
-            <p>The printing of a numeroscope PDF is a premium service.<br />
-            Currently you don't have credits to do so. You have following
-            options to buy credits:</p>
+          {
+            !isSuccess
+            &&
+            (!credits || credits.length === 0 || credits.filter(c => c.total > 0).length === 0)
+            && (
+            <p>Das Erstellen eines Numeroskop-PDFs ist ein kostenpflichtiger Premium Service.<br />
+            Derzeit haben Sie dafür kein Guthaben zur Verfügung. Sie haben die Möglichkeit,
+            folgende Arten von Guthaben zu erwerben:</p>
           )}
           <Table>
             <thead>

@@ -33,7 +33,7 @@ const Wait = ({ onSuccess, data, loading, refetch }) => {
   }, 1000 * 10);
 
   return (
-    <LoadingIndicator text={`Waiting for purchase to come through.`} />
+    <LoadingIndicator text={`Wir warten bis die Zahlung in unserem Webshop (in einem separaten Fenster) erfolgreich durchgeführt wurde.`} />
   );
 };
 
