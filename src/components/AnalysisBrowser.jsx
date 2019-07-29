@@ -322,7 +322,7 @@ class AnalysisBrowser extends Component {
       NotificationManager.success(`Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.`);
     }
     catch (error) {
-      NotificationManager.error('Error using credit.');
+      NotificationManager.error('Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.');
     }
     this.setState({
       loading: false,
