@@ -56,7 +56,7 @@ export default ({ credits: rawCredits }) => {
             </thead>
             <tbody>
               <tr>
-                <td>Persönlichkeitsnumeroskop kurz als PDF</td>
+                <td>Persönlichkeitsnumeroskop</td>
                 <td>{credits.personalShorts}</td>
                 <td>{credits.personalLongs}</td>
               </tr>
