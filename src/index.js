@@ -11,6 +11,7 @@ import {
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
+import dotenv from 'dotenv';
 import 'react-notifications/lib/notifications.css';
 
 import withTracker from './utils/tracking/withTracker';
@@ -39,6 +40,9 @@ import './styles/font-awesome/font-awesome.min.css';
 import './styles/theme.css';
 
 import { GRAPHQL_ENDPOINT } from './utils/Config';
+
+// configuring dotenv
+dotenv.config();
 
 // creating fragment matcher
 const fragmentMatcher = new IntrospectionFragmentMatcher({
