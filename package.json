@@ -8,7 +8,6 @@
     "apollo-link-context": "^1.0.7",
     "apollo-link-http": "^1.5.0",
     "dotenv": "^8.1.0",
-    "eslint": "^4.17.0",
     "graphql": "0.12.3",
     "graphql-tag": "^2.8.0",
     "interweave": "^10.1.3",
@@ -27,7 +26,7 @@
     "react-ga": "^2.5.3",
     "react-notifications": "^1.4.3",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.17",
+    "react-scripts": "3.1.1",
     "react-spinkit": "^3.0.0",
     "stickyfilljs": "^2.0.3",
     "yup": "^0.24.1"
@@ -44,5 +43,17 @@
     "eslint-plugin-jest": "^21.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.6.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
