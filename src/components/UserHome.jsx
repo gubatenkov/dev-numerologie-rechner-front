@@ -7,6 +7,7 @@ import {
   NotificationManager,
   NotificationContainer,
 } from 'react-notifications';
+import cogoToast from 'cogo-toast';
 import Button from 'react-bootstrap/Button';
 
 import '../styles/UserHome.css';
@@ -202,9 +203,9 @@ class UserHome extends Component {
           primaryActionTitle="Anfrage an Berater"
           secondaryActionTitle="Neue Analyse"
           onSecondaryAction={() => this.props.history.push('/analysisInput')}
-          onPrimaryAction={() =>
-            NotificationManager.error('Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.')
-          }
+          onPrimaryAction={() => {
+            cogoToast.error('Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.', { position: 'top-right' });
+          }}
           renderLeftButtons={() => (
             <Fragment>
               <CreditsInfoButton

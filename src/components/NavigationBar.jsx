@@ -83,13 +83,6 @@ class NavigationBar extends Component {
               Abmelden
             </NavigationDropdownMenuItem>
           </NavigationDropdownMenu>
-          <li>
-            <button className="nav-link navbar-avatar">
-              <span className="avatar">
-                <img height="50" src={logo} alt={logo} />
-              </span>
-            </button>
-          </li>
         </ul>
       ) : (
         <ul className="nav navbar-toolbar navbar-right">

@@ -12,9 +12,13 @@
     padding-right: 30px !important;
 }
 
-.tableRow__detailsCompare a {
-    color: blue !important;
-    cursor: pointer;
+.tableRow__detailsCompare button {
+    color: #00b3d4;
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    text-decoration: underline;
+    cursor: pointer !important;
 }
 
 .tableRow__customCompareRowName {

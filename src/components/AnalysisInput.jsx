@@ -216,7 +216,8 @@ class AnalysisInput extends Component {
                       />
                     </div>
                   )}
-                  <button
+                  <div
+                    role="link"
                     onClick={() =>
                       this.setState({
                         comfortNameFieldsShown: !this.state
@@ -231,7 +232,7 @@ class AnalysisInput extends Component {
                           : 'einblenden'
                       }`}
                     </h6>
-                  </button>
+                  </div>
                   <button
                     className="btn btn-primary btn-block"
                     onClick={this.startAnalysis}

@@ -73,9 +73,6 @@ const client = new ApolloClient({
   }),
 });
 
-// <PrivateRoute path="/analysisInput"
-// isAuthenticated={isUserAuthenticated} loginPath='/login' component={AnalysisInput} />
-
 ReactDOM.render(
   <ApolloProvider client={client}>
     <BrowserRouter >
