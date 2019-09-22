@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
 import { graphql, compose, withApollo } from 'react-apollo';
-import { NotificationManager } from 'react-notifications';
 import _ from 'lodash';
 
 import Panel from './Panel';
@@ -12,6 +11,7 @@ import AnalysisTableRow from './AnalysisTableRow';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import LoadingIndicator from './LoadingIndicator';
+import ToastNotifications from 'cogo-toast';
 
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
 import ConfirmGroupDeletionDialog from './dialogs/ConfirmGroupDeletionDialog';
@@ -107,12 +107,12 @@ class AnalysisBrowser extends Component {
           store.writeQuery({ query: currentUserQuery, data });
         },
       });
-      NotificationManager.success(`Die Gruppe ${groupName} wurde erfolgreich erstellt.`);
+      ToastNotifications.success(`Die Gruppe ${groupName} wurde erfolgreich erstellt.`, { position: 'top-right' });
     } catch (error) {
       // error occured -> displaying notification
-      NotificationManager.error(error.graphQLErrors[0].message);
+      ToastNotifications.error(error.graphQLErrors[0].message, { position: 'top-right' });
     }
-    this.setState({ loading: false, });
+    this.setState({ loading: false });
   };
 
   /**
@@ -129,12 +129,12 @@ class AnalysisBrowser extends Component {
           newName,
         },
       });
-      NotificationManager.success(`Die Gruppe ${newName} wurde erfolgreich umbenannt.`);
+      ToastNotifications.success(`Die Gruppe ${newName} wurde erfolgreich umbenannt.`, { position: 'top-right' });
     } catch (error) {
       // error occured -> displaying notification
-      NotificationManager.error('Die Gruppe konnte nicht umbenannt werden');
+      ToastNotifications.error('Die Gruppe konnte nicht umbenannt werden', { position: 'top-right' });
     }
-    this.setState({ loading: false, });
+    this.setState({ loading: false });
   };
 
   /**
@@ -170,11 +170,9 @@ class AnalysisBrowser extends Component {
       });
 
       // shooting notification informting the user
-      NotificationManager.success(`Die Gruppe ${
-        deletedGroup.data.deleteAnalysisGroup.name
-      } wurde erfolgreich gelöscht.`);
+      ToastNotifications.success(`Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`, { position: 'top-right' });
     } catch (error) {
-      NotificationManager.error('Gruppe konnte nicht gelöscht werden.');
+      ToastNotifications.error('Gruppe konnte nicht gelöscht werden.', { position: 'top-right' });
     }
     this.setState({ loading: false, });
   };
@@ -211,13 +209,11 @@ class AnalysisBrowser extends Component {
       });
 
       // shooting notification informting the user
-      NotificationManager.success(`Die Analyse ${
-        deletedAnalysis.data.deleteAnalysis.name
-      } wurde erfolgreich gelöscht.`);
+      ToastNotifications.success(`Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`, { position: 'top-right' });
     } catch (error) {
-      NotificationManager.error('Analyse konnte nicht gelöscht werden.');
+      ToastNotifications.error('Analyse konnte nicht gelöscht werden.', { position: 'top-right' });
     }
-    this.setState({ loading: false, });
+    this.setState({ loading: false});
   };
 
   /**
@@ -284,18 +280,6 @@ class AnalysisBrowser extends Component {
         loading: false,
         loadingText: null,
       });
-      NotificationManager.error(
-        'Das Erstellen eines fertigen Numeroskops mit wahlweise kurzen oder langen Texten mit ca. 60 bzw. 100 Seiten als PDF (kostenpflichtig) zum Ausdrucken oder Weiterleiten ist noch nicht möglich. Diese Eigenschaft wird erst ab Herbst 2018 freigeschalten. Wir informieren Sie darüber in unseremPsychologische Numerologie Newsletter. Klicken Sie hier um sich für den Newsletter anzumelden.',
-        '',
-        5000,
-        () => {
-          const win = window.open(
-            'https://www.psychologischenumerologie.eu/newsletter/',
-            '_blank',
-          );
-          win.focus();
-        },
-      );
     }
 
     // removing loading indicator
@@ -319,10 +303,10 @@ class AnalysisBrowser extends Component {
         update: (store, { data: { useCredit: analysis } }) => {},
       });
       this.props.onUsedCredit();
-      NotificationManager.success(`Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.`);
+      ToastNotifications.success('Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.', { position: 'top-right' });
     }
     catch (error) {
-      NotificationManager.error('Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.');
+      ToastNotifications.error('Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.', { position: 'top-right' });
     }
     this.setState({
       loading: false,

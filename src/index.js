@@ -12,7 +12,6 @@ import {
 } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import dotenv from 'dotenv';
-import 'react-notifications/lib/notifications.css';
 
 import withTracker from './utils/tracking/withTracker';
 
