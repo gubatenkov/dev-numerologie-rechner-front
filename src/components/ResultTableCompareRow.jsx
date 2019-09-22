@@ -128,13 +128,13 @@ class ResultTableCompareRow extends Component {
           );
         })}
         <td className="tableRow__detailsCompare">
-          <a
+          <button
             role="link"
             key="readIndicator"
             onClick={this.props.onTextDetailClick}
           >
             Details
-          </a>
+          </button>
         </td>
       </tr>
     );
@@ -179,13 +179,13 @@ class ResultTableCompareRow extends Component {
             : contentColumnCompare}
         </td>
         <td className="tableRow__detailsCompare">
-          <a
+          <button
             role="link"
             key="readIndicator"
             onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
           >
             Details
-          </a>
+          </button>
         </td>
       </tr>
     );

@@ -39,13 +39,13 @@ class ResultTableRow extends Component {
             0,
             LENGTH_DESCRIPITON_PREVIEW
           )}...  `,
-          <a
+          <button
             role="link"
             key="readIndicator"
             onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
           >
             Lesen
-          </a>
+          </button>
         ];
       }
     }

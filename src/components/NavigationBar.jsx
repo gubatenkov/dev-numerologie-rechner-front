@@ -84,11 +84,11 @@ class NavigationBar extends Component {
             </NavigationDropdownMenuItem>
           </NavigationDropdownMenu>
           <li>
-            <a className="nav-link navbar-avatar">
+            <button className="nav-link navbar-avatar">
               <span className="avatar">
                 <img height="50" src={logo} alt={logo} />
               </span>
-            </a>
+            </button>
           </li>
         </ul>
       ) : (

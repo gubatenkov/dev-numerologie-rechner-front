@@ -52,14 +52,13 @@ class NavigationDropdownMenu extends Component {
         role="button"
       >
         <li className={`nav-item dropdown${this.state.isOpen ? ' show' : ''}`}>
-          <a
+          <button
             className={`NavigationDropdownMenu__button ${
               this.props.navbar ? 'nav-link' : ''
             }`}
-            role="button"
           >
             {this.props.name}
-          </a>
+          </button>
           <div
             className={`dropdown-menu dropdown-menu-bullet ${
               this.props.direction === 'right' ? 'dropdown-menu-right' : ''

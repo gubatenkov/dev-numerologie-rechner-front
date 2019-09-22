@@ -7,13 +7,12 @@ import '../styles/NavigationDropdownMenuItem.css';
  * wrapper component for dropdown items
  */
 const NavigationDropdownMenuItem = props => (
-  <a
+  <button
     onClick={props.onClick}
     className="NavigationDropdownMenuItem dropdown-item"
-    role="button"
   >
     {props.children}
-  </a>
+  </button>
 );
 
 NavigationDropdownMenuItem.propTypes = {
@@ -23,6 +22,6 @@ NavigationDropdownMenuItem.propTypes = {
 
 NavigationDropdownMenuItem.defaultProps = {
   onClick: () => {},
-  children: null,
+  children: null, 
 };
 export default NavigationDropdownMenuItem;
