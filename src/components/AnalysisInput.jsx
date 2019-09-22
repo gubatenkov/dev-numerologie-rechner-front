@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import yup from 'yup';
 import moment from 'moment';
-import {
-  NotificationManager,
-  NotificationContainer,
-} from 'react-notifications';
+
+import ToastNotifications from 'cogo-toast';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -76,7 +74,6 @@ class AnalysisInput extends Component {
     // setting background dynamically
     document.body.style.backgroundColor = '#00b3d4';
     const querString = this.props.location.search.replace('?', '')
-    console.log("Params " + querString)
     const values = queryString.parse(querString)
     const firstNameParam = values.firstNames
     const lastNameParam = values.lastNames
@@ -121,14 +118,14 @@ class AnalysisInput extends Component {
 
     // setting error message
     if (!valid) {
-      NotificationManager.error('Vor- und Nachname müssen (für alle Namen) angegeben werden.');
+      ToastNotifications.error('Vor- und Nachname müssen (für alle Namen) angegeben werden.', { position: 'top-right' });
       return false;
     }
 
     // validating dateOfBirth
     const date = moment(this.dateOfBirth, 'DD.MM.YYYY', true);
     if (!date.isValid()) {
-      NotificationManager.error('Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.');
+      ToastNotifications.error('Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.', { position: 'top-right' });
       return false;
     }
 
@@ -252,7 +249,6 @@ class AnalysisInput extends Component {
             </div>
           </div>
         </div>
-        <NotificationContainer />
       </div>
     );
   }

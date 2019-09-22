@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
 
-import {
-  NotificationManager,
-  NotificationContainer,
-} from 'react-notifications';
-
+import ToastNotifications from 'cogo-toast';
 import Panel from './Panel';
 import InputField from './InputField';
 
@@ -65,7 +61,7 @@ class Register extends Component {
       // redirecting to user home
       this.props.history.push('/userHome');
     } catch (error) {
-      NotificationManager.error(error.message || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.');
+      ToastNotifications.error(error.message || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.', { position: 'top-right' });
     }
   };
 
@@ -233,7 +229,6 @@ class Register extends Component {
             </div>
           </div>
         </div>
-        <NotificationContainer />
       </div>
     );
   }

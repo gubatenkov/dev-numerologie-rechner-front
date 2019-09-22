@@ -8,7 +8,7 @@ import '../styles/NavigationDropdownMenuItem.css';
  * wrapper component for dropdown items
  */
 const NavigationDropdownMenuItem = props => (
-  <Button 
+  <Button
     variant="link"
     onClick={props.onClick}
     className="NavigationDropdownMenuItem dropdown-item"
