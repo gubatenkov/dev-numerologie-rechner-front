@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
-import yup from 'yup';
+import * as yup from 'yup'
 import moment from 'moment';
+import queryString from 'querystring'
 
 import ToastNotifications from 'cogo-toast';
 
@@ -12,7 +13,6 @@ import InputField from './InputField';
 import logo from '../logo.png';
 import '../styles/AnalysisInput.css';
 import '../styles/InputForm.css';
-import queryString from 'querystring'
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({

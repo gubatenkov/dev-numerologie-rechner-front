@@ -2,7 +2,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter, Redirect } from 'react-router-dom';
-import { graphql, compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import * as compose from 'lodash.flowright';
 import ToastNotifications from 'cogo-toast';
 import Button from 'react-bootstrap/Button';
 
