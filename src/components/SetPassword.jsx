@@ -52,7 +52,6 @@ class SetPassword extends Component {
    * default render method
    */
   render() {
-    console.log(this.token);
     return (
       <div className="page-register-v3 layout-full">
         <div className="page vertical-align">
