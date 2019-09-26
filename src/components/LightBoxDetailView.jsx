@@ -53,25 +53,29 @@ class LightBoxDetailView extends Component {
   }
 
   /**
-   * lifcycle method called if props change
-   * @param nextProps new version of the props
-   */
-  componentWillReceiveProps(nextProps) {
-    // checking if own state needs ro be re-initilized based on props
-    // from parent component
+  * lifecycle method that updates internal state on prop update
+  * @param nextProps the updated prop
+  * @param {*} prevState the previous state of the component
+  * @returns an object to pass to setState
+  */
+  getDerivedStateFromProps(nextProps, prevState) {
+    // if props have been changed (index of section and element), updating state
     if (
-      this.state.currentSectionIndex !== nextProps.sectionIndex ||
-      this.state.currentElementIndex !== nextProps.elementIndex
+      prevState.currentSectionIndex !== nextProps.sectionIndex
+      || prevState.currentElementIndex !== nextProps.elementIndex
     ) {
-      this.setState({
+      // returning object to update state
+      return {
         currentSectionIndex: nextProps.sectionIndex,
         currentElementIndex: nextProps.elementIndex,
-      });
+      };
     }
+
+    return null;
   }
 
   /**
-   * default licecylce method that makes sure component
+   * default lifecycle method that makes sure component
    * parameters are set upon display/hide
    */
   componentDidUpdate() {
@@ -160,6 +164,8 @@ class LightBoxDetailView extends Component {
    * default render
    */
   render() {
+    console.log('Lightbox Render');
+    console.log(this.state);
     // if detail view not open -> not showing it
     if (this.props.isOpen === false) {
       return null;
