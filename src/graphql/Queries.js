@@ -151,7 +151,7 @@ export const personalResultsQuery = gql`
 
 export const personalResultsByIdQuery = gql`
   query analysis(
-    $id: Int!
+    $id: ID!
     $isPdf: Boolean!
     $longTexts: Boolean!
   ) {

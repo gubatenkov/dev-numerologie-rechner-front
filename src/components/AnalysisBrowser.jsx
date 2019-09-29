@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { graphql, withApollo } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 import _ from 'lodash';
+import ToastNotifications from 'cogo-toast';
 
 import Panel from './Panel';
 import GroupTableRow from './GroupTableRow';
@@ -12,7 +13,6 @@ import AnalysisTableRow from './AnalysisTableRow';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import LoadingIndicator from './LoadingIndicator';
-import ToastNotifications from 'cogo-toast';
 
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
 import ConfirmGroupDeletionDialog from './dialogs/ConfirmGroupDeletionDialog';
@@ -38,27 +38,14 @@ import '../styles/AnalysisBrowser.css';
  * their analyses and groups
  */
 class AnalysisBrowser extends Component {
-  static propTypes = {
-    analyses: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      inputs: PropTypes.arrayOf(PropTypes.shape({
-        firstNames: PropTypes.string.isRequired,
-        lastName: PropTypes.string.isRequired,
-        dateOfBirth: PropTypes.string.isRequired,
-      })).isRequired,
-    })).isRequired,
-    groups: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })).isRequired,
-    createGroup: PropTypes.func.isRequired,
-    deleteGroup: PropTypes.func.isRequired,
-    renameGroup: PropTypes.func.isRequired,
-    deleteAnalysis: PropTypes.func.isRequired,
-  };
+  // group to be deleted and not yet confirmed
+  groupToBeDeleted = null;
 
-  static defaultProps = {};
+  // group to be renamed
+  groupToBeRenamed = null;
+
+  // analysis about to be deleted (yet to be confirmed)
+  analysisToBeDeleted = null;
 
   /**
    * default constructor
@@ -81,38 +68,38 @@ class AnalysisBrowser extends Component {
     };
   }
 
-  // group to be deleted and not yet confirmed
-  groupToBeDeleted = null;
-
-  // group to be renamed
-  groupToBeRenamed = null;
-
-  // analysis about to be deleted (yet to be confirmed)
-  analysisToBeDeleted = null;
-
   /**
    * handler for the creation of a group
    * @param groupName the name of the new group to be created
    */
   createGroup = async (groupName) => {
+    // getting createGroup mutation
+    const { createGroup } = this.props;
     try {
-      // performing mutation call
-      await this.props.createGroup({
+      // performing mutation call to create group
+      await createGroup({
         variables: {
           groupName,
         },
         update: (store, { data: { createAnalysisGroup } }) => {
-          // gettint the query from the local cache and adding group
+          // getting the query from the local cache and adding group
           const data = store.readQuery({ query: currentUserQuery });
           data.currentUser.groups.push(createAnalysisGroup);
           store.writeQuery({ query: currentUserQuery, data });
         },
       });
-      ToastNotifications.success(`Die Gruppe ${groupName} wurde erfolgreich erstellt.`, { position: 'top-right' });
+      // notifying user
+      ToastNotifications.success(
+        `Die Gruppe ${groupName} wurde erfolgreich erstellt.`,
+        { position: 'top-right' },
+      );
     } catch (error) {
       // error occured -> displaying notification
-      ToastNotifications.error(error.graphQLErrors[0].message, { position: 'top-right' });
+      ToastNotifications.error(error.graphQLErrors[0].message, {
+        position: 'top-right',
+      });
     }
+    // resetting loading
     this.setState({ loading: false });
   };
 
@@ -122,19 +109,28 @@ class AnalysisBrowser extends Component {
    * @param id the id of the item to renamed
    */
   renameGroup = async (newName, id) => {
+    // getting createGroup mutation
+    const { renameGroup } = this.props;
     try {
       // performing mutation call
-      await this.props.renameGroup({
+      await renameGroup({
         variables: {
           id,
           newName,
         },
       });
-      ToastNotifications.success(`Die Gruppe ${newName} wurde erfolgreich umbenannt.`, { position: 'top-right' });
+      // notifying user
+      ToastNotifications.success(
+        `Die Gruppe ${newName} wurde erfolgreich umbenannt.`,
+        { position: 'top-right' },
+      );
     } catch (error) {
       // error occured -> displaying notification
-      ToastNotifications.error('Die Gruppe konnte nicht umbenannt werden', { position: 'top-right' });
+      ToastNotifications.error('Die Gruppe konnte nicht umbenannt werden', {
+        position: 'top-right',
+      });
     }
+    // resetting loading state
     this.setState({ loading: false });
   };
 
@@ -143,9 +139,11 @@ class AnalysisBrowser extends Component {
    * @param id: the id of the group to be deleted
    */
   deleteGroup = async (id) => {
+    // getting createGroup mutation
+    const { deleteGroup } = this.props;
     // deleting group
     try {
-      const deletedGroup = await this.props.deleteGroup({
+      const deletedGroup = await deleteGroup({
         variables: {
           id,
         },
@@ -155,9 +153,8 @@ class AnalysisBrowser extends Component {
           // getting index of item to delete
           const groupIndex = _.findIndex(
             data.currentUser.groups,
-            item =>
-              item.id === deleteAnalysisGroup.id &&
-              item.name === deleteAnalysisGroup.name,
+            (item) => item.id === deleteAnalysisGroup.id
+              && item.name === deleteAnalysisGroup.name,
           );
 
           // deleting item if present
@@ -170,12 +167,18 @@ class AnalysisBrowser extends Component {
         },
       });
 
-      // shooting notification informting the user
-      ToastNotifications.success(`Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`, { position: 'top-right' });
+      // informing the user
+      ToastNotifications.success(
+        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
+        { position: 'top-right' },
+      );
     } catch (error) {
-      ToastNotifications.error('Gruppe konnte nicht gelöscht werden.', { position: 'top-right' });
+      ToastNotifications.error('Gruppe konnte nicht gelöscht werden.', {
+        position: 'top-right',
+      });
     }
-    this.setState({ loading: false, });
+    // resetting loading state
+    this.setState({ loading: false });
   };
 
   /**
@@ -196,7 +199,7 @@ class AnalysisBrowser extends Component {
           // getting index of item to delete
           const analysisIndex = _.findIndex(
             data.analyses,
-            item => item.id === deleteAnalysis.id,
+            (item) => item.id === deleteAnalysis.id,
           );
 
           // deleting item if present
@@ -210,11 +213,16 @@ class AnalysisBrowser extends Component {
       });
 
       // shooting notification informting the user
-      ToastNotifications.success(`Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`, { position: 'top-right' });
+      ToastNotifications.success(
+        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
+        { position: 'top-right' },
+      );
     } catch (error) {
-      ToastNotifications.error('Analyse konnte nicht gelöscht werden.', { position: 'top-right' });
+      ToastNotifications.error('Analyse konnte nicht gelöscht werden.', {
+        position: 'top-right',
+      });
     }
-    this.setState({ loading: false});
+    this.setState({ loading: false });
   };
 
   /**
@@ -222,6 +230,7 @@ class AnalysisBrowser extends Component {
    */
   createAnalysisPdf = async (pdfToBeDownloaded) => {
     // checking if logged in => otherwise redirecting to login
+    console.log('creating pdf!!!!!!!!!!!!!!!!!!!!!!');
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
       this.props.history.push('/login');
@@ -248,30 +257,26 @@ class AnalysisBrowser extends Component {
 
       // creating pdf and downloading with custom name
       if (analysis.personalAnalysisResults.length > 1) {
-        const [personalAnalysisResult, personalAnalysisResultCompare] = analysis.personalAnalysisResults
+        const [
+          personalAnalysisResult,
+          personalAnalysisResultCompare,
+        ] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           { personalAnalysis: personalAnalysisResult },
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${
-            personalAnalysisResult.firstName}_${personalAnalysisResult.lastName
-          }_${
-            personalAnalysisResultCompare.firstName}_${personalAnalysisResultCompare.lastName
-          }.pdf`,
+          `Namensvergleich_${personalAnalysisResult.firstName}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstName}_${personalAnalysisResultCompare.lastName}.pdf`,
           { personalAnalysis: personalAnalysisResultCompare },
           personalAnalysisResultCompare.firstNames,
           personalAnalysisResultCompare.lastName,
         );
-      }
-      else {
+      } else {
         const [personalAnalysisResult] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           { personalAnalysis: personalAnalysisResult },
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
-            personalAnalysisResult.lastName
-          }.pdf`,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
         );
       }
     } catch (error) {
@@ -290,43 +295,53 @@ class AnalysisBrowser extends Component {
     });
   };
 
-  async useCredit() {
-    this.setState({
-      loading: true,
-      loadingText: 'Die Numeroskop-Berechnung wird durchgeführt und das Guthaben verwendet.',
-    });
-    try {
-      const { analysisId, type } = this.state.creditToBeUsed;
-      await this.props.useCredit({
-        variables: {
-          analysisId, type
-        },
-        update: (store, { data: { useCredit: analysis } }) => {},
-      });
-      this.props.onUsedCredit();
-      ToastNotifications.success('Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.', { position: 'top-right' });
-    }
-    catch (error) {
-      ToastNotifications.error('Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.', { position: 'top-right' });
-    }
-    this.setState({
-      loading: false,
-      loadingText: null,
-    });
-  }
-
-  hadnleOnUseCredit = (analysisId, type) => {
-    const { credits } = this.props;
+  handleOnUseCredit = (analysisId, type) => {
+    const { credits, onInsuficientCredits } = this.props;
     const filtered = credits.filter((c) => c.type === type);
     if (filtered.length === 1 && filtered[0].total > 0) {
       this.setState({
         confirmUseCreditDialogOpen: true,
         creditToBeUsed: { analysisId, type },
       });
+    } else {
+      onInsuficientCredits();
     }
-    else {
-      this.props.onInsuficientCredits();
+  };
+
+  async useCredit() {
+    this.setState({
+      loading: true,
+      loadingText:
+        'Die Numeroskop-Berechnung wird durchgeführt und das Guthaben verwendet.',
+    });
+    try {
+      // preparing arguments to use credit
+      const { creditToBeUsed } = this.state;
+      const { analysisId, type } = creditToBeUsed;
+      await this.props.useCredit({
+        variables: {
+          analysisId/*: parseInt(analysisId, 10)*/,
+          type,
+        },
+        update: (store, { data: { useCredit: analysis } }) => {},
+      });
+      console.log('used credit');
+      this.props.onUsedCredit();
+      ToastNotifications.success(
+        'Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.',
+        { position: 'top-right' },
+      );
+    } catch (error) {
+      console.log(error);
+      ToastNotifications.error(
+        'Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.',
+        { position: 'top-right' },
+      );
     }
+    this.setState({
+      loading: false,
+      loadingText: null,
+    });
   }
 
   /**
@@ -356,7 +371,9 @@ class AnalysisBrowser extends Component {
                   group={group}
                   index={index}
                   elementsInGroup={
-                    this.props.analyses.filter(analysis => analysis.group.id === group.id).length
+                    this.props.analyses.filter(
+                      (analysis) => analysis.group.id === group.id,
+                    ).length
                   }
                   clickHandler={(clickIndex) => {
                     // if index is not already set -> setting new index
@@ -395,9 +412,10 @@ class AnalysisBrowser extends Component {
               // if index of current group is expanded
               // -> rendering analyses as well
               if (this.state.expandedIndex === index) {
-                groupCellContent.push(this.props.analyses
-                    .filter(analysis => analysis.group.id === group.id)
-                    .map(analysis => (
+                groupCellContent.push(
+                  this.props.analyses
+                    .filter((analysis) => analysis.group.id === group.id)
+                    .map((analysis) => (
                       <AnalysisTableRow
                         key={analysis.id}
                         analysis={analysis}
@@ -405,7 +423,7 @@ class AnalysisBrowser extends Component {
                           // getting analysis to be deleted
                           this.analysisToBeDeleted = _.find(
                             this.props.analyses,
-                            item => item.id === analysisId,
+                            (item) => item.id === analysisId,
                           );
 
                           // showing confirm dialog
@@ -414,16 +432,19 @@ class AnalysisBrowser extends Component {
                           });
                         }}
                         showHandler={() => {
-                          this.props.history.push(`/resultPersonal/${analysis.id}`);
+                          this.props.history.push(
+                            `/resultPersonal/${analysis.id}`,
+                          );
                         }}
                         onUseCredit={(type) => {
-                          this.hadnleOnUseCredit(analysis.id, type);
+                          this.handleOnUseCredit(analysis.id, type);
                         }}
                         onPdfDownload={(longTexts) => {
                           this.createAnalysisPdf({ ...analysis, longTexts });
                         }}
                       />
-                    )));
+                    )),
+                );
               }
 
               // returning accumulated rows for group
@@ -441,11 +462,9 @@ class AnalysisBrowser extends Component {
     }
     return (
       <div>
-        {
-          this.state.loading
-          &&
+        {this.state.loading && (
           <LoadingIndicator text={this.state.loadingText} />
-        }
+        )}
         <Panel
           title="Analysen"
           actions={[
@@ -462,7 +481,9 @@ class AnalysisBrowser extends Component {
               >
                 Gruppe
               </NavigationDropdownMenuItem>
-              <NavigationDropdownMenuItem onClick={() => this.props.history.push('/analysisInput')}>
+              <NavigationDropdownMenuItem
+                onClick={() => this.props.history.push('/analysisInput')}
+              >
                 Analyse
               </NavigationDropdownMenuItem>
             </NavigationDropdownMenu>,
@@ -480,7 +501,10 @@ class AnalysisBrowser extends Component {
           }}
           onAction={() => {
             // hiding dialog, deleting group and clearing to be deleted group
-            this.setState({ confirmGroupDeletionDialogOpen: false, loading: true });
+            this.setState({
+              confirmGroupDeletionDialogOpen: false,
+              loading: true,
+            });
             this.deleteGroup(this.groupToBeDeleted.id);
             this.groupToBeDeleted = null;
           }}
@@ -494,7 +518,10 @@ class AnalysisBrowser extends Component {
           }}
           onAction={() => {
             // hiding dialog, deleting analysis and clearing to be deleted group
-            this.setState({ confirmAnalysisDeletionDialogOpen: false, loading: true });
+            this.setState({
+              confirmAnalysisDeletionDialogOpen: false,
+              loading: true,
+            });
             this.deleteAnalysis(this.analysisToBeDeleted.id);
             this.analysisToBeDeleted = null;
           }}
@@ -507,9 +534,9 @@ class AnalysisBrowser extends Component {
             this.createGroup(groupName);
 
             // hiding dialog
-            this.setState({ createGroupDialogOpen: false, loading: true, });
+            this.setState({ createGroupDialogOpen: false, loading: true });
           }}
-          groups={this.props.groups.map(item => item.name)}
+          groups={this.props.groups.map((item) => item.name)}
         />
         <RenameGroupDialog
           isOpen={this.state.renameGroupDialopOpen}
@@ -525,7 +552,7 @@ class AnalysisBrowser extends Component {
             this.renameGroup(newName, id);
 
             // hiding dialog
-            this.setState({ renameGroupDialopOpen: false, loading: true, });
+            this.setState({ renameGroupDialopOpen: false, loading: true });
           }}
           group={this.groupToBeRenamed}
         />
@@ -546,6 +573,34 @@ class AnalysisBrowser extends Component {
     );
   }
 }
+
+AnalysisBrowser.propTypes = {
+  analyses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      inputs: PropTypes.arrayOf(
+        PropTypes.shape({
+          firstNames: PropTypes.string.isRequired,
+          lastName: PropTypes.string.isRequired,
+          dateOfBirth: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
+    }),
+  ).isRequired,
+  groups: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  createGroup: PropTypes.func.isRequired,
+  deleteGroup: PropTypes.func.isRequired,
+  renameGroup: PropTypes.func.isRequired,
+  deleteAnalysis: PropTypes.func.isRequired,
+};
+
+AnalysisBrowser.defaultProps = {};
 
 export default compose(
   graphql(deleteGroupMutation, { name: 'deleteGroup' }),
