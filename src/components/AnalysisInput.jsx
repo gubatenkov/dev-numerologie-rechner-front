@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
-import yup from 'yup';
+import * as yup from 'yup'
 import moment from 'moment';
-import {
-  NotificationManager,
-  NotificationContainer,
-} from 'react-notifications';
+import queryString from 'querystring'
+
+import ToastNotifications from 'cogo-toast';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -14,7 +13,6 @@ import InputField from './InputField';
 import logo from '../logo.png';
 import '../styles/AnalysisInput.css';
 import '../styles/InputForm.css';
-import queryString from 'querystring'
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({
@@ -76,7 +74,6 @@ class AnalysisInput extends Component {
     // setting background dynamically
     document.body.style.backgroundColor = '#00b3d4';
     const querString = this.props.location.search.replace('?', '')
-    console.log("Params " + querString)
     const values = queryString.parse(querString)
     const firstNameParam = values.firstNames
     const lastNameParam = values.lastNames
@@ -121,14 +118,14 @@ class AnalysisInput extends Component {
 
     // setting error message
     if (!valid) {
-      NotificationManager.error('Vor- und Nachname müssen (für alle Namen) angegeben werden.');
+      ToastNotifications.error('Vor- und Nachname müssen (für alle Namen) angegeben werden.', { position: 'top-right' });
       return false;
     }
 
     // validating dateOfBirth
     const date = moment(this.dateOfBirth, 'DD.MM.YYYY', true);
     if (!date.isValid()) {
-      NotificationManager.error('Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.');
+      ToastNotifications.error('Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.', { position: 'top-right' });
       return false;
     }
 
@@ -216,8 +213,8 @@ class AnalysisInput extends Component {
                       />
                     </div>
                   )}
-                  <a
-                    role="button"
+                  <div
+                    role="link"
                     onClick={() =>
                       this.setState({
                         comfortNameFieldsShown: !this.state
@@ -232,7 +229,7 @@ class AnalysisInput extends Component {
                           : 'einblenden'
                       }`}
                     </h6>
-                  </a>
+                  </div>
                   <button
                     className="btn btn-primary btn-block"
                     onClick={this.startAnalysis}
@@ -252,7 +249,6 @@ class AnalysisInput extends Component {
             </div>
           </div>
         </div>
-        <NotificationContainer />
       </div>
     );
   }

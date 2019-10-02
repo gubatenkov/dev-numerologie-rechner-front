@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 
 import '../styles/NavigationDropdownMenu.css';
 
@@ -52,14 +53,14 @@ class NavigationDropdownMenu extends Component {
         role="button"
       >
         <li className={`nav-item dropdown${this.state.isOpen ? ' show' : ''}`}>
-          <a
+          <Button
+            variant="link"
             className={`NavigationDropdownMenu__button ${
               this.props.navbar ? 'nav-link' : ''
             }`}
-            role="button"
           >
             {this.props.name}
-          </a>
+          </Button>
           <div
             className={`dropdown-menu dropdown-menu-bullet ${
               this.props.direction === 'right' ? 'dropdown-menu-right' : ''

@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
-import {
-  NotificationManager,
-  NotificationContainer,
-} from 'react-notifications';
 
 import Panel from './Panel';
 import InputField from './InputField';
 
-// import logo from '../logo.png';
+import ToastNotifications from 'cogo-toast';
 
 import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 import '../styles/InputForm.css';
@@ -58,7 +54,7 @@ class Login extends Component {
       // redirecting to user home
       this.props.history.push('/userHome');
     } catch (error) {
-      NotificationManager.error('Login fehlgeschlagen. Bitte versuchen Sie es erneut.');
+      ToastNotifications.error('Login fehlgeschlagen. Bitte versuchen Sie es erneut.', { position: 'top-right' });
     }
   };
 
@@ -110,7 +106,6 @@ class Login extends Component {
             </div>
           </div>
         </div>
-        <NotificationContainer />
       </div>
     );
   }

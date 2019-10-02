@@ -2,11 +2,9 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter, Redirect } from 'react-router-dom';
-import { graphql, compose } from 'react-apollo';
-import {
-  NotificationManager,
-  NotificationContainer,
-} from 'react-notifications';
+import { graphql } from 'react-apollo';
+import * as compose from 'lodash.flowright';
+import ToastNotifications from 'cogo-toast';
 import Button from 'react-bootstrap/Button';
 
 import '../styles/UserHome.css';
@@ -137,11 +135,15 @@ class UserHome extends Component {
         },
       });
       this.setState({ loading: false, });
+
+      // redirecting to user home
       this.props.history.push('/userHome');
-      NotificationManager.success(`Die Analyse ${name} wurde erfolgreich erstellt.`);
+
+      // sending notification to user
+      ToastNotifications.success(`Die Analyse ${name} wurde erfolgreich erstellt.`, { position: 'top-right' });
     } catch (error) {
-      // error occured -> displaying notification
-      NotificationManager.error('Analyse konnte nicht gespreichert werden.');
+      // informing user of error
+      ToastNotifications.error('Analyse konnte nicht gespreichert werden.', { position: 'top-right' });
     }
   }
 
@@ -202,9 +204,9 @@ class UserHome extends Component {
           primaryActionTitle="Anfrage an Berater"
           secondaryActionTitle="Neue Analyse"
           onSecondaryAction={() => this.props.history.push('/analysisInput')}
-          onPrimaryAction={() =>
-            NotificationManager.error('Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.')
-          }
+          onPrimaryAction={() => {
+            ToastNotifications.error('Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.', { position: 'top-right' });
+          }}
           renderLeftButtons={() => (
             <Fragment>
               <CreditsInfoButton
@@ -298,7 +300,6 @@ class UserHome extends Component {
             this.handleDeleteUser();
           }}
         />
-        <NotificationContainer />
 
         <CreditsBuyModal
           credits={this.props.data.currentUser.credits}

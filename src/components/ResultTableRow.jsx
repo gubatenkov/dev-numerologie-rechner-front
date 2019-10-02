@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Interweave from "interweave";
+import { Button } from 'react-bootstrap'; 
 
 import "../styles/ResultTableRow.css";
 
@@ -35,17 +36,14 @@ class ResultTableRow extends Component {
       rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, "");
       if (rowTextRepresentation.length > LENGTH_DESCRIPITON_PREVIEW) {
         rowTextRepresentation = [
-          `${rowTextRepresentation.substring(
-            0,
-            LENGTH_DESCRIPITON_PREVIEW
-          )}...  `,
-          <a
-            role="link"
+          `${rowTextRepresentation.substring(0,LENGTH_DESCRIPITON_PREVIEW)}...  `,
+          <Button
+            variant="link"
             key="readIndicator"
             onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
           >
             Lesen
-          </a>
+          </Button>
         ];
       }
     }

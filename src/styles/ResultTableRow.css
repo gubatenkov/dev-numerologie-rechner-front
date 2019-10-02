@@ -11,10 +11,13 @@
     overflow-wrap: break-word;
 }
 
-.tableRow__text a {
-    color: blue !important;
-    text-decoration: underline !important;
-    cursor: pointer;
+.tableRow__text button {
+    color: #00b3d4;
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    text-decoration: underline;
+    cursor: pointer !important;
 }
 
 .tableRow--highlighted {

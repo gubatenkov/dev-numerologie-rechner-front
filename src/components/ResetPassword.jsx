@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
-import {
-  NotificationManager,
-  NotificationContainer,
-} from 'react-notifications';
-
 import { postJsonData } from '../utils/AuthUtils';
+
+import ToastNotifications from 'cogo-toast';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -49,12 +46,12 @@ class ResetPassword extends Component {
         email: this.email,
       });
 
-      NotificationManager.success('Ein Email mit einer Anleitung zum Zurücksetzten des Passworts wurde versendet.');
-
+      ToastNotifications.success('Ein Email mit einer Anleitung zum Zurücksetzten des Passworts wurde versendet.', { position: 'top-right' });
+      
       // redirecting to user home after 3 seconds
       setTimeout(() => this.props.history.push('/login'), 3000);
     } catch (error) {
-      NotificationManager.error('Rücksetzen fehlgeschlagen. Bitte versuchen Sie es erneut.');
+      ToastNotifications.error('Rücksetzen fehlgeschlagen. Bitte versuchen Sie es erneut.', { position: 'top-right' });
     }
   };
 
@@ -105,7 +102,6 @@ class ResetPassword extends Component {
             </div>
           </div>
         </div>
-        <NotificationContainer />
       </div>
     );
   }
