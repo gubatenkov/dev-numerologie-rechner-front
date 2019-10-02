@@ -2,43 +2,44 @@
  * From ReactGA Community Wiki Page https://github.com/react-ga/react-ga/wiki/React-Router-v4-withTracker
  */
 
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import GoogleAnalytics from 'react-ga';
 
 GoogleAnalytics.initialize('UA-109503933-2', { anonymizeIp: true });
 
-const withTracker = (WrappedComponent, options = {}) => {
+const withTracker = (WrappedComponent, options) => (props) => {
+  // getting needed parts of props
+  const { location } = props;
+
+  // function to track a pageview
   const trackPage = (page) => {
     GoogleAnalytics.set({
       page,
       ...options,
     });
-    GoogleAnalytics.pageview(page);
-  };
-
-  const HOC = class extends Component {
-    componentDidMount() {
-      // making sure no parametesr are tracked to GA
-      const page = this.props.location.pathname;
-      const loggingPath = page.split('/').length > 0 ? page.split('/')[1] : '/';
-      trackPage(loggingPath);
-    }
-
-    componentWillReceiveProps(nextProps) {
-      const currentPage = this.props.location.pathname;
-      const nextPage = nextProps.location.pathname;
-
-      if (currentPage !== nextPage) {
-        trackPage(nextPage);
-      }
-    }
-
-    render() {
-      return <WrappedComponent {...this.props} />;
+    // logging pageview
+    if (page) {
+      GoogleAnalytics.pageview(page);
     }
   };
 
-  return HOC;
+  // tracking upon location change (prop)
+  useEffect(() => {
+    const page = location.pathname;
+    const loggingPath = page.split('/').length > 0 ? page.split('/')[1] : '/';
+    trackPage(loggingPath);
+  }, [location.pathname]);
+
+  return <WrappedComponent {...props} />;
 };
+
+
+withTracker.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }),
+};
+
 
 export default withTracker;

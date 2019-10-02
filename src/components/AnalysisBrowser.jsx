@@ -230,7 +230,6 @@ class AnalysisBrowser extends Component {
    */
   createAnalysisPdf = async (pdfToBeDownloaded) => {
     // checking if logged in => otherwise redirecting to login
-    console.log('creating pdf!!!!!!!!!!!!!!!!!!!!!!');
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
       this.props.history.push('/login');
@@ -325,7 +324,6 @@ class AnalysisBrowser extends Component {
         },
         update: (store, { data: { useCredit: analysis } }) => {},
       });
-      console.log('used credit');
       this.props.onUsedCredit();
       ToastNotifications.success(
         'Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.',
