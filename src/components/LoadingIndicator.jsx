@@ -1,24 +1,23 @@
-import React, { Component } from 'react';
-import Spinner from 'react-spinkit';
+import React from 'react';
+import Spinner from 'react-bootstrap/Spinner';
 
 import '../styles/LoadingIndicator.css';
 
 /**
  * spinner inidcating loading
  */
-class LoadingIndicator extends Component {
-  render() {
-    return (
-      <div className="LoadingIndicator__container">
-        <Spinner
-          className="LoadingIndicator"
-          name="double-bounce"
-          fadeIn="none"
-        />
-        <h4 className="LoadingIndicator__text">{this.props.text}</h4>
-      </div>
-    );
-  }
-}
+const LoadingIndicator = (props) => (
+  <div className="LoadingIndicator__container">
+    <Spinner
+      // className="LoadingIndicator"
+      // name="double-bounce"
+      // fadeIn="none"
+      animation="border"
+      role="status"
+      variant="dark"
+    />
+    <h4 className="LoadingIndicator__text">{props.text}</h4>
+  </div>
+);
 
 export default LoadingIndicator;

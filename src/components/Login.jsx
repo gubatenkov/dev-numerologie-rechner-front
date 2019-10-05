@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import ToastNotifications from 'cogo-toast';
 
@@ -9,12 +9,9 @@ import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 import '../styles/InputForm.css';
 import '../styles/Login.css';
 
+// Login form component
 const Login = (props) => {
-  // input field refs to access content upon submit
-  const emailField = useRef();
-  const passwordField = useRef();
-
-  // email and password
+  // email and password state variable
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -31,7 +28,7 @@ const Login = (props) => {
 
       // saving received token
       setUserAuthData({
-        email: emailField.current.value,
+        email,
         token: response.token,
       });
 
@@ -69,19 +66,21 @@ const Login = (props) => {
           <div className="row justify-content-md-center">
             <div className="col-lg-4">
               <Panel title="Anmelden">
-                <InputField
-                  icon="wb-user"
-                  fieldName="Email-Adresse"
-                  onChange={(event) => setEmail(event.target.value)}
-                  ref={emailField}
-                />
-                <InputField
-                  type="password"
-                  icon="wb-lock"
-                  fieldName="Passwort"
-                  onChange={(event) => setPassword(event.target.value)}
-                  ref={passwordField}
-                />
+                <form>
+                  <InputField
+                    icon="wb-user"
+                    fieldName="Email-Adresse"
+                    onChange={(event) => setEmail(event.target.value)}
+                    autoComplete="username"
+                  />
+                  <InputField
+                    type="password"
+                    icon="wb-lock"
+                    fieldName="Passwort"
+                    onChange={(event) => setPassword(event.target.value)}
+                    autoComplete="current-password"
+                  />
+                </form>
                 <button
                   type="submit"
                   className="btn btn-primary btn-block"
