@@ -9,9 +9,6 @@ import '../styles/LoadingIndicator.css';
 const LoadingIndicator = (props) => (
   <div className="LoadingIndicator__container">
     <Spinner
-      // className="LoadingIndicator"
-      // name="double-bounce"
-      // fadeIn="none"
       animation="border"
       role="status"
       variant="dark"

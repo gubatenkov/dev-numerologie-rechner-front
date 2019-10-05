@@ -4,6 +4,7 @@ import ToastNotifications from 'cogo-toast';
 
 import Panel from './Panel';
 import InputField from './InputField';
+import LoadingIndicator from './LoadingIndicator';
 
 import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 import '../styles/InputForm.css';
@@ -14,6 +15,7 @@ const Login = (props) => {
   // email and password state variable
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const loginUser = async () => {
     // getting react router history from props
@@ -21,6 +23,10 @@ const Login = (props) => {
 
     // sending request to server
     try {
+      // setting loading indication
+      setLoading(true);
+
+      // making actual request
       const response = await postJsonData('/login', {
         email,
         password,
@@ -39,6 +45,9 @@ const Login = (props) => {
         'Login fehlgeschlagen. Bitte versuchen Sie es erneut.',
         { position: 'top-right' },
       );
+    } finally {
+      // resetting loading indication
+      setLoading(false);
     }
   };
 
@@ -53,6 +62,12 @@ const Login = (props) => {
     };
   });
 
+  // if loading => Showing indicator to user
+  if (loading) {
+    return <LoadingIndicator text="Anmeldung..." />;
+  }
+
+  // returning login form
   return (
     <div className="page-register-v3 layout-full">
       <div className="page vertical-align">

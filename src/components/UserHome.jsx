@@ -187,7 +187,7 @@ class UserHome extends Component {
       !this.props.data.currentUser ||
       this.state.isBuyProcessing
     ) {
-      return <LoadingIndicator text="Lade..."/>;
+      return <LoadingIndicator text="Lade..." />;
     }
 
     const { isBuyModalOpen } = this.state;
