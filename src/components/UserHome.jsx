@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter, Redirect } from 'react-router-dom';
@@ -51,6 +51,7 @@ class UserHome extends Component {
     saveAnalysis: PropTypes.func.isRequired,
     deleteUser: PropTypes.func.isRequired,
   };
+
   /**
    * default constructor
    */
@@ -86,11 +87,43 @@ class UserHome extends Component {
    * handler for deleting the current user
    */
   handleDeleteUser = async () => {
+    // setting loading state
+    this.setState({
+      loading: true,
+    });
+
     // deleting user from server
     await this.props.deleteUser();
 
+    // setting loading state
+    this.setState({
+      loading: false,
+    });
+
     // logging user out
     this.handleLogout();
+  };
+
+  handleUsedCredit = () => {
+    if (this.props.data && this.props.data.refetch) {
+      this.props.data.refetch();
+    }
+  };
+
+  toggleBuyModal = () => {
+    this.setState({
+      isBuyModalOpen: !this.state.isBuyModalOpen,
+    });
+  };
+
+  handleBuy = () => {
+    this.setState({
+      isBuyProcessing: true,
+    });
+  };
+
+  handleSuccessfulPurchase = () => {
+    this.props.data.refetch();
   };
 
   /**
@@ -134,58 +167,37 @@ class UserHome extends Component {
           store.writeQuery({ query: currentUserQuery, data });
         },
       });
-      this.setState({ loading: false, });
+      this.setState({ loading: false });
 
       // redirecting to user home
       this.props.history.push('/userHome');
 
       // sending notification to user
-      ToastNotifications.success(`Die Analyse ${name} wurde erfolgreich erstellt.`, { position: 'top-right' });
+      ToastNotifications.success(
+        `Die Analyse ${name} wurde erfolgreich erstellt.`,
+        { position: 'top-right' },
+      );
     } catch (error) {
       // informing user of error
-      ToastNotifications.error('Analyse konnte nicht gespreichert werden.', { position: 'top-right' });
+      ToastNotifications.error('Analyse konnte nicht gespreichert werden.', {
+        position: 'top-right',
+      });
     }
-  }
-
-  handleUsedCredit = () => {
-    if (this.props.data && this.props.data.refetch) {
-      this.props.data.refetch()
-    }
-  }
-
-  toggleBuyModal = () => {
-    this.setState({
-      isBuyModalOpen: !this.state.isBuyModalOpen,
-    });
-  }
-
-  handleBuy = () => {
-    this.setState({
-      isBuyProcessing: true,
-    });
-  }
-
-  handleSuccessfulPurchase = () => {
-    this.props.data.refetch();
   }
 
   /**
    * default component render
    */
   render() {
-    if (
-      !this.props.data.loading
-      &&
-      this.props.data.error
-    ) {
-      return <Redirect to="/login" />
+    if (!this.props.data.loading && this.props.data.error) {
+      return <Redirect to="/login" />;
     }
 
     if (
-      this.props.data.loading ||
-      !this.props.data ||
-      !this.props.data.currentUser ||
-      this.state.isBuyProcessing
+      this.props.data.loading
+      || !this.props.data
+      || !this.props.data.currentUser
+      || this.state.isBuyProcessing
     ) {
       return <LoadingIndicator text="Lade..." />;
     }
@@ -196,31 +208,29 @@ class UserHome extends Component {
       <div>
         {this.state.loading && <LoadingIndicator />}
         <NavigationBar
-          handleDeleteUser={() =>
-            this.setState({ userDeletionDialogOpen: true })
-          }
+          handleDeleteUser={() => this.setState({ userDeletionDialogOpen: true })}
         />
         <TitleBar
           primaryActionTitle="Anfrage an Berater"
           secondaryActionTitle="Neue Analyse"
           onSecondaryAction={() => this.props.history.push('/analysisInput')}
           onPrimaryAction={() => {
-            ToastNotifications.error('Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.', { position: 'top-right' });
+            ToastNotifications.error(
+              'Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.',
+              { position: 'top-right' },
+            );
           }}
           renderLeftButtons={() => (
-            <Fragment>
+            <>
               <CreditsInfoButton
                 credits={this.props.data.currentUser.credits}
               />
-              <Button
-                variant="success"
-                onClick={this.toggleBuyModal}
-              >
+              <Button variant="success" onClick={this.toggleBuyModal}>
                 <i className="fa fa-icon fa-shopping-cart" />
                 {' '}
-                Guthaben kaufen
+Guthaben kaufen
               </Button>
-            </Fragment>
+            </>
           )}
         />
         <div className="UserHomeContentArea">
@@ -262,36 +272,40 @@ class UserHome extends Component {
               this.props.computedMatch.params.lastName.split(',').length > 1
             ) {
               // gettin names
-              const firstName = this.props.computedMatch.params.firstNames.split(',')[0];
-              const firstNameComfort = this.props.computedMatch.params.firstNames.split(',')[1];
-              const lastName = this.props.computedMatch.params.lastName.split(',')[0];
-              const lastNameComfort = this.props.computedMatch.params.lastName.split(',')[1];
+              const firstName = this.props.computedMatch.params.firstNames.split(
+                ',',
+              )[0];
+              const firstNameComfort = this.props.computedMatch.params.firstNames.split(
+                ',',
+              )[1];
+              const lastName = this.props.computedMatch.params.lastName.split(
+                ',',
+              )[0];
+              const lastNameComfort = this.props.computedMatch.params.lastName.split(
+                ',',
+              )[1];
               const { dateOfBirth } = this.props.computedMatch.params;
 
               // constructing name
               analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
             } else {
               // constructing name
-              analysisName = `${this.props.computedMatch.params.firstNames} ${
-                this.props.computedMatch.params.lastName
-              }, ${this.props.computedMatch.params.dateOfBirth}`;
+              analysisName = `${this.props.computedMatch.params.firstNames} ${this.props.computedMatch.params.lastName}, ${this.props.computedMatch.params.dateOfBirth}`;
             }
 
             // saving analysis
             this.saveAnalysis(analysisName, group.id);
 
             // hiding dialog
-            this.setState({ saveDialogOpen: false, loading: true, });
+            this.setState({ saveDialogOpen: false, loading: true });
           }}
           groups={this.props.data.currentUser.groups}
         />
         <ConfirmUserDeletionDialog
           isOpen={this.state.userDeletionDialogOpen}
-          onClose={() =>
-            this.setState({
-              userDeletionDialogOpen: false,
-            })
-          }
+          onClose={() => this.setState({
+            userDeletionDialogOpen: false,
+          })}
           onAction={() => {
             // dismissing dialog
             this.setState({ userDeletionDialogOpen: false });
