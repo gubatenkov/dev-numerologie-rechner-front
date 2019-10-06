@@ -32,6 +32,7 @@ class InputField extends Component {
             className="form-control"
             placeholder={this.props.fieldName}
             onChange={this.props.onChange}
+            autoComplete={this.props.autoComplete}
           />
         </div>
       </div>

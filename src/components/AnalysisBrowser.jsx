@@ -311,7 +311,7 @@ class AnalysisBrowser extends Component {
     this.setState({
       loading: true,
       loadingText:
-        'Die Numeroskop-Berechnung wird durchgeführt und das Guthaben verwendet.',
+        'Ihr Guthaben wird eingelöst...',
     });
     try {
       // preparing arguments to use credit
