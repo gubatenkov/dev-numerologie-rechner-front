@@ -21,7 +21,6 @@ const SetPassword = (props) => {
 
   // creating state
   const [password, setPassword] = useState('');
-  const [passwordMatch, setPasswordMatch] = useState('');
   const [loading, setLoading] = useState(false);
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
@@ -36,14 +35,6 @@ const SetPassword = (props) => {
   });
 
   const setUserPassword = async () => {
-    // checking if two passwords match
-    if (password !== passwordMatch) {
-      ToastNotifications.error('Die beiden Passwörter stimmen nicht überein.', {
-        position: 'top-right',
-      });
-      return;
-    }
-
     // sending request to server
     try {
       // setting loading indicator
@@ -100,12 +91,6 @@ const SetPassword = (props) => {
                     icon="wb-lock"
                     fieldName="Neues Password"
                     onChange={(event) => setPassword(event.target.value)}
-                  />
-                  <InputField
-                    type="password"
-                    icon="wb-lock"
-                    fieldName="Passwort wiederholen"
-                    onChange={(event) => setPasswordMatch(event.target.value)}
                   />
                 </form>
                 <button
