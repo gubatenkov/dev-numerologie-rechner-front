@@ -54,7 +54,7 @@ const SetPassword = (props) => {
 
       // informing user
       ToastNotifications.success(
-        'Das neues Passwort wurde erfolgreich gesetzt',
+        'Das neues Passwort wurde erfolgreich gesetzt. Sie werden nun automatisch angemeldet.',
         { position: 'top-right' },
       );
 
