@@ -38,9 +38,6 @@ const Login = (props) => {
         token: response.token,
       });
 
-      console.log('Login response');
-      console.log(response);
-
       // redirecting to user home
       history.push('/userHome');
     } catch (error) {
