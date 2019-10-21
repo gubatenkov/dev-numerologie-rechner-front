@@ -41,13 +41,12 @@ const Login = (props) => {
       // redirecting to user home
       history.push('/userHome');
     } catch (error) {
+      // resetting loading indication
+      setLoading(false);
       ToastNotifications.error(
         'Login fehlgeschlagen. Bitte versuchen Sie es erneut.',
         { position: 'top-right' },
       );
-    } finally {
-      // resetting loading indication
-      setLoading(false);
     }
   };
 
