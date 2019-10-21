@@ -3,7 +3,7 @@ import { withRouter, Link } from 'react-router-dom';
 import ToastNotifications from 'cogo-toast';
 
 import LoadingIndicator from './LoadingIndicator';
-import { postJsonData } from '../utils/AuthUtils';
+import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 
 import Panel from './Panel';
 import InputField from './InputField';
@@ -41,19 +41,25 @@ const SetPassword = (props) => {
       setLoading(true);
 
       // making call to server to set password
-      await postJsonData('/set-password', {
+      const response = await postJsonData('/set-password', {
         password,
         token,
       });
 
+      // saving received token in response
+      setUserAuthData({
+        email: response.email,
+        token: response.token,
+      });
+
       // informing user
       ToastNotifications.success(
-        'Das neues Passwort wurde erfolgreich gesetzt',
+        'Das neues Passwort wurde erfolgreich gesetzt. Sie werden nun automatisch angemeldet.',
         { position: 'top-right' },
       );
 
       // redirecting to user home
-      setTimeout(() => history.push('/login'), DELAY_REDIRECT_AFTER_SET);
+      setTimeout(() => history.push('/userHome'), DELAY_REDIRECT_AFTER_SET);
     } catch (error) {
       ToastNotifications.error(
         'Setzen des Passworts fehlgeschlagen. Bitte versuchen Sie es erneut.',
