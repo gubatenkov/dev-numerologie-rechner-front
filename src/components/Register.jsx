@@ -54,13 +54,15 @@ const Register = (props) => {
       // redirecting to user home
       history.push('/userHome');
     } catch (error) {
+      // hiding loading indicator
+      setLoading(false);
+
+      // showing error message
       ToastNotifications.error(
         error.message
           || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.',
         { position: 'top-right' },
       );
-    } finally {
-      setLoading(false);
     }
   };
 
