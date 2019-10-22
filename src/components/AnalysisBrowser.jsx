@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
@@ -33,51 +33,31 @@ import {
 
 import '../styles/AnalysisBrowser.css';
 
-/**
- * browser that allows users to view and organize
- * their analyses and groups
- */
-class AnalysisBrowser extends Component {
-  // group to be deleted and not yet confirmed
-  groupToBeDeleted = null;
+const AnalysisBrowser = (props) => {
+  // declaring state variables
+  const [expandedIndex, setExpandedIndex] = useState(-1);
+  const [confirmGroupDeletionDialogOpen, setConfirmGroupDeletionDialogOpen] = useState(false);
+  const [confirmAnalysisDeletionDialogOpen, setConfirmAnalysisDeletionDialogOpen] = useState(false);
+  const [confirmUseCreditDialogOpen, setConfirmUseCreditDialogOpen] = useState(false);
+  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
+  const [renameGroupDialopOpen, setRenameGroupDialopOpen] = useState(false);
+  const [creditToBeUsed, setCreditToBeUsed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState(false);
 
-  // group to be renamed
-  groupToBeRenamed = null;
+  const [groupToBeRenamed, setGroupToBeRenamed] = useState(null);
+  const [groupToBeDeleted, setGroupToBeDeleted] = useState(null);
+  const [analysisToBeDeleted, setAnalysisToBeDeleted] = useState(null);
 
-  // analysis about to be deleted (yet to be confirmed)
-  analysisToBeDeleted = null;
-
-  /**
-   * default constructor
-   */
-  constructor(props) {
-    super(props);
-
-    // getting initial state from server
-    // TODO replace with real server call
-    this.state = {
-      expandedIndex: -1,
-      confirmGroupDeletionDialogOpen: false,
-      confirmAnalysisDeletionDialogOpen: false,
-      confirmUseCreditDialogOpen: false,
-      createGroupDialogOpen: false,
-      renameGroupDialopOpen: false,
-      creditToBeUsed: false,
-      loading: false,
-      loadingText: null,
-    };
-  }
 
   /**
    * handler for the creation of a group
    * @param groupName the name of the new group to be created
    */
-  createGroup = async (groupName) => {
-    // getting createGroup mutation
-    const { createGroup } = this.props;
+  const createGroup = async (groupName) => {
     try {
       // performing mutation call to create group
-      await createGroup({
+      await props.createGroup({
         variables: {
           groupName,
         },
@@ -100,7 +80,7 @@ class AnalysisBrowser extends Component {
       });
     }
     // resetting loading
-    this.setState({ loading: false });
+    setLoading(false);
   };
 
   /**
@@ -108,9 +88,9 @@ class AnalysisBrowser extends Component {
    * @param newName the name to be renamed to
    * @param id the id of the item to renamed
    */
-  renameGroup = async (newName, id) => {
+  const renameGroup = async (newName, id) => {
     // getting createGroup mutation
-    const { renameGroup } = this.props;
+    const { renameGroup } = props;
     try {
       // performing mutation call
       await renameGroup({
@@ -131,19 +111,17 @@ class AnalysisBrowser extends Component {
       });
     }
     // resetting loading state
-    this.setState({ loading: false });
+    setLoading(false);
   };
 
   /**
    * deletes the group identified by id from the server
    * @param id: the id of the group to be deleted
    */
-  deleteGroup = async (id) => {
-    // getting createGroup mutation
-    const { deleteGroup } = this.props;
+  const deleteGroup = async (id) => {
     // deleting group
     try {
-      const deletedGroup = await deleteGroup({
+      const deletedGroup = await props.deleteGroup({
         variables: {
           id,
         },
@@ -173,22 +151,23 @@ class AnalysisBrowser extends Component {
         { position: 'top-right' },
       );
     } catch (error) {
+      console.log(error);
       ToastNotifications.error('Gruppe konnte nicht gelöscht werden.', {
         position: 'top-right',
       });
     }
     // resetting loading state
-    this.setState({ loading: false });
+    setLoading(false);
   };
 
   /**
    * handler for deleting a specific analysis
    * @param id the id of the analysis to be deleted
    */
-  deleteAnalysis = async (id) => {
+  const deleteAnalysis = async (id) => {
     // deleting analysis
     try {
-      const deletedAnalysis = await this.props.deleteAnalysis({
+      const deletedAnalysis = await props.deleteAnalysis({
         variables: {
           id,
         },
@@ -222,29 +201,29 @@ class AnalysisBrowser extends Component {
         position: 'top-right',
       });
     }
-    this.setState({ loading: false });
+    // resetting loading state
+    setLoading(false);
   };
+
 
   /**
    * creates a pdf for the analysis and opens it in a new tab
    */
-  createAnalysisPdf = async (pdfToBeDownloaded) => {
+  const createAnalysisPdf = async (pdfToBeDownloaded) => {
     // checking if logged in => otherwise redirecting to login
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
-      this.props.history.push('/login');
+      props.history.push('/login');
       return;
     }
 
     // setting activity indicator
-    this.setState({
-      loading: true,
-      loadingText: 'Berechne detaillierte Auswertung und erstelle PDF...',
-    });
+    setLoading(true);
+    setLoadingText('Berechne detaillierte Auswertung und erstelle PDF...');
 
     // getting long texts used for pdf (if allowed)
     try {
-      const result = await this.props.client.query({
+      const result = await props.client.query({
         query: personalResultsByIdQuery,
         variables: {
           id: pdfToBeDownloaded.id,
@@ -279,298 +258,276 @@ class AnalysisBrowser extends Component {
         );
       }
     } catch (error) {
+      console.log('Creating PDF failed');
       console.log(error);
+    } finally {
       // removing loading indicator
-      this.setState({
-        loading: false,
-        loadingText: null,
-      });
+      setLoading(false);
+      setLoadingText(null);
     }
-
-    // removing loading indicator
-    this.setState({
-      loading: false,
-      loadingText: null,
-    });
   };
 
-  handleOnUseCredit = (analysisId, type) => {
-    const { credits, onInsuficientCredits } = this.props;
+  /**
+   * handles the spending of a credit = decreases the available credits and associates a given
+   * credit with an analysis
+   * @param {string} analysisId the id of the analysis to spend the credit on
+   * @param {string} type type of the credit to be used (e.g. long and short)
+   */
+  const handleOnUseCredit = (analysisId, type) => {
+    const { credits, onInsuficientCredits } = props;
     const filtered = credits.filter((c) => c.type === type);
     if (filtered.length === 1 && filtered[0].total > 0) {
-      this.setState({
-        confirmUseCreditDialogOpen: true,
-        creditToBeUsed: { analysisId, type },
-      });
+      // opening confirm dialog and storing credits to be used
+      setConfirmUseCreditDialogOpen(true);
+      setCreditToBeUsed({ analysisId, type });
     } else {
       onInsuficientCredits();
     }
   };
 
-  async useCredit() {
-    this.setState({
-      loading: true,
-      loadingText:
-        'Ihr Guthaben wird eingelöst...',
-    });
+  /**
+   * uses a user credit
+   */
+  const spendCredit = async () => {
+    // showing loading indicator
+    setLoading(true);
+    setLoadingText('Ihr Guthaben wird eingelöst...');
     try {
       // preparing arguments to use credit
-      const { creditToBeUsed } = this.state;
       const { analysisId, type } = creditToBeUsed;
-      await this.props.useCredit({
+      await props.useCredit({
         variables: {
-          analysisId/*: parseInt(analysisId, 10)*/,
+          analysisId,
           type,
         },
         update: (store, { data: { useCredit: analysis } }) => {},
       });
-      this.props.onUsedCredit();
+      props.onUsedCredit();
       ToastNotifications.success(
         'Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.',
         { position: 'top-right' },
       );
     } catch (error) {
+      console.log('Using credit failed');
       console.log(error);
       ToastNotifications.error(
         'Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.',
         { position: 'top-right' },
       );
+    } finally {
+      setLoading(false);
+      setLoadingText(null);
     }
-    this.setState({
-      loading: false,
-      loadingText: null,
-    });
-  }
+  };
 
-  /**
-   * default render method rendering panel and table of groups and analyses
-   */
-  render() {
-    // determining content of panel based on if there is data or not
-    let panelContent = null;
-
-    if (this.props.groups.length > 0) {
-      panelContent = (
-        <table className="table table-striped table-hover AnalysisBrowser--table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Typ</th>
-              <th />
-              <th>Aktionen</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.groups.map((group, index) => {
-              // adding group row to result
-              const groupCellContent = [
-                <GroupTableRow
-                  key={group.id}
-                  group={group}
-                  index={index}
-                  elementsInGroup={
-                    this.props.analyses.filter(
-                      (analysis) => analysis.group.id === group.id,
-                    ).length
+  // render
+  // determining content of panel based on if there is data or not
+  let panelContent = null;
+  if (props.groups.length > 0) {
+    panelContent = (
+      <table className="table table-striped table-hover AnalysisBrowser--table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Typ</th>
+            <th />
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.groups.map((group, index) => {
+            // adding group row to result
+            const groupCellContent = [
+              <GroupTableRow
+                key={group.id}
+                group={group}
+                index={index}
+                elementsInGroup={
+                  props.analyses.filter(
+                    (analysis) => analysis.group.id === group.id,
+                  ).length
+                }
+                clickHandler={(clickIndex) => {
+                  // if index is not already set -> setting new index
+                  // else resetting
+                  if (clickIndex !== expandedIndex) {
+                    setExpandedIndex(clickIndex);
+                  } else {
+                    setExpandedIndex(-1);
                   }
-                  clickHandler={(clickIndex) => {
-                    // if index is not already set -> setting new index
-                    // else resetting
-                    if (clickIndex !== this.state.expandedIndex) {
-                      this.setState({
-                        expandedIndex: clickIndex,
-                      });
-                    } else {
-                      this.setState({
-                        expandedIndex: -1,
-                      });
-                    }
-                  }}
-                  renameHandler={(renameIndex) => {
-                    // setting group that is about to be renamed
-                    this.groupToBeRenamed = this.props.groups[renameIndex];
-
-                    // showing dialog
-                    this.setState({
-                      renameGroupDialopOpen: true,
-                    });
-                  }}
-                  deleteHandler={(deleteIndex) => {
-                    // setting group that is about to be deleted
-                    this.groupToBeDeleted = this.props.groups[deleteIndex];
-
-                    // showing confirm dilog
-                    this.setState({
-                      confirmGroupDeletionDialogOpen: true,
-                    });
-                  }}
-                />,
-              ];
-
-              // if index of current group is expanded
-              // -> rendering analyses as well
-              if (this.state.expandedIndex === index) {
-                groupCellContent.push(
-                  this.props.analyses
-                    .filter((analysis) => analysis.group.id === group.id)
-                    .map((analysis) => (
-                      <AnalysisTableRow
-                        key={analysis.id}
-                        analysis={analysis}
-                        deleteHandler={(analysisId) => {
-                          // getting analysis to be deleted
-                          this.analysisToBeDeleted = _.find(
-                            this.props.analyses,
-                            (item) => item.id === analysisId,
-                          );
-
-                          // showing confirm dialog
-                          this.setState({
-                            confirmAnalysisDeletionDialogOpen: true,
-                          });
-                        }}
-                        showHandler={() => {
-                          this.props.history.push(
-                            `/resultPersonal/${analysis.id}`,
-                          );
-                        }}
-                        onUseCredit={(type) => {
-                          this.handleOnUseCredit(analysis.id, type);
-                        }}
-                        onPdfDownload={(longTexts) => {
-                          this.createAnalysisPdf({ ...analysis, longTexts });
-                        }}
-                      />
-                    )),
-                );
-              }
-
-              // returning accumulated rows for group
-              return groupCellContent;
-            })}
-          </tbody>
-        </table>
-      );
-    } else {
-      panelContent = (
-        <p className="AnalysisBrowser--placeholder">
-          Keine Gruppen oder Analysen
-        </p>
-      );
-    }
-    return (
-      <div>
-        {this.state.loading && (
-          <LoadingIndicator text={this.state.loadingText} />
-        )}
-        <Panel
-          title="Analysen"
-          actions={[
-            <NavigationDropdownMenu
-              key="AddGroupAnalysis"
-              name="+"
-              direction="right"
-              navbar
-            >
-              <NavigationDropdownMenuItem
-                onClick={() => {
-                  this.setState({ createGroupDialogOpen: true });
                 }}
-              >
-                Gruppe
-              </NavigationDropdownMenuItem>
-              <NavigationDropdownMenuItem
-                onClick={() => this.props.history.push('/analysisInput')}
-              >
-                Analyse
-              </NavigationDropdownMenuItem>
-            </NavigationDropdownMenu>,
-          ]}
-        >
-          {panelContent}
-        </Panel>
-        <ConfirmGroupDeletionDialog
-          group={this.groupToBeDeleted}
-          isOpen={this.state.confirmGroupDeletionDialogOpen}
-          onClose={() => {
-            // clearing to be deleted group and hiding dialog
-            this.setState({ confirmGroupDeletionDialogOpen: false });
-            this.groupToBeDeleted = null;
-          }}
-          onAction={() => {
-            // hiding dialog, deleting group and clearing to be deleted group
-            this.setState({
-              confirmGroupDeletionDialogOpen: false,
-              loading: true,
-            });
-            this.deleteGroup(this.groupToBeDeleted.id);
-            this.groupToBeDeleted = null;
-          }}
-        />
-        <ConfirmAnalysisDeletionDialog
-          analysis={this.analysisToBeDeleted}
-          isOpen={this.state.confirmAnalysisDeletionDialogOpen}
-          onClose={() => {
-            this.setState({ confirmAnalysisDeletionDialogOpen: false });
-            this.analysisToBeDeleted = null;
-          }}
-          onAction={() => {
-            // hiding dialog, deleting analysis and clearing to be deleted group
-            this.setState({
-              confirmAnalysisDeletionDialogOpen: false,
-              loading: true,
-            });
-            this.deleteAnalysis(this.analysisToBeDeleted.id);
-            this.analysisToBeDeleted = null;
-          }}
-        />
-        <CreateGroupDialog
-          isOpen={this.state.createGroupDialogOpen}
-          onClose={() => this.setState({ createGroupDialogOpen: false })}
-          onAction={(groupName) => {
-            // calling handler
-            this.createGroup(groupName);
+                renameHandler={(renameIndex) => {
+                  // setting group that is about to be renamed
+                  setGroupToBeRenamed(props.groups[renameIndex]);
 
-            // hiding dialog
-            this.setState({ createGroupDialogOpen: false, loading: true });
-          }}
-          groups={this.props.groups.map((item) => item.name)}
-        />
-        <RenameGroupDialog
-          isOpen={this.state.renameGroupDialopOpen}
-          onClose={() => {
-            // clearing to be renamed field
-            this.groupToBeRenamed = null;
+                  // showing dialog
+                  setRenameGroupDialopOpen(true);
+                }}
+                deleteHandler={(deleteIndex) => {
 
-            // hiding dialog
-            this.setState({ renameGroupDialopOpen: false });
-          }}
-          onAction={(id, newName) => {
-            // renaming group
-            this.renameGroup(newName, id);
+                  // setting group that is about to be deleted
+                  setGroupToBeDeleted(props.groups[deleteIndex]);
 
-            // hiding dialog
-            this.setState({ renameGroupDialopOpen: false, loading: true });
-          }}
-          group={this.groupToBeRenamed}
-        />
-        <ConfirmUseCreditDialog
-          isOpen={this.state.confirmUseCreditDialogOpen}
-          onClose={() => {
-            this.setState({
-              confirmUseCreditDialogOpen: false,
-              creditToBeUsed: null,
-            });
-          }}
-          onAction={() => {
-            this.setState({ confirmUseCreditDialogOpen: false });
-            this.useCredit();
-          }}
-        />
-      </div>
+                  // showing confirm dilog
+                  setConfirmGroupDeletionDialogOpen(true);
+                }}
+              />,
+            ];
+
+            // if index of current group is expanded
+            // -> rendering analyses as well
+            if (expandedIndex === index) {
+              groupCellContent.push(
+                props.analyses
+                  .filter((analysis) => analysis.group.id === group.id)
+                  .map((analysis) => (
+                    <AnalysisTableRow
+                      key={analysis.id}
+                      analysis={analysis}
+                      deleteHandler={(analysisId) => {
+                        // getting analysis to be deleted
+                        setAnalysisToBeDeleted(_.find(
+                          props.analyses,
+                          (item) => item.id === analysisId,
+                        ));
+
+                        // showing confirm dialog
+                        setConfirmAnalysisDeletionDialogOpen(true);
+                      }}
+                      showHandler={() => {
+                        props.history.push(
+                          `/resultPersonal/${analysis.id}`,
+                        );
+                      }}
+                      onUseCredit={(type) => {
+                        handleOnUseCredit(analysis.id, type);
+                      }}
+                      onPdfDownload={(longTexts) => {
+                        createAnalysisPdf({ ...analysis, longTexts });
+                      }}
+                    />
+                  )),
+              );
+            }
+            // returning accumulated rows for group
+            return groupCellContent;
+          })}
+        </tbody>
+      </table>
+    );
+  } else {
+    panelContent = (
+      <p className="AnalysisBrowser--placeholder">
+        Keine Gruppen oder Analysen
+      </p>
     );
   }
-}
+  return (
+    <div>
+      {loading && (
+        <LoadingIndicator text={loadingText} />
+      )}
+      <Panel
+        title="Analysen"
+        actions={[
+          <NavigationDropdownMenu
+            key="AddGroupAnalysis"
+            name="+"
+            direction="right"
+            navbar
+          >
+            <NavigationDropdownMenuItem
+              onClick={() => setCreateGroupDialogOpen(true)}
+            >
+              Gruppe
+            </NavigationDropdownMenuItem>
+            <NavigationDropdownMenuItem
+              onClick={() => props.history.push('/analysisInput')}
+            >
+              Analyse
+            </NavigationDropdownMenuItem>
+          </NavigationDropdownMenu>,
+        ]}
+      >
+        {panelContent}
+      </Panel>
+      <ConfirmGroupDeletionDialog
+        group={groupToBeDeleted}
+        isOpen={confirmGroupDeletionDialogOpen}
+        onClose={() => {
+          // clearing to be deleted group and hiding dialog
+          setConfirmGroupDeletionDialogOpen(false);
+          setGroupToBeDeleted(null);
+        }}
+        onAction={() => {
+          // hiding dialog, deleting group and clearing to be deleted group
+          setConfirmGroupDeletionDialogOpen(false);
+          setLoading(true);
+          deleteGroup(groupToBeDeleted.id);
+          setGroupToBeDeleted(null);
+        }}
+      />
+      <ConfirmAnalysisDeletionDialog
+        analysis={analysisToBeDeleted}
+        isOpen={confirmAnalysisDeletionDialogOpen}
+        onClose={() => {
+          setConfirmAnalysisDeletionDialogOpen(false);
+          setAnalysisToBeDeleted(null);
+        }}
+        onAction={() => {
+          // hiding dialog, deleting analysis and clearing to be deleted group
+          setConfirmAnalysisDeletionDialogOpen(false);
+          setLoading(true);
+          deleteAnalysis(analysisToBeDeleted.id);
+          setAnalysisToBeDeleted(null);
+        }}
+      />
+      <CreateGroupDialog
+        isOpen={createGroupDialogOpen}
+        onClose={() => setCreateGroupDialogOpen(false)}
+        onAction={(groupName) => {
+          // calling handler
+          createGroup(groupName);
+
+          // hiding dialog
+          setCreateGroupDialogOpen(false);
+          setLoading(true);
+        }}
+        groups={props.groups.map((item) => item.name)}
+      />
+      <RenameGroupDialog
+        isOpen={renameGroupDialopOpen}
+        onClose={() => {
+          // clearing to be renamed field
+          setGroupToBeRenamed(null);
+
+          // hiding dialog
+          setRenameGroupDialopOpen(false);
+        }}
+        onAction={(id, newName) => {
+          // renaming group
+          renameGroup(newName, id);
+
+          // hiding dialog
+          setRenameGroupDialopOpen(false);
+          setLoading(true);
+        }}
+        group={groupToBeRenamed}
+      />
+      <ConfirmUseCreditDialog
+        isOpen={confirmUseCreditDialogOpen}
+        onClose={() => {
+          setConfirmUseCreditDialogOpen(false);
+          setCreditToBeUsed(null);
+        }}
+        onAction={() => {
+          setConfirmUseCreditDialogOpen(false);
+          spendCredit();
+        }}
+      />
+    </div>
+  );
+};
 
 AnalysisBrowser.propTypes = {
   analyses: PropTypes.arrayOf(

@@ -36,22 +36,6 @@ const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
  * Home screen of the user displaying analyses, groups and credits
  */
 class UserHome extends Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired,
-    }).isRequired,
-    computedMatch: PropTypes.shape({
-      params: PropTypes.shape({
-        userAction: PropTypes.string,
-        firstNames: PropTypes.string,
-        lastName: PropTypes.string,
-        dateOfBirth: PropTypes.string,
-      }),
-    }).isRequired,
-    saveAnalysis: PropTypes.func.isRequired,
-    deleteUser: PropTypes.func.isRequired,
-  };
-
   /**
    * default constructor
    */
@@ -327,6 +311,23 @@ Guthaben kaufen
     );
   }
 }
+
+// props validation
+UserHome.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  computedMatch: PropTypes.shape({
+    params: PropTypes.shape({
+      userAction: PropTypes.string,
+      firstNames: PropTypes.string,
+      lastName: PropTypes.string,
+      dateOfBirth: PropTypes.string,
+    }),
+  }).isRequired,
+  saveAnalysis: PropTypes.func.isRequired,
+  deleteUser: PropTypes.func.isRequired,
+};
 
 export default compose(
   graphql(currentUserQuery),
