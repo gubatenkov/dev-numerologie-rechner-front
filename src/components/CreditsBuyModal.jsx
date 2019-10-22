@@ -15,8 +15,8 @@ import {
 
 import '../styles/CreditsBuyModal.css';
 
-const PRICE_PERSONAL_SHORT = 25;
-const PRICE_PERSONAL_LONG = 49;
+const PRICE_PERSONAL_SHORT = 29;
+const PRICE_PERSONAL_LONG = 59;
 
 const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPurchase, onBuy, createWindowToken }) => {
   const [personalShorts, setPersonalShorts] = useState(1);
