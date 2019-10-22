@@ -36,7 +36,9 @@ function addProductsToShopCart(productIds, windowToken) {
 
   // opening and focusing link
   const shopWindow = window.open(addToCartURI, '_blank');
-  shopWindow.focus();
+  if (shopWindow) {
+    shopWindow.focus();
+  }
 }
 
 /**

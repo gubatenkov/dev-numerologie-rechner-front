@@ -40,7 +40,7 @@ const AnalysisBrowser = (props) => {
   const [confirmAnalysisDeletionDialogOpen, setConfirmAnalysisDeletionDialogOpen] = useState(false);
   const [confirmUseCreditDialogOpen, setConfirmUseCreditDialogOpen] = useState(false);
   const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
-  const [renameGroupDialopOpen, setRenameGroupDialopOpen] = useState(false);
+  const [renameGroupDialogOpen, setRenameGroupDialogOpen] = useState(false);
   const [creditToBeUsed, setCreditToBeUsed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState(false);
@@ -274,14 +274,14 @@ const AnalysisBrowser = (props) => {
    * @param {string} type type of the credit to be used (e.g. long and short)
    */
   const handleOnUseCredit = (analysisId, type) => {
-    const { credits, onInsuficientCredits } = props;
+    const { credits, onInsufficientCredits } = props;
     const filtered = credits.filter((c) => c.type === type);
     if (filtered.length === 1 && filtered[0].total > 0) {
       // opening confirm dialog and storing credits to be used
       setConfirmUseCreditDialogOpen(true);
       setCreditToBeUsed({ analysisId, type });
     } else {
-      onInsuficientCredits();
+      onInsufficientCredits();
     }
   };
 
@@ -361,7 +361,7 @@ const AnalysisBrowser = (props) => {
                   setGroupToBeRenamed(props.groups[renameIndex]);
 
                   // showing dialog
-                  setRenameGroupDialopOpen(true);
+                  setRenameGroupDialogOpen(true);
                 }}
                 deleteHandler={(deleteIndex) => {
 
@@ -496,20 +496,20 @@ const AnalysisBrowser = (props) => {
         groups={props.groups.map((item) => item.name)}
       />
       <RenameGroupDialog
-        isOpen={renameGroupDialopOpen}
+        isOpen={renameGroupDialogOpen}
         onClose={() => {
           // clearing to be renamed field
           setGroupToBeRenamed(null);
 
           // hiding dialog
-          setRenameGroupDialopOpen(false);
+          setRenameGroupDialogOpen(false);
         }}
         onAction={(id, newName) => {
           // renaming group
           renameGroup(newName, id);
 
           // hiding dialog
-          setRenameGroupDialopOpen(false);
+          setRenameGroupDialogOpen(false);
           setLoading(true);
         }}
         group={groupToBeRenamed}

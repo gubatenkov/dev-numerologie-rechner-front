@@ -235,7 +235,7 @@ Guthaben kaufen
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.analyses}
               credits={this.props.data.currentUser.credits}
-              onInsuficientCredits={this.toggleBuyModal}
+              onInsufficientCredits={this.toggleBuyModal}
               onUsedCredit={this.handleUsedCredit}
             />
             <AdArea horizontal>
