@@ -369,6 +369,24 @@ export function getResultArrayFormat(data) {
 }
 
 /**
+ * @param item a result item to extract information based on type from
+ * @returns a string representing the item description
+ */
+function extractDescriptionTextFromItem(item) {
+  // normal row => directly access member
+  if (item.type === 'row') {
+    return item.descriptionText;
+  }
+
+  // if custom row => using values and provided index
+  if (item.type === 'customRow') {
+    return item.values[item.descriptionTextIndex];
+  }
+
+  return null;
+}
+
+/**
  * extracts item name and value from
  */
 function extractNameAndValueFromItem(item) {
@@ -655,8 +673,9 @@ export function createPDFFromAnalysisResult(
       );
     }
 
-    // adding numbers
-    result.numbers.forEach((item, resultIndex) => {
+    // adding number results for all numbers with descriptionText
+    result.numbers.filter((item) => extractDescriptionTextFromItem(item) && 
+      extractDescriptionTextFromItem(item).length > 0).forEach((item, resultIndex) => {
       const { itemName, itemValue } = extractNameAndValueFromItem(item);
 
       // getting compare item
@@ -730,14 +749,7 @@ export function createPDFFromAnalysisResult(
         }
 
         // pushing description text
-        let descriptionText = null;
-
-        // having to determine between standard and custom row
-        if (item.type === 'row') {
-          ({ descriptionText } = item);
-        } else if (item.type === 'customRow') {
-          descriptionText = item.values[item.descriptionTextIndex];
-        }
+        let descriptionText = extractDescriptionTextFromItem(item);
 
         // if description text is present => adding to content
         if (descriptionText) {
@@ -769,14 +781,7 @@ export function createPDFFromAnalysisResult(
           });
 
           // pushing description text
-          let compareDescriptionText = null;
-
-          // having to determine between standard and custom row
-          if (item.type === 'row') {
-            compareDescriptionText = compareItem.descriptionText;
-          } else if (item.type === 'customRow') {
-            compareDescriptionText = compareItem.values[compareItem.descriptionTextIndex];
-          }
+          let compareDescriptionText = extractDescriptionTextFromItem(compareItem);
 
           // if description text is present => adding to content
           if (compareDescriptionText) {
