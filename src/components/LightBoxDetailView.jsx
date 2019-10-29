@@ -49,12 +49,14 @@ function LightBoxDetailView(props) {
 
   // handler for click on the next button
   const handleNextClick = () => {
+    // navigate within section
     if (
       currentElementIndex
-      < props.data[currentSectionIndex].sectionElements.length - 1
+      < data[currentSectionIndex].sectionElements.length - 1
     ) {
       setCurrentElementIndex(currentElementIndex + 1);
-    } else if (currentSectionIndex < props.data.length - 1) {
+    // navigate to first element of next section
+    } else if (currentSectionIndex < data.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentElementIndex(0);
     }
@@ -94,10 +96,10 @@ function LightBoxDetailView(props) {
     document.body.classList.toggle('noScroll', isOpen);
 
     // if modal is shown, getting focus so key inputs work
-    if (componentContainer && isOpen) {
+    if (componentContainer && componentContainer.current && isOpen) {
       componentContainer.current.focus();
     }
-  }, [isOpen]);
+  });
 
   // if detail view not open -> not showing it
   if (isOpen === false) {

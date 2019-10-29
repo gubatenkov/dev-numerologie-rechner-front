@@ -75,6 +75,8 @@ class AnalysisResultPersonalRender extends Component {
       sectionUpToIndex.filter(item => this.doesElementHaveDescription(item))
         .length;
 
+    console.log('opening details');
+
     // opening detail view
     this.setState({
       resultTextDetailViewOpen: true,
@@ -123,7 +125,7 @@ class AnalysisResultPersonalRender extends Component {
       sectionName: item.name,
       sectionElements: item.numbers
         // filtering elements that are not suitable for displaying as detail view
-        .filter(numberItem => this.doesElementHaveDescription(numberItem))
+        /*.filter(numberItem => this.doesElementHaveDescription(numberItem))*/
         // mapping those elements to data for detail
         .map((numberItem) => {
           if (numberItem.type === 'row') {

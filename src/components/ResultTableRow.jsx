@@ -1,60 +1,56 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import Interweave from "interweave";
-import { Button } from 'react-bootstrap'; 
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Interweave from 'interweave';
+import { Button } from 'react-bootstrap';
 
-import "../styles/ResultTableRow.css";
+import '../styles/ResultTableRow.css';
 
 // identifiers for row types
-export const ROW_TYPE_ID_CUSTOM = "customRow";
+export const ROW_TYPE_ID_CUSTOM = 'customRow';
 
 // identifiers for results
-export const TYPE_ID_NUMBER = "number";
-export const TYPE_ID_LIST = "list";
-export const TYPE_ID_MATRIX = "matrix";
+export const TYPE_ID_NUMBER = 'number';
+export const TYPE_ID_LIST = 'list';
+export const TYPE_ID_MATRIX = 'matrix';
 
 // chars in description preview
-const LENGTH_DESCRIPITON_PREVIEW = 50;
+const DESCRIPTION_PREVIEW_LENGTH = 50;
 
 /**
  * row rendering a single row item of an analysis result
  */
 class ResultTableRow extends Component {
-  static propTypes = {
-    item: PropTypes.object.isRequired,
-    onTextDetailClick: PropTypes.func.isRequired,
-    rowIndex: PropTypes.number.isRequired
-  };
-
   /**
-   * returns the row representation of the text passed by the server
+   * returns the row representation of the text passed by the server (html)
+   * If the description text is larger than a defined (static) threshold, it is truncated
+   * and a more button is added leading to the detailed view
    */
-  getTextRepresentation(rowText, showFullText = false) {
+  getTextRepresentation(rowText) {
     let rowTextRepresentation = null;
+    // if no text => returning null
     if (rowText && rowText.length > 0) {
       // removing html tags for preview
-      rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, "");
-      if (rowTextRepresentation.length > LENGTH_DESCRIPITON_PREVIEW) {
+      rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, '');
+
+      // if text is longer than threshold => truncating and adding more button
+      if (rowTextRepresentation.length > DESCRIPTION_PREVIEW_LENGTH) {
         rowTextRepresentation = [
-          `${rowTextRepresentation.substring(0,LENGTH_DESCRIPITON_PREVIEW)}...  `,
+          `${rowTextRepresentation.substring(
+            0,
+            DESCRIPTION_PREVIEW_LENGTH,
+          )}...  `,
           <Button
             variant="link"
             key="readIndicator"
             onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
           >
             Lesen
-          </Button>
+          </Button>,
         ];
       }
     }
     return rowTextRepresentation;
   }
-
-  /**
-   * handles clicks on the more link of the description text
-   */
-  handleMoreClick = () => {
-  };
 
   /**
    * renders a result matrix as content of the table
@@ -68,40 +64,38 @@ class ResultTableRow extends Component {
     return (
       <table className="table table-bordered tableRow__matrix">
         <tbody>
-        {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
-          <tr
-            key={
-              resultItem.name +
-              resultItem.numberId +
-              rowIndex +
-              resultItem.result.values[rowIndex]
-            }
-          >
-            {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
-              // determining current index composed of cols and rows
-              const currentIndex =
-                rowIndex * matrixDimensions.cols + colIndex;
+          {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
+            <tr
+              key={
+                resultItem.name
+                + resultItem.numberId
+                + rowIndex
+                + resultItem.result.values[rowIndex]
+              }
+            >
+              {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
+                // determining current index composed of cols and rows
+                const currentIndex = rowIndex * matrixDimensions.cols + colIndex;
 
-              // checking if index is highlighted
-              const highlighted =
-                resultItem.result.highlighted.indexOf(currentIndex) > -1;
+                // checking if index is highlighted
+                const highlighted = resultItem.result.highlighted.indexOf(currentIndex) > -1;
 
-              // returning cell for element
-              return (
-                <td
-                  key={resultItem.name + currentIndex}
-                  className={highlighted ? " ResultTable--highlighted" : ""}
-                >
-                  <div className="content">
-                    {resultItem.result.values[currentIndex]
-                      ? resultItem.result.values[currentIndex]
-                      : "-"}
-                  </div>
-                </td>
-              );
-            })}
-          </tr>
-        ))}
+                // returning cell for element
+                return (
+                  <td
+                    key={resultItem.name + currentIndex}
+                    className={highlighted ? ' ResultTable--highlighted' : ''}
+                  >
+                    <div className="content">
+                      {resultItem.result.values[currentIndex]
+                        ? resultItem.result.values[currentIndex]
+                        : '-'}
+                    </div>
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
         </tbody>
       </table>
     );
@@ -112,7 +106,7 @@ class ResultTableRow extends Component {
    * @param {*} resultItem the received result item of type list
    */
   renderResultList(resultItem) {
-    return resultItem.result.list.map(item => ` ${item}`);
+    return resultItem.result.list.map((item) => ` ${item}`);
   }
 
   /**
@@ -125,35 +119,31 @@ class ResultTableRow extends Component {
     return (
       <tr
         key={rowItem.numberId}
-        className={rowItem.highlighted ? "tableRow--highlighted" : ""}
+        className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
         {rowItem.values.map((value, index) => {
-
-          if (rowItem.onlyInPro) {
-            return <td key={index} className="tableRow__text"><Interweave content={value}/></td>;
-          }
-
-
           // defining style of cell
-          let cellStyle = "";
+          let cellStyle = '';
           let cellValue = value;
           if (index === lastIndex) {
-            cellStyle += "tableRow__text";
-            cellValue = <span dangerouslySetInnerHTML={{ __html: value }}></span>;
+            cellStyle += 'tableRow__text';
+            cellValue = <Interweave content={value} />;
           }
           if (index === descriptionTextIndex) {
-            cellStyle += "tableRow__text";
+            cellStyle += 'tableRow__text';
             cellValue = this.getTextRepresentation(value);
           }
           if (index === 0) {
-            cellStyle += "tableRow__name table--bold";
+            cellStyle += 'tableRow__name table--bold';
           }
 
           return (
             <td
               className={cellStyle}
               key={rowItem.numberId + index + cellValue}
-            >{cellValue}</td>
+            >
+              {cellValue}
+            </td>
           );
         })}
       </tr>
@@ -178,19 +168,16 @@ class ResultTableRow extends Component {
     return (
       <tr
         key={rowItem.numberId}
-        className={rowItem.highlighted ? "tableRow--highlighted" : ""}
+        className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
         <td className="table--bold tableRow__name">{rowItem.name}</td>
         <td className="tableRow__id ">{rowItem.numberId}</td>
         <td className="table--bold">{contentColumn}</td>
         <td className="tableRow__text">
-          {
-            !rowItem.onlyInPro ? this.getTextRepresentation(rowItem.descriptionText) :
-              <Interweave content={rowItem.descriptionText}/>
-          }
+          {this.getTextRepresentation(rowItem.descriptionText)}
         </td>
         <td className="tableRow__text ">
-          <span dangerouslySetInnerHTML={{ __html: rowItem.bookReference }}></span>
+          <Interweave content={rowItem.bookReference} />
         </td>
       </tr>
     );
@@ -207,5 +194,12 @@ class ResultTableRow extends Component {
     return this.renderDefaultRow(item);
   }
 }
+
+// propTypes
+ResultTableRow.propTypes = {
+  item: PropTypes.object.isRequired,
+  onTextDetailClick: PropTypes.func.isRequired,
+  rowIndex: PropTypes.number.isRequired,
+};
 
 export default ResultTableRow;

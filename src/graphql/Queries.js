@@ -108,7 +108,6 @@ export const personalAnalysisFragment = gql`
     firstNames
     lastName
     dateOfBirth
-    longTexts
     analysisIntro {
       title
       text

@@ -187,7 +187,7 @@ const levelPositionInformation = {
  * @return the point equivalent to centimeters
  */
 function cmToPoints(centimeters) {
-  return centimeters / INCH_IN_CM * PIXEL_DENSITY;
+  return (centimeters / INCH_IN_CM) * PIXEL_DENSITY;
 }
 
 /**
@@ -199,7 +199,7 @@ function areResultValuesEqual(resultValue, compareResultValue) {
   }
 
   if (Array.isArray(resultValue) && Array.isArray(compareResultValue)) {
-    return resultValue.every(item => compareResultValue.includes(item));
+    return resultValue.every((item) => compareResultValue.includes(item));
   }
   return false;
 }
@@ -219,7 +219,7 @@ function extractTableValueFromItem(numberItem) {
         alignment: 'left',
       };
     } else {
-      const matrix = numberItem.result.values.map(item => (item && item.length > 0 ? item : '     '));
+      const matrix = numberItem.result.values.map((item) => (item && item.length > 0 ? item : '     '));
       value = {
         table: {
           dontBreakRows: true,
@@ -338,11 +338,14 @@ function calculateResultOverviewTable(
           compareValue,
         ]);
       } else {
-        overviewTableBody.push([{
-          text: name,
-          bold: numberItem.highlighted,
-          alignment: 'left'
-        }, value]);
+        overviewTableBody.push([
+          {
+            text: name,
+            bold: numberItem.highlighted,
+            alignment: 'left',
+          },
+          value,
+        ]);
       }
     });
   });
@@ -374,8 +377,8 @@ function extractNameAndValueFromItem(item) {
 
   // determining name of element
   if (
-    item.type === 'row' &&
-    (item.result.value || item.result.values || item.result.list)
+    item.type === 'row'
+    && (item.result.value || item.result.values || item.result.list)
   ) {
     itemName = item.name;
     itemValue = item.result.value || item.result.values || item.result.list;
@@ -385,11 +388,11 @@ function extractNameAndValueFromItem(item) {
       itemValue = ' ';
     }
   } else if (
-    item.type === 'customRow' &&
-    item.values &&
-    item.nameIndex !== null &&
-    item.values[item.nameIndex] &&
-    item.valueIndex !== null
+    item.type === 'customRow'
+    && item.values
+    && item.nameIndex !== null
+    && item.values[item.nameIndex]
+    && item.valueIndex !== null
   ) {
     // sad special treatment of hf/hp
     if (item.numberId.startsWith('HF/HP')) {
@@ -426,7 +429,7 @@ function extractNameAndValueFromItem(item) {
 /**
  * build a pdf document from the analysis result given and opens it in new tab
  * @param analysisResult the analysis result with subsections
- * @param ristNames the first names of the analysis
+ * @param firstNames the first names of the analysis
  * @param lastName the last name of the analysis
  */
 export function createPDFFromAnalysisResult(
@@ -442,11 +445,15 @@ export function createPDFFromAnalysisResult(
   const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
   let resultCompareArray = null;
   if (compareAnalysisResult) {
-    resultCompareArray = getResultArrayFormat(compareAnalysisResult.personalAnalysis);
+    resultCompareArray = getResultArrayFormat(
+      compareAnalysisResult.personalAnalysis,
+    );
   }
 
   // getting lz to determine title image
-  const lzValue = analysisResult.personalAnalysis.personalLevel.numbers.filter(item => item.numberId === 'LZ')[0].result.value;
+  const lzValue = analysisResult.personalAnalysis.personalLevel.numbers.filter(
+    (item) => item.numberId === 'LZ',
+  )[0].result.value;
   const titleImage = COVER_IMAGE_BY_LZ[lzValue] || COVER_IMAGE_BY_LZ[0];
 
   // defining pdf and default styling
@@ -518,7 +525,9 @@ export function createPDFFromAnalysisResult(
         pageBreak: 'before',
       },
       [
-        ...convertHTMLTextToPDFSyntax(analysisResult.personalAnalysis.analysisIntro.text),
+        ...convertHTMLTextToPDFSyntax(
+          analysisResult.personalAnalysis.analysisIntro.text,
+        ),
       ],
       {
         text: 'Übersichtsblatt der Zahlen',
@@ -556,9 +565,9 @@ export function createPDFFromAnalysisResult(
 
       // heading with subheadings is last element before footer
       if (
-        currentNode.headlineLevel &&
-        followingNodesOnPage[0].headlineLevel &&
-        followingNodesOnPage.length === 4
+        currentNode.headlineLevel
+        && followingNodesOnPage[0].headlineLevel
+        && followingNodesOnPage.length === 4
       ) {
         return true;
       }
@@ -572,12 +581,10 @@ export function createPDFFromAnalysisResult(
         const levelEntries = Object.entries(levelPositionInformation);
         levelEntries.forEach(([key, value]) => {
           // setting start page correlating with start index
-          levelPositionInformation[key].startPage =
-            docDefinition.content[value.startIndex].positions[0].pageNumber;
+          levelPositionInformation[key].startPage = docDefinition.content[value.startIndex].positions[0].pageNumber;
 
           // setting stop page correlating with start index
-          levelPositionInformation[key].endPage =
-            docDefinition.content[value.endIndex].positions[0].pageNumber;
+          levelPositionInformation[key].endPage = docDefinition.content[value.endIndex].positions[0].pageNumber;
         });
       }
     },
@@ -630,8 +637,7 @@ export function createPDFFromAnalysisResult(
 
     // saving information about first element of level -> the index saved will be the first index
     // of this level
-    levelPositionInformation[result.name].startIndex =
-      docDefinition.content.length;
+    levelPositionInformation[result.name].startIndex = docDefinition.content.length;
 
     // adding level intro
     if (result.introText) {
@@ -642,9 +648,11 @@ export function createPDFFromAnalysisResult(
         tocItem: true,
         tocStyle: { color: resultColor },
       });
-      docDefinition.content.push(...convertHTMLTextToPDFSyntax(result.introText.text, {
-        h1: { color: resultColor },
-      }));
+      docDefinition.content.push(
+        ...convertHTMLTextToPDFSyntax(result.introText.text, {
+          h1: { color: resultColor },
+        }),
+      );
     }
 
     // adding numbers
@@ -663,8 +671,7 @@ export function createPDFFromAnalysisResult(
       }
 
       // checking if item is empty
-      const itemEmpty =
-        !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
+      const itemEmpty = !itemValue || (Array.isArray(itemValue && itemValue.length === 0));
 
       // if item name set => adding name and name subtitle
       if (itemName && !itemEmpty) {
@@ -708,8 +715,8 @@ export function createPDFFromAnalysisResult(
 
         // adding number calculation description if present
         if (
-          item.numberDescription &&
-          item.numberDescription.calculationDescription
+          item.numberDescription
+          && item.numberDescription.calculationDescription
         ) {
           docDefinition.content.push({
             stack: [
@@ -734,10 +741,12 @@ export function createPDFFromAnalysisResult(
 
         // if description text is present => adding to content
         if (descriptionText) {
-          docDefinition.content.push(...convertHTMLTextToPDFSyntax(descriptionText, {
-            h1: { color: resultColor },
-            ul: { markerColor: resultColor },
-          }));
+          docDefinition.content.push(
+            ...convertHTMLTextToPDFSyntax(descriptionText, {
+              h1: { color: resultColor },
+              ul: { markerColor: resultColor },
+            }),
+          );
         }
 
         if (compareItem && !areResultValuesEqual(compareItemValue, itemValue)) {
@@ -766,16 +775,17 @@ export function createPDFFromAnalysisResult(
           if (item.type === 'row') {
             compareDescriptionText = compareItem.descriptionText;
           } else if (item.type === 'customRow') {
-            compareDescriptionText =
-              compareItem.values[compareItem.descriptionTextIndex];
+            compareDescriptionText = compareItem.values[compareItem.descriptionTextIndex];
           }
 
           // if description text is present => adding to content
           if (compareDescriptionText) {
-            docDefinition.content.push(...convertHTMLTextToPDFSyntax(compareDescriptionText, {
-              h1: { color: resultColor },
-              ul: { markerColor: resultColor },
-            }));
+            docDefinition.content.push(
+              ...convertHTMLTextToPDFSyntax(compareDescriptionText, {
+                h1: { color: resultColor },
+                ul: { markerColor: resultColor },
+              }),
+            );
           }
         }
       }
@@ -783,8 +793,7 @@ export function createPDFFromAnalysisResult(
 
     // saving information about last element of level -> the index saved will be the last index
     // of this level
-    levelPositionInformation[result.name].endIndex =
-      docDefinition.content.length - 1;
+    levelPositionInformation[result.name].endIndex = docDefinition.content.length - 1;
   });
 
   // adding legal text at end of pdf
