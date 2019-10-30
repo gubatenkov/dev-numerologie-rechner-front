@@ -58,28 +58,20 @@ class AnalysisResultPersonalRender extends Component {
   handleItemDetailClick = (dataKey, index) => {
     const analysisResult = this.props.personalAnalysisResult;
     // getting index of elemnent represented by dataKey in state
-    const dataIndex = this.getResultArrayFormat(analysisResult).indexOf(analysisResult[dataKey]);
+    const dataIndex = this.getResultArrayFormat(analysisResult).indexOf(
+      analysisResult[dataKey],
+    );
 
     // if data is not here -> skip
     if (dataIndex < 0) {
       return;
     }
 
-    // calculating index in filtered data passed to details component
-    // indeNew = index - #of items removed by filtering before passed to detail component
-    const sectionUpToIndex = this.props.personalAnalysisResult[
-      dataKey
-    ].numbers.slice(0, index);
-    const removedElementsToIndexCount =
-      sectionUpToIndex.length -
-      sectionUpToIndex.filter(item => this.doesElementHaveDescription(item))
-        .length;
-
     // opening detail view
     this.setState({
       resultTextDetailViewOpen: true,
       resultTextDetailViewSectionIndex: dataIndex,
-      resultTextDetailViewElementIndex: index - removedElementsToIndexCount,
+      resultTextDetailViewElementIndex: index,
     });
   };
 
@@ -102,11 +94,11 @@ class AnalysisResultPersonalRender extends Component {
   doesElementHaveDescription(element) {
     if (element.type === 'row') {
       return element.descriptionText && element.descriptionText.length > 0;
-    } else if (element.type === 'customRow') {
+    } if (element.type === 'customRow') {
       return (
-        element.descriptionTextIndex &&
-        element.descriptionTextIndex >= 0 &&
-        element.values[element.descriptionTextIndex]
+        element.descriptionTextIndex
+        && element.descriptionTextIndex >= 0
+        && element.values[element.descriptionTextIndex]
       );
     }
     return false;
@@ -119,21 +111,21 @@ class AnalysisResultPersonalRender extends Component {
    */
   convertResultsToDetailsDataFormat(resultData) {
     // transforming into items where results are numbers and a text to display is present
-    return this.getResultArrayFormat(resultData).map(item => ({
+    return this.getResultArrayFormat(resultData).map((item) => ({
       sectionName: item.name,
       sectionElements: item.numbers
         // filtering elements that are not suitable for displaying as detail view
-        .filter(numberItem => this.doesElementHaveDescription(numberItem))
+        /* .filter(numberItem => this.doesElementHaveDescription(numberItem)) */
         // mapping those elements to data for detail
         .map((numberItem) => {
           if (numberItem.type === 'row') {
             return {
-              elementTitle: `${numberItem.name} = ${numberItem.result.value ||
-                numberItem.result.values ||
-                numberItem.result.list}`,
+              elementTitle: `${numberItem.name} = ${numberItem.result.value
+                || numberItem.result.values
+                || numberItem.result.list}`,
               elementContent: numberItem.descriptionText,
             };
-          } else if (numberItem.type === 'customRow') {
+          } if (numberItem.type === 'customRow') {
             // sad special treatment for HF/HP
             let elementTitle;
             if (numberItem.numberId.startsWith('HF/HP')) {
@@ -153,7 +145,8 @@ class AnalysisResultPersonalRender extends Component {
             }
             return {
               elementTitle,
-              elementContent: numberItem.values[numberItem.descriptionTextIndex],
+              elementContent:
+                numberItem.values[numberItem.descriptionTextIndex],
             };
           }
           return null;
@@ -161,14 +154,14 @@ class AnalysisResultPersonalRender extends Component {
     }));
   }
 
-  resize = () => this.forceUpdate()
+  resize = () => this.forceUpdate();
 
   componentDidMount() {
-    window.addEventListener('resize', this.resize)
+    window.addEventListener('resize', this.resize);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.resize)
+    window.removeEventListener('resize', this.resize);
   }
 
   /**
@@ -188,27 +181,28 @@ class AnalysisResultPersonalRender extends Component {
       return <LoadingIndicator text={this.props.error.message} />;
     }
 
-    let sideMenu = 
-    <div className="ResultContentOverview">
-      <ContentNavigation
-        contentItems={[
-          'Ausdrucksebene',
-          'Persönlichkeitsebene',
-          'Entfaltungspotential',
-          'Seelische Ebene',
-          'Zeitliche Ebene',
-        ]}
-        contentItemAnchors={[
-          'ExpressionResult',
-          'PersonalResult',
-          'DevelopmentResult',
-          'SoulResult',
-          'TimeResult',
-        ]}
-        onItemClick={this.navigateToElementHandler}
-        autoAdapt
-      />
-    </div>
+    let sideMenu = (
+      <div className="ResultContentOverview">
+        <ContentNavigation
+          contentItems={[
+            'Ausdrucksebene',
+            'Persönlichkeitsebene',
+            'Entfaltungspotential',
+            'Seelische Ebene',
+            'Zeitliche Ebene',
+          ]}
+          contentItemAnchors={[
+            'ExpressionResult',
+            'PersonalResult',
+            'DevelopmentResult',
+            'SoulResult',
+            'TimeResult',
+          ]}
+          onItemClick={this.navigateToElementHandler}
+          autoAdapt
+        />
+      </div>
+    );
 
     let showSideMenu = window.innerWidth >= 992;
 
@@ -222,15 +216,11 @@ class AnalysisResultPersonalRender extends Component {
           title="Übersicht der Zahlen"
           backTitle="Zurück"
           backRoute="/analysisInput"
-          primaryActionTitle={
-            !analysis
-              ? 'Speichern'
-              : null
-          }
+          primaryActionTitle={!analysis ? 'Speichern' : null}
           onPrimaryAction={() => {
-            this.props.history.push(`/userHome/saveAnalysis/${personalAnalysisResult.firstNames}/${
-              personalAnalysisResult.lastName
-              }/${personalAnalysisResult.dateOfBirth}`);
+            this.props.history.push(
+              `/userHome/saveAnalysis/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
+            );
           }}
           badgeTitle="Kurztext"
         />
@@ -243,7 +233,7 @@ class AnalysisResultPersonalRender extends Component {
           </div>
         </div>
         <div className="ContentArea">
-          {showSideMenu? sideMenu: null}
+          {showSideMenu ? sideMenu : null}
           <div className="ResultContent">
             <Panel
               title={personalAnalysisResult.expressionLevel.name}

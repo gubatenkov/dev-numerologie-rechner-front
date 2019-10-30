@@ -8,3 +8,5 @@ Alle Beschreibungen wurden nach bestem Wissen und Gewissen zusammengestellt und 
 Die Benutzung dieses numerologischen Profils und die Umsetzung der darin enthaltenen Informationen erfolgen ausschließlich auf eigenes Risiko.
 
 Die Autorin bzw. die akademie bios – Dr. Ernestina Mazza OG können für etwaige Schäden aus Rechtsgründen keine Haftung übernehmen. Sie übernehmen dadurch keine Haftung für Schäden irgendeiner Art, die direkt oder indirekt aus der Verwendung der Angaben dieses numerologischen Persönlichkeitsprofil entstehen können.`;
+
+export const PROMOTION_TEXT = 'TO BE ADDED: PROMOTIONAL TEXT FOR LONG VERSION';

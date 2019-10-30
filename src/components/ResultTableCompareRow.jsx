@@ -24,13 +24,6 @@ class ResultTableCompareRow extends Component {
   };
 
   /**
-   * handles clicks on the more link of the description text
-   */
-  handleMoreClick = () => {
-    this.props.onTextDetailClick(this.props.rowIndex);
-  };
-
-  /**
    * renders a result matrix as content of the table
    * @param {} item the item of type 'matrix'
    */
@@ -45,20 +38,18 @@ class ResultTableCompareRow extends Component {
           {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
             <tr
               key={
-                resultItem.name +
-                resultItem.numberId +
-                rowIndex +
-                resultItem.result.values[rowIndex]
+                resultItem.name
+                + resultItem.numberId
+                + rowIndex
+                + resultItem.result.values[rowIndex]
               }
             >
               {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
                 // determining current index composed of cols and rows
-                const currentIndex =
-                  rowIndex * matrixDimensions.cols + colIndex;
+                const currentIndex = rowIndex * matrixDimensions.cols + colIndex;
 
                 // checking if index is highlighted
-                const highlighted =
-                  resultItem.result.highlighted.indexOf(currentIndex) > -1;
+                const highlighted = resultItem.result.highlighted.indexOf(currentIndex) > -1;
 
                 // returning cell for element
                 return (
@@ -86,7 +77,7 @@ class ResultTableCompareRow extends Component {
    * @param {*} resultItem the received result item of type list
    */
   renderResultList(resultItem) {
-    return resultItem.result.list.map(item => ` ${item}`);
+    return resultItem.result.list.map((item) => ` ${item}`);
   }
 
   /**
@@ -97,16 +88,16 @@ class ResultTableCompareRow extends Component {
     const { compareIndices } = rowItem;
 
     // removing name and description from values
-    const rowValuesItem = rowItem.values.filter((item, index) =>
-      compareIndices.includes(index));
+    const rowValuesItem = rowItem.values.filter((item, index) => compareIndices.includes(index));
 
-    const rowValueCompare = compareItem.values.filter((item, index) =>
-      compareIndices.includes(index));
+    const rowValueCompare = compareItem.values.filter((item, index) => compareIndices.includes(index));
 
     // comparing if values are equal => if so not displaying comparing
     let rowValues;
     if (_.isEqual(rowValuesItem, rowValueCompare)) {
-      rowValues = rowValuesItem.concat(Array(rowValueCompare.length - 1).fill('-'));
+      rowValues = rowValuesItem.concat(
+        Array(rowValueCompare.length - 1).fill('-'),
+      );
     } else {
       // concatinating values for both
       rowValueCompare.shift();
@@ -131,7 +122,7 @@ class ResultTableCompareRow extends Component {
           <button
             role="link"
             key="readIndicator"
-            onClick={this.props.onTextDetailClick}
+            onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
           >
             Details
           </button>

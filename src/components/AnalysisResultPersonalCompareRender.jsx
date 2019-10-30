@@ -68,28 +68,20 @@ class AnalysisResultPersonalCompare extends Component {
     const [personalAnalysisResult] = this.props.personalAnalysisResults;
 
     // getting index of elemnent represented by dataKey in state
-    const dataIndex = this.getResultArrayFormat(personalAnalysisResult).indexOf(personalAnalysisResult[dataKey]);
+    const dataIndex = this.getResultArrayFormat(personalAnalysisResult).indexOf(
+      personalAnalysisResult[dataKey],
+    );
 
     // if data is not here -> skip
     if (dataIndex < 0) {
       return;
     }
 
-    // calculating index in filtered data passed to details component
-    // indeNew = index - #of items removed by filtering before passed to detail component
-    const sectionUpToIndex = personalAnalysisResult[
-      dataKey
-    ].numbers.slice(0, index);
-    const removedElementsToIndexCount =
-      sectionUpToIndex.length -
-      sectionUpToIndex.filter(item => this.doesElementHaveDescription(item))
-        .length;
-
     // opening detail view
     this.setState({
       resultTextDetailViewOpen: true,
       resultTextDetailViewSectionIndex: dataIndex,
-      resultTextDetailViewElementIndex: index - removedElementsToIndexCount,
+      resultTextDetailViewElementIndex: index,
     });
   };
 
@@ -112,11 +104,12 @@ class AnalysisResultPersonalCompare extends Component {
   doesElementHaveDescription(element) {
     if (element.type === 'row') {
       return element.descriptionText && element.descriptionText.length > 0;
-    } else if (element.type === 'customRow') {
+    }
+    if (element.type === 'customRow') {
       return (
-        element.descriptionTextIndex &&
-        element.descriptionTextIndex >= 0 &&
-        element.values[element.descriptionTextIndex]
+        element.descriptionTextIndex
+        && element.descriptionTextIndex >= 0
+        && element.values[element.descriptionTextIndex]
       );
     }
     return false;
@@ -126,27 +119,24 @@ class AnalysisResultPersonalCompare extends Component {
    * maps the state of this component to one that can be used
    * by the detail component
    * @param resultData the state to be transformed
+   * @param compareData the compare state to be transformed
    */
   convertResultsToDetailsDataFormat(resultData, compareData) {
     // transforming into items where results are numbers and a text to display is present
-    const compareDataArray = this.getResultArrayFormat(compareData);
     return this.getResultArrayFormat(resultData).map((item, itemIndex) => ({
       sectionName: item.name,
       sectionElements: item.numbers
-        // filtering elements that are not suitable for displaying as detail view
-        .filter((numberItem, numberIndex) =>
-          this.doesElementHaveDescription(numberItem) ||
-            this.doesElementHaveDescription(compareDataArray[itemIndex].numbers[numberIndex]))
         // mapping those elements to data for detail
         .map((numberItem) => {
           if (numberItem.type === 'row') {
             return {
-              elementTitle: `${numberItem.name} = ${numberItem.result.value ||
-                numberItem.result.values ||
-                numberItem.result.list}`,
+              elementTitle: `${numberItem.name} = ${numberItem.result.value
+                || numberItem.result.values
+                || numberItem.result.list}`,
               elementContent: numberItem.descriptionText,
             };
-          } else if (numberItem.type === 'customRow') {
+          }
+          if (numberItem.type === 'customRow') {
             // sad special treatment for HF/HP
             let elementTitle;
             if (numberItem.numberId.startsWith('HF/HP')) {
@@ -166,7 +156,8 @@ class AnalysisResultPersonalCompare extends Component {
             }
             return {
               elementTitle,
-              elementContent: numberItem.values[numberItem.descriptionTextIndex],
+              elementContent:
+                numberItem.values[numberItem.descriptionTextIndex],
             };
           }
           return null;
@@ -189,7 +180,10 @@ class AnalysisResultPersonalCompare extends Component {
     }
 
     const { analysis } = this.props;
-    const [personalAnalysisResult, personalAnalysisResultCompare] = this.props.personalAnalysisResults;
+    const [
+      personalAnalysisResult,
+      personalAnalysisResultCompare,
+    ] = this.props.personalAnalysisResults;
 
     // render table, table shows spinner
     return (
@@ -199,18 +193,11 @@ class AnalysisResultPersonalCompare extends Component {
           title="Übersicht der Zahlen"
           backTitle="Zurück"
           backRoute="/analysisInput"
-          primaryActionTitle={
-            !analysis
-              ? 'Speichern'
-              : null
-          }
+          primaryActionTitle={!analysis ? 'Speichern' : null}
           onPrimaryAction={() => {
-            this.props.history.push(`/userHome/saveAnalysis/${
-              personalAnalysisResult.firstNames},${
-              personalAnalysisResultCompare.firstNames}/${
-                personalAnalysisResult.lastName},${
-                personalAnalysisResultCompare.lastName
-              }/${personalAnalysisResult.dateOfBirth}`);
+            this.props.history.push(
+              `/userHome/saveAnalysis/${personalAnalysisResult.firstNames},${personalAnalysisResultCompare.firstNames}/${personalAnalysisResult.lastName},${personalAnalysisResultCompare.lastName}/${personalAnalysisResult.dateOfBirth}`,
+            );
           }}
           badgeTitle="Kurztext"
         />
@@ -254,52 +241,38 @@ class AnalysisResultPersonalCompare extends Component {
               </tbody>
             </table>
             <Panel
-              title={
-                personalAnalysisResult.expressionLevel.name
-              }
+              title={personalAnalysisResult.expressionLevel.name}
               id="ExpressionResult"
               className="panelResult"
             >
               <ResultTableCompare
                 data={personalAnalysisResult.expressionLevel}
-                dataCompare={
-                  personalAnalysisResultCompare.expressionLevel
-                }
+                dataCompare={personalAnalysisResultCompare.expressionLevel}
                 dataKey="expressionLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
 
             <Panel
-              title={
-                personalAnalysisResult.personalLevel.name
-              }
+              title={personalAnalysisResult.personalLevel.name}
               id="PersonalResult"
               className="panelResult"
             >
               <ResultTableCompare
                 data={personalAnalysisResult.personalLevel}
-                dataCompare={
-                  personalAnalysisResultCompare.personalLevel
-                }
+                dataCompare={personalAnalysisResultCompare.personalLevel}
                 dataKey="personalLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
             </Panel>
             <Panel
-              title={
-                personalAnalysisResult.developmentLevel.name
-              }
+              title={personalAnalysisResult.developmentLevel.name}
               id="DevelopmentResult"
               className="panelResult"
             >
               <ResultTableCompare
-                data={
-                  personalAnalysisResult.developmentLevel
-                }
-                dataCompare={
-                  personalAnalysisResultCompare.developmentLevel
-                }
+                data={personalAnalysisResult.developmentLevel}
+                dataCompare={personalAnalysisResultCompare.developmentLevel}
                 dataKey="developmentLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
@@ -311,9 +284,7 @@ class AnalysisResultPersonalCompare extends Component {
             >
               <ResultTableCompare
                 data={personalAnalysisResult.soulLevel}
-                dataCompare={
-                  personalAnalysisResultCompare.soulLevel
-                }
+                dataCompare={personalAnalysisResultCompare.soulLevel}
                 dataKey="soulLevel"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
@@ -325,27 +296,19 @@ class AnalysisResultPersonalCompare extends Component {
             >
               <ResultTableCompare
                 data={personalAnalysisResult.vibratoryCycles}
-                dataCompare={
-                  personalAnalysisResultCompare
-                    .vibratoryCycles
-                }
+                dataCompare={personalAnalysisResultCompare.vibratoryCycles}
                 dataKey="vibratoryCycles"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
               <ResultTableCompare
                 data={personalAnalysisResult.challengesHighs}
-                dataCompare={
-                  personalAnalysisResultCompare
-                    .challengesHighs
-                }
+                dataCompare={personalAnalysisResultCompare.challengesHighs}
                 dataKey="challengesHighs"
                 handleTextDetailClick={this.handleItemDetailClick}
               />
               <ResultTableCompare
                 data={personalAnalysisResult.personalYear}
-                dataCompare={
-                  personalAnalysisResultCompare.personalYear
-                }
+                dataCompare={personalAnalysisResultCompare.personalYear}
                 dataKey="personalYear"
                 handleTextDetailClick={this.handleItemDetailClick}
               />

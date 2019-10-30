@@ -247,6 +247,7 @@ const AnalysisBrowser = (props) => {
           { personalAnalysis: personalAnalysisResultCompare },
           personalAnalysisResultCompare.firstNames,
           personalAnalysisResultCompare.lastName,
+          pdfToBeDownloaded.longTexts,
         );
       } else {
         const [personalAnalysisResult] = analysis.personalAnalysisResults;
@@ -255,6 +256,7 @@ const AnalysisBrowser = (props) => {
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
           `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
+          pdfToBeDownloaded.longTexts,
         );
       }
     } catch (error) {
