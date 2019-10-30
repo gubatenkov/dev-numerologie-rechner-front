@@ -461,10 +461,10 @@ export function createPDFFromAnalysisResult(
   firstNames,
   lastName,
   fileName = null,
+  includePromotion = false,
   compareAnalysisResult = null,
   compareFirstNames = null,
   compareLastName = null,
-  includePromotion = false,
 ) {
   // getting result in array format
   const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
