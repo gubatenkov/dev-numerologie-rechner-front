@@ -3,7 +3,7 @@ import pdfFonts from '../fonts/vfs_fonts';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
 import { COVER_IMAGE_BY_LZ, LEVEL_BG_IMAGES } from './Images';
-import { COPYRIGHT_NOTICE, LEGAL_NOTICE } from './PdfTexts';
+import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from './PdfTexts';
 
 // defining colors used in the pdf
 const CI_COLORS = {
@@ -449,6 +449,12 @@ function extractNameAndValueFromItem(item) {
  * @param analysisResult the analysis result with subsections
  * @param firstNames the first names of the analysis
  * @param lastName the last name of the analysis
+ * @param fileName name of the file to download as
+ * @param compareAnalysisResult the compare analysis result with subsections
+ * @param compareFirstNames the first name input to the compare analysis
+ * @param compareLastName the last name input to the compare analysis
+ * @param includePromotion flag that indicates if a promotional text should be added
+ * to the end of the PDF
  */
 export function createPDFFromAnalysisResult(
   analysisResult,
@@ -458,6 +464,7 @@ export function createPDFFromAnalysisResult(
   compareAnalysisResult = null,
   compareFirstNames = null,
   compareLastName = null,
+  includePromotion = false,
 ) {
   // getting result in array format
   const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
@@ -800,6 +807,22 @@ export function createPDFFromAnalysisResult(
     // of this level
     levelPositionInformation[result.name].endIndex = docDefinition.content.length - 1;
   });
+
+  // if flag is set => adding promotional text
+  if (!includePromotion) {
+    // pushing title
+    docDefinition.content.push({
+      text: 'Vergleich zur Langtext-Version',
+      style: ['H1'],
+      tocItem: true,
+      pageBreak: 'before',
+      marginBottom: 10,
+    });
+    // pushing text
+    docDefinition.content.push({
+      text: PROMOTION_TEXT,
+    });
+  }
 
   // adding legal text at end of pdf
   docDefinition.content.push({
