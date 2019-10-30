@@ -65,23 +65,11 @@ class AnalysisResultPersonalRender extends Component {
       return;
     }
 
-    // calculating index in filtered data passed to details component
-    // indeNew = index - #of items removed by filtering before passed to detail component
-    const sectionUpToIndex = this.props.personalAnalysisResult[
-      dataKey
-    ].numbers.slice(0, index);
-    const removedElementsToIndexCount =
-      sectionUpToIndex.length -
-      sectionUpToIndex.filter(item => this.doesElementHaveDescription(item))
-        .length;
-
-    console.log('opening details');
-
     // opening detail view
     this.setState({
       resultTextDetailViewOpen: true,
       resultTextDetailViewSectionIndex: dataIndex,
-      resultTextDetailViewElementIndex: index - removedElementsToIndexCount,
+      resultTextDetailViewElementIndex: index,
     });
   };
 

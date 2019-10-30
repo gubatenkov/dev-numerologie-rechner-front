@@ -77,21 +77,11 @@ class AnalysisResultPersonalCompare extends Component {
       return;
     }
 
-    // calculating index in filtered data passed to details component
-    // indeNew = index - #of items removed by filtering before passed to detail component
-    const sectionUpToIndex = personalAnalysisResult[dataKey].numbers.slice(
-      0,
-      index,
-    );
-    const removedElementsToIndexCount = sectionUpToIndex.length
-      - sectionUpToIndex.filter((item) => this.doesElementHaveDescription(item))
-        .length;
-
     // opening detail view
     this.setState({
       resultTextDetailViewOpen: true,
       resultTextDetailViewSectionIndex: dataIndex,
-      resultTextDetailViewElementIndex: index - removedElementsToIndexCount,
+      resultTextDetailViewElementIndex: index,
     });
   };
 
@@ -114,7 +104,8 @@ class AnalysisResultPersonalCompare extends Component {
   doesElementHaveDescription(element) {
     if (element.type === 'row') {
       return element.descriptionText && element.descriptionText.length > 0;
-    } if (element.type === 'customRow') {
+    }
+    if (element.type === 'customRow') {
       return (
         element.descriptionTextIndex
         && element.descriptionTextIndex >= 0
@@ -144,7 +135,8 @@ class AnalysisResultPersonalCompare extends Component {
                 || numberItem.result.list}`,
               elementContent: numberItem.descriptionText,
             };
-          } if (numberItem.type === 'customRow') {
+          }
+          if (numberItem.type === 'customRow') {
             // sad special treatment for HF/HP
             let elementTitle;
             if (numberItem.numberId.startsWith('HF/HP')) {
