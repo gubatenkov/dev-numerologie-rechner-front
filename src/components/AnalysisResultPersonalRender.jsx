@@ -28,9 +28,9 @@ class AnalysisResultPersonalRender extends Component {
 
     // setting initial state based on calculations
     this.state = {
-      resultTextDetailViewOpen: false,
       loading: false,
       loadingText: null,
+      resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
     };
@@ -94,7 +94,8 @@ class AnalysisResultPersonalRender extends Component {
   doesElementHaveDescription(element) {
     if (element.type === 'row') {
       return element.descriptionText && element.descriptionText.length > 0;
-    } if (element.type === 'customRow') {
+    }
+    if (element.type === 'customRow') {
       return (
         element.descriptionTextIndex
         && element.descriptionTextIndex >= 0
@@ -125,7 +126,8 @@ class AnalysisResultPersonalRender extends Component {
                 || numberItem.result.list}`,
               elementContent: numberItem.descriptionText,
             };
-          } if (numberItem.type === 'customRow') {
+          }
+          if (numberItem.type === 'customRow') {
             // sad special treatment for HF/HP
             let elementTitle;
             if (numberItem.numberId.startsWith('HF/HP')) {
@@ -181,6 +183,7 @@ class AnalysisResultPersonalRender extends Component {
       return <LoadingIndicator text={this.props.error.message} />;
     }
 
+    // constructing side menu component
     let sideMenu = (
       <div className="ResultContentOverview">
         <ContentNavigation
@@ -204,9 +207,47 @@ class AnalysisResultPersonalRender extends Component {
       </div>
     );
 
+    // responsiveness => if window smaller than defined width => hide side menu
     let showSideMenu = window.innerWidth >= 992;
 
+    // getting props with two different types on inputs to this component:
+    // a) analysis => display
+    // b) analysis result => display result
     const { analysis, personalAnalysisResult } = this.props;
+
+    const configuration = [
+      {
+        name: 'Ausdrucksebene',
+        numberIds: ['az', 'bz', 'nnz'],
+        headings: null,
+      },
+      {
+        name: 'Persönlichkeitsebene',
+        numberIds: [
+          'wz',
+          'lz',
+          'iz',
+          'gz' /* TODO: how to handle nested structure?!! 'GDR', 'GDR-V', 'GDR-F', 'GDR-I' */,
+        ],
+        headings: null,
+      },
+      {
+        name: 'Entfaltungspotenzial',
+        numberIds: ['tz', 'kz', 'bfz', 'visz'],
+        headings: null,
+      },
+      {
+        name: 'Seelische Ebene',
+        numberIds: ['sz', 'iniz', 'sm', 'smv', 'kl', 'zsa'],
+        headings: null,
+      },
+      /* {
+        name: 'Zeitliche Ebene',
+        TODO: how to handle nested structure?!!
+        numberIds: ['vzb', 'vzp', 'vze', 'hfHp1', 'hfHp2', 'hfHp3', 'hfHp4'],
+        headings: null,
+      }, */
+    ];
 
     // render table, table shows spinner
     return (
@@ -235,78 +276,43 @@ class AnalysisResultPersonalRender extends Component {
         <div className="ContentArea">
           {showSideMenu ? sideMenu : null}
           <div className="ResultContent">
-            <Panel
-              title={personalAnalysisResult.expressionLevel.name}
-              id="ExpressionResult"
-              className="panelResult"
-            >
-              <ResultTable
-                data={personalAnalysisResult.expressionLevel}
-                dataKey="expressionLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
+            {// mapping every configuration section to a result panel
+            configuration.map((resultSection) => {
 
-            <Panel
-              title={personalAnalysisResult.personalLevel.name}
-              id="PersonalResult"
-              className="panelResult"
-            >
-              <ResultTable
-                data={personalAnalysisResult.personalLevel}
-                dataKey="personalLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
-            <Panel
-              title={personalAnalysisResult.developmentLevel.name}
-              id="DevelopmentResult"
-              className="panelResult"
-            >
-              <ResultTable
-                data={personalAnalysisResult.developmentLevel}
-                dataKey="developmentLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
-            <Panel
-              title={personalAnalysisResult.soulLevel.name}
-              id="SoulResult"
-              className="panelResult"
-            >
-              <ResultTable
-                data={personalAnalysisResult.soulLevel}
-                dataKey="soulLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
-            <Panel
-              title="Zeitliche Ebene"
-              id="TimeResult"
-              className="panelResult"
-            >
-              <ResultTable
-                data={personalAnalysisResult.vibratoryCycles}
-                dataKey="vibratoryCycles"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-              <ResultTable
-                data={personalAnalysisResult.challengesHighs}
-                dataKey="challengesHighs"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-              <ResultTable
-                data={personalAnalysisResult.personalYear}
-                dataKey="personalYear"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
+              // building data object for section
+              let numberData = [];
+              resultSection.numberIds.forEach(
+                (numberId) => (numberData.push(personalAnalysisResult[numberId])),
+              );
+
+              // constructing section data
+              const sectionData = {
+                name: resultSection.name, 
+                headings: resultSection.headings,
+                numbers: numberData,
+              }
+              // returning panel and result table with filtered data
+              return (
+                <Panel
+                  title={resultSection.name}
+                  id={resultSection.name}
+                  className="panelResult"
+                  key={resultSection.name}
+                >
+                  <ResultTable
+                    data={sectionData}
+                    dataKey={resultSection.name}
+                    handleTextDetailClick={this.handleItemDetailClick}
+                  />
+                </Panel>
+              );
+            })}
           </div>
         </div>
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          data={this.convertResultsToDetailsDataFormat(personalAnalysisResult)}
+          data={[]/*this.convertResultsToDetailsDataFormat(personalAnalysisResult)*/}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />

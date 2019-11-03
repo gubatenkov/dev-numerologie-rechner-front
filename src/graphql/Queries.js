@@ -157,6 +157,9 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
         lz {
           ...DefaultAnalysisResultItemFragment
         }
+        bz {
+          ...DefaultAnalysisResultItemFragment
+        }
         nnz {
           ...DefaultAnalysisResultItemFragment
         }
@@ -187,6 +190,9 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
           ...DefaultAnalysisResultItemFragment
         }
         tz {
+          ...DefaultAnalysisResultItemFragment
+        }
+        kz {
           ...DefaultAnalysisResultItemFragment
         }
         bfz {

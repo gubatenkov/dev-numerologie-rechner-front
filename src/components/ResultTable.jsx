@@ -55,6 +55,8 @@ class ResultTable extends Component {
    * default render method rendering content objects based on their type
    */
   render() {
+    console.log('Result Table Render');
+    console.log(this.props);
     return [
       <table
         key={`ResultTable ${this.props.data.name}`}

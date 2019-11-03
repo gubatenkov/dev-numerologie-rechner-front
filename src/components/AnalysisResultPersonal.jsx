@@ -13,7 +13,6 @@ import AnalysisResultPersonalRender from './AnalysisResultPersonalRender';
 /**
  * result screen for personal analysis
  */
-
 const AnalysisResultPersonal = (props) => {
   const {data} = props;
   if (data.loading) {
@@ -25,7 +24,7 @@ const AnalysisResultPersonal = (props) => {
   }
 
   // getting result from response data
-  const [personalAnalysisResult] = data;
+  const [personalAnalysisResult] = data.personalAnalyses;
 
   // returning render component with result param set (vs. analysis)
   return <AnalysisResultPersonalRender
