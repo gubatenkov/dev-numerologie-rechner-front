@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
 
+import * as _ from 'lodash';
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
@@ -227,7 +228,11 @@ class AnalysisResultPersonalRender extends Component {
           'wz',
           'lz',
           'iz',
-          'gz' /* TODO: how to handle nested structure?!! 'GDR', 'GDR-V', 'GDR-F', 'GDR-I' */,
+          'gz',
+          'gdr.gdr',
+          'gdr.gdrv',
+          'gdr.gdrf',
+          'gdr.gdri',
         ],
         headings: null,
       },
@@ -241,12 +246,11 @@ class AnalysisResultPersonalRender extends Component {
         numberIds: ['sz', 'iniz', 'sm', 'smv', 'kl', 'zsa'],
         headings: null,
       },
-      /* {
+      {
         name: 'Zeitliche Ebene',
-        TODO: how to handle nested structure?!!
-        numberIds: ['vzb', 'vzp', 'vze', 'hfHp1', 'hfHp2', 'hfHp3', 'hfHp4'],
+        numberIds: ['vz.vzb', 'vz.vzp', 'vz.vze', 'hfhp.hfHp1', 'hfhp.hfHp2', 'hfhp.hfHp3', 'hfhp.hfHp4', 'pj.pj', 'pj.pjnj'],
         headings: null,
-      }, */
+      },
     ];
 
     // render table, table shows spinner
@@ -278,19 +282,18 @@ class AnalysisResultPersonalRender extends Component {
           <div className="ResultContent">
             {// mapping every configuration section to a result panel
             configuration.map((resultSection) => {
-
               // building data object for section
               let numberData = [];
-              resultSection.numberIds.forEach(
-                (numberId) => (numberData.push(personalAnalysisResult[numberId])),
-              );
+              resultSection.numberIds.forEach((numberId) => numberData.push(_.get(personalAnalysisResult, numberId)));
 
               // constructing section data
               const sectionData = {
-                name: resultSection.name, 
+                name: resultSection.name,
                 headings: resultSection.headings,
                 numbers: numberData,
-              }
+              };
+              console.log('Section data');
+              console.log(sectionData);
               // returning panel and result table with filtered data
               return (
                 <Panel
@@ -312,7 +315,9 @@ class AnalysisResultPersonalRender extends Component {
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          data={[]/*this.convertResultsToDetailsDataFormat(personalAnalysisResult)*/}
+          data={
+            [] /* this.convertResultsToDetailsDataFormat(personalAnalysisResult) */
+          }
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />

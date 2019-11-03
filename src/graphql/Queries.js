@@ -49,6 +49,7 @@ export const currentUserQuery = gql`
 // result fragment for default analysis result item for the analysis on the web (not pdf)
 export const webDefaultAnalysisResultItemFragment = gql`
   fragment DefaultAnalysisResultItemFragment on DefaultAnalysisResultItem {
+    type
     name
     numberId
     descriptionText
@@ -79,8 +80,8 @@ export const webDefaultAnalysisResultItemFragment = gql`
 // result fragment for default analysis result item for the analysis in a pdf to be generated
 export const pdfDefaultAnalysisResultItemFragment = gql`
   fragment DefaultAnalysisResultItemFragment on DefaultAnalysisResultItem {
-    name
     type
+    name
     numberId
     descriptionText
     bookReference
@@ -114,6 +115,7 @@ export const pdfDefaultAnalysisResultItemFragment = gql`
 // result fragment for default analysis result item for the analysis on the web (not pdf)
 export const webCustomAnalysisResultItemFragment = gql`
   fragment CustomAnalysisResultItemFragment on CustomAnalysisResultItem {
+    type
     numberId
     values
     highlighted
