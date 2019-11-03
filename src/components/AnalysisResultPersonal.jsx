@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
@@ -13,44 +13,44 @@ import AnalysisResultPersonalRender from './AnalysisResultPersonalRender';
 /**
  * result screen for personal analysis
  */
-class AnalysisResultPersonal extends Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired,
-    }).isRequired,
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        firstNames: PropTypes.string.isRequired,
-        lastName: PropTypes.string.isRequired,
-        dateOfBirth: PropTypes.string.isRequired,
-      }).isRequired,
-    }).isRequired,
-  };
 
-  /**
-   * default render
-   */
-  render() {
-    if (this.props.data.loading) {
-      return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
-    }
-
-    if (this.props.data.error) {
-      return <LoadingIndicator text={this.props.data.error.message} />;
-    }
-
-    const { personalAnalyses } = this.props.data;
-
-    const [personalAnalysisResult] = personalAnalyses;
-    return <AnalysisResultPersonalRender
-      error={this.props.data.error}
-      loading={this.props.data.loading}
-      analysis={null}
-      personalAnalysisResult={personalAnalysisResult}
-    />;
+const AnalysisResultPersonal = (props) => {
+  const {data} = props;
+  if (data.loading) {
+    return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
   }
+
+  if (data.error) {
+    return <LoadingIndicator text={data.error.message} />;
+  }
+
+  // getting result from response data
+  const [personalAnalysisResult] = data;
+
+  // returning render component with result param set (vs. analysis)
+  return <AnalysisResultPersonalRender
+    error={data.error}
+    loading={data.loading}
+    analysis={null}
+    personalAnalysisResult={personalAnalysisResult}
+  />;
+} 
+
+// prop types validation
+AnalysisResultPersonal.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      firstNames: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      dateOfBirth: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired, 
 }
 
+// constructing query with input parameters taken from URL params
 export default compose(graphql(buildPersonalAnalysisQuery(false), {
   options: params => ({
     variables: { inputs: [{
