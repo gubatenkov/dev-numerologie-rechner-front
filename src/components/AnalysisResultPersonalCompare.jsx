@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { graphql, withApollo } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 
-import { personalResultsQuery } from '../graphql/Queries';
+import { buildPersonalAnalysisQuery } from '../graphql/Queries';
 
 import LoadingIndicator from './LoadingIndicator';
 import AnalysisResultPersonalCompareRender from './AnalysisResultPersonalCompareRender';
@@ -51,7 +51,7 @@ class AnalysisResultPersonal extends Component {
   }
 }
 
-export default compose(graphql(personalResultsQuery, {
+export default compose(graphql(buildPersonalAnalysisQuery(false), {
   options: params => ({
     variables: { inputs: [{
       firstNames: params.match.params.firstNames.split(',')[0],
