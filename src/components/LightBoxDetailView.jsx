@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import Interweave from 'interweave';
 
 import '../styles/LightBoxDetailView.css';
 
@@ -101,10 +102,49 @@ function LightBoxDetailView(props) {
     }
   });
 
+  /**
+   * extracts the title and content from the passed result element
+   * and returns both parameters as array
+   * @param element the result element to build title and content from
+   */
+  const buildElementContent = (element) => {
+    // if no element passed => returning null for all value
+    if (!element) {
+      return [null, null];
+    }
+    // determining title and content of element
+    let elementTitle;
+    let elementContent;
+    if (element.type === 'row') {
+      // if element is default result => using standard result
+      // title is name and value
+      elementTitle = `${element.name} = ${element.result.value
+        || element.result.values
+        || element.result.list}`;
+
+      // content is description
+      elementContent = element.descriptionText;
+    } else {
+      // title needs to be extracted from custom element
+      elementTitle = `${element.values[element.nameIndex]} = ${
+        element.values[element.valueIndex]
+      }`;
+
+      // description text needs to be extracted from custom values
+      elementContent = element.values[element.descriptionTextIndex];
+    }
+
+    return [elementTitle, elementContent];
+  };
+
   // if detail view not open -> not showing it
   if (isOpen === false) {
     return null;
   }
+
+  console.log('Indices');
+  console.log(sectionIndex);
+  console.log(elementIndex);
 
   console.log('tourdata');
   console.log(tourData);
@@ -125,18 +165,11 @@ function LightBoxDetailView(props) {
     return null;
   }
 
-  // determining title of element
-  let elementTitle;
-  if (currentElement.type === 'row') {
-    // if element is default result => using standard result
-    elementTitle = `${currentElement.name} = ${currentElement.result.value
-      || currentElement.result.values
-      || currentElement.result.list}`;
-  } else {
-    elementTitle = `${currentElement.values[currentElement.nameIndex]} = ${
-      currentElement.values[currentElement.valueIndex]
-    }`;
-  }
+  // determining title and content of elements
+  const [elementTitle, elementContent] = buildElementContent(currentElement);
+  const [compareElementTitle, compareElementContent] = buildElementContent(
+    currentCompareElement,
+  );
 
   return (
     <div
@@ -193,12 +226,8 @@ function LightBoxDetailView(props) {
         </div>
         <div>
           <Panel className="LightBoxDetailView__Panel" title={elementTitle}>
-            <div
-              className="LightBoxDetailView__text LightBoxDetailView--non-printable"
-              dangerouslySetInnerHTML={{
-                __html: currentElement.elementContent,
-              }}
-            />
+            <div className="LightBoxDetailView__text LightBoxDetailView--non-printable" />
+            <Interweave content={elementContent} />
             <h3 className="LightBoxDetailView--printWatermark">
               Die Resultate können nur mit Druckpaket ausgedruckt werden.
             </h3>
@@ -208,16 +237,17 @@ function LightBoxDetailView(props) {
           <div className="">
             <Panel
               className="LightBoxDetailView__Panel"
-              title={currentCompareElement.elementTitle}
+              title={compareElementTitle}
             >
-              <div
-                className="LightBoxDetailView__text LightBoxDetailView--non-printable"
-                dangerouslySetInnerHTML={{
-                  __html: _.isEqual(currentCompareElement, currentElement)
-                    ? 'Gleich wie links.'
-                    : currentCompareElement.elementContent,
-                }}
-              />
+              <div className="LightBoxDetailView__text LightBoxDetailView--non-printable">
+                <Interweave
+                  content={
+                    _.isEqual(currentCompareElement, currentElement)
+                      ? 'Gleich wie links.'
+                      : compareElementContent
+                  }
+                />
+              </div>
               <h3 className="LightBoxDetailView--printWatermark">
                 Die Resultate können nur mit Druckpaket ausgedruckt werden.
               </h3>

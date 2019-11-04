@@ -37,76 +37,8 @@ class AnalysisResultPersonalRender extends Component {
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
+      resultConfiguration: PersonalResultConfiguration.LEVELS,
     };
-  }
-
-  /**
-   * returns an array representation of the state of the component
-   * @param data the state to be transformed
-   */
-  getResultArrayFormat(data) {
-    return [
-      data.expressionLevel,
-      data.personalLevel,
-      data.developmentLevel,
-      data.soulLevel,
-      data.vibratoryCycles,
-      data.challengesHighs,
-      data.personalYear,
-    ];
-  }
-
-  /**
-   *  handles clicks on detail links
-   */
-  handleItemDetailClick = (dataKey, index) => {
-    const analysisResult = this.props.personalAnalysisResult;
-    // getting index of elemnent represented by dataKey in state
-    const dataIndex = this.getResultArrayFormat(analysisResult).indexOf(
-      analysisResult[dataKey],
-    );
-
-    // if data is not here -> skip
-    if (dataIndex < 0) {
-      return;
-    }
-
-    // opening detail view
-    this.setState({
-      resultTextDetailViewOpen: true,
-      resultTextDetailViewSectionIndex: dataIndex,
-      resultTextDetailViewElementIndex: index,
-    });
-  };
-
-  /**
-   * handles the navigation to a specific item
-   */
-  navigateToElementHandler = (name, anchor) => {
-    // scrolling to item if present in DOM
-    const stepContentItem = document.getElementById(anchor);
-    if (stepContentItem) {
-      stepContentItem.scrollIntoView();
-    }
-  };
-
-  /**
-   * checks whether an element has a description text element present
-   * @param element the element to check for
-   * @returns true if contains valid description, false otherwise
-   */
-  doesElementHaveDescription(element) {
-    if (element.type === 'row') {
-      return element.descriptionText && element.descriptionText.length > 0;
-    }
-    if (element.type === 'customRow') {
-      return (
-        element.descriptionTextIndex
-        && element.descriptionTextIndex >= 0
-        && element.values[element.descriptionTextIndex]
-      );
-    }
-    return false;
   }
 
   /**
@@ -115,12 +47,12 @@ class AnalysisResultPersonalRender extends Component {
    * @param configuration the current result configuration
    * @returns an array of tour sections containing section name and result items
    */
-  buildTourStructure(resultData, configuration) {
+  buildTourDataStructure(resultData, configuration) {
     // constructing tourSection element for every table in configuration
     const tourSections = [];
     configuration.forEach((resultSection) => {
-      tourSections.push(...
-        resultSection.tables.map((table) => ({
+      tourSections.push(
+        ...resultSection.tables.map((table) => ({
           sectionName: table.name,
           sectionElements: table.numberIds.map((numberId) => _.get(resultData, numberId)),
         })),
@@ -128,6 +60,57 @@ class AnalysisResultPersonalRender extends Component {
     });
     return tourSections;
   }
+
+  /**
+   * builds a data structure used for the content sidebar
+   * @param configuration the current result configuration
+   */
+  buildContentDataStructure(configuration) {
+    // returning an array of section names
+    return configuration.map((configSection) => configSection.name);
+  }
+
+  /**
+   *  handles clicks on detail links
+   * @param dataKey the name of the table the event was fired
+   * @param rowIndex the index of the row inside the table the event was fired for
+   */
+  handleItemDetailClick = (dataKey, rowIndex) => {
+    //  getting tour structure
+    const tourDataStructure = this.buildTourDataStructure(
+      this.props.personalAnalysisResult,
+      this.state.resultConfiguration,
+    );
+
+    // finding index with datakey in tour data structure
+    const sectionIndex = tourDataStructure.findIndex(
+      (section) => section.sectionName === dataKey,
+    );
+
+    // if data is not here -> skip
+    if (sectionIndex < 0) {
+      return;
+    }
+
+    // opening detail view with right section index
+    this.setState({
+      resultTextDetailViewOpen: true,
+      resultTextDetailViewSectionIndex: sectionIndex,
+      resultTextDetailViewElementIndex: rowIndex,
+    });
+  };
+
+  /**
+   * handles the navigation to a specific item
+   * @param anchor the # anchor in the html to navigate to
+   */
+  navigateToElementHandler = (name, anchor) => {
+    // scrolling to item if present in DOM
+    const stepContentItem = document.getElementById(anchor);
+    if (stepContentItem) {
+      stepContentItem.scrollIntoView();
+    }
+  };
 
   resize = () => this.forceUpdate();
 
@@ -148,10 +131,12 @@ class AnalysisResultPersonalRender extends Component {
       return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
     }
 
+    // if processing internally => showing loading indicator
     if (this.state.loading) {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
 
+    // if error => show loading indicator with error message to inform user
     if (this.props.error) {
       return <LoadingIndicator text={this.props.error.message} />;
     }
@@ -160,20 +145,12 @@ class AnalysisResultPersonalRender extends Component {
     let sideMenu = (
       <div className="ResultContentOverview">
         <ContentNavigation
-          contentItems={[
-            'Ausdrucksebene',
-            'Persönlichkeitsebene',
-            'Entfaltungspotential',
-            'Seelische Ebene',
-            'Zeitliche Ebene',
-          ]}
-          contentItemAnchors={[
-            'ExpressionResult',
-            'PersonalResult',
-            'DevelopmentResult',
-            'SoulResult',
-            'TimeResult',
-          ]}
+          contentItems={this.buildContentDataStructure(
+            this.state.resultConfiguration,
+          )}
+          contentItemAnchors={this.buildContentDataStructure(
+            this.state.resultConfiguration,
+          )}
           onItemClick={this.navigateToElementHandler}
           autoAdapt
         />
@@ -187,10 +164,6 @@ class AnalysisResultPersonalRender extends Component {
     // a) analysis => display
     // b) analysis result => display result
     const { analysis, personalAnalysisResult } = this.props;
-
-    // defining configuration of current view
-    // TODO: switch this based on url param
-    const resultConfiguration = PersonalResultConfiguration.LEVELS;
 
     // render table, table shows spinner
     return (
@@ -220,7 +193,7 @@ class AnalysisResultPersonalRender extends Component {
           {showSideMenu ? sideMenu : null}
           <div className="ResultContent">
             {// mapping every configuration section to a result panel
-            resultConfiguration.map((resultSection) => (
+            this.state.resultConfiguration.map((resultSection) => (
               // returning panel and result table with filtered data
               <Panel
                 title={resultSection.name}
@@ -235,7 +208,7 @@ class AnalysisResultPersonalRender extends Component {
                       numbers: tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId)),
                       headings: tableData.headings,
                     }}
-                    dataKey={'TBA'}
+                    dataKey={tableData.name}
                     key={`${resultSection.name + tableData.headings}`}
                     handleTextDetailClick={this.handleItemDetailClick}
                   />
@@ -247,9 +220,9 @@ class AnalysisResultPersonalRender extends Component {
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          tourData={this.buildTourStructure(
+          tourData={this.buildTourDataStructure(
             personalAnalysisResult,
-            resultConfiguration,
+            this.state.resultConfiguration,
           )}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
