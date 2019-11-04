@@ -179,7 +179,13 @@ class AnalysisResultPersonalCompare extends Component {
           primaryActionTitle={!analysis ? 'Speichern' : null}
           onPrimaryAction={() => {
             this.props.history.push(
-              `/userHome/saveAnalysis/${personalAnalysisResult.firstNames},${personalAnalysisResultCompare.firstNames}/${personalAnalysisResult.lastName},${personalAnalysisResultCompare.lastName}/${personalAnalysisResult.dateOfBirth}`,
+              `/userHome/saveAnalysis/${encodeURIComponent([
+                personalAnalysisResult.firstNames,
+                personalAnalysisResultCompare.firstNames,
+              ])}/${encodeURIComponent([
+                personalAnalysisResult.lastName,
+                personalAnalysisResultCompare.lastName,
+              ])}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
             );
           }}
           badgeTitle="Kurztext"

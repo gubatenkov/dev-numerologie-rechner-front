@@ -176,7 +176,11 @@ class AnalysisResultPersonalRender extends Component {
           primaryActionTitle={!analysis ? 'Speichern' : null}
           onPrimaryAction={() => {
             this.props.history.push(
-              `/userHome/saveAnalysis/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
+              `/userHome/saveAnalysis/${encodeURIComponent(
+                personalAnalysisResult.firstNames,
+              )}/${encodeURIComponent(
+                personalAnalysisResult.lastName,
+              )}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
             );
           }}
           badgeTitle="Kurztext"

@@ -46,7 +46,6 @@ export const saveAnalysisMutation = gql`
     saveAnalysis(inputs: $inputs, name: $name, group: $group) {
       id
       name
-      usedCreditType
       usedCreditTypes
       inputs {
         id
@@ -73,7 +72,6 @@ export const useCreditMutation = gql`
     useCredit(analysisId: $analysisId type: $type) {
       id
       name
-      usedCreditType
       usedCreditTypes
     }
   }

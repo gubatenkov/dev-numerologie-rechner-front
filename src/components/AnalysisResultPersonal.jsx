@@ -68,19 +68,25 @@ AnalysisResultPersonal.propTypes = {
 export default compose(
   graphql(buildPersonalAnalysisQuery(false), {
     options: (params) => {
-      if (params.match.params.firstNames.split(',').length > 1) {
+      // decoding values
+      const firstNames = decodeURIComponent(params.match.params.firstNames);
+      const lastNames = decodeURIComponent(params.match.params.lastNames);
+      const dateOfBirth = decodeURIComponent(params.match.params.dateOfBirth);
+
+      // if more than one first name => splitting and getting results for both names
+      if (firstNames.split(',').length > 1) {
         return {
           variables: {
             inputs: [
               {
-                firstNames: params.match.params.firstNames.split(',')[0],
-                lastName: params.match.params.lastNames.split(',')[0],
-                dateOfBirth: params.match.params.dateOfBirth,
+                firstNames: firstNames.split(',')[0],
+                lastName: lastNames.split(',')[0],
+                dateOfBirth,
               },
               {
-                firstNames: params.match.params.firstNames.split(',')[1],
-                lastName: params.match.params.lastNames.split(',')[1],
-                dateOfBirth: params.match.params.dateOfBirth,
+                firstNames: firstNames.split(',')[1],
+                lastName: lastNames.split(',')[1],
+                dateOfBirth,
               },
             ],
           },
@@ -90,9 +96,9 @@ export default compose(
         variables: {
           inputs: [
             {
-              firstNames: params.match.params.firstNames,
-              lastName: params.match.params.lastNames,
-              dateOfBirth: params.match.params.dateOfBirth,
+              firstNames,
+              lastName: lastNames,
+              dateOfBirth,
             },
           ],
         },
