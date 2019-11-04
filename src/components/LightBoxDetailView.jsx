@@ -13,8 +13,8 @@ function LightBoxDetailView(props) {
   const {
     sectionIndex,
     elementIndex,
-    data,
-    compareData,
+    tourData,
+    compareTourData,
     onClose,
     isOpen,
   } = props;
@@ -26,7 +26,7 @@ function LightBoxDetailView(props) {
   // handler for clicks on the steps directly in the overview
   const handleStepClick = (sectionTitleClicked) => {
     // getting index of section title clicked and setting it's index as current section index
-    const index = props.data.findIndex(
+    const index = tourData.findIndex(
       (item) => item.sectionName === sectionTitleClicked,
     );
     if (index > -1) {
@@ -42,7 +42,7 @@ function LightBoxDetailView(props) {
     } else if (currentSectionIndex > 0) {
       setCurrentSectionIndex(currentSectionIndex - 1);
       setCurrentElementIndex(
-        props.data[currentSectionIndex - 1].sectionElements.length - 1,
+        tourData[currentSectionIndex - 1].sectionElements.length - 1,
       );
     }
   };
@@ -52,11 +52,11 @@ function LightBoxDetailView(props) {
     // navigate within section
     if (
       currentElementIndex
-      < data[currentSectionIndex].sectionElements.length - 1
+      < tourData[currentSectionIndex].sectionElements.length - 1
     ) {
       setCurrentElementIndex(currentElementIndex + 1);
-    // navigate to first element of next section
-    } else if (currentSectionIndex < data.length - 1) {
+      // navigate to first element of next section
+    } else if (currentSectionIndex < tourData.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentElementIndex(0);
     }
@@ -106,18 +106,36 @@ function LightBoxDetailView(props) {
     return null;
   }
 
+  console.log('tourdata');
+  console.log(tourData);
+
   // getting current element
-  const currentElement = data[currentSectionIndex].sectionElements[currentElementIndex];
+  const currentElement = tourData[currentSectionIndex].sectionElements[currentElementIndex];
+  console.log('current element');
+  console.log(currentElement);
 
   // getting current compare element if persent
   let currentCompareElement;
-  if (compareData) {
-    currentCompareElement = compareData[currentSectionIndex].sectionElements[currentElementIndex];
+  if (compareTourData) {
+    currentCompareElement = compareTourData[currentSectionIndex].sectionElements[currentElementIndex];
   }
 
   // if for some reason, the current element is invalid > rendering nothing
-  if (!currentElement || (compareData && !currentCompareElement)) {
+  if (!currentElement || (compareTourData && !currentCompareElement)) {
     return null;
+  }
+
+  // determining title of element
+  let elementTitle;
+  if (currentElement.type === 'row') {
+    // if element is default result => using standard result
+    elementTitle = `${currentElement.name} = ${currentElement.result.value
+      || currentElement.result.values
+      || currentElement.result.list}`;
+  } else {
+    elementTitle = `${currentElement.values[currentElement.nameIndex]} = ${
+      currentElement.values[currentElement.valueIndex]
+    }`;
   }
 
   return (
@@ -130,32 +148,32 @@ function LightBoxDetailView(props) {
     >
       <div className="LightBoxDetailView__ContentOverview">
         <Steps horizontal>
-          {data.map((item, index) => {
+          {tourData.map((tourSection, tourSectionIndex) => {
             // getting length of current section (only elements that have content)
-            const currentSectionLength = item.sectionElements.length;
+            const currentSectionLength = tourSection.sectionElements.length;
 
             // determining index to display for step
             let stepElementIndex = 0;
-            if (index === currentSectionIndex) {
+            if (tourSectionIndex === currentSectionIndex) {
               stepElementIndex = currentElementIndex;
-            } else if (index < currentSectionIndex) {
+            } else if (tourSectionIndex < currentSectionIndex) {
               stepElementIndex = currentSectionLength - 1;
             }
 
             // determining the name of the item to display
             // if if is the current section, an indication for
             // the element position in the current section is given
-            let stepName = item.sectionName;
-            if (index === currentSectionIndex) {
+            let stepName = tourSection.sectionName;
+            if (tourSectionIndex === currentSectionIndex) {
               stepName += ` (${stepElementIndex + 1}/${currentSectionLength})`;
             }
 
             return (
               <Step
-                key={item.sectionName}
+                key={tourSection.sectionName}
                 name={stepName}
-                current={index === currentSectionIndex}
-                done={index < currentSectionIndex}
+                current={tourSectionIndex === currentSectionIndex}
+                done={tourSectionIndex < currentSectionIndex}
                 onStepClick={handleStepClick}
                 horizontal
               />
@@ -174,10 +192,7 @@ function LightBoxDetailView(props) {
           </button>
         </div>
         <div>
-          <Panel
-            className="LightBoxDetailView__Panel"
-            title={currentElement.elementTitle}
-          >
+          <Panel className="LightBoxDetailView__Panel" title={elementTitle}>
             <div
               className="LightBoxDetailView__text LightBoxDetailView--non-printable"
               dangerouslySetInnerHTML={{
@@ -230,7 +245,7 @@ function LightBoxDetailView(props) {
 
 // defining proptypes
 LightBoxDetailView.propTypes = {
-  data: PropTypes.arrayOf(
+  tourData: PropTypes.arrayOf(
     PropTypes.shape({
       sectionName: PropTypes.string.isRequired,
       sectionElements: PropTypes.arrayOf(
@@ -241,7 +256,7 @@ LightBoxDetailView.propTypes = {
       ),
     }),
   ).isRequired,
-  compareData: PropTypes.arrayOf(
+  compareTourData: PropTypes.arrayOf(
     PropTypes.shape({
       sectionName: PropTypes.string.isRequired,
       sectionElements: PropTypes.arrayOf(

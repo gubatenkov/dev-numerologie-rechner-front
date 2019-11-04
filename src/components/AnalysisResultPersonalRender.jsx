@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import * as _ from 'lodash';
+
+import { PersonalResultConfiguration } from '../utils/Config';
+
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
@@ -107,54 +110,23 @@ class AnalysisResultPersonalRender extends Component {
   }
 
   /**
-   * maps the state of this component to one that can be used
-   * by the detail component
-   * @param resultData the state to be transformed
+   * transforms the analysis results and configuration into a tour data structure used for the detailed tour
+   * @param resultData the result data for the analysis
+   * @param configuration the current result configuration
+   * @returns an array of tour sections containing section name and result items
    */
-  convertResultsToDetailsDataFormat(resultData) {
-    // transforming into items where results are numbers and a text to display is present
-    return this.getResultArrayFormat(resultData).map((item) => ({
-      sectionName: item.name,
-      sectionElements: item.numbers
-        // filtering elements that are not suitable for displaying as detail view
-        /* .filter(numberItem => this.doesElementHaveDescription(numberItem)) */
-        // mapping those elements to data for detail
-        .map((numberItem) => {
-          if (numberItem.type === 'row') {
-            return {
-              elementTitle: `${numberItem.name} = ${numberItem.result.value
-                || numberItem.result.values
-                || numberItem.result.list}`,
-              elementContent: numberItem.descriptionText,
-            };
-          }
-          if (numberItem.type === 'customRow') {
-            // sad special treatment for HF/HP
-            let elementTitle;
-            if (numberItem.numberId.startsWith('HF/HP')) {
-              elementTitle = `${numberItem.values[1]}. Herausforderung = ${
-                numberItem.values[2]
-              }  |  ${numberItem.values[1]}. Höhepunkt = ${
-                numberItem.values[3]
-              } (${numberItem.values[4]})`;
-            } else if (['PJ', 'PJ (+1)'].includes(numberItem.numberId)) {
-              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
-                numberItem.values[numberItem.valueIndex]
-              } (${numberItem.values[3]})`;
-            } else {
-              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
-                numberItem.values[numberItem.valueIndex]
-              }`;
-            }
-            return {
-              elementTitle,
-              elementContent:
-                numberItem.values[numberItem.descriptionTextIndex],
-            };
-          }
-          return null;
-        }),
-    }));
+  buildTourStructure(resultData, configuration) {
+    // constructing tourSection element for every table in configuration
+    const tourSections = [];
+    configuration.forEach((resultSection) => {
+      tourSections.push(...
+        resultSection.tables.map((table) => ({
+          sectionName: table.name,
+          sectionElements: table.numberIds.map((numberId) => _.get(resultData, numberId)),
+        })),
+      );
+    });
+    return tourSections;
   }
 
   resize = () => this.forceUpdate();
@@ -217,92 +189,8 @@ class AnalysisResultPersonalRender extends Component {
     const { analysis, personalAnalysisResult } = this.props;
 
     // defining configuration of current view
-    const configuration = [
-      {
-        name: 'Ausdrucksebene',
-        tables: [
-          {
-            headings: null,
-            numberIds: ['az', 'bz', 'nnz'],
-          },
-        ],
-      },
-      {
-        name: 'Persönlichkeitsebene',
-        tables: [
-          {
-            numberIds: [
-              'wz',
-              'lz',
-              'iz',
-              'gz',
-              'gdr.gdr',
-              'gdr.gdrv',
-              'gdr.gdrf',
-              'gdr.gdri',
-            ],
-            headings: null,
-          },
-        ],
-      },
-      {
-        name: 'Entfaltungspotenzial',
-        tables: [
-          {
-            numberIds: ['tz', 'kz', 'bfz', 'visz'],
-            headings: null,
-          },
-        ],
-      },
-      {
-        name: 'Seelische Ebene',
-        tables: [
-          {
-            numberIds: ['sz', 'iniz', 'sm', 'smv', 'kl', 'zsa'],
-            headings: null,
-          },
-        ],
-      },
-      {
-        name: 'Zeitliche Ebene',
-        tables: [
-          {
-            numberIds: ['vz.vzb', 'vz.vzp', 'vz.vze'],
-            headings: [
-              'Vibratorische Zyklen',
-              'VZ',
-              'Wert',
-              'Alter',
-              'Beschreibung',
-              'Referenz im Buch',
-            ],
-          },
-          {
-            numberIds: ['hfhp.hfHp1', 'hfhp.hfHp2', 'hfhp.hfHp3', 'hfhp.hfHp4'],
-            headings: [
-              'Herausforderungen und Höhepunkte',
-              'HF/HP',
-              'HF',
-              'HP',
-              'Zeitpunkt',
-              'Beschreibung',
-              'Referenz im Buch',
-            ],
-          },
-          {
-            numberIds: ['pj.pj', 'pj.pjnj'],
-            headings: [
-              'Persönliches Jahr',
-              'PJ',
-              'Wert',
-              'Zeitraum',
-              'Beschreibung',
-              'Referenz im Buch',
-            ],
-          },
-        ],
-      },
-    ];
+    // TODO: switch this based on url param
+    const resultConfiguration = PersonalResultConfiguration.LEVELS;
 
     // render table, table shows spinner
     return (
@@ -332,7 +220,7 @@ class AnalysisResultPersonalRender extends Component {
           {showSideMenu ? sideMenu : null}
           <div className="ResultContent">
             {// mapping every configuration section to a result panel
-            configuration.map((resultSection) => (
+            resultConfiguration.map((resultSection) => (
               // returning panel and result table with filtered data
               <Panel
                 title={resultSection.name}
@@ -359,9 +247,10 @@ class AnalysisResultPersonalRender extends Component {
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          data={
-            [] /* this.convertResultsToDetailsDataFormat(personalAnalysisResult) */
-          }
+          tourData={this.buildTourStructure(
+            personalAnalysisResult,
+            resultConfiguration,
+          )}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
         />

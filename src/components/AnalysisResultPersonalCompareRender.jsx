@@ -318,11 +318,11 @@ class AnalysisResultPersonalCompare extends Component {
         <LightBoxDetailView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          data={this.convertResultsToDetailsDataFormat(
+          tourData={this.convertResultsToDetailsDataFormat(
             personalAnalysisResult,
             personalAnalysisResultCompare,
           )}
-          compareData={this.convertResultsToDetailsDataFormat(
+          compareTourData={this.convertResultsToDetailsDataFormat(
             personalAnalysisResultCompare,
             personalAnalysisResult,
           )}
