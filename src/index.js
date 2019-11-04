@@ -23,7 +23,6 @@ import Register from './components/Register';
 import ResetPassword from './components/ResetPassword';
 import SetPassword from './components/SetPassword';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
-import AnalysisResultPersonalById from './components/AnalysisResultPersonalById';
 import UserHome from './components/UserHome';
 import PrivateRoute from './utils/PrivateRoute';
 
@@ -85,7 +84,7 @@ ReactDOM.render(
         <Route
           exact
           path="/resultPersonal/:analysisId"
-          component={withTracker(AnalysisResultPersonalById)}
+          component={withTracker(AnalysisResultPersonal)}
         />
         <Route
           exact

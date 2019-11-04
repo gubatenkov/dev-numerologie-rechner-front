@@ -5,7 +5,10 @@ import { withRouter } from 'react-router-dom';
 import { graphql, withApollo } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 
-import { buildPersonalAnalysisQuery } from '../graphql/Queries';
+import {
+  buildPersonalAnalysisQuery,
+  personalResultsByIdQuery,
+} from '../graphql/Queries';
 
 import LoadingIndicator from './LoadingIndicator';
 import AnalysisResultPersonalRender from './AnalysisResultPersonalRender';
@@ -24,17 +27,22 @@ const AnalysisResultPersonal = (props) => {
     return <LoadingIndicator text={data.error.message} />;
   }
 
-  // getting result from response data
-  const [personalAnalysisResult] = data.personalAnalyses;
+  // getting result from response data dependent on mode of this component (id or name)
+  let personalAnalysisResult = [];
+  if (props.match.params.analysisId) {
+    personalAnalysisResult = data.analysis.personalAnalysisResults;
+  } else {
+    personalAnalysisResult = data.personalAnalyses;
+  }
 
   // rendering single or compare result based on result
-  if (data.personalAnalyses.length > 1) {
+  if (personalAnalysisResult.length > 1) {
     return (
       <AnalysisResultPersonalCompareRender
         error={data.error}
         loading={data.loading}
         analysis={null}
-        personalAnalysisResults={data.personalAnalyses}
+        personalAnalysisResults={personalAnalysisResult}
       />
     );
   }
@@ -45,7 +53,7 @@ const AnalysisResultPersonal = (props) => {
       error={data.error}
       loading={data.loading}
       analysis={null}
-      personalAnalysisResult={personalAnalysisResult}
+      personalAnalysisResult={personalAnalysisResult[0]}
     />
   );
 };
@@ -57,18 +65,32 @@ AnalysisResultPersonal.propTypes = {
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
-      firstNames: PropTypes.string.isRequired,
-      lastNames: PropTypes.string.isRequired,
-      dateOfBirth: PropTypes.string.isRequired,
+      firstNames: PropTypes.string,
+      lastNames: PropTypes.string,
+      dateOfBirth: PropTypes.string,
+      analysisId: PropTypes.string,
     }).isRequired,
   }).isRequired,
 };
 
 // constructing query with input parameters taken from URL params
 export default compose(
+  graphql(personalResultsByIdQuery, {
+    options: (params) => ({
+      // query by id (skipped if no id present)
+      // returning input variables
+      variables: {
+        id: parseInt(params.match.params.analysisId, 10),
+        isPdf: false,
+        longTexts: false,
+      },
+    }),
+    // skipping this query if no id is provided
+    skip: (params) => !params.match.params.analysisId,
+  }),
   graphql(buildPersonalAnalysisQuery(false), {
     options: (params) => {
-      // decoding values
+      // decoding url param values
       const firstNames = decodeURIComponent(params.match.params.firstNames);
       const lastNames = decodeURIComponent(params.match.params.lastNames);
       const dateOfBirth = decodeURIComponent(params.match.params.dateOfBirth);
@@ -104,5 +126,7 @@ export default compose(
         },
       };
     },
+    // skipping this query if no names are provided
+    skip: (params) => !params.match.params.firstNames,
   }),
 )(withApollo(withRouter(AnalysisResultPersonal)));
