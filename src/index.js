@@ -24,7 +24,6 @@ import ResetPassword from './components/ResetPassword';
 import SetPassword from './components/SetPassword';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
 import AnalysisResultPersonalById from './components/AnalysisResultPersonalById';
-import AnalysisResultPersonalCompare from './components/AnalysisResultPersonalCompare';
 import UserHome from './components/UserHome';
 import PrivateRoute from './utils/PrivateRoute';
 
@@ -90,12 +89,8 @@ ReactDOM.render(
         />
         <Route
           exact
-          path="/resultPersonal/:firstNames/:lastName/:dateOfBirth"
+          path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth"
           component={withTracker(AnalysisResultPersonal)}
-        />
-        <Route
-          path="/resultPersonalCompare/:firstNames/:lastNames/:dateOfBirth"
-          component={withTracker(AnalysisResultPersonalCompare)}
         />
         <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
         <PrivateRoute
