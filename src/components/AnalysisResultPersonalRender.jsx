@@ -216,40 +216,91 @@ class AnalysisResultPersonalRender extends Component {
     // b) analysis result => display result
     const { analysis, personalAnalysisResult } = this.props;
 
+    // defining configuration of current view
     const configuration = [
       {
         name: 'Ausdrucksebene',
-        numberIds: ['az', 'bz', 'nnz'],
-        headings: null,
+        tables: [
+          {
+            headings: null,
+            numberIds: ['az', 'bz', 'nnz'],
+          },
+        ],
       },
       {
         name: 'Persönlichkeitsebene',
-        numberIds: [
-          'wz',
-          'lz',
-          'iz',
-          'gz',
-          'gdr.gdr',
-          'gdr.gdrv',
-          'gdr.gdrf',
-          'gdr.gdri',
+        tables: [
+          {
+            numberIds: [
+              'wz',
+              'lz',
+              'iz',
+              'gz',
+              'gdr.gdr',
+              'gdr.gdrv',
+              'gdr.gdrf',
+              'gdr.gdri',
+            ],
+            headings: null,
+          },
         ],
-        headings: null,
       },
       {
         name: 'Entfaltungspotenzial',
-        numberIds: ['tz', 'kz', 'bfz', 'visz'],
-        headings: null,
+        tables: [
+          {
+            numberIds: ['tz', 'kz', 'bfz', 'visz'],
+            headings: null,
+          },
+        ],
       },
       {
         name: 'Seelische Ebene',
-        numberIds: ['sz', 'iniz', 'sm', 'smv', 'kl', 'zsa'],
-        headings: null,
+        tables: [
+          {
+            numberIds: ['sz', 'iniz', 'sm', 'smv', 'kl', 'zsa'],
+            headings: null,
+          },
+        ],
       },
       {
         name: 'Zeitliche Ebene',
-        numberIds: ['vz.vzb', 'vz.vzp', 'vz.vze', 'hfhp.hfHp1', 'hfhp.hfHp2', 'hfhp.hfHp3', 'hfhp.hfHp4', 'pj.pj', 'pj.pjnj'],
-        headings: null,
+        tables: [
+          {
+            numberIds: ['vz.vzb', 'vz.vzp', 'vz.vze'],
+            headings: [
+              'Vibratorische Zyklen',
+              'VZ',
+              'Wert',
+              'Alter',
+              'Beschreibung',
+              'Referenz im Buch',
+            ],
+          },
+          {
+            numberIds: ['hfhp.hfHp1', 'hfhp.hfHp2', 'hfhp.hfHp3', 'hfhp.hfHp4'],
+            headings: [
+              'Herausforderungen und Höhepunkte',
+              'HF/HP',
+              'HF',
+              'HP',
+              'Zeitpunkt',
+              'Beschreibung',
+              'Referenz im Buch',
+            ],
+          },
+          {
+            numberIds: ['pj.pj', 'pj.pjnj'],
+            headings: [
+              'Persönliches Jahr',
+              'PJ',
+              'Wert',
+              'Zeitraum',
+              'Beschreibung',
+              'Referenz im Buch',
+            ],
+          },
+        ],
       },
     ];
 
@@ -281,35 +332,28 @@ class AnalysisResultPersonalRender extends Component {
           {showSideMenu ? sideMenu : null}
           <div className="ResultContent">
             {// mapping every configuration section to a result panel
-            configuration.map((resultSection) => {
-              // building data object for section
-              let numberData = [];
-              resultSection.numberIds.forEach((numberId) => numberData.push(_.get(personalAnalysisResult, numberId)));
-
-              // constructing section data
-              const sectionData = {
-                name: resultSection.name,
-                headings: resultSection.headings,
-                numbers: numberData,
-              };
-              console.log('Section data');
-              console.log(sectionData);
+            configuration.map((resultSection) => (
               // returning panel and result table with filtered data
-              return (
-                <Panel
-                  title={resultSection.name}
-                  id={resultSection.name}
-                  className="panelResult"
-                  key={resultSection.name}
-                >
+              <Panel
+                title={resultSection.name}
+                id={resultSection.name}
+                className="panelResult"
+                key={resultSection.name}
+              >
+                {resultSection.tables.map((tableData) => (
+                  // returning table with result data for each number id
                   <ResultTable
-                    data={sectionData}
-                    dataKey={resultSection.name}
+                    data={{
+                      numbers: tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId)),
+                      headings: tableData.headings,
+                    }}
+                    dataKey={'TBA'}
+                    key={`${resultSection.name + tableData.headings}`}
                     handleTextDetailClick={this.handleItemDetailClick}
                   />
-                </Panel>
-              );
-            })}
+                ))}
+              </Panel>
+            ))}
           </div>
         </div>
         <LightBoxDetailView
