@@ -32,7 +32,6 @@ export const currentUserQuery = gql`
     analyses {
       id
       name
-      usedCreditType
       usedCreditTypes
       group {
         id
@@ -288,7 +287,7 @@ export const personalResultsByIdQuery = gql`
         dateOfBirth
       }
       personalAnalysisResults(isPdf: $isPdf, longTexts: $longTexts) {
-        ...PersonalAnalysisResultParts
+        ...PersonalAnalysisResultFragment
       }
     }
   }

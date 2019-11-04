@@ -177,6 +177,10 @@ class UserHome extends Component {
       return <Redirect to="/login" />;
     }
 
+    if (this.props.error) {
+      console.log(this.props.error);
+    }
+
     if (
       this.props.data.loading
       || !this.props.data

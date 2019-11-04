@@ -9,7 +9,7 @@ import Panel from './Panel';
 import Steps from './Steps';
 import Step from './Step';
 
-function LightBoxDetailView(props) {
+const LightBoxDetailView = (props) => {
   // getting used values out of props
   const {
     sectionIndex,
@@ -142,17 +142,8 @@ function LightBoxDetailView(props) {
     return null;
   }
 
-  console.log('Indices');
-  console.log(sectionIndex);
-  console.log(elementIndex);
-
-  console.log('tourdata');
-  console.log(tourData);
-
   // getting current element
   const currentElement = tourData[currentSectionIndex].sectionElements[currentElementIndex];
-  console.log('current element');
-  console.log(currentElement);
 
   // getting current compare element if persent
   let currentCompareElement;
@@ -275,28 +266,8 @@ function LightBoxDetailView(props) {
 
 // defining proptypes
 LightBoxDetailView.propTypes = {
-  tourData: PropTypes.arrayOf(
-    PropTypes.shape({
-      sectionName: PropTypes.string.isRequired,
-      sectionElements: PropTypes.arrayOf(
-        PropTypes.shape({
-          elementTitle: PropTypes.string.isRequired,
-          elementContent: PropTypes.string.isRequired,
-        }),
-      ),
-    }),
-  ).isRequired,
-  compareTourData: PropTypes.arrayOf(
-    PropTypes.shape({
-      sectionName: PropTypes.string.isRequired,
-      sectionElements: PropTypes.arrayOf(
-        PropTypes.shape({
-          elementTitle: PropTypes.string.isRequired,
-          elementContent: PropTypes.string.isRequired,
-        }),
-      ),
-    }),
-  ),
+  tourData: PropTypes.array.isRequired,
+  compareTourData: PropTypes.array, 
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   sectionIndex: PropTypes.number,
@@ -307,7 +278,7 @@ LightBoxDetailView.propTypes = {
 LightBoxDetailView.defaultProps = {
   sectionIndex: 0,
   elementIndex: 0,
-  compareData: null,
+  compareTourData: null,
 };
 
 export default LightBoxDetailView;
