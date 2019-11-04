@@ -113,8 +113,6 @@ class ResultTableRow extends Component {
    * renders the cells of a custom item
    */
   renderCustomRow(rowItem) {
-    console.log('Render custom row');
-    console.log(rowItem);
     // determining last element to align properly
     const lastIndex = rowItem.values.length - 1;
     const { descriptionTextIndex } = rowItem;
@@ -156,8 +154,6 @@ class ResultTableRow extends Component {
    * renders a default cell
    */
   renderDefaultRow(rowItem) {
-    console.log('Render default row');
-    console.log(rowItem);
     // rendering content based on number type
     let contentColumn;
     if (rowItem.result.type === TYPE_ID_NUMBER) {
@@ -190,10 +186,6 @@ class ResultTableRow extends Component {
   render() {
     // getting item from passed props
     const { item } = this.props;
-
-    console.log('ResultTableRow::render');
-    console.log(item);
-    console.log(item.type);
 
     // render custom or default row based on type
     if (item.type === ROW_TYPE_ID_CUSTOM) {
