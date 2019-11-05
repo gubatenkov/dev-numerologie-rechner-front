@@ -6,8 +6,8 @@ import { graphql, withApollo } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 
 import {
-  buildPersonalAnalysisQuery,
-  personalResultsByIdQuery,
+  buildPersonalAnalysisByNameQuery,
+  buildPersonalAnalysisByIdQuery,
 } from '../graphql/Queries';
 
 import LoadingIndicator from './LoadingIndicator';
@@ -75,7 +75,7 @@ AnalysisResultPersonal.propTypes = {
 
 // constructing query with input parameters taken from URL params
 export default compose(
-  graphql(personalResultsByIdQuery, {
+  graphql(buildPersonalAnalysisByIdQuery(false), {
     options: (params) => ({
       // query by id (skipped if no id present)
       // returning input variables
@@ -88,7 +88,7 @@ export default compose(
     // skipping this query if no id is provided
     skip: (params) => !params.match.params.analysisId,
   }),
-  graphql(buildPersonalAnalysisQuery(false), {
+  graphql(buildPersonalAnalysisByNameQuery(false), {
     options: (params) => {
       // decoding url param values
       const firstNames = decodeURIComponent(params.match.params.firstNames);

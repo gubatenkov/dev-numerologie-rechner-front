@@ -20,9 +20,17 @@ import ConfirmAnalysisDeletionDialog from './dialogs/ConfirmAnalysisDeletionDial
 import RenameGroupDialog from './dialogs/RenameGroupDialog';
 import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
 
+import {
+  PersonalResultConfiguration,
+  OVERALL_INTRO_KEY,
+} from '../utils/Config';
 import { getUserAuthData } from '../utils/AuthUtils';
 import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
-import { currentUserQuery, personalResultsByIdQuery } from '../graphql/Queries';
+import {
+  currentUserQuery,
+  buildPersonalAnalysisByIdQuery,
+  introTextQuery,
+} from '../graphql/Queries';
 import {
   deleteGroupMutation,
   createGroupMutation,
@@ -36,9 +44,17 @@ import '../styles/AnalysisBrowser.css';
 const AnalysisBrowser = (props) => {
   // declaring state variables
   const [expandedIndex, setExpandedIndex] = useState(-1);
-  const [confirmGroupDeletionDialogOpen, setConfirmGroupDeletionDialogOpen] = useState(false);
-  const [confirmAnalysisDeletionDialogOpen, setConfirmAnalysisDeletionDialogOpen] = useState(false);
-  const [confirmUseCreditDialogOpen, setConfirmUseCreditDialogOpen] = useState(false);
+  const [
+    confirmGroupDeletionDialogOpen,
+    setConfirmGroupDeletionDialogOpen,
+  ] = useState(false);
+  const [
+    confirmAnalysisDeletionDialogOpen,
+    setConfirmAnalysisDeletionDialogOpen,
+  ] = useState(false);
+  const [confirmUseCreditDialogOpen, setConfirmUseCreditDialogOpen] = useState(
+    false,
+  );
   const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [renameGroupDialogOpen, setRenameGroupDialogOpen] = useState(false);
   const [creditToBeUsed, setCreditToBeUsed] = useState(false);
@@ -48,7 +64,6 @@ const AnalysisBrowser = (props) => {
   const [groupToBeRenamed, setGroupToBeRenamed] = useState(null);
   const [groupToBeDeleted, setGroupToBeDeleted] = useState(null);
   const [analysisToBeDeleted, setAnalysisToBeDeleted] = useState(null);
-
 
   /**
    * handler for the creation of a group
@@ -205,7 +220,6 @@ const AnalysisBrowser = (props) => {
     setLoading(false);
   };
 
-
   /**
    * creates a pdf for the analysis and opens it in a new tab
    */
@@ -221,16 +235,35 @@ const AnalysisBrowser = (props) => {
     setLoading(true);
     setLoadingText('Berechne detaillierte Auswertung und erstelle PDF...');
 
-    // getting long texts used for pdf (if allowed)
     try {
+      // getting long texts used for pdf (if allowed)
       const result = await props.client.query({
-        query: personalResultsByIdQuery,
+        query: buildPersonalAnalysisByIdQuery(true),
         variables: {
           id: pdfToBeDownloaded.id,
           isPdf: true,
           longTexts: pdfToBeDownloaded.longTexts || false,
         },
       });
+
+      // TODO: how to determine configuration? Save with analysis?
+      const configuration = PersonalResultConfiguration.LEVELS;
+
+      // getting section ids to get intro texts for including overall intro text
+      const sectionIds = configuration.map((section) => section.name);
+      sectionIds.push(OVERALL_INTRO_KEY);
+
+      // getting intro texts for all sections in configuration
+      const { introTexts } = (await props.client.query({
+        query: introTextQuery,
+        variables: {
+          sectionIds,
+          isPdf: true,
+          longText: pdfToBeDownloaded.longTexts || false,
+        },
+      })).data;
+
+      // getting analysis from result
       const { analysis } = result.data;
 
       // creating pdf and downloading with custom name
@@ -240,19 +273,23 @@ const AnalysisBrowser = (props) => {
           personalAnalysisResultCompare,
         ] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
-          { personalAnalysis: personalAnalysisResult },
+          personalAnalysisResult,
+          PersonalResultConfiguration.LEVELS,
+          introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstName}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstName}_${personalAnalysisResultCompare.lastName}.pdf`,
-          { personalAnalysis: personalAnalysisResultCompare },
+          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
+          pdfToBeDownloaded.longTexts,
+          personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
           personalAnalysisResultCompare.lastName,
-          pdfToBeDownloaded.longTexts,
         );
       } else {
         const [personalAnalysisResult] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
-          { personalAnalysis: personalAnalysisResult },
+          personalAnalysisResult,
+          PersonalResultConfiguration.LEVELS,
+          introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
           `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
@@ -366,7 +403,6 @@ const AnalysisBrowser = (props) => {
                   setRenameGroupDialogOpen(true);
                 }}
                 deleteHandler={(deleteIndex) => {
-
                   // setting group that is about to be deleted
                   setGroupToBeDeleted(props.groups[deleteIndex]);
 
@@ -388,18 +424,18 @@ const AnalysisBrowser = (props) => {
                       analysis={analysis}
                       deleteHandler={(analysisId) => {
                         // getting analysis to be deleted
-                        setAnalysisToBeDeleted(_.find(
-                          props.analyses,
-                          (item) => item.id === analysisId,
-                        ));
+                        setAnalysisToBeDeleted(
+                          _.find(
+                            props.analyses,
+                            (item) => item.id === analysisId,
+                          ),
+                        );
 
                         // showing confirm dialog
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
                       showHandler={() => {
-                        props.history.push(
-                          `/resultPersonal/${analysis.id}`,
-                        );
+                        props.history.push(`/resultPersonal/${analysis.id}`);
                       }}
                       onUseCredit={(type) => {
                         handleOnUseCredit(analysis.id, type);
@@ -426,9 +462,7 @@ const AnalysisBrowser = (props) => {
   }
   return (
     <div>
-      {loading && (
-        <LoadingIndicator text={loadingText} />
-      )}
+      {loading && <LoadingIndicator text={loadingText} />}
       <Panel
         title="Analysen"
         actions={[

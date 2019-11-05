@@ -4,6 +4,9 @@ export const GRAPHQL_HOST = process.env.REACT_APP_BACKEND_HOST
 export const GRAPHQL_ENDPOINT = `${GRAPHQL_HOST}/graphql`;
 export const AUTH_ENDPOINT = `${GRAPHQL_HOST}/auth`;
 
+// TODO: move this to constants?
+export const OVERALL_INTRO_KEY = 'Vorwort';
+
 // result configurations defining the order and structuring of numbers for the personal result
 export const PersonalResultConfiguration = {
   LEVELS: [
