@@ -33,8 +33,10 @@ const LEVEL_COLORS = {
 
 // constant for how many centimeters an inch is
 const INCH_IN_CM = 2.54;
+
 // current pixel density assumed for conversions in DPI
 const PIXEL_DENSITY = 72;
+
 // page margins
 const PAGE_MARGIN_LEFT_CM = 3.5;
 const PAGE_MARGIN_RIGHT_CM = 3.5;
@@ -233,8 +235,8 @@ function extractTableValueFromItem(numberItem) {
     };
   }
 
+  // bold if highlighted
   value.bold = numberItem.highlighted;
-
   return value;
 }
 
@@ -242,9 +244,12 @@ function extractTableValueFromItem(numberItem) {
  * extracts the number name from an item dependent on the type
  */
 function extractTableNameFromItem(numberItem) {
+  // if default item => has member
   if (numberItem.type === 'row') {
     return numberItem.name;
   }
+
+  // if custom row => using values array and index
   return numberItem.values[numberItem.nameIndex];
 }
 
@@ -674,8 +679,6 @@ export function createPDFFromAnalysisResult(
     let resultCompareSection = null;
     if (resultsCompareSections) {
       resultCompareSection = resultsCompareSections[index];
-      console.log('Results compare Sections');
-      console.log(resultsCompareSections);
     }
 
     // saving information about first element of level -> the index saved will be the first index
@@ -700,30 +703,28 @@ export function createPDFFromAnalysisResult(
 
     // adding number results for all numbers with descriptionText
     resultSection.numbers
-      .filter(
-        (item) => extractDescriptionTextFromItem(item)
-          && extractDescriptionTextFromItem(item).length > 0,
-      )
+      .filter((number) => {
+        // filter out numbers without description text
+        const itemDescriptionText = extractDescriptionTextFromItem(number);
+        return itemDescriptionText && itemDescriptionText.length > 0;
+      })
       .forEach((number, resultIndex) => {
+        // extracting values from number result item
         const { itemName, itemValue } = extractNameAndValueFromItem(number);
 
-        // getting compare item
+        // getting if there is a compare item
         let compareItem = null;
         let compareItemName = null;
         let compareItemValue = null;
         if (resultCompareSection) {
           compareItem = resultCompareSection.numbers[resultIndex];
-          console.log('compare item');
-          console.log(compareItem);
-          console.log(resultCompareSection);
-
           const extractedResult = extractNameAndValueFromItem(compareItem);
           compareItemName = extractedResult.itemName;
           compareItemValue = extractedResult.itemValue;
         }
 
         // checking if item is empty
-        const itemEmpty = !itemValue || Array.isArray(itemValue && itemValue.length === 0);
+        const itemEmpty = !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
 
         // if item name set => adding name and name subtitle
         if (itemName && !itemEmpty) {
@@ -754,7 +755,10 @@ export function createPDFFromAnalysisResult(
           }
 
           // adding number description if present
-          if (number.numberDescription && number.numberDescription.description) {
+          if (
+            number.numberDescription
+            && number.numberDescription.description
+          ) {
             docDefinition.content.push({
               stack: [
                 ...convertHTMLTextToPDFSyntax(
@@ -797,6 +801,7 @@ export function createPDFFromAnalysisResult(
             );
           }
 
+          // adding compare item
           if (
             compareItem
             && !areResultValuesEqual(compareItemValue, itemValue)
