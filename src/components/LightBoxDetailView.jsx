@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Interweave from 'interweave';
@@ -17,12 +17,9 @@ const LightBoxDetailView = (props) => {
     tourData,
     compareTourData,
     onClose,
+    onIndexChange,
     isOpen,
   } = props;
-
-  // defining and initializing state variables
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(sectionIndex);
-  const [currentElementIndex, setCurrentElementIndex] = useState(elementIndex);
 
   // handler for clicks on the steps directly in the overview
   const handleStepClick = (sectionTitleClicked) => {
@@ -31,19 +28,18 @@ const LightBoxDetailView = (props) => {
       (item) => item.sectionName === sectionTitleClicked,
     );
     if (index > -1) {
-      setCurrentSectionIndex(index);
-      setCurrentElementIndex(0);
+      onIndexChange(index, 0);
     }
   };
 
   // handler for clicking on back button
   const handleBackClick = () => {
-    if (currentElementIndex > 0) {
-      setCurrentElementIndex(currentElementIndex - 1);
-    } else if (currentSectionIndex > 0) {
-      setCurrentSectionIndex(currentSectionIndex - 1);
-      setCurrentElementIndex(
-        tourData[currentSectionIndex - 1].sectionElements.length - 1,
+    if (elementIndex > 0) {
+      onIndexChange(sectionIndex, elementIndex - 1);
+    } else if (sectionIndex > 0) {
+      onIndexChange(
+        sectionIndex - 1,
+        tourData[sectionIndex - 1].sectionElements.length - 1,
       );
     }
   };
@@ -51,15 +47,11 @@ const LightBoxDetailView = (props) => {
   // handler for click on the next button
   const handleNextClick = () => {
     // navigate within section
-    if (
-      currentElementIndex
-      < tourData[currentSectionIndex].sectionElements.length - 1
-    ) {
-      setCurrentElementIndex(currentElementIndex + 1);
+    if (elementIndex < tourData[sectionIndex].sectionElements.length - 1) {
+      onIndexChange(sectionIndex, elementIndex + 1);
       // navigate to first element of next section
-    } else if (currentSectionIndex < tourData.length - 1) {
-      setCurrentSectionIndex(currentSectionIndex + 1);
-      setCurrentElementIndex(0);
+    } else if (sectionIndex < tourData.length - 1) {
+      onIndexChange(sectionIndex + 1, 0);
     }
   };
 
@@ -82,14 +74,6 @@ const LightBoxDetailView = (props) => {
 
   // ref to focus container
   const componentContainer = useRef();
-
-  // re-initializing in two cases:
-  //  a) section or element of prop changes
-  //  b) lightbox is opened or closed
-  useEffect(() => {
-    setCurrentSectionIndex(sectionIndex);
-    setCurrentElementIndex(elementIndex);
-  }, [sectionIndex, elementIndex, isOpen]);
 
   // disabling/enabling scrolling and focus for key input if is shown/hidden
   useEffect(() => {
@@ -143,12 +127,12 @@ const LightBoxDetailView = (props) => {
   }
 
   // getting current element
-  const currentElement = tourData[currentSectionIndex].sectionElements[currentElementIndex];
+  const currentElement = tourData[sectionIndex].sectionElements[elementIndex];
 
   // getting current compare element if persent
   let currentCompareElement;
   if (compareTourData) {
-    currentCompareElement = compareTourData[currentSectionIndex].sectionElements[currentElementIndex];
+    currentCompareElement = compareTourData[sectionIndex].sectionElements[elementIndex];
   }
 
   // if for some reason, the current element is invalid > rendering nothing
@@ -178,9 +162,9 @@ const LightBoxDetailView = (props) => {
 
             // determining index to display for step
             let stepElementIndex = 0;
-            if (tourSectionIndex === currentSectionIndex) {
-              stepElementIndex = currentElementIndex;
-            } else if (tourSectionIndex < currentSectionIndex) {
+            if (tourSectionIndex === sectionIndex) {
+              stepElementIndex = elementIndex;
+            } else if (tourSectionIndex < sectionIndex) {
               stepElementIndex = currentSectionLength - 1;
             }
 
@@ -188,7 +172,7 @@ const LightBoxDetailView = (props) => {
             // if if is the current section, an indication for
             // the element position in the current section is given
             let stepName = tourSection.sectionName;
-            if (tourSectionIndex === currentSectionIndex) {
+            if (tourSectionIndex === sectionIndex) {
               stepName += ` (${stepElementIndex + 1}/${currentSectionLength})`;
             }
 
@@ -196,8 +180,8 @@ const LightBoxDetailView = (props) => {
               <Step
                 key={tourSection.sectionName}
                 name={stepName}
-                current={tourSectionIndex === currentSectionIndex}
-                done={tourSectionIndex < currentSectionIndex}
+                current={tourSectionIndex === sectionIndex}
+                done={tourSectionIndex < sectionIndex}
                 onStepClick={handleStepClick}
                 horizontal
               />
@@ -262,12 +246,12 @@ const LightBoxDetailView = (props) => {
       </div>
     </div>
   );
-}
+};
 
 // defining proptypes
 LightBoxDetailView.propTypes = {
   tourData: PropTypes.array.isRequired,
-  compareTourData: PropTypes.array, 
+  compareTourData: PropTypes.array,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   sectionIndex: PropTypes.number,

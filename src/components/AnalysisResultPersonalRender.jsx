@@ -230,6 +230,13 @@ class AnalysisResultPersonalRender extends Component {
           )}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
+          onIndexChange={(sectionIndex, elementIndex) => {
+            // if index changes by interaction with component => updating state to re-render accordingly
+            this.setState({
+              resultTextDetailViewSectionIndex: sectionIndex,
+              resultTextDetailViewElementIndex: elementIndex,
+            })
+          }}
         />
       </div>
     );
