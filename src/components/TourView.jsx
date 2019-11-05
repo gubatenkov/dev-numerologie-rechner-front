@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Interweave from 'interweave';
 
-import '../styles/LightBoxDetailView.css';
+import '../styles/TourView.css';
 
 import Panel from './Panel';
 import Steps from './Steps';
 import Step from './Step';
 
-const LightBoxDetailView = (props) => {
+const TourView = (props) => {
   // getting used values out of props
   const {
     sectionIndex,
@@ -148,13 +148,13 @@ const LightBoxDetailView = (props) => {
 
   return (
     <div
-      className="LightBoxDetailView__Container modal-backdrop"
+      className="TourView__Container modal-backdrop"
       onKeyDown={handleKeyDown}
       role="link"
       tabIndex="0"
       ref={componentContainer}
     >
-      <div className="LightBoxDetailView__ContentOverview">
+      <div className="TourView__ContentOverview">
         <Steps horizontal>
           {tourData.map((tourSection, tourSectionIndex) => {
             // getting length of current section (only elements that have content)
@@ -189,32 +189,32 @@ const LightBoxDetailView = (props) => {
           })}
         </Steps>
       </div>
-      <div className="LightBoxDetailView__Content">
-        <div className="LightBoxDetailView__ButtonArea">
+      <div className="TourView__Content">
+        <div className="TourView__ButtonArea">
           <button
             type="button"
-            className="LightBoxDetailView__NavigationButton"
+            className="TourView__NavigationButton"
             onClick={handleBackClick}
           >
             <i className="icon wb-chevron-left" />
           </button>
         </div>
         <div>
-          <Panel className="LightBoxDetailView__Panel" title={elementTitle}>
-            <div className="LightBoxDetailView__text LightBoxDetailView--non-printable" />
+          <Panel className="TourView__Panel" title={elementTitle}>
+            <div className="TourView__text TourView--non-printable" />
             <Interweave content={elementContent} />
-            <h3 className="LightBoxDetailView--printWatermark">
+            <h3 className="TourView--printWatermark">
               Die Resultate können nur mit Druckpaket ausgedruckt werden.
             </h3>
           </Panel>
         </div>
-        {props.compareData && (
+        {compareTourData && (
           <div className="">
             <Panel
-              className="LightBoxDetailView__Panel"
+              className="TourView__Panel"
               title={compareElementTitle}
             >
-              <div className="LightBoxDetailView__text LightBoxDetailView--non-printable">
+              <div className="TourView__text TourView--non-printable">
                 <Interweave
                   content={
                     _.isEqual(currentCompareElement, currentElement)
@@ -223,23 +223,23 @@ const LightBoxDetailView = (props) => {
                   }
                 />
               </div>
-              <h3 className="LightBoxDetailView--printWatermark">
+              <h3 className="TourView--printWatermark">
                 Die Resultate können nur mit Druckpaket ausgedruckt werden.
               </h3>
             </Panel>
           </div>
         )}
-        <div className="LightBoxDetailView__ButtonArea">
+        <div className="TourView__ButtonArea">
           <button
             type="button"
-            className="LightBoxDetailView__NavigationButton"
+            className="TourView__NavigationButton"
             onClick={handleNextClick}
           >
             <i className="icon wb-chevron-right" />
           </button>
         </div>
       </div>
-      <div className="LightBoxDetailView__BottomActions">
+      <div className="TourView__BottomActions">
         <button type="button" className="btn btn-default" onClick={onClose}>
           Schließen
         </button>
@@ -249,7 +249,7 @@ const LightBoxDetailView = (props) => {
 };
 
 // defining proptypes
-LightBoxDetailView.propTypes = {
+TourView.propTypes = {
   tourData: PropTypes.array.isRequired,
   compareTourData: PropTypes.array,
   isOpen: PropTypes.bool.isRequired,
@@ -259,10 +259,10 @@ LightBoxDetailView.propTypes = {
 };
 
 // defining default props
-LightBoxDetailView.defaultProps = {
+TourView.defaultProps = {
   sectionIndex: 0,
   elementIndex: 0,
   compareTourData: null,
 };
 
-export default LightBoxDetailView;
+export default TourView;

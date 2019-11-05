@@ -12,7 +12,7 @@ import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTableCompare from './ResultTableCompare';
-import LightBoxDetailView from './LightBoxDetailView';
+import TourView from './TourView';
 import LoadingIndicator from './LoadingIndicator';
 
 import '../styles/AnalysisResultPersonal.css';
@@ -239,7 +239,7 @@ class AnalysisResultPersonalCompare extends Component {
             ))}
           </div>
         </div>
-        <LightBoxDetailView
+        <TourView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
           tourData={this.buildTourDataStructure(
@@ -252,6 +252,13 @@ class AnalysisResultPersonalCompare extends Component {
           )}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
+          onIndexChange={(sectionIndex, elementIndex) => {
+            // if index changes by interaction with component => updating state to re-render accordingly
+            this.setState({
+              resultTextDetailViewSectionIndex: sectionIndex,
+              resultTextDetailViewElementIndex: elementIndex,
+            });
+          }}
         />
       </div>
     );

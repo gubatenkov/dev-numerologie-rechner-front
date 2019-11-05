@@ -12,7 +12,7 @@ import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTable from './ResultTable';
-import LightBoxDetailView from './LightBoxDetailView';
+import TourView from './TourView';
 import LoadingIndicator from './LoadingIndicator';
 
 import '../styles/AnalysisResultPersonal.css';
@@ -221,7 +221,7 @@ class AnalysisResultPersonalRender extends Component {
             ))}
           </div>
         </div>
-        <LightBoxDetailView
+        <TourView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
           tourData={this.buildTourDataStructure(
@@ -235,7 +235,7 @@ class AnalysisResultPersonalRender extends Component {
             this.setState({
               resultTextDetailViewSectionIndex: sectionIndex,
               resultTextDetailViewElementIndex: elementIndex,
-            })
+            });
           }}
         />
       </div>
