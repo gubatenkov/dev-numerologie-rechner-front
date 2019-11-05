@@ -10,7 +10,7 @@ import ToastNotifications from 'cogo-toast';
 import Panel from './Panel';
 import InputField from './InputField';
 
-import logo from '../logo.png';
+import logo from '../images/logo.png';
 import '../styles/AnalysisInput.css';
 import '../styles/InputForm.css';
 

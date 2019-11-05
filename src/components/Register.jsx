@@ -6,7 +6,7 @@ import ToastNotifications from 'cogo-toast';
 import Panel from './Panel';
 import InputField from './InputField';
 
-import logo from '../logo.png';
+import logo from '../images/logo.png';
 
 import LoadingIndicator from './LoadingIndicator';
 import { setUserAuthData, postJsonData } from '../utils/AuthUtils';

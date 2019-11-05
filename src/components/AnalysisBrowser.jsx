@@ -22,10 +22,10 @@ import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
 
 import {
   PersonalResultConfiguration,
-  OVERALL_INTRO_KEY,
 } from '../utils/Config';
+import {OVERALL_INTRO_KEY} from '../utils/Constants';
 import { getUserAuthData } from '../utils/AuthUtils';
-import { createPDFFromAnalysisResult } from '../utils/PdfBuilder';
+import { createPDFFromAnalysisResult } from '../pdf/PdfBuilder';
 import {
   currentUserQuery,
   buildPersonalAnalysisByIdQuery,

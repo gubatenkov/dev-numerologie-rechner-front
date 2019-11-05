@@ -2,34 +2,11 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import * as _ from 'lodash';
 import pdfFonts from '../fonts/vfs_fonts';
 
-import { OVERALL_INTRO_KEY } from '../utils/Config';
+import { OVERALL_INTRO_KEY, CI_COLORS } from '../utils/Constants';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
 import { COVER_IMAGE_BY_LZ, LEVEL_BG_IMAGES } from './Images';
 import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from './PdfTexts';
-
-// defining colors used in the pdf
-const CI_COLORS = {
-  RED: '#fb2c2c',
-  ORANGE: '#f88000',
-  YELLOW: '#e7c900',
-  GREEN: '#8ebe31',
-  BLUE: '#00b3d4',
-  PURPLE: '#bb00eb',
-  SILVER: '#afafaf',
-  GREY: '#969696',
-  BLACK: '#262626',
-  WHITE: '#FFFFFF',
-};
-
-// mapping of colors to levels
-const LEVEL_COLORS = {
-  Ausdrucksebene: CI_COLORS.RED,
-  Persönlichkeitsebene: CI_COLORS.GREEN,
-  Entfaltungspotenzial: CI_COLORS.BLUE,
-  'Seelische Ebene': CI_COLORS.PURPLE,
-  'Zeitliche Ebene': CI_COLORS.SILVER,
-};
 
 // constant for how many centimeters an inch is
 const INCH_IN_CM = 2.54;
@@ -370,6 +347,7 @@ export function buildResultDataStructure(
     // returning full section with resolved and aggregated numbers
     return {
       name: configSection.name,
+      color: configSection.color,
       introText: sectionIntroText,
       numbers,
     };
@@ -673,7 +651,7 @@ export function createPDFFromAnalysisResult(
   // pushing content to pdf => each level
   resultSections.forEach((resultSection, index) => {
     // getting color for current level
-    const resultColor = LEVEL_COLORS[resultSection.name] || '';
+    const resultColor = resultSection.color || '';
 
     // getting compare result
     let resultCompareSection = null;

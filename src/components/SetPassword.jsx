@@ -8,7 +8,7 @@ import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
 import Panel from './Panel';
 import InputField from './InputField';
 
-import logo from '../logo.png';
+import logo from '../images/logo.png';
 
 // delay after which the user is redirected upon successfully setting password
 const DELAY_REDIRECT_AFTER_SET = 3000;

@@ -1,17 +1,17 @@
+import { CI_COLORS } from './Constants';
+
 // graphql endpoint url configuration
 export const GRAPHQL_HOST = process.env.REACT_APP_BACKEND_HOST
   || 'https://prd-numerologie-rechner.herokuapp.com';
 export const GRAPHQL_ENDPOINT = `${GRAPHQL_HOST}/graphql`;
 export const AUTH_ENDPOINT = `${GRAPHQL_HOST}/auth`;
 
-// TODO: move this to constants?
-export const OVERALL_INTRO_KEY = 'Vorwort';
-
 // result configurations defining the order and structuring of numbers for the personal result
 export const PersonalResultConfiguration = {
   LEVELS: [
     {
       name: 'Ausdrucksebene',
+      color: CI_COLORS.RED,
       tables: [
         {
           name: 'Ausdrucksebene',
@@ -22,6 +22,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Persönlichkeitsebene',
+      color: CI_COLORS.GREEN,
       tables: [
         {
           name: 'Persönlichkeitsebene',
@@ -41,6 +42,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Entfaltungspotenzial',
+      color: CI_COLORS.BLUE,
       tables: [
         {
           name: 'Entfaltungspotenzial',
@@ -51,6 +53,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Seelische Ebene',
+      color: CI_COLORS.PURPLE,
       tables: [
         {
           name: 'Seelische Ebene',
@@ -61,6 +64,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Zeitliche Ebene',
+      color: CI_COLORS.SILVER,
       tables: [
         {
           name: 'Vibratorische Zyklen',

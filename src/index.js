@@ -24,7 +24,7 @@ import ResetPassword from './components/ResetPassword';
 import SetPassword from './components/SetPassword';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
 import UserHome from './components/UserHome';
-import PrivateRoute from './utils/PrivateRoute';
+import PrivateRoute from './utils/routing/PrivateRoute';
 
 import registerServiceWorker from './utils/registerServiceWorker';
 import { isUserAuthenticated, getUserAuthData } from './utils/AuthUtils';

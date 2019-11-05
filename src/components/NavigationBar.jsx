@@ -7,7 +7,7 @@ import NavigationDropdownMenu from './NavigationDropdownMenu';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 
 import '../styles/NavigationBar.css';
-import logo from '../logo_image.png';
+import logo from '../images/logo_image.png';
 
 import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
 
