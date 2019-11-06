@@ -79,11 +79,16 @@ export default compose(
     options: (params) => ({
       // query by id (skipped if no id present)
       // returning input variables
+      // initializing with fetch policy that will not use cache
+      // this is needed as this query returns different results based on the user status (logged in vs. guest)
+      // and the purchased and used credits for an analysis this query refers to (no credit, short/long) credit
+      // Therefore caching can be likely wrong.
       variables: {
         id: parseInt(params.match.params.analysisId, 10),
         isPdf: false,
         longTexts: false,
       },
+      fetchPolicy: 'network-only',
     }),
     // skipping this query if no id is provided
     skip: (params) => !params.match.params.analysisId,
@@ -95,27 +100,33 @@ export default compose(
       const lastNames = decodeURIComponent(params.match.params.lastNames);
       const dateOfBirth = decodeURIComponent(params.match.params.dateOfBirth);
 
+      // configuring options object to return
+      // initializing with fetch policy that will not use cache
+      // this is needed as this query returns different results based on the user status (logged in vs. guest)
+      // and the purchased and used credits for an analysis this query refers to (no credit, short/long) credit
+      // Therefore caching can be likely wrong.
+      const options = {
+        fetchPolicy: 'network-only',
+      };
+
       // if more than one first name => splitting and getting results for both names
       if (firstNames.split(',').length > 1) {
-        return {
-          variables: {
-            inputs: [
-              {
-                firstNames: firstNames.split(',')[0],
-                lastName: lastNames.split(',')[0],
-                dateOfBirth,
-              },
-              {
-                firstNames: firstNames.split(',')[1],
-                lastName: lastNames.split(',')[1],
-                dateOfBirth,
-              },
-            ],
-          },
+        options.variables = {
+          inputs: [
+            {
+              firstNames: firstNames.split(',')[0],
+              lastName: lastNames.split(',')[0],
+              dateOfBirth,
+            },
+            {
+              firstNames: firstNames.split(',')[1],
+              lastName: lastNames.split(',')[1],
+              dateOfBirth,
+            },
+          ],
         };
-      }
-      return {
-        variables: {
+      } else {
+        options.variables = {
           inputs: [
             {
               firstNames,
@@ -123,8 +134,10 @@ export default compose(
               dateOfBirth,
             },
           ],
-        },
-      };
+        };
+      }
+
+      return options;
     },
     // skipping this query if no names are provided
     skip: (params) => !params.match.params.firstNames,
