@@ -5,7 +5,7 @@ import pdfFonts from './fonts/vfs_fonts';
 import { OVERALL_INTRO_KEY, CI_COLORS } from '../utils/Constants';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
-import { COVER_IMAGE_BY_LZ, LEVEL_BG_IMAGES } from './Images';
+import { COVER_IMAGE_BY_LZ, LEVEL_BG_IMAGES } from './images/Images';
 import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from './PdfTexts';
 
 // constant for how many centimeters an inch is
@@ -836,9 +836,7 @@ export async function createPDFFromAnalysisResult(
       marginBottom: 10,
     });
     // pushing text
-    docDefinition.content.push(
-      ...convertHTMLTextToPDFSyntax(PROMOTION_TEXT)
-    );
+    docDefinition.content.push(...convertHTMLTextToPDFSyntax(PROMOTION_TEXT));
   }
 
   // adding legal text at end of pdf
