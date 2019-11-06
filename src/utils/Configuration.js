@@ -7,6 +7,14 @@ export const GRAPHQL_ENDPOINT = `${GRAPHQL_HOST}/graphql`;
 export const AUTH_ENDPOINT = `${GRAPHQL_HOST}/auth`;
 
 // result configurations defining the order and structuring of numbers for the personal result
+// this is structured in two levels
+// a) sections (top level) structuring results with the following properties: 
+//    - name: name of the section displayed in the table of contents and as a panel in the results
+//    - color: color associated with the section (and used in a generated pdf)
+// b) tables: list of tables to carry number information with the following properties
+//   - name: name of the table displayed in the table header
+//   - headings: table headings to be displayed
+//   - numberIds: list of number ids to display in the table 
 export const PersonalResultConfiguration = {
   LEVELS: [
     {

@@ -836,9 +836,9 @@ export async function createPDFFromAnalysisResult(
       marginBottom: 10,
     });
     // pushing text
-    docDefinition.content.push({
-      text: PROMOTION_TEXT,
-    });
+    docDefinition.content.push(
+      ...convertHTMLTextToPDFSyntax(PROMOTION_TEXT)
+    );
   }
 
   // adding legal text at end of pdf
