@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import * as _ from 'lodash';
 
-import { PersonalResultConfiguration } from '../utils/Config';
+import { PersonalResultConfiguration } from '../utils/Configuration';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';

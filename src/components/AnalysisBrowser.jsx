@@ -22,7 +22,7 @@ import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
 
 import {
   PersonalResultConfiguration,
-} from '../utils/Config';
+} from '../utils/Configuration';
 import {OVERALL_INTRO_KEY} from '../utils/Constants';
 import { getUserAuthData } from '../utils/AuthUtils';
 import { createPDFFromAnalysisResult } from '../pdf/PdfBuilder';

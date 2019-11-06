@@ -1,6 +1,6 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as _ from 'lodash';
-import pdfFonts from '../fonts/vfs_fonts';
+import pdfFonts from './fonts/vfs_fonts';
 
 import { OVERALL_INTRO_KEY, CI_COLORS } from '../utils/Constants';
 
@@ -442,7 +442,7 @@ function extractNameAndValueFromItem(item) {
  * @param includePromotion flag that indicates if a promotional text should be added
  * to the end of the PDF
  */
-export function createPDFFromAnalysisResult(
+export async function createPDFFromAnalysisResult(
   analysisResult,
   configuration,
   introTexts,

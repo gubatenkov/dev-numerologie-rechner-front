@@ -1,4 +1,4 @@
-import { AUTH_ENDPOINT } from '../utils/Config';
+import { AUTH_ENDPOINT } from '../utils/Configuration';
 
 const AUTH_TOKEN = 'auth-token';
 const AUTH_EMAIL = 'auth-email';

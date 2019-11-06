@@ -1,4 +1,9 @@
 import gql from 'graphql-tag';
+// disabling frament warning caused by dynamic query building (pdf vs web)
+// see here for more information: https://github.com/apollographql/graphql-tag/issues/269
+import { disableFragmentWarnings } from 'graphql-tag';
+disableFragmentWarnings()
+
 
 // query for the window token used to identify purchases with open shop windows
 export const currentWindowToken = gql`

@@ -36,7 +36,7 @@ import './styles/web-icons/web-icons.min.css';
 import './styles/font-awesome/font-awesome.min.css';
 import './styles/theme.css';
 
-import { GRAPHQL_ENDPOINT } from './utils/Config';
+import { GRAPHQL_ENDPOINT } from './utils/Configuration';
 
 // configuring dotenv
 dotenv.config();
