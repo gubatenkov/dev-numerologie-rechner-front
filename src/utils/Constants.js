@@ -1,5 +1,7 @@
+// key used to obtain intro text for whole analysis result
 export const OVERALL_INTRO_KEY = 'Vorwort';
 
+// ids of ci colors
 export const CI_COLOR_IDS = {
   RED_ORANGE_YELLOW: 'RED_ORANGE_YELLOW',
   RED: 'RED',
@@ -14,7 +16,7 @@ export const CI_COLOR_IDS = {
   WHITE: 'WHITE',
 }
 
-// used colors
+// used colors (mapping from color ids)
 export const CI_COLORS = {
   RED_ORANGE_YELLOW: '#fb2c2c',
   RED: '#fb2c2c',
