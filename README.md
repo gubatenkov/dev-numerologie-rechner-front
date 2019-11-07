@@ -1,4 +1,10 @@
 ## Akademie Bios Analysis Tool
+The frontend project to the numberology calculator project. The main purpose of this application is : 
+- Allow users to perform numberology calculations on their name(s) and date of birth
+- View the results in the browser and take a tour through the description of their analysis
+- Register/Login to their own user profile and save analysis
+- Buy credits for pdf generation in the shop and spend on short/long versions of detailed pdf analysis documents
+- Generate (client side!) and download these pdf documents
 
 ## Getting started
 - Checkout
@@ -9,19 +15,16 @@
 - ```/analysisInput``` input for personal analysis
 
 ## Used Frameworks
-- [React](http://knexjs.org/)
-- TODO
+- [React](https://reactjs.org/)
+- [YUP] (https://github.com/jquense/yup)
+- [Apollo] https://www.apollographql.com/
 
 
 ## Testing
 - run ```yarn test``` to run test cases in ```./tests```
 
-## Theme, icons and creative elements
-    - TODO
-
 ## Attribution: 
-This application uses: 
-- TODO
+- TBA
 
 ## ENV Variables: 
 - ```IMAGE_INLINE_SIZE_LIMIT```: sets the file size limit until which images are loaded as data url by ```ìmport```. Make sure this is bigh enough for all images loaded (cover images etc.). 
