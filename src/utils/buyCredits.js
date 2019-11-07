@@ -50,7 +50,7 @@ function addProductsToShopCart(productIds, windowToken) {
  * Once a purchase is completed, this windowId will be matched with an wpOrderId in the db marking completion
  * of the purchase.
  */
-export default function buyCredits(personalShorts = 0, personalLongs = 0, wpAccessToken, windowToken) {
+export function buyCredits(personalShorts = 0, personalLongs = 0, wpAccessToken, windowToken) {
   // getting array of ids for short and long credit products
   const idsPersonalShorts = Array(parseInt(personalShorts, 10)).fill(CREDIT_PERSONAL_SHORT_WPID);
   const idsPersonalLongs = Array(parseInt(personalLongs, 10)).fill(CREDIT_PERSONAL_LONG_WPID);
