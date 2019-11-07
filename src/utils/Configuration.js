@@ -19,7 +19,7 @@ export const PersonalResultConfiguration = {
   LEVELS: [
     {
       name: 'Ausdrucksebene',
-      color: CI_COLORS.RED,
+      color: CI_COLORS.RED_ORANGE_YELLOW,
       tables: [
         {
           name: 'Ausdrucksebene',

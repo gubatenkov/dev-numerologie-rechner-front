@@ -2,6 +2,7 @@ export const OVERALL_INTRO_KEY = 'Vorwort';
 
 // used colors
 export const CI_COLORS = {
+  RED_ORANGE_YELLOW: '#fb2c2c',
   RED: '#fb2c2c',
   ORANGE: '#f88000',
   YELLOW: '#e7c900',
