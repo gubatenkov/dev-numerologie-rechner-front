@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
 
+import * as _ from 'lodash';
+
+import { PersonalResultConfiguration } from '../utils/Configuration';
+
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTableCompare from './ResultTableCompare';
-import LightBoxDetailView from './LightBoxDetailView';
+import TourView from './TourView';
 import LoadingIndicator from './LoadingIndicator';
 
 import '../styles/AnalysisResultPersonal.css';
@@ -22,13 +26,6 @@ class AnalysisResultPersonalCompare extends Component {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }).isRequired,
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        firstNames: PropTypes.string,
-        lastNames: PropTypes.string,
-        dateOfBirth: PropTypes.string,
-      }).isRequired,
-    }).isRequired,
   };
 
   constructor(props) {
@@ -36,57 +33,77 @@ class AnalysisResultPersonalCompare extends Component {
 
     // setting initial state based on calculations
     this.state = {
-      resultTextDetailViewOpen: false,
       loading: false,
       loadingText: null,
+      resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
+      resultConfiguration: PersonalResultConfiguration.LEVELS,
     };
   }
 
   /**
-   * returns an array representation of the state of the component
-   * @param data the state to be transformed
+   * transforms the analysis results and configuration into a tour data structure used for the detailed tour
+   * @param resultData the result data for the analysis
+   * @param configuration the current result configuration
+   * @returns an array of tour sections containing section name and result items
    */
-  getResultArrayFormat(data) {
-    return [
-      data.expressionLevel,
-      data.personalLevel,
-      data.developmentLevel,
-      data.soulLevel,
-      data.vibratoryCycles,
-      data.challengesHighs,
-      data.personalYear,
-    ];
+  buildTourDataStructure(resultData, configuration) {
+    // constructing tourSection element for every table in configuration
+    const tourSections = [];
+    configuration.forEach((resultSection) => {
+      tourSections.push(
+        ...resultSection.tables.map((table) => ({
+          sectionName: table.name,
+          sectionElements: table.numberIds.map((numberId) => _.get(resultData, numberId)),
+        })),
+      );
+    });
+    return tourSections;
+  }
+
+  /**
+   * builds a data structure used for the content sidebar
+   * @param configuration the current result configuration
+   */
+  buildContentDataStructure(configuration) {
+    // returning an array of section names
+    return configuration.map((configSection) => configSection.name);
   }
 
   /**
    *  handles clicks on detail links
+   * @param dataKey the name of the table the event was fired
+   * @param rowIndex the index of the row inside the table the event was fired for
    */
-  handleItemDetailClick = (dataKey, index) => {
-    // getting both results
-    const [personalAnalysisResult] = this.props.personalAnalysisResults;
+  handleItemDetailClick = (dataKey, rowIndex) => {
+    //  getting tour structure
+    const tourDataStructure = this.buildTourDataStructure(
+      this.props.personalAnalysisResult,
+      this.state.resultConfiguration,
+    );
 
-    // getting index of elemnent represented by dataKey in state
-    const dataIndex = this.getResultArrayFormat(personalAnalysisResult).indexOf(
-      personalAnalysisResult[dataKey],
+    // finding index with datakey in tour data structure
+    const sectionIndex = tourDataStructure.findIndex(
+      (section) => section.sectionName === dataKey,
     );
 
     // if data is not here -> skip
-    if (dataIndex < 0) {
+    if (sectionIndex < 0) {
       return;
     }
 
-    // opening detail view
+    // opening detail view with right section index
     this.setState({
       resultTextDetailViewOpen: true,
-      resultTextDetailViewSectionIndex: dataIndex,
-      resultTextDetailViewElementIndex: index,
+      resultTextDetailViewSectionIndex: sectionIndex,
+      resultTextDetailViewElementIndex: rowIndex,
     });
   };
 
   /**
    * handles the navigation to a specific item
+   * @param anchor the # anchor in the html to navigate to
    */
   navigateToElementHandler = (name, anchor) => {
     // scrolling to item if present in DOM
@@ -96,73 +113,14 @@ class AnalysisResultPersonalCompare extends Component {
     }
   };
 
-  /**
-   * checks whether an element has a description text element present
-   * @param element the element to check for
-   * @returns true if contains valid description, false otherwise
-   */
-  doesElementHaveDescription(element) {
-    if (element.type === 'row') {
-      return element.descriptionText && element.descriptionText.length > 0;
-    }
-    if (element.type === 'customRow') {
-      return (
-        element.descriptionTextIndex
-        && element.descriptionTextIndex >= 0
-        && element.values[element.descriptionTextIndex]
-      );
-    }
-    return false;
+  resize = () => this.forceUpdate();
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
   }
 
-  /**
-   * maps the state of this component to one that can be used
-   * by the detail component
-   * @param resultData the state to be transformed
-   * @param compareData the compare state to be transformed
-   */
-  convertResultsToDetailsDataFormat(resultData, compareData) {
-    // transforming into items where results are numbers and a text to display is present
-    return this.getResultArrayFormat(resultData).map((item, itemIndex) => ({
-      sectionName: item.name,
-      sectionElements: item.numbers
-        // mapping those elements to data for detail
-        .map((numberItem) => {
-          if (numberItem.type === 'row') {
-            return {
-              elementTitle: `${numberItem.name} = ${numberItem.result.value
-                || numberItem.result.values
-                || numberItem.result.list}`,
-              elementContent: numberItem.descriptionText,
-            };
-          }
-          if (numberItem.type === 'customRow') {
-            // sad special treatment for HF/HP
-            let elementTitle;
-            if (numberItem.numberId.startsWith('HF/HP')) {
-              elementTitle = `${numberItem.values[1]}. Herausforderung = ${
-                numberItem.values[2]
-              }  |  ${numberItem.values[1]}. Höhepunkt = ${
-                numberItem.values[3]
-              } (${numberItem.values[4]})`;
-            } else if (['PJ', 'PJ (+1)'].includes(numberItem.numberId)) {
-              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
-                numberItem.values[numberItem.valueIndex]
-              } (${numberItem.values[3]})`;
-            } else {
-              elementTitle = `${numberItem.values[numberItem.nameIndex]} = ${
-                numberItem.values[numberItem.valueIndex]
-              }`;
-            }
-            return {
-              elementTitle,
-              elementContent:
-                numberItem.values[numberItem.descriptionTextIndex],
-            };
-          }
-          return null;
-        }),
-    }));
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
   }
 
   /**
@@ -175,9 +133,34 @@ class AnalysisResultPersonalCompare extends Component {
       );
     }
 
+    // if processing internally => showing loading indicator
     if (this.state.loading) {
       return <LoadingIndicator text={this.state.loadingText} />;
     }
+
+    // if error => show loading indicator with error message to inform user
+    if (this.props.error) {
+      return <LoadingIndicator text={this.props.error.message} />;
+    }
+
+    // constructing side menu component
+    let sideMenu = (
+      <div className="ResultContentOverview">
+        <ContentNavigation
+          contentItems={this.buildContentDataStructure(
+            this.state.resultConfiguration,
+          )}
+          contentItemAnchors={this.buildContentDataStructure(
+            this.state.resultConfiguration,
+          )}
+          onItemClick={this.navigateToElementHandler}
+          autoAdapt
+        />
+      </div>
+    );
+
+    // responsiveness => if window smaller than defined width => hide side menu
+    let showSideMenu = window.innerWidth >= 992;
 
     const { analysis } = this.props;
     const [
@@ -196,7 +179,13 @@ class AnalysisResultPersonalCompare extends Component {
           primaryActionTitle={!analysis ? 'Speichern' : null}
           onPrimaryAction={() => {
             this.props.history.push(
-              `/userHome/saveAnalysis/${personalAnalysisResult.firstNames},${personalAnalysisResultCompare.firstNames}/${personalAnalysisResult.lastName},${personalAnalysisResultCompare.lastName}/${personalAnalysisResult.dateOfBirth}`,
+              `/userHome/saveAnalysis/${encodeURIComponent([
+                personalAnalysisResult.firstNames,
+                personalAnalysisResultCompare.firstNames,
+              ])}/${encodeURIComponent([
+                personalAnalysisResult.lastName,
+                personalAnalysisResultCompare.lastName,
+              ])}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
             );
           }}
           badgeTitle="Kurztext"
@@ -205,26 +194,7 @@ class AnalysisResultPersonalCompare extends Component {
           <h4>{personalAnalysisResult.dateOfBirth}</h4>
         </div>
         <div className="ContentArea">
-          <div className="ResultContentOverview">
-            <ContentNavigation
-              contentItems={[
-                'Ausdrucksebene',
-                'Persönlichkeitsebene',
-                'Entfaltungspotential',
-                'Seelische Ebene',
-                'Zeitliche Ebene',
-              ]}
-              contentItemAnchors={[
-                'ExpressionResult',
-                'PersonalResult',
-                'DevelopmentResult',
-                'SoulResult',
-                'TimeResult',
-              ]}
-              onItemClick={this.navigateToElementHandler}
-              autoAdapt
-            />
-          </div>
+          {showSideMenu ? sideMenu : null}
           <div className="ResultContent">
             <table className="resultCompareNameTable">
               <tbody>
@@ -240,94 +210,55 @@ class AnalysisResultPersonalCompare extends Component {
                 </tr>
               </tbody>
             </table>
-            <Panel
-              title={personalAnalysisResult.expressionLevel.name}
-              id="ExpressionResult"
-              className="panelResult"
-            >
-              <ResultTableCompare
-                data={personalAnalysisResult.expressionLevel}
-                dataCompare={personalAnalysisResultCompare.expressionLevel}
-                dataKey="expressionLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
-
-            <Panel
-              title={personalAnalysisResult.personalLevel.name}
-              id="PersonalResult"
-              className="panelResult"
-            >
-              <ResultTableCompare
-                data={personalAnalysisResult.personalLevel}
-                dataCompare={personalAnalysisResultCompare.personalLevel}
-                dataKey="personalLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
-            <Panel
-              title={personalAnalysisResult.developmentLevel.name}
-              id="DevelopmentResult"
-              className="panelResult"
-            >
-              <ResultTableCompare
-                data={personalAnalysisResult.developmentLevel}
-                dataCompare={personalAnalysisResultCompare.developmentLevel}
-                dataKey="developmentLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
-            <Panel
-              title={personalAnalysisResult.soulLevel.name}
-              id="SoulResult"
-              className="panelResult"
-            >
-              <ResultTableCompare
-                data={personalAnalysisResult.soulLevel}
-                dataCompare={personalAnalysisResultCompare.soulLevel}
-                dataKey="soulLevel"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
-            <Panel
-              title="Zeitliche Ebene"
-              id="TimeResult"
-              className="panelResult"
-            >
-              <ResultTableCompare
-                data={personalAnalysisResult.vibratoryCycles}
-                dataCompare={personalAnalysisResultCompare.vibratoryCycles}
-                dataKey="vibratoryCycles"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-              <ResultTableCompare
-                data={personalAnalysisResult.challengesHighs}
-                dataCompare={personalAnalysisResultCompare.challengesHighs}
-                dataKey="challengesHighs"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-              <ResultTableCompare
-                data={personalAnalysisResult.personalYear}
-                dataCompare={personalAnalysisResultCompare.personalYear}
-                dataKey="personalYear"
-                handleTextDetailClick={this.handleItemDetailClick}
-              />
-            </Panel>
+            {// mapping every configuration section to a result panel
+            this.state.resultConfiguration.map((resultSection) => (
+              // returning panel and result table with filtered data
+              <Panel
+                title={resultSection.name}
+                id={resultSection.name}
+                className="panelResult"
+                key={resultSection.name}
+              >
+                {resultSection.tables.map((tableData) => (
+                  // returning table with result data for each number id
+                  <ResultTableCompare
+                    data={{
+                      numbers: tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId)),
+                      headings: tableData.headings,
+                    }}
+                    dataCompare={{
+                      numbers: tableData.numberIds.map((numberId) => _.get(personalAnalysisResultCompare, numberId)),
+                      headings: tableData.headings,
+                    }}
+                    dataKey={tableData.name}
+                    key={`${resultSection.name + tableData.headings}`}
+                    handleTextDetailClick={this.handleItemDetailClick}
+                  />
+                ))}
+              </Panel>
+            ))}
           </div>
         </div>
-        <LightBoxDetailView
+        <TourView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          data={this.convertResultsToDetailsDataFormat(
+          tourData={this.buildTourDataStructure(
             personalAnalysisResult,
-            personalAnalysisResultCompare,
+            this.state.resultConfiguration,
           )}
-          compareData={this.convertResultsToDetailsDataFormat(
+          compareTourData={this.buildTourDataStructure(
             personalAnalysisResultCompare,
-            personalAnalysisResult,
+            this.state.resultConfiguration,
           )}
           sectionIndex={this.state.resultTextDetailViewSectionIndex}
           elementIndex={this.state.resultTextDetailViewElementIndex}
+          onIndexChange={(sectionIndex, elementIndex) => {
+            // if index changes by interaction with component => updating state to re-render accordingly
+            this.setState({
+              resultTextDetailViewSectionIndex: sectionIndex,
+              resultTextDetailViewElementIndex: elementIndex,
+            });
+          }}
         />
       </div>
     );

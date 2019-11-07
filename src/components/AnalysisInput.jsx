@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
-import * as yup from 'yup'
+import * as yup from 'yup';
 import moment from 'moment';
-import queryString from 'querystring'
+import queryString from 'querystring';
 
 import ToastNotifications from 'cogo-toast';
 
 import Panel from './Panel';
 import InputField from './InputField';
 
-import logo from '../logo.png';
+import logo from '../images/logo.png';
 import '../styles/AnalysisInput.css';
 import '../styles/InputForm.css';
 
@@ -51,6 +51,7 @@ class AnalysisInput extends Component {
       push: PropTypes.func.isRequired,
     }).isRequired,
   };
+
   /**
    * default constructor
    */
@@ -73,20 +74,22 @@ class AnalysisInput extends Component {
   componentDidMount() {
     // setting background dynamically
     document.body.style.backgroundColor = '#00b3d4';
-    const querString = this.props.location.search.replace('?', '')
-    const values = queryString.parse(querString)
-    const firstNameParam = values.firstNames
-    const lastNameParam = values.lastNames
-    const dateOfBirthParam = values.dateOfBirth
- 
-    if(firstNameParam != null && lastNameParam != null && dateOfBirthParam != null) {
-      this.firstNames = firstNameParam
-      this.lastNames = lastNameParam
-      this.dateOfBirth = dateOfBirthParam
-      this.startAnalysis()
+    const querString = this.props.location.search.replace('?', '');
+    const values = queryString.parse(querString);
+    const firstNameParam = values.firstNames;
+    const lastNameParam = values.lastNames;
+    const dateOfBirthParam = values.dateOfBirth;
+
+    if (
+      firstNameParam != null
+      && lastNameParam != null
+      && dateOfBirthParam != null
+    ) {
+      this.firstNames = firstNameParam;
+      this.lastNames = lastNameParam;
+      this.dateOfBirth = dateOfBirthParam;
+      this.startAnalysis();
     }
-
-
   }
 
   componentWillUnmount() {
@@ -118,14 +121,20 @@ class AnalysisInput extends Component {
 
     // setting error message
     if (!valid) {
-      ToastNotifications.error('Vor- und Nachname müssen (für alle Namen) angegeben werden.', { position: 'top-right' });
+      ToastNotifications.error(
+        'Vor- und Nachname müssen (für alle Namen) angegeben werden.',
+        { position: 'top-right' },
+      );
       return false;
     }
 
     // validating dateOfBirth
     const date = moment(this.dateOfBirth, 'DD.MM.YYYY', true);
     if (!date.isValid()) {
-      ToastNotifications.error('Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.', { position: 'top-right' });
+      ToastNotifications.error(
+        'Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.',
+        { position: 'top-right' },
+      );
       return false;
     }
 
@@ -137,20 +146,29 @@ class AnalysisInput extends Component {
    */
   startAnalysis = async () => {
     // if input is not valid => skipping
-    if (!await this.validateInput()) {
+    if (!(await this.validateInput())) {
       return;
     }
 
     // navigating to right analysis screen
     if (this.firstNamesComfort && this.lastNameComfort) {
-      this.props.history.push(`/resultPersonalCompare/${[this.firstNames, this.firstNamesComfort]}/${[
-        this.lastNames,
-        this.lastNameComfort,
-      ]}/${this.dateOfBirth}`);
+      this.props.history.push(
+        `/resultPersonal/${encodeURIComponent([
+          this.firstNames,
+          this.firstNamesComfort,
+        ])}/${encodeURIComponent([
+          this.lastNames,
+          this.lastNameComfort,
+        ])}/${encodeURIComponent(this.dateOfBirth)}`,
+      );
     } else {
-      this.props.history.push(`/resultPersonal/${this.firstNames}/${this.lastNames}/${
-        this.dateOfBirth
-      }`);
+      this.props.history.push(
+        `/resultPersonal/${encodeURIComponent(
+          this.firstNames,
+        )}/${encodeURIComponent(this.lastNames)}/${encodeURIComponent(
+          this.dateOfBirth,
+        )}`,
+      );
     }
   };
 
@@ -215,11 +233,10 @@ class AnalysisInput extends Component {
                   )}
                   <div
                     role="link"
-                    onClick={() =>
-                      this.setState({
-                        comfortNameFieldsShown: !this.state
-                          .comfortNameFieldsShown,
-                      })
+                    onClick={() => this.setState({
+                      comfortNameFieldsShown: !this.state
+                        .comfortNameFieldsShown,
+                    })
                     }
                   >
                     <h6 className="linkText">

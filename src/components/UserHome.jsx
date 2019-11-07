@@ -116,22 +116,33 @@ class UserHome extends Component {
    * @param groupId: the id of the group of the new analysis
    */
   async saveAnalysis(name, groupId) {
+    // decoding url param values
+    const firstNames = decodeURIComponent(
+      this.props.computedMatch.params.firstNames,
+    );
+    const lastNames = decodeURIComponent(
+      this.props.computedMatch.params.lastNames,
+    );
+    const dateOfBirth = decodeURIComponent(
+      this.props.computedMatch.params.dateOfBirth,
+    );
+
     // one or more names?
     let nameInputs = [];
-    if (this.props.computedMatch.params.lastName.split(',').length > 1) {
-      const firstNames = this.props.computedMatch.params.firstNames.split(',');
-      const lastNames = this.props.computedMatch.params.lastName.split(',');
-      nameInputs = firstNames.map((item, index) => ({
+    if (lastNames.split(',').length > 1) {
+      const firstNamesArray = firstNames.split(',');
+      const lastNamesArray = lastNames.split(',');
+      nameInputs = firstNamesArray.map((item, index) => ({
         firstNames: item,
-        lastName: lastNames[index],
-        dateOfBirth: this.props.computedMatch.params.dateOfBirth,
+        lastName: lastNamesArray[index],
+        dateOfBirth,
       }));
     } else {
       nameInputs = [
         {
-          firstNames: this.props.computedMatch.params.firstNames,
-          lastName: this.props.computedMatch.params.lastName,
-          dateOfBirth: this.props.computedMatch.params.dateOfBirth,
+          firstNames,
+          lastName: lastNames,
+          dateOfBirth,
         },
       ];
     }
@@ -177,6 +188,10 @@ class UserHome extends Component {
       return <Redirect to="/login" />;
     }
 
+    if (this.props.error) {
+      console.log(this.props.error);
+    }
+
     if (
       this.props.data.loading
       || !this.props.data
@@ -192,7 +207,8 @@ class UserHome extends Component {
       <div>
         {this.state.loading && <LoadingIndicator />}
         <NavigationBar
-          handleDeleteUser={() => this.setState({ userDeletionDialogOpen: true })}
+          handleDeleteUser={() => this.setState({ userDeletionDialogOpen: true })
+          }
         />
         <TitleBar
           primaryActionTitle="Anfrage an Berater"
@@ -210,9 +226,7 @@ class UserHome extends Component {
                 credits={this.props.data.currentUser.credits}
               />
               <Button variant="success" onClick={this.toggleBuyModal}>
-                <i className="fa fa-icon fa-shopping-cart" />
-                {' '}
-Guthaben kaufen
+                <i className="fa fa-icon fa-shopping-cart" /> Guthaben kaufen
               </Button>
             </>
           )}
@@ -250,31 +264,31 @@ Guthaben kaufen
           isOpen={this.state.saveDialogOpen}
           onClose={() => this.setState({ saveDialogOpen: false })}
           onSave={(group) => {
+            // decoding url param values
+            const firstNames = decodeURIComponent(
+              this.props.computedMatch.params.firstNames,
+            );
+            const lastNames = decodeURIComponent(
+              this.props.computedMatch.params.lastNames,
+            );
+            const dateOfBirth = decodeURIComponent(
+              this.props.computedMatch.params.dateOfBirth,
+            );
+
             // constructing name for analysis
             let analysisName;
-            if (
-              this.props.computedMatch.params.lastName.split(',').length > 1
-            ) {
+            if (lastNames.split(',').length > 1) {
               // gettin names
-              const firstName = this.props.computedMatch.params.firstNames.split(
-                ',',
-              )[0];
-              const firstNameComfort = this.props.computedMatch.params.firstNames.split(
-                ',',
-              )[1];
-              const lastName = this.props.computedMatch.params.lastName.split(
-                ',',
-              )[0];
-              const lastNameComfort = this.props.computedMatch.params.lastName.split(
-                ',',
-              )[1];
-              const { dateOfBirth } = this.props.computedMatch.params;
+              const firstName = firstNames.split(',')[0];
+              const firstNameComfort = firstNames.split(',')[1];
+              const lastName = lastNames.split(',')[0];
+              const lastNameComfort = lastNames.split(',')[1];
 
               // constructing name
               analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
             } else {
               // constructing name
-              analysisName = `${this.props.computedMatch.params.firstNames} ${this.props.computedMatch.params.lastName}, ${this.props.computedMatch.params.dateOfBirth}`;
+              analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
             }
 
             // saving analysis
@@ -289,7 +303,8 @@ Guthaben kaufen
           isOpen={this.state.userDeletionDialogOpen}
           onClose={() => this.setState({
             userDeletionDialogOpen: false,
-          })}
+          })
+          }
           onAction={() => {
             // dismissing dialog
             this.setState({ userDeletionDialogOpen: false });

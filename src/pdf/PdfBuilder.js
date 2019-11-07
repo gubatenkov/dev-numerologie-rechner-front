@@ -1,39 +1,22 @@
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from '../fonts/vfs_fonts';
+import * as _ from 'lodash';
+import pdfFonts from './fonts/vfs_fonts';
+
+import { OVERALL_INTRO_KEY, CI_COLORS } from '../utils/Constants';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
-import { COVER_IMAGE_BY_LZ, LEVEL_BG_IMAGES } from './Images';
+import {
+  COVER_IMAGE_BY_LZ,
+  BACKGROUND_IMAGES
+} from './images/Images';
 import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from './PdfTexts';
-
-// defining colors used in the pdf
-const CI_COLORS = {
-  RED: '#fb2c2c',
-  ORANGE: '#f88000',
-  YELLOW: '#e7c900',
-  GREEN: '#8ebe31',
-  BLUE: '#00b3d4',
-  PURPLE: '#bb00eb',
-  SILVER: '#afafaf',
-  GREY: '#969696',
-  BLACK: '#262626',
-  WHITE: '#FFFFFF',
-};
-
-// mapping of colors to levels
-const LEVEL_COLORS = {
-  Ausdrucksebene: CI_COLORS.RED,
-  Persönlichkeitsebene: CI_COLORS.GREEN,
-  Entfaltungspotenzial: CI_COLORS.BLUE,
-  'Seelische Ebene': CI_COLORS.PURPLE,
-  'Vibratorische Zyklen': CI_COLORS.SILVER,
-  'Herausforderungen und Höhepunkte': CI_COLORS.SILVER,
-  'Persönliches Jahr': CI_COLORS.SILVER,
-};
 
 // constant for how many centimeters an inch is
 const INCH_IN_CM = 2.54;
+
 // current pixel density assumed for conversions in DPI
 const PIXEL_DENSITY = 72;
+
 // page margins
 const PAGE_MARGIN_LEFT_CM = 3.5;
 const PAGE_MARGIN_RIGHT_CM = 3.5;
@@ -134,52 +117,27 @@ pdfMake.fonts = {
   },
 };
 
-// the level location information in the created document
-// this is needed to keep track of the position of the layers in the document
-const levelPositionInformation = {
-  Ausdrucksebene: {
-    startIndex: null,
-    endIndex: null,
-    startPage: null,
-    endPage: null,
-  },
-  Persönlichkeitsebene: {
-    startIndex: null,
-    endIndex: null,
-    startPage: null,
-    endPage: null,
-  },
-  Entfaltungspotenzial: {
-    startIndex: null,
-    endIndex: null,
-    startPage: null,
-    endPage: null,
-  },
-  'Seelische Ebene': {
-    startIndex: null,
-    endIndex: null,
-    startPage: null,
-    endPage: null,
-  },
-  'Vibratorische Zyklen': {
-    startIndex: null,
-    endIndex: null,
-    startPage: null,
-    endPage: null,
-  },
-  'Herausforderungen und Höhepunkte': {
-    startIndex: null,
-    endIndex: null,
-    startPage: null,
-    endPage: null,
-  },
-  'Persönliches Jahr': {
-    startIndex: null,
-    endIndex: null,
-    startPage: null,
-    endPage: null,
-  },
-};
+/**
+ * builds and initializes an object to keep track of the position of
+ * different sections in the pdf given the passed configuration
+ * @param configuration the configuration to be used for the pdf generation
+ */
+function buildSectionPositionInformation(configuration) {
+  // template for result
+  const result = {};
+
+  // keeping track of the location of every section in the config
+  configuration.forEach((configSection) => {
+    result[configSection.name] = {
+      startIndex: null,
+      endIndex: null,
+      startPage: null,
+      endPage: null,
+    };
+  });
+
+  return result;
+}
 
 /**
  * converts centimeters to points for margins etc.
@@ -257,8 +215,8 @@ function extractTableValueFromItem(numberItem) {
     };
   }
 
+  // bold if highlighted
   value.bold = numberItem.highlighted;
-
   return value;
 }
 
@@ -266,9 +224,12 @@ function extractTableValueFromItem(numberItem) {
  * extracts the number name from an item dependent on the type
  */
 function extractTableNameFromItem(numberItem) {
+  // if default item => has member
   if (numberItem.type === 'row') {
     return numberItem.name;
   }
+
+  // if custom row => using values array and index
   return numberItem.values[numberItem.nameIndex];
 }
 
@@ -353,19 +314,47 @@ function calculateResultOverviewTable(
 }
 
 /**
- * returns an array representation of the state of the component
- * @param data the state to be transformed
+ * builds the result structure for the pdf generation based on the analysis result and the
+ * given configuration
+ * @param resultData result of the analysis
+ * @param configuration the current configuration to generate the pdf in accordance with
+ * @param introTexts an array of introduction texts for the different levels
+ * @returns an array of sections of the pdf containing a name, intro text and an array of result items per section
  */
-export function getResultArrayFormat(data) {
-  return [
-    data.expressionLevel,
-    data.personalLevel,
-    data.developmentLevel,
-    data.soulLevel,
-    data.vibratoryCycles,
-    data.challengesHighs,
-    data.personalYear,
-  ];
+export function buildResultDataStructure(
+  resultData,
+  configuration,
+  introTexts,
+) {
+  // if any of the parameters is null => return null
+  if (!resultData || !configuration) {
+    return null;
+  }
+  // mapping sections to result items with all numbers of tables aggregated and resolved against result
+  return configuration.map((configSection) => {
+    // container for all numbers in section (not ids but resolved result objects)
+    const numbers = [];
+    // iterating over tables and aggregating numbers
+    configSection.tables.forEach((table) => {
+      // adding numbers (resolved  for result objects) to numbers
+      numbers.push(
+        ...table.numberIds.map((numberId) => _.get(resultData, numberId)),
+      );
+    });
+
+    // finding intro text in input param
+    const sectionIntroText = introTexts.filter(
+      (text) => text.sectionId === configSection.name,
+    )[0];
+
+    // returning full section with resolved and aggregated numbers
+    return {
+      name: configSection.name,
+      color: configSection.color,
+      introText: sectionIntroText,
+      numbers,
+    };
+  });
 }
 
 /**
@@ -456,8 +445,10 @@ function extractNameAndValueFromItem(item) {
  * @param includePromotion flag that indicates if a promotional text should be added
  * to the end of the PDF
  */
-export function createPDFFromAnalysisResult(
+export async function createPDFFromAnalysisResult(
   analysisResult,
+  configuration,
+  introTexts,
   firstNames,
   lastName,
   fileName = null,
@@ -466,19 +457,34 @@ export function createPDFFromAnalysisResult(
   compareFirstNames = null,
   compareLastName = null,
 ) {
-  // getting result in array format
-  const resultArray = getResultArrayFormat(analysisResult.personalAnalysis);
-  let resultCompareArray = null;
-  if (compareAnalysisResult) {
-    resultCompareArray = getResultArrayFormat(
-      compareAnalysisResult.personalAnalysis,
-    );
-  }
+  // preparing data structure to generate pdf from for result
+  const resultSections = buildResultDataStructure(
+    analysisResult,
+    configuration,
+    introTexts,
+  );
+
+  // preparing data structure to generate pdf from for result (might be null)
+  const resultsCompareSections = buildResultDataStructure(
+    compareAnalysisResult,
+    configuration,
+    introTexts,
+  );
+
+  // getting pdf Intro text
+  const pdfIntroText = introTexts.filter(
+    (text) => text.sectionId === OVERALL_INTRO_KEY,
+  )[0];
+
+  // building section location info object. This is used to keep track
+  // of the position of different sections throughout the document and is
+  // build up as the pdf is generated
+  const sectionPositionInformation = buildSectionPositionInformation(
+    configuration,
+  );
 
   // getting lz to determine title image
-  const lzValue = analysisResult.personalAnalysis.personalLevel.numbers.filter(
-    (item) => item.numberId === 'LZ',
-  )[0].result.value;
+  const lzValue = analysisResult.lz.result.value;
   const titleImage = COVER_IMAGE_BY_LZ[lzValue] || COVER_IMAGE_BY_LZ[0];
 
   // defining pdf and default styling
@@ -496,24 +502,29 @@ export function createPDFFromAnalysisResult(
       }
 
       // checking if the page is in a range of level pages => background image
-      let currentLevelName = null;
-      Object.entries(levelPositionInformation).forEach(([key, value]) => {
-        if (page >= value.startPage && page <= value.endPage) {
-          currentLevelName = key;
+      let currentSectionName = null;
+      Object.entries(sectionPositionInformation).forEach(([key, section]) => {
+        // if page is within range of section => setting background image
+        if (page >= section.startPage && page <= section.endPage) {
+          currentSectionName = key;
         }
       });
 
+      // getting section color
+      let currentResultSection = resultSections.filter(
+        (section) => section.name === currentSectionName,
+      )[0];
+
       // if current page is in level rage => setting corresponding background image
-      if (currentLevelName) {
+      if (currentResultSection && currentResultSection.color && BACKGROUND_IMAGES[currentResultSection.color]) {
         return [
           {
-            image: LEVEL_BG_IMAGES[currentLevelName],
+            image: BACKGROUND_IMAGES[currentResultSection.color],
             absolutePosition: { x: 550, y: 350 },
             width: 50,
           },
         ];
       }
-
       return null;
     },
     pageOrientation: 'portrait',
@@ -543,17 +554,13 @@ export function createPDFFromAnalysisResult(
         },
       },
       {
-        text: analysisResult.personalAnalysis.analysisIntro.title,
+        text: pdfIntroText.title,
         style: ['H1'],
         tocItem: true,
         tocMargin: [0, 15, 0, 0],
         pageBreak: 'before',
       },
-      [
-        ...convertHTMLTextToPDFSyntax(
-          analysisResult.personalAnalysis.analysisIntro.text,
-        ),
-      ],
+      [...convertHTMLTextToPDFSyntax(pdfIntroText.text)],
       {
         text: 'Übersichtsblatt der Zahlen',
         style: ['H1', { alignment: 'center' }],
@@ -569,10 +576,10 @@ export function createPDFFromAnalysisResult(
             table: {
               dontBreakRows: true,
               body: calculateResultOverviewTable(
-                resultArray,
+                resultSections,
                 firstNames,
                 lastName,
-                resultCompareArray,
+                resultsCompareSections,
                 compareFirstNames,
                 compareLastName,
               ),
@@ -603,13 +610,13 @@ export function createPDFFromAnalysisResult(
       if (currentPage === 1) {
         // first page in created document (page numbers are final) =>
         // getting information about the start pages of the different levels
-        const levelEntries = Object.entries(levelPositionInformation);
+        const levelEntries = Object.entries(sectionPositionInformation);
         levelEntries.forEach(([key, value]) => {
           // setting start page correlating with start index
-          levelPositionInformation[key].startPage = docDefinition.content[value.startIndex].positions[0].pageNumber;
+          sectionPositionInformation[key].startPage = docDefinition.content[value.startIndex].positions[0].pageNumber;
 
           // setting stop page correlating with start index
-          levelPositionInformation[key].endPage = docDefinition.content[value.endIndex].positions[0].pageNumber;
+          sectionPositionInformation[key].endPage = docDefinition.content[value.endIndex].positions[0].pageNumber;
         });
       }
     },
@@ -649,130 +656,72 @@ export function createPDFFromAnalysisResult(
     styles: PDF_STYLES,
   };
 
-  // pushing content to pdf
-  resultArray.forEach((result, index) => {
+  // pushing content to pdf => each level
+  resultSections.forEach((resultSection, index) => {
     // getting color for current level
-    const resultColor = LEVEL_COLORS[result.name] || '';
+    const resultColor = (resultSection.color && CI_COLORS[resultSection.color]) ? CI_COLORS[resultSection.color] : '';
 
     // getting compare result
-    let compareResult = null;
-    if (resultCompareArray) {
-      compareResult = resultCompareArray[index];
+    let resultCompareSection = null;
+    if (resultsCompareSections) {
+      resultCompareSection = resultsCompareSections[index];
     }
 
     // saving information about first element of level -> the index saved will be the first index
     // of this level
-    levelPositionInformation[result.name].startIndex = docDefinition.content.length;
+    sectionPositionInformation[resultSection.name].startIndex = docDefinition.content.length;
 
     // adding level intro
-    if (result.introText) {
+    if (resultSection.introText) {
       docDefinition.content.push({
-        text: result.introText.title,
+        text: resultSection.introText.title,
         style: ['H0', { color: resultColor, alignment: 'center' }],
         pageBreak: 'before',
         tocItem: true,
         tocStyle: { color: resultColor },
       });
       docDefinition.content.push(
-        ...convertHTMLTextToPDFSyntax(result.introText.text, {
+        ...convertHTMLTextToPDFSyntax(resultSection.introText.text, {
           h1: { color: resultColor },
         }),
       );
     }
 
     // adding number results for all numbers with descriptionText
-    result.numbers.filter((item) => extractDescriptionTextFromItem(item) && 
-      extractDescriptionTextFromItem(item).length > 0).forEach((item, resultIndex) => {
-      const { itemName, itemValue } = extractNameAndValueFromItem(item);
+    resultSection.numbers
+      .filter((number) => {
+        // filter out numbers without description text
+        const itemDescriptionText = extractDescriptionTextFromItem(number);
+        return itemDescriptionText && itemDescriptionText.length > 0;
+      })
+      .forEach((number, resultIndex) => {
+        // extracting values from number result item
+        const { itemName, itemValue } = extractNameAndValueFromItem(number);
 
-      // getting compare item
-      let compareItem = null;
-      let compareItemName = null;
-      let compareItemValue = null;
-      if (compareResult) {
-        compareItem = compareResult.numbers[resultIndex];
-        const extractedResult = extractNameAndValueFromItem(compareItem);
-        compareItemName = extractedResult.itemName;
-        compareItemValue = extractedResult.itemValue;
-      }
-
-      // checking if item is empty
-      const itemEmpty = !itemValue || (Array.isArray(itemValue && itemValue.length === 0));
-
-      // if item name set => adding name and name subtitle
-      if (itemName && !itemEmpty) {
-        // adding heading for number
-        docDefinition.content.push({
-          text: `${itemName} ${itemValue}`,
-          style: ['H1', { color: resultColor }],
-          marginBottom:
-            compareItem && !areResultValuesEqual(compareItemValue, itemValue)
-              ? 0
-              : 20,
-          headlineLevel: 'H1',
-          tocItem: true,
-          tocStyle: { color: resultColor },
-          tocMargin: [15, 0, 0, 0],
-        });
-
-        // adding subheading with name if compare is present
-        if (compareItem && !areResultValuesEqual(compareItemValue, itemValue)) {
-          docDefinition.content.push({
-            text: `mit Name ${firstNames} ${lastName}`,
-            style: ['SUBTITLE', { color: resultColor }],
-            headlineLevel: 'SUBTITLE',
-          });
+        // getting if there is a compare item
+        let compareItem = null;
+        let compareItemName = null;
+        let compareItemValue = null;
+        if (resultCompareSection) {
+          compareItem = resultCompareSection.numbers[resultIndex];
+          const extractedResult = extractNameAndValueFromItem(compareItem);
+          compareItemName = extractedResult.itemName;
+          compareItemValue = extractedResult.itemValue;
         }
 
-        // adding number description if present
-        if (item.numberDescription && item.numberDescription.description) {
-          docDefinition.content.push({
-            stack: [
-              ...convertHTMLTextToPDFSyntax(
-                item.numberDescription.description,
-                {
-                  text: 'NUMBERDESCRIPTION',
-                },
-              ),
-            ],
-            marginBottom: 10,
-          });
-        }
+        // checking if item is empty
+        const itemEmpty = !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
 
-        // adding number calculation description if present
-        if (
-          item.numberDescription
-          && item.numberDescription.calculationDescription
-        ) {
-          docDefinition.content.push({
-            stack: [
-              ...convertHTMLTextToPDFSyntax(
-                item.numberDescription.calculationDescription,
-                { text: 'NUMBERDESCRIPTION' },
-              ),
-            ],
-            marginBottom: 10,
-          });
-        }
-
-        // pushing description text
-        let descriptionText = extractDescriptionTextFromItem(item);
-
-        // if description text is present => adding to content
-        if (descriptionText) {
-          docDefinition.content.push(
-            ...convertHTMLTextToPDFSyntax(descriptionText, {
-              h1: { color: resultColor },
-              ul: { markerColor: resultColor },
-            }),
-          );
-        }
-
-        if (compareItem && !areResultValuesEqual(compareItemValue, itemValue)) {
+        // if item name set => adding name and name subtitle
+        if (itemName && !itemEmpty) {
           // adding heading for number
           docDefinition.content.push({
-            text: `${compareItemName} ${compareItemValue}`,
+            text: `${itemName} ${itemValue}`,
             style: ['H1', { color: resultColor }],
+            marginBottom:
+              compareItem && !areResultValuesEqual(compareItemValue, itemValue)
+                ? 0
+                : 20,
             headlineLevel: 'H1',
             tocItem: true,
             tocStyle: { color: resultColor },
@@ -780,32 +729,108 @@ export function createPDFFromAnalysisResult(
           });
 
           // adding subheading with name if compare is present
-          docDefinition.content.push({
-            text: `mit Name ${compareFirstNames} ${compareLastName}`,
-            style: ['SUBTITLE', { color: resultColor }],
-            headlineLevel: 'SUBTITLE',
-            marginBottom: 20,
-          });
+          if (
+            compareItem
+            && !areResultValuesEqual(compareItemValue, itemValue)
+          ) {
+            docDefinition.content.push({
+              text: `mit Name ${firstNames} ${lastName}`,
+              style: ['SUBTITLE', { color: resultColor }],
+              headlineLevel: 'SUBTITLE',
+            });
+          }
+
+          // adding number description if present
+          if (
+            number.numberDescription
+            && number.numberDescription.description
+          ) {
+            docDefinition.content.push({
+              stack: [
+                ...convertHTMLTextToPDFSyntax(
+                  number.numberDescription.description,
+                  {
+                    text: 'NUMBERDESCRIPTION',
+                  },
+                ),
+              ],
+              marginBottom: 10,
+            });
+          }
+
+          // adding number calculation description if present
+          if (
+            number.numberDescription
+            && number.numberDescription.calculationDescription
+          ) {
+            docDefinition.content.push({
+              stack: [
+                ...convertHTMLTextToPDFSyntax(
+                  number.numberDescription.calculationDescription,
+                  { text: 'NUMBERDESCRIPTION' },
+                ),
+              ],
+              marginBottom: 10,
+            });
+          }
 
           // pushing description text
-          let compareDescriptionText = extractDescriptionTextFromItem(compareItem);
+          let descriptionText = extractDescriptionTextFromItem(number);
 
           // if description text is present => adding to content
-          if (compareDescriptionText) {
+          if (descriptionText) {
             docDefinition.content.push(
-              ...convertHTMLTextToPDFSyntax(compareDescriptionText, {
+              ...convertHTMLTextToPDFSyntax(descriptionText, {
                 h1: { color: resultColor },
                 ul: { markerColor: resultColor },
               }),
             );
           }
+
+          // adding compare item
+          if (
+            compareItem
+            && !areResultValuesEqual(compareItemValue, itemValue)
+          ) {
+            // adding heading for number
+            docDefinition.content.push({
+              text: `${compareItemName} ${compareItemValue}`,
+              style: ['H1', { color: resultColor }],
+              headlineLevel: 'H1',
+              tocItem: true,
+              tocStyle: { color: resultColor },
+              tocMargin: [15, 0, 0, 0],
+            });
+
+            // adding subheading with name if compare is present
+            docDefinition.content.push({
+              text: `mit Name ${compareFirstNames} ${compareLastName}`,
+              style: ['SUBTITLE', { color: resultColor }],
+              headlineLevel: 'SUBTITLE',
+              marginBottom: 20,
+            });
+
+            // pushing description text
+            let compareDescriptionText = extractDescriptionTextFromItem(
+              compareItem,
+            );
+
+            // if description text is present => adding to content
+            if (compareDescriptionText) {
+              docDefinition.content.push(
+                ...convertHTMLTextToPDFSyntax(compareDescriptionText, {
+                  h1: { color: resultColor },
+                  ul: { markerColor: resultColor },
+                }),
+              );
+            }
+          }
         }
-      }
-    });
+      });
 
     // saving information about last element of level -> the index saved will be the last index
     // of this level
-    levelPositionInformation[result.name].endIndex = docDefinition.content.length - 1;
+    sectionPositionInformation[resultSection.name].endIndex = docDefinition.content.length - 1;
   });
 
   // if flag is set => adding promotional text
@@ -819,9 +844,7 @@ export function createPDFFromAnalysisResult(
       marginBottom: 10,
     });
     // pushing text
-    docDefinition.content.push({
-      text: PROMOTION_TEXT,
-    });
+    docDefinition.content.push(...convertHTMLTextToPDFSyntax(PROMOTION_TEXT));
   }
 
   // adding legal text at end of pdf

@@ -23,10 +23,8 @@ import Register from './components/Register';
 import ResetPassword from './components/ResetPassword';
 import SetPassword from './components/SetPassword';
 import AnalysisResultPersonal from './components/AnalysisResultPersonal';
-import AnalysisResultPersonalById from './components/AnalysisResultPersonalById';
-import AnalysisResultPersonalCompare from './components/AnalysisResultPersonalCompare';
 import UserHome from './components/UserHome';
-import PrivateRoute from './utils/PrivateRoute';
+import PrivateRoute from './utils/routing/PrivateRoute';
 
 import registerServiceWorker from './utils/registerServiceWorker';
 import { isUserAuthenticated, getUserAuthData } from './utils/AuthUtils';
@@ -38,7 +36,7 @@ import './styles/web-icons/web-icons.min.css';
 import './styles/font-awesome/font-awesome.min.css';
 import './styles/theme.css';
 
-import { GRAPHQL_ENDPOINT } from './utils/Config';
+import { GRAPHQL_ENDPOINT } from './utils/Configuration';
 
 // configuring dotenv
 dotenv.config();
@@ -86,20 +84,16 @@ ReactDOM.render(
         <Route
           exact
           path="/resultPersonal/:analysisId"
-          component={withTracker(AnalysisResultPersonalById)}
-        />
-        <Route
-          exact
-          path="/resultPersonal/:firstNames/:lastName/:dateOfBirth"
           component={withTracker(AnalysisResultPersonal)}
         />
         <Route
-          path="/resultPersonalCompare/:firstNames/:lastNames/:dateOfBirth"
-          component={withTracker(AnalysisResultPersonalCompare)}
+          exact
+          path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth"
+          component={withTracker(AnalysisResultPersonal)}
         />
         <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
         <PrivateRoute
-          path="/userHome/:userAction?/:firstNames?/:lastName?/:dateOfBirth?"
+          path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?"
           isAuthenticated={isUserAuthenticated}
           loginPath="/login"
           component={withTracker(UserHome)}
