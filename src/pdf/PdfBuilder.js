@@ -5,7 +5,10 @@ import pdfFonts from './fonts/vfs_fonts';
 import { OVERALL_INTRO_KEY, CI_COLORS } from '../utils/Constants';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
-import { COVER_IMAGE_BY_LZ, SIDE_IMAGES } from './images/Images';
+import {
+  COVER_IMAGE_BY_LZ,
+  BACKGROUND_IMAGES
+} from './images/Images';
 import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from './PdfTexts';
 
 // constant for how many centimeters an inch is
@@ -508,13 +511,15 @@ export async function createPDFFromAnalysisResult(
       });
 
       // getting section color
-      let currentResultSection = resultSections.filter(section => section.name === currentSectionName)[0];
+      let currentResultSection = resultSections.filter(
+        (section) => section.name === currentSectionName,
+      )[0];
 
       // if current page is in level rage => setting corresponding background image
-      if (currentResultSection && SIDE_IMAGES[currentResultSection.color]) {
+      if (currentResultSection && currentResultSection.color && BACKGROUND_IMAGES[currentResultSection.color]) {
         return [
           {
-            image: SIDE_IMAGES[currentResultSection.color],
+            image: BACKGROUND_IMAGES[currentResultSection.color],
             absolutePosition: { x: 550, y: 350 },
             width: 50,
           },
@@ -654,7 +659,7 @@ export async function createPDFFromAnalysisResult(
   // pushing content to pdf => each level
   resultSections.forEach((resultSection, index) => {
     // getting color for current level
-    const resultColor = resultSection.color || '';
+    const resultColor = (resultSection.color && CI_COLORS[resultSection.color]) ? CI_COLORS[resultSection.color] : '';
 
     // getting compare result
     let resultCompareSection = null;

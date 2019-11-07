@@ -1,4 +1,4 @@
-import { CI_COLORS } from './Constants';
+import { CI_COLOR_IDS } from './Constants';
 
 // graphql endpoint url configuration
 export const GRAPHQL_HOST = process.env.REACT_APP_BACKEND_HOST
@@ -19,7 +19,7 @@ export const PersonalResultConfiguration = {
   LEVELS: [
     {
       name: 'Ausdrucksebene',
-      color: CI_COLORS.RED_ORANGE_YELLOW,
+      color: CI_COLOR_IDS.RED_ORANGE_YELLOW,
       tables: [
         {
           name: 'Ausdrucksebene',
@@ -30,7 +30,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Persönlichkeitsebene',
-      color: CI_COLORS.GREEN,
+      color: CI_COLOR_IDS.GREEN,
       tables: [
         {
           name: 'Persönlichkeitsebene',
@@ -50,7 +50,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Entfaltungspotenzial',
-      color: CI_COLORS.BLUE,
+      color: CI_COLOR_IDS.BLUE,
       tables: [
         {
           name: 'Entfaltungspotenzial',
@@ -61,7 +61,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Seelische Ebene',
-      color: CI_COLORS.PURPLE,
+      color: CI_COLOR_IDS.PURPLE,
       tables: [
         {
           name: 'Seelische Ebene',
@@ -72,7 +72,7 @@ export const PersonalResultConfiguration = {
     },
     {
       name: 'Zeitliche Ebene',
-      color: CI_COLORS.SILVER,
+      color: CI_COLOR_IDS.SILVER,
       tables: [
         {
           name: 'Vibratorische Zyklen',
