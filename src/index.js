@@ -88,12 +88,12 @@ ReactDOM.render(
         />
         <Route
           exact
-          path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth"
+          path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfig?"
           component={withTracker(AnalysisResultPersonal)}
         />
         <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
         <PrivateRoute
-          path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?"
+          path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/:resultConfig?"
           isAuthenticated={isUserAuthenticated}
           loginPath="/login"
           component={withTracker(UserHome)}

@@ -35,6 +35,9 @@ const AnalysisResultPersonal = (props) => {
     personalAnalysisResult = data.personalAnalyses;
   }
 
+  // determining configuration for result
+  //const configuration = props.match.params.resultConfig || Con 
+
   // rendering single or compare result based on result
   if (personalAnalysisResult.length > 1) {
     return (
@@ -43,6 +46,7 @@ const AnalysisResultPersonal = (props) => {
         loading={data.loading}
         analysis={null}
         personalAnalysisResults={personalAnalysisResult}
+        //configuration={}
       />
     );
   }
