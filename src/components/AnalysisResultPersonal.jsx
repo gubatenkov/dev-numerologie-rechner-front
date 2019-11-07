@@ -5,6 +5,8 @@ import { withRouter } from 'react-router-dom';
 import { graphql, withApollo } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 
+import {PERSONAL_RESULT_CONFIGURATIONS} from '../utils/Configuration';
+
 import {
   buildPersonalAnalysisByNameQuery,
   buildPersonalAnalysisByIdQuery,
@@ -35,8 +37,11 @@ const AnalysisResultPersonal = (props) => {
     personalAnalysisResult = data.personalAnalyses;
   }
 
-  // determining configuration for result
-  //const configuration = props.match.params.resultConfig || Con 
+  // determining configuration for result, levels per default
+  let resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS.LEVELS;
+  if (props.match.params.resultConfig && PERSONAL_RESULT_CONFIGURATIONS[props.match.params.resultConfig.toUpperCase()]) {
+    resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[props.match.params.resultConfig.toUpperCase()];
+  }
 
   // rendering single or compare result based on result
   if (personalAnalysisResult.length > 1) {
@@ -46,7 +51,7 @@ const AnalysisResultPersonal = (props) => {
         loading={data.loading}
         analysis={null}
         personalAnalysisResults={personalAnalysisResult}
-        //configuration={}
+        configuration={resultConfiguration}
       />
     );
   }
@@ -58,6 +63,7 @@ const AnalysisResultPersonal = (props) => {
       loading={data.loading}
       analysis={null}
       personalAnalysisResult={personalAnalysisResult[0]}
+      configuration={resultConfiguration}
     />
   );
 };

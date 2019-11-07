@@ -21,7 +21,7 @@ import RenameGroupDialog from './dialogs/RenameGroupDialog';
 import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
 
 import {
-  PersonalResultConfiguration,
+  PERSONAL_RESULT_CONFIGURATIONS,
 } from '../utils/Configuration';
 import {OVERALL_INTRO_KEY} from '../utils/Constants';
 import { getUserAuthData } from '../utils/AuthUtils';
@@ -247,7 +247,7 @@ const AnalysisBrowser = (props) => {
       });
 
       // TODO: how to determine configuration? Save with analysis?
-      const configuration = PersonalResultConfiguration.LEVELS;
+      const configuration = PERSONAL_RESULT_CONFIGURATIONS.LEVELS;
 
       // getting section ids to get intro texts for including overall intro text
       const sectionIds = configuration.map((section) => section.name);
@@ -274,7 +274,7 @@ const AnalysisBrowser = (props) => {
         ] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           personalAnalysisResult,
-          PersonalResultConfiguration.LEVELS,
+          PERSONAL_RESULT_CONFIGURATIONS.LEVELS,
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
@@ -288,7 +288,7 @@ const AnalysisBrowser = (props) => {
         const [personalAnalysisResult] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           personalAnalysisResult,
-          PersonalResultConfiguration.LEVELS,
+          PERSONAL_RESULT_CONFIGURATIONS.LEVELS,
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,

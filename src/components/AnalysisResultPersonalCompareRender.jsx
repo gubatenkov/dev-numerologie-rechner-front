@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import * as _ from 'lodash';
 
-import { PersonalResultConfiguration } from '../utils/Configuration';
+import { PERSONAL_RESULT_CONFIGURATIONS } from '../utils/Configuration';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -38,7 +38,7 @@ class AnalysisResultPersonalCompare extends Component {
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
-      resultConfiguration: PersonalResultConfiguration.LEVELS,
+      resultConfiguration: PERSONAL_RESULT_CONFIGURATIONS.LEVELS,
     };
   }
 

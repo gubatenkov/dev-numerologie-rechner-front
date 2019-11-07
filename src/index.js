@@ -83,7 +83,7 @@ ReactDOM.render(
         />
         <Route
           exact
-          path="/resultPersonal/:analysisId"
+          path="/resultPersonal/:analysisId/:resultConfig?"
           component={withTracker(AnalysisResultPersonal)}
         />
         <Route

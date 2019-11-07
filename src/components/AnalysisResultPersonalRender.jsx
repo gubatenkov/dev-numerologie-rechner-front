@@ -5,8 +5,6 @@ import { withRouter } from 'react-router-dom';
 
 import * as _ from 'lodash';
 
-import { PersonalResultConfiguration } from '../utils/Configuration';
-
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
@@ -37,7 +35,7 @@ class AnalysisResultPersonalRender extends Component {
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
-      resultConfiguration: PersonalResultConfiguration.LEVELS,
+      resultConfiguration: props.configuration,
     };
   }
 
