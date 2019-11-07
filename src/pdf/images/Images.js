@@ -41,10 +41,6 @@ BACKGROUND_IMAGES[CI_COLOR_IDS.SILVER] = image_bg_silver;
 BACKGROUND_IMAGES[CI_COLOR_IDS.WHITE] = image_bg_white;
 BACKGROUND_IMAGES[CI_COLOR_IDS.YELLOW] = image_bg_yellow;
 
-console.log('IMAGE!!!!!!!!!!!');
-console.log(image_cover_lz_1);
-console.log(image_bg_red);
-
 // defining base64 title images ordered by LZ
 export const COVER_IMAGE_BY_LZ = {
   '1': image_cover_lz_1,

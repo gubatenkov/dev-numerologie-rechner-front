@@ -23,4 +23,7 @@
 This application uses: 
 - TODO
 
+## ENV Variables: 
+- ```IMAGE_INLINE_SIZE_LIMIT```: sets the file size limit until which images are loaded as data url by ```ìmport```. Make sure this is bigh enough for all images loaded (cover images etc.). 
+
 Thanks for providing these great libraries as open source 🙏 ️❤️
