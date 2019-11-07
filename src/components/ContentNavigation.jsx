@@ -35,7 +35,6 @@ class ContentNaviation extends Component {
     // calling super constructor
     super(props);
     // setting initial state
-    // TODO fetch thispanel-title
     this.state = {
       currentIndex: 0,
     };

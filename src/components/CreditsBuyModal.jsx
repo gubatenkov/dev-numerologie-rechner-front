@@ -8,7 +8,7 @@ import * as compose from 'lodash.flowright';
 
 import CreditsBuyWait from './CreditsBuyWait';
 
-import buyCredits from '../utils/BuyCredits';
+import {buyCredits} from '../utils/BuyCredits';
 import {
   createWindowTokenMutation,
 } from '../graphql/Mutations';
