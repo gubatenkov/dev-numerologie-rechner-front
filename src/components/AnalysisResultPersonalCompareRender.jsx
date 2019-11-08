@@ -5,7 +5,10 @@ import { withRouter } from 'react-router-dom';
 
 import * as _ from 'lodash';
 
-import { PERSONAL_RESULT_CONFIGURATIONS } from '../utils/Configuration';
+import {
+  PERSONAL_RESULT_CONFIGURATIONS,
+  PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
+} from '../utils/Configuration';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -31,6 +34,19 @@ class AnalysisResultPersonalCompare extends Component {
   constructor(props) {
     super(props);
 
+    // determining configuration for result, levels per default
+    let resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID];
+    if (
+      props.match.params.resultConfigurationId
+      && PERSONAL_RESULT_CONFIGURATIONS[
+        props.match.params.resultConfigurationId.toUpperCase()
+      ]
+    ) {
+      resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[
+        props.match.params.resultConfigurationId.toUpperCase()
+      ];
+    }
+
     // setting initial state based on calculations
     this.state = {
       loading: false,
@@ -38,7 +54,7 @@ class AnalysisResultPersonalCompare extends Component {
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
-      resultConfiguration: PERSONAL_RESULT_CONFIGURATIONS.LEVELS,
+      resultConfiguration,
     };
   }
 
@@ -185,7 +201,10 @@ class AnalysisResultPersonalCompare extends Component {
               ])}/${encodeURIComponent([
                 personalAnalysisResult.lastName,
                 personalAnalysisResultCompare.lastName,
-              ])}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
+              ])}/${encodeURIComponent(
+                personalAnalysisResult.dateOfBirth,
+              )}/${this.props.match.params.resultConfigurationId
+                || PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID.toLowerCase()}`,
             );
           }}
           badgeTitle="Kurztext"

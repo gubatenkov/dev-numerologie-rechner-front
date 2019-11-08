@@ -15,6 +15,13 @@ export const AUTH_ENDPOINT = `${GRAPHQL_HOST}/auth`;
 //   - name: name of the table displayed in the table header
 //   - headings: table headings to be displayed
 //   - numberIds: list of number ids to display in the table
+export const PERSONAL_RESULT_CONFIGURATION_IDS = {
+  LEVELS: 'LEVELS',
+  STARTER: 'STARTER',
+};
+
+export const PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID = PERSONAL_RESULT_CONFIGURATION_IDS.STARTER;
+
 export const PERSONAL_RESULT_CONFIGURATIONS = {
   LEVELS: [
     {

@@ -41,6 +41,7 @@ export const currentUserQuery = gql`
       group {
         id
       }
+      resultConfiguration
       inputs {
         firstNames
         lastName

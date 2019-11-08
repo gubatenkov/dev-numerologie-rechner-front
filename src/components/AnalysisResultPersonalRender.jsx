@@ -13,6 +13,11 @@ import ResultTable from './ResultTable';
 import TourView from './TourView';
 import LoadingIndicator from './LoadingIndicator';
 
+import {
+  PERSONAL_RESULT_CONFIGURATIONS,
+  PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
+} from '../utils/Configuration';
+
 import '../styles/AnalysisResultPersonal.css';
 
 /**
@@ -28,6 +33,19 @@ class AnalysisResultPersonalRender extends Component {
   constructor(props) {
     super(props);
 
+    // determining configuration for result, levels per default
+    let resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID];
+    if (
+      props.match.params.resultConfigurationId
+      && PERSONAL_RESULT_CONFIGURATIONS[
+        props.match.params.resultConfigurationId.toUpperCase()
+      ]
+    ) {
+      resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[
+        props.match.params.resultConfigurationId.toUpperCase()
+      ];
+    }
+
     // setting initial state based on calculations
     this.state = {
       loading: false,
@@ -35,7 +53,7 @@ class AnalysisResultPersonalRender extends Component {
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
-      resultConfiguration: props.configuration,
+      resultConfiguration,
     };
   }
 
@@ -178,7 +196,10 @@ class AnalysisResultPersonalRender extends Component {
                 personalAnalysisResult.firstNames,
               )}/${encodeURIComponent(
                 personalAnalysisResult.lastName,
-              )}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
+              )}/${encodeURIComponent(
+                personalAnalysisResult.dateOfBirth,
+              )}/${this.props.match.params.resultConfigurationId
+                || PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID.toLocaleLowerCase()}`,
             );
           }}
           badgeTitle="Kurztext"

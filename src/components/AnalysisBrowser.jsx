@@ -435,7 +435,7 @@ const AnalysisBrowser = (props) => {
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
                       showHandler={() => {
-                        props.history.push(`/resultPersonal/${analysis.id}`);
+                        props.history.push(`/resultPersonal/${analysis.id}/${analysis.resultConfiguration}`);
                       }}
                       onUseCredit={(type) => {
                         handleOnUseCredit(analysis.id, type);
