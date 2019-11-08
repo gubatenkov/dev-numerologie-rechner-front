@@ -21,9 +21,10 @@ import RenameGroupDialog from './dialogs/RenameGroupDialog';
 import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
 
 import {
-  PERSONAL_RESULT_CONFIGURATIONS,
+  getConfigurationForId,
+  PERSONAL_RESULT_CONFIGURATION_DEFAULT,
 } from '../utils/Configuration';
-import {OVERALL_INTRO_KEY} from '../utils/Constants';
+import { OVERALL_INTRO_KEY } from '../utils/Constants';
 import { getUserAuthData } from '../utils/AuthUtils';
 import { createPDFFromAnalysisResult } from '../pdf/PdfBuilder';
 import {
@@ -223,7 +224,7 @@ const AnalysisBrowser = (props) => {
   /**
    * creates a pdf for the analysis and opens it in a new tab
    */
-  const createAnalysisPdf = async (pdfToBeDownloaded) => {
+  const createAnalysisPdf = async (targetAnalysis) => {
     // checking if logged in => otherwise redirecting to login
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
@@ -240,17 +241,18 @@ const AnalysisBrowser = (props) => {
       const result = await props.client.query({
         query: buildPersonalAnalysisByIdQuery(true),
         variables: {
-          id: pdfToBeDownloaded.id,
+          id: targetAnalysis.id,
           isPdf: true,
-          longTexts: pdfToBeDownloaded.longTexts || false,
+          longTexts: targetAnalysis.longTexts || false,
         },
       });
 
       // TODO: how to determine configuration? Save with analysis?
-      const configuration = PERSONAL_RESULT_CONFIGURATIONS.LEVELS;
+      const resultConfiguration = getConfigurationForId(targetAnalysis.resultConfiguration)
+        || PERSONAL_RESULT_CONFIGURATION_DEFAULT;
 
       // getting section ids to get intro texts for including overall intro text
-      const sectionIds = configuration.map((section) => section.name);
+      const sectionIds = resultConfiguration.map((section) => section.name);
       sectionIds.push(OVERALL_INTRO_KEY);
 
       // getting intro texts for all sections in configuration
@@ -259,7 +261,7 @@ const AnalysisBrowser = (props) => {
         variables: {
           sectionIds,
           isPdf: true,
-          longText: pdfToBeDownloaded.longTexts || false,
+          longText: targetAnalysis.longTexts || false,
         },
       })).data;
 
@@ -274,12 +276,12 @@ const AnalysisBrowser = (props) => {
         ] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           personalAnalysisResult,
-          PERSONAL_RESULT_CONFIGURATIONS.LEVELS,
+          resultConfiguration,
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
           `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
-          pdfToBeDownloaded.longTexts,
+          analysis.longTexts,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
           personalAnalysisResultCompare.lastName,
@@ -288,12 +290,12 @@ const AnalysisBrowser = (props) => {
         const [personalAnalysisResult] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           personalAnalysisResult,
-          PERSONAL_RESULT_CONFIGURATIONS.LEVELS,
+          resultConfiguration,
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
           `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
-          pdfToBeDownloaded.longTexts,
+          analysis.longTexts,
         );
       }
     } catch (error) {
@@ -435,7 +437,9 @@ const AnalysisBrowser = (props) => {
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
                       showHandler={() => {
-                        props.history.push(`/resultPersonal/${analysis.id}/${analysis.resultConfiguration}`);
+                        props.history.push(
+                          `/resultPersonal/${analysis.id}/${analysis.resultConfiguration}`,
+                        );
                       }}
                       onUseCredit={(type) => {
                         handleOnUseCredit(analysis.id, type);

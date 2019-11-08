@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import {
   PERSONAL_RESULT_CONFIGURATIONS,
   PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
+  getConfigurationForId,
 } from '../utils/Configuration';
 
 import TitleBar from './TitleBar';
@@ -34,17 +35,15 @@ class AnalysisResultPersonalCompare extends Component {
   constructor(props) {
     super(props);
 
-    // determining configuration for result, levels per default
+    // determining configuration for result
     let resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID];
     if (
       props.match.params.resultConfigurationId
-      && PERSONAL_RESULT_CONFIGURATIONS[
-        props.match.params.resultConfigurationId.toUpperCase()
-      ]
+      && getConfigurationForId(props.match.params.resultConfigurationId)
     ) {
-      resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[
-        props.match.params.resultConfigurationId.toUpperCase()
-      ];
+      resultConfiguration = getConfigurationForId(
+        props.match.params.resultConfigurationId,
+      );
     }
 
     // setting initial state based on calculations
