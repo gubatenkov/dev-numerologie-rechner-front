@@ -11,11 +11,10 @@ import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTable from './ResultTable';
 import TourView from './TourView';
-import LoadingIndicator from './LoadingIndicator';
 
 import {
-  PERSONAL_RESULT_CONFIGURATIONS,
-  PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
+  PERSONAL_RESULT_CONFIGURATION_DEFAULT,
+  getConfigurationForId,
 } from '../utils/Configuration';
 
 import '../styles/AnalysisResultPersonal.css';
@@ -31,19 +30,28 @@ class AnalysisResultPersonalRender extends Component {
   };
 
   constructor(props) {
+    // super constructor
     super(props);
 
-    // determining configuration for result, levels per default
-    let resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID];
-    if (
-      props.match.params.resultConfigurationId
-      && PERSONAL_RESULT_CONFIGURATIONS[
-        props.match.params.resultConfigurationId.toUpperCase()
-      ]
+    // getting relevant parameters from props
+    const { user } = props;
+    const { resultConfigurationId } = props.match.params;
+
+    // determining configuration for result
+    // 3) if no user and param set => using default
+    let resultConfiguration = PERSONAL_RESULT_CONFIGURATION_DEFAULT;
+
+    // 1) if param is set => using this one
+    if (resultConfigurationId && getConfigurationForId(resultConfigurationId)) {
+      resultConfiguration = getConfigurationForId(resultConfigurationId);
+    }
+    // 2) if no param set and user => using user default
+    else if (
+      user
+      && user.resultConfiguration
+      && getConfigurationForId(user.resultConfiguration)
     ) {
-      resultConfiguration = PERSONAL_RESULT_CONFIGURATIONS[
-        props.match.params.resultConfigurationId.toUpperCase()
-      ];
+      resultConfiguration = getConfigurationForId(user.resultConfiguration);
     }
 
     // setting initial state based on calculations
@@ -142,21 +150,6 @@ class AnalysisResultPersonalRender extends Component {
    * default render
    */
   render() {
-    // if data is loading => showing loading indicator with standard text
-    if (this.props.loading) {
-      return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
-    }
-
-    // if processing internally => showing loading indicator
-    if (this.state.loading) {
-      return <LoadingIndicator text={this.state.loadingText} />;
-    }
-
-    // if error => show loading indicator with error message to inform user
-    if (this.props.error) {
-      return <LoadingIndicator text={this.props.error.message} />;
-    }
-
     // constructing side menu component
     let sideMenu = (
       <div className="ResultContentOverview">
@@ -196,10 +189,7 @@ class AnalysisResultPersonalRender extends Component {
                 personalAnalysisResult.firstNames,
               )}/${encodeURIComponent(
                 personalAnalysisResult.lastName,
-              )}/${encodeURIComponent(
-                personalAnalysisResult.dateOfBirth,
-              )}/${this.props.match.params.resultConfigurationId
-                || PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID.toLocaleLowerCase()}`,
+              )}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}}`,
             );
           }}
           badgeTitle="Kurztext"

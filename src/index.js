@@ -93,7 +93,7 @@ ReactDOM.render(
         />
         <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
         <PrivateRoute
-          path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/:resultConfigurationId?"
+          path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
           isAuthenticated={isUserAuthenticated}
           loginPath="/login"
           component={withTracker(UserHome)}

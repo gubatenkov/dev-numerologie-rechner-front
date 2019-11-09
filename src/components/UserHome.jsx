@@ -29,9 +29,6 @@ import { currentUserQuery } from '../graphql/Queries';
 import { saveAnalysisMutation, deleteUserMutation } from '../graphql/Mutations';
 
 import { deleteUserAuthData } from '../utils/AuthUtils';
-import {
-  PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
-} from '../utils/Configuration';
 
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
@@ -117,9 +114,8 @@ class UserHome extends Component {
    * saves the analysis passed to user home
    * @param name: the name of the new analysis
    * @param groupId: the id of the group of the new analysis
-   * @param resultConfigurationId the result configuration to store the analysis for
    */
-  async saveAnalysis(name, groupId, resultConfigurationId) {
+  async saveAnalysis(name, groupId) {
     // decoding url param values
     const firstNames = decodeURIComponent(
       this.props.computedMatch.params.firstNames,
@@ -158,7 +154,6 @@ class UserHome extends Component {
           name,
           group: groupId,
           inputs: nameInputs,
-          resultConfiguration: resultConfigurationId,
         },
         update: (store, { data: { saveAnalysis } }) => {
           // gettint the query from the local cache and adding group
@@ -190,6 +185,8 @@ class UserHome extends Component {
    */
   render() {
     if (!this.props.data.loading && this.props.data.error) {
+      console.log('GQL error');
+      console.log(this.props.data.error);
       return <Redirect to="/login" />;
     }
 
@@ -256,6 +253,7 @@ class UserHome extends Component {
               credits={this.props.data.currentUser.credits}
               onInsufficientCredits={this.toggleBuyModal}
               onUsedCredit={this.handleUsedCredit}
+              resultConfiguration={this.props.data.currentUser.resultConfiguration}
             />
             <AdArea horizontal>
               <AdAreaItem
@@ -280,14 +278,6 @@ class UserHome extends Component {
               this.props.computedMatch.params.dateOfBirth,
             );
 
-            // determining configuration of result
-            const resultConfigurationId = this.props.computedMatch.params
-              .resultConfigurationId
-              ? decodeURIComponent(
-                this.props.computedMatch.params.resultConfigurationId,
-              )
-              : PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID;
-
             // constructing name for analysis
             let analysisName;
             if (lastNames.split(',').length > 1) {
@@ -305,7 +295,7 @@ class UserHome extends Component {
             }
 
             // saving analysis
-            this.saveAnalysis(analysisName, group.id, resultConfigurationId);
+            this.saveAnalysis(analysisName, group.id);
 
             // hiding dialog
             this.setState({ saveDialogOpen: false, loading: true });

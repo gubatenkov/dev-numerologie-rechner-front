@@ -7,8 +7,6 @@ import queryString from 'querystring';
 
 import ToastNotifications from 'cogo-toast';
 
-import { PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID } from '../utils/Configuration';
-
 import Panel from './Panel';
 import InputField from './InputField';
 
@@ -167,7 +165,7 @@ class AnalysisInput extends Component {
 
       // navigating to results
       this.props.history.push(
-        `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}/${PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID}`,
+        `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`,
       );
     } else {
       // encoding parameters
@@ -177,7 +175,7 @@ class AnalysisInput extends Component {
 
       // navigating to results
       this.props.history.push(
-        `/resultPersonal/${firstNamesEncoded}/${lastNameEncoded}/${dateOfBirthEncoded}/starter`,
+        `/resultPersonal/${firstNamesEncoded}/${lastNameEncoded}/${dateOfBirthEncoded}`,
       );
     }
   };

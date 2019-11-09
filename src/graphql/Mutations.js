@@ -42,9 +42,8 @@ export const saveAnalysisMutation = gql`
     $inputs: [AnalysisInput!]!
     $name: String!
     $group: ID!
-    $resultConfiguration: AnalysisResultConfiguration!
   ) {
-    saveAnalysis(inputs: $inputs, name: $name, group: $group, resultConfiguration: $resultConfiguration) {
+    saveAnalysis(inputs: $inputs, name: $name, group: $group) {
       id
       name
       usedCreditTypes
@@ -58,7 +57,6 @@ export const saveAnalysisMutation = gql`
         id
         name
       }
-      resultConfiguration
     }
   }
 `;

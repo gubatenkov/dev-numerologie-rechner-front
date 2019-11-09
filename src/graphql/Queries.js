@@ -24,6 +24,7 @@ export const currentUserQuery = gql`
       email
       wpAccessToken
       wpTokenExpiredAt
+      resultConfiguration
       groups {
         id
         name
@@ -41,12 +42,21 @@ export const currentUserQuery = gql`
       group {
         id
       }
-      resultConfiguration
       inputs {
         firstNames
         lastName
         dateOfBirth
       }
+    }
+  }
+`;
+
+// queries the current user's result configuration
+export const currentUserBasicQuery = gql`
+  query currentUserResultConfiguration {
+    currentUser {
+      email
+      resultConfiguration
     }
   }
 `;
@@ -292,7 +302,7 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
 export function buildPersonalAnalysisByNameQuery(isPdf) {
   return gql`
     query personalAnalysesByNames($inputs: [AnalysisInput!]!) {
-      personalAnalyses: personalAnalysesByNames(inputs: $inputs) {
+      personalAnalysisResults: personalAnalysesByNames(inputs: $inputs) {
         ...PersonalAnalysisResultFragment
       }
     }
@@ -307,7 +317,7 @@ export function buildPersonalAnalysisByNameQuery(isPdf) {
  */
 export function buildPersonalAnalysisByIdQuery(isPdf) {
   return gql`
-  query analysis($id: ID!, $isPdf: Boolean!, $longTexts: Boolean!) {
+  query personalAnalysesById($id: ID!, $isPdf: Boolean!, $longTexts: Boolean!) {
     analysis(id: $id) {
       id
       name

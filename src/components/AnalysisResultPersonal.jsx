@@ -8,6 +8,7 @@ import * as compose from 'lodash.flowright';
 import {
   buildPersonalAnalysisByNameQuery,
   buildPersonalAnalysisByIdQuery,
+  currentUserBasicQuery,
 } from '../graphql/Queries';
 
 import LoadingIndicator from './LoadingIndicator';
@@ -18,31 +19,55 @@ import AnalysisResultPersonalCompareRender from './AnalysisResultPersonalCompare
  * result screen for personal analysis
  */
 const AnalysisResultPersonal = (props) => {
-  const { data } = props;
-  if (data.loading) {
+  // extracting relevant parameters from props
+  const { personalAnalysesById, personalAnalysesByNames } = props;
+  let { currentUser } = props;
+
+  // if gql state loading => showing spinner
+  if (
+    (personalAnalysesById && personalAnalysesById.loading)
+    || (personalAnalysesByNames && personalAnalysesByNames.loading)
+    || (currentUser && currentUser.loading)
+  ) {
     return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
   }
 
-  if (data.error) {
-    return <LoadingIndicator text={data.error.message} />;
+  // if gql state error => displaying error in loader to make it more visible for debugging
+  if (
+    (personalAnalysesById && personalAnalysesById.error)
+    || (personalAnalysesByNames && personalAnalysesByNames.error)
+  ) {
+    return (
+      <LoadingIndicator
+        text={'A critical error occurred when fetching data...'}
+      />
+    );
   }
 
-  // getting result from response data dependent on mode of this component (id or name)
-  let personalAnalysisResult = [];
-  if (props.match.params.analysisId) {
-    personalAnalysisResult = data.analysis.personalAnalysisResults;
+  // if current user query throws error => this means user is not authenticated
+  if (currentUser && currentUser.error) {
+    console.log('user not authenticated');
+    currentUser = null;
+  }
+
+  // this component fetches results in two cases
+  // a) An id of a stored analysis is provided => fetching result based on input parameters of stored id
+  // b) Input parameters (names + dob) are provided => fetching results based on input parameters passed
+  // both queries are configured for this component and are skipped if the params are not passed
+  let personalAnalysisResults = [];
+  if (props.match.params.analysisId && personalAnalysesById) {
+    personalAnalysisResults = personalAnalysesById.analysis.personalAnalysisResults;
   } else {
-    personalAnalysisResult = data.personalAnalyses;
+    personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
   }
 
   // rendering single or compare result based on result
-  if (personalAnalysisResult.length > 1) {
+  if (personalAnalysisResults.length > 1) {
     return (
       <AnalysisResultPersonalCompareRender
-        error={data.error}
-        loading={data.loading}
         analysis={null}
-        personalAnalysisResults={personalAnalysisResult}
+        personalAnalysisResults={personalAnalysisResults}
+        user={props.currentUser.currentUser}
       />
     );
   }
@@ -50,10 +75,9 @@ const AnalysisResultPersonal = (props) => {
   // returning render component with result param set (vs. analysis)
   return (
     <AnalysisResultPersonalRender
-      error={data.error}
-      loading={data.loading}
       analysis={null}
-      personalAnalysisResult={personalAnalysisResult[0]}
+      personalAnalysisResult={personalAnalysisResults[0]}
+      user={props.currentUser.currentUser}
     />
   );
 };
@@ -75,6 +99,9 @@ AnalysisResultPersonal.propTypes = {
 
 // constructing query with input parameters taken from URL params
 export default compose(
+  graphql(currentUserBasicQuery, {
+    name: 'currentUser',
+  }),
   graphql(buildPersonalAnalysisByIdQuery(false), {
     options: (params) => ({
       // query by id (skipped if no id present)
@@ -92,6 +119,7 @@ export default compose(
     }),
     // skipping this query if no id is provided
     skip: (params) => !params.match.params.analysisId,
+    name: 'personalAnalysesById',
   }),
   graphql(buildPersonalAnalysisByNameQuery(false), {
     options: (params) => {
@@ -141,5 +169,6 @@ export default compose(
     },
     // skipping this query if no names are provided
     skip: (params) => !params.match.params.firstNames,
+    name: 'personalAnalysesByNames',
   }),
 )(withApollo(withRouter(AnalysisResultPersonal)));

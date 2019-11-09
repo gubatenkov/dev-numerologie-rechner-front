@@ -22,7 +22,6 @@ import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
 
 import {
   getConfigurationForId,
-  PERSONAL_RESULT_CONFIGURATION_DEFAULT,
 } from '../utils/Configuration';
 import { OVERALL_INTRO_KEY } from '../utils/Constants';
 import { getUserAuthData } from '../utils/AuthUtils';
@@ -247,9 +246,8 @@ const AnalysisBrowser = (props) => {
         },
       });
 
-      // TODO: how to determine configuration? Save with analysis?
-      const resultConfiguration = getConfigurationForId(targetAnalysis.resultConfiguration)
-        || PERSONAL_RESULT_CONFIGURATION_DEFAULT;
+      // getting user default result configuration
+      const resultConfiguration = getConfigurationForId(props.resultConfiguration);
 
       // getting section ids to get intro texts for including overall intro text
       const sectionIds = resultConfiguration.map((section) => section.name);
@@ -438,7 +436,7 @@ const AnalysisBrowser = (props) => {
                       }}
                       showHandler={() => {
                         props.history.push(
-                          `/resultPersonal/${analysis.id}/${analysis.resultConfiguration}`,
+                          `/resultPersonal/${analysis.id}`,
                         );
                       }}
                       onUseCredit={(type) => {
