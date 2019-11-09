@@ -185,6 +185,8 @@ class UserHome extends Component {
    */
   render() {
     if (!this.props.data.loading && this.props.data.error) {
+      console.log('GQL error');
+      console.log(this.props.data.error);
       return <Redirect to="/login" />;
     }
 
@@ -251,6 +253,7 @@ class UserHome extends Component {
               credits={this.props.data.currentUser.credits}
               onInsufficientCredits={this.toggleBuyModal}
               onUsedCredit={this.handleUsedCredit}
+              resultConfiguration={this.props.data.currentUser.resultConfiguration}
             />
             <AdArea horizontal>
               <AdAreaItem

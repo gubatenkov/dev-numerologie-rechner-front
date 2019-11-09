@@ -5,10 +5,7 @@ import pdfFonts from './fonts/vfs_fonts';
 import { OVERALL_INTRO_KEY, CI_COLORS } from '../utils/Constants';
 
 import { convertHTMLTextToPDFSyntax } from './PdfHelper';
-import {
-  COVER_IMAGE_BY_LZ,
-  BACKGROUND_IMAGES
-} from './images/Images';
+import { COVER_IMAGE_BY_LZ, BACKGROUND_IMAGES } from './images/Images';
 import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from './PdfTexts';
 
 // constant for how many centimeters an inch is
@@ -516,7 +513,11 @@ export async function createPDFFromAnalysisResult(
       )[0];
 
       // if current page is in level rage => setting corresponding background image
-      if (currentResultSection && currentResultSection.color && BACKGROUND_IMAGES[currentResultSection.color]) {
+      if (
+        currentResultSection
+        && currentResultSection.color
+        && BACKGROUND_IMAGES[currentResultSection.color]
+      ) {
         return [
           {
             image: BACKGROUND_IMAGES[currentResultSection.color],
@@ -613,9 +614,12 @@ export async function createPDFFromAnalysisResult(
         const levelEntries = Object.entries(sectionPositionInformation);
         levelEntries.forEach(([key, value]) => {
           // setting start page correlating with start index
-          sectionPositionInformation[key].startPage = docDefinition.content[value.startIndex].positions[0].pageNumber;
+          if (value.startIndex) {
+            sectionPositionInformation[key].startPage = docDefinition.content[value.startIndex].positions[0].pageNumber;
+          }
 
           // setting stop page correlating with start index
+          if (value.endIndex)
           sectionPositionInformation[key].endPage = docDefinition.content[value.endIndex].positions[0].pageNumber;
         });
       }
@@ -657,145 +661,81 @@ export async function createPDFFromAnalysisResult(
   };
 
   // pushing content to pdf => each level
-  resultSections.forEach((resultSection, index) => {
-    // getting color for current level
-    const resultColor = (resultSection.color && CI_COLORS[resultSection.color]) ? CI_COLORS[resultSection.color] : '';
-
-    // getting compare result
-    let resultCompareSection = null;
-    if (resultsCompareSections) {
-      resultCompareSection = resultsCompareSections[index];
-    }
-
-    // saving information about first element of level -> the index saved will be the first index
-    // of this level
-    sectionPositionInformation[resultSection.name].startIndex = docDefinition.content.length;
-
-    // adding level intro
-    if (resultSection.introText) {
-      docDefinition.content.push({
-        text: resultSection.introText.title,
-        style: ['H0', { color: resultColor, alignment: 'center' }],
-        pageBreak: 'before',
-        tocItem: true,
-        tocStyle: { color: resultColor },
-      });
-      docDefinition.content.push(
-        ...convertHTMLTextToPDFSyntax(resultSection.introText.text, {
-          h1: { color: resultColor },
-        }),
-      );
-    }
-
-    // adding number results for all numbers with descriptionText
-    resultSection.numbers
-      .filter((number) => {
-        // filter out numbers without description text
+  resultSections
+    .filter((resultSection) =>
+      // checking if any numbers on the section has description text => excluding section if not. Rule: No empty sections (just intro text)
+      resultSection.numbers.some((number) => {
         const itemDescriptionText = extractDescriptionTextFromItem(number);
         return itemDescriptionText && itemDescriptionText.length > 0;
-      })
-      .forEach((number, resultIndex) => {
-        // extracting values from number result item
-        const { itemName, itemValue } = extractNameAndValueFromItem(number);
+      }))
+    .forEach((resultSection, index) => {
+      // getting color for current level
+      const resultColor = resultSection.color && CI_COLORS[resultSection.color]
+        ? CI_COLORS[resultSection.color]
+        : '';
 
-        // getting if there is a compare item
-        let compareItem = null;
-        let compareItemName = null;
-        let compareItemValue = null;
-        if (resultCompareSection) {
-          compareItem = resultCompareSection.numbers[resultIndex];
-          const extractedResult = extractNameAndValueFromItem(compareItem);
-          compareItemName = extractedResult.itemName;
-          compareItemValue = extractedResult.itemValue;
-        }
+      // getting compare result
+      let resultCompareSection = null;
+      if (resultsCompareSections) {
+        resultCompareSection = resultsCompareSections[index];
+      }
 
-        // checking if item is empty
-        const itemEmpty = !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
+      // saving information about first element of level -> the index saved will be the first index
+      // of this level
+      sectionPositionInformation[resultSection.name].startIndex = docDefinition.content.length;
 
-        // if item name set => adding name and name subtitle
-        if (itemName && !itemEmpty) {
-          // adding heading for number
-          docDefinition.content.push({
-            text: `${itemName} ${itemValue}`,
-            style: ['H1', { color: resultColor }],
-            marginBottom:
-              compareItem && !areResultValuesEqual(compareItemValue, itemValue)
-                ? 0
-                : 20,
-            headlineLevel: 'H1',
-            tocItem: true,
-            tocStyle: { color: resultColor },
-            tocMargin: [15, 0, 0, 0],
-          });
+      // adding level intro
+      if (resultSection.introText) {
+        docDefinition.content.push({
+          text: resultSection.introText.title,
+          style: ['H0', { color: resultColor, alignment: 'center' }],
+          pageBreak: 'before',
+          tocItem: true,
+          tocStyle: { color: resultColor },
+        });
+        docDefinition.content.push(
+          ...convertHTMLTextToPDFSyntax(resultSection.introText.text, {
+            h1: { color: resultColor },
+          }),
+        );
+      }
 
-          // adding subheading with name if compare is present
-          if (
-            compareItem
-            && !areResultValuesEqual(compareItemValue, itemValue)
-          ) {
-            docDefinition.content.push({
-              text: `mit Name ${firstNames} ${lastName}`,
-              style: ['SUBTITLE', { color: resultColor }],
-              headlineLevel: 'SUBTITLE',
-            });
+      // adding number results for all numbers with descriptionText
+      resultSection.numbers
+        .filter((number) => {
+          // filter out numbers without description text. Rule: No numbers without description text (only result)
+          const itemDescriptionText = extractDescriptionTextFromItem(number);
+          return itemDescriptionText && itemDescriptionText.length > 0;
+        })
+        .forEach((number, resultIndex) => {
+          // extracting values from number result item
+          const { itemName, itemValue } = extractNameAndValueFromItem(number);
+
+          // getting if there is a compare item
+          let compareItem = null;
+          let compareItemName = null;
+          let compareItemValue = null;
+          if (resultCompareSection) {
+            compareItem = resultCompareSection.numbers[resultIndex];
+            const extractedResult = extractNameAndValueFromItem(compareItem);
+            compareItemName = extractedResult.itemName;
+            compareItemValue = extractedResult.itemValue;
           }
 
-          // adding number description if present
-          if (
-            number.numberDescription
-            && number.numberDescription.description
-          ) {
-            docDefinition.content.push({
-              stack: [
-                ...convertHTMLTextToPDFSyntax(
-                  number.numberDescription.description,
-                  {
-                    text: 'NUMBERDESCRIPTION',
-                  },
-                ),
-              ],
-              marginBottom: 10,
-            });
-          }
+          // checking if item is empty
+          const itemEmpty = !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
 
-          // adding number calculation description if present
-          if (
-            number.numberDescription
-            && number.numberDescription.calculationDescription
-          ) {
-            docDefinition.content.push({
-              stack: [
-                ...convertHTMLTextToPDFSyntax(
-                  number.numberDescription.calculationDescription,
-                  { text: 'NUMBERDESCRIPTION' },
-                ),
-              ],
-              marginBottom: 10,
-            });
-          }
-
-          // pushing description text
-          let descriptionText = extractDescriptionTextFromItem(number);
-
-          // if description text is present => adding to content
-          if (descriptionText) {
-            docDefinition.content.push(
-              ...convertHTMLTextToPDFSyntax(descriptionText, {
-                h1: { color: resultColor },
-                ul: { markerColor: resultColor },
-              }),
-            );
-          }
-
-          // adding compare item
-          if (
-            compareItem
-            && !areResultValuesEqual(compareItemValue, itemValue)
-          ) {
+          // if item name set => adding name and name subtitle
+          if (itemName && !itemEmpty) {
             // adding heading for number
             docDefinition.content.push({
-              text: `${compareItemName} ${compareItemValue}`,
+              text: `${itemName} ${itemValue}`,
               style: ['H1', { color: resultColor }],
+              marginBottom:
+                compareItem
+                && !areResultValuesEqual(compareItemValue, itemValue)
+                  ? 0
+                  : 20,
               headlineLevel: 'H1',
               tocItem: true,
               tocStyle: { color: resultColor },
@@ -803,35 +743,109 @@ export async function createPDFFromAnalysisResult(
             });
 
             // adding subheading with name if compare is present
-            docDefinition.content.push({
-              text: `mit Name ${compareFirstNames} ${compareLastName}`,
-              style: ['SUBTITLE', { color: resultColor }],
-              headlineLevel: 'SUBTITLE',
-              marginBottom: 20,
-            });
+            if (
+              compareItem
+              && !areResultValuesEqual(compareItemValue, itemValue)
+            ) {
+              docDefinition.content.push({
+                text: `mit Name ${firstNames} ${lastName}`,
+                style: ['SUBTITLE', { color: resultColor }],
+                headlineLevel: 'SUBTITLE',
+              });
+            }
+
+            // adding number description if present
+            if (
+              number.numberDescription
+              && number.numberDescription.description
+            ) {
+              docDefinition.content.push({
+                stack: [
+                  ...convertHTMLTextToPDFSyntax(
+                    number.numberDescription.description,
+                    {
+                      text: 'NUMBERDESCRIPTION',
+                    },
+                  ),
+                ],
+                marginBottom: 10,
+              });
+            }
+
+            // adding number calculation description if present
+            if (
+              number.numberDescription
+              && number.numberDescription.calculationDescription
+            ) {
+              docDefinition.content.push({
+                stack: [
+                  ...convertHTMLTextToPDFSyntax(
+                    number.numberDescription.calculationDescription,
+                    { text: 'NUMBERDESCRIPTION' },
+                  ),
+                ],
+                marginBottom: 10,
+              });
+            }
 
             // pushing description text
-            let compareDescriptionText = extractDescriptionTextFromItem(
-              compareItem,
-            );
+            let descriptionText = extractDescriptionTextFromItem(number);
 
             // if description text is present => adding to content
-            if (compareDescriptionText) {
+            if (descriptionText) {
               docDefinition.content.push(
-                ...convertHTMLTextToPDFSyntax(compareDescriptionText, {
+                ...convertHTMLTextToPDFSyntax(descriptionText, {
                   h1: { color: resultColor },
                   ul: { markerColor: resultColor },
                 }),
               );
             }
-          }
-        }
-      });
 
-    // saving information about last element of level -> the index saved will be the last index
-    // of this level
-    sectionPositionInformation[resultSection.name].endIndex = docDefinition.content.length - 1;
-  });
+            // adding compare item
+            if (
+              compareItem
+              && !areResultValuesEqual(compareItemValue, itemValue)
+            ) {
+              // adding heading for number
+              docDefinition.content.push({
+                text: `${compareItemName} ${compareItemValue}`,
+                style: ['H1', { color: resultColor }],
+                headlineLevel: 'H1',
+                tocItem: true,
+                tocStyle: { color: resultColor },
+                tocMargin: [15, 0, 0, 0],
+              });
+
+              // adding subheading with name if compare is present
+              docDefinition.content.push({
+                text: `mit Name ${compareFirstNames} ${compareLastName}`,
+                style: ['SUBTITLE', { color: resultColor }],
+                headlineLevel: 'SUBTITLE',
+                marginBottom: 20,
+              });
+
+              // pushing description text
+              let compareDescriptionText = extractDescriptionTextFromItem(
+                compareItem,
+              );
+
+              // if description text is present => adding to content
+              if (compareDescriptionText) {
+                docDefinition.content.push(
+                  ...convertHTMLTextToPDFSyntax(compareDescriptionText, {
+                    h1: { color: resultColor },
+                    ul: { markerColor: resultColor },
+                  }),
+                );
+              }
+            }
+          }
+        });
+
+      // saving information about last element of level -> the index saved will be the last index
+      // of this level
+      sectionPositionInformation[resultSection.name].endIndex = docDefinition.content.length - 1;
+    });
 
   // if flag is set => adding promotional text
   if (!includePromotion) {

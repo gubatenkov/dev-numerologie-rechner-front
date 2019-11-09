@@ -152,22 +152,30 @@ class AnalysisInput extends Component {
 
     // navigating to right analysis screen
     if (this.firstNamesComfort && this.lastNameComfort) {
+      // encoding params
+      const firstNamesEncoded = encodeURIComponent([
+        this.firstNames,
+        this.firstNamesComfort,
+      ]);
+      const lastNamesEncoded = encodeURIComponent([
+        this.lastNames,
+        this.lastNameComfort,
+      ]);
+      const dateOfBirthEncoded = encodeURIComponent(this.dateOfBirth);
+
+      // navigating to results
       this.props.history.push(
-        `/resultPersonal/${encodeURIComponent([
-          this.firstNames,
-          this.firstNamesComfort,
-        ])}/${encodeURIComponent([
-          this.lastNames,
-          this.lastNameComfort,
-        ])}/${encodeURIComponent(this.dateOfBirth)}`,
+        `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`,
       );
     } else {
+      // encoding parameters
+      const firstNamesEncoded = encodeURIComponent(this.firstNames);
+      const lastNameEncoded = encodeURIComponent(this.lastNames);
+      const dateOfBirthEncoded = encodeURIComponent(this.dateOfBirth);
+
+      // navigating to results
       this.props.history.push(
-        `/resultPersonal/${encodeURIComponent(
-          this.firstNames,
-        )}/${encodeURIComponent(this.lastNames)}/${encodeURIComponent(
-          this.dateOfBirth,
-        )}`,
+        `/resultPersonal/${firstNamesEncoded}/${lastNameEncoded}/${dateOfBirthEncoded}`,
       );
     }
   };

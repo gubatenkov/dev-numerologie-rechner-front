@@ -5,7 +5,10 @@ import { withRouter } from 'react-router-dom';
 
 import * as _ from 'lodash';
 
-import { PersonalResultConfiguration } from '../utils/Configuration';
+import {
+  PERSONAL_RESULT_CONFIGURATION_DEFAULT,
+  getConfigurationForId,
+} from '../utils/Configuration';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -31,6 +34,27 @@ class AnalysisResultPersonalCompare extends Component {
   constructor(props) {
     super(props);
 
+    // getting relevant parameters from props
+    const { user } = props;
+    const { resultConfigurationId } = props.match.params;
+
+    // determining configuration for result
+    // 3) if no user and param set => using default
+    let resultConfiguration = PERSONAL_RESULT_CONFIGURATION_DEFAULT;
+
+    // 1) if param is set => using this one
+    if (resultConfigurationId && getConfigurationForId(resultConfigurationId)) {
+      resultConfiguration = getConfigurationForId(resultConfigurationId);
+    }
+    // 2) if no param set and user => using user default
+    else if (
+      user
+      && user.resultConfiguration
+      && getConfigurationForId(user.resultConfiguration)
+    ) {
+      resultConfiguration = getConfigurationForId(user.resultConfiguration);
+    }
+
     // setting initial state based on calculations
     this.state = {
       loading: false,
@@ -38,7 +62,7 @@ class AnalysisResultPersonalCompare extends Component {
       resultTextDetailViewOpen: false,
       resultTextDetailViewSectionIndex: 0,
       resultTextDetailViewElementIndex: 0,
-      resultConfiguration: PersonalResultConfiguration.LEVELS,
+      resultConfiguration,
     };
   }
 
@@ -185,7 +209,7 @@ class AnalysisResultPersonalCompare extends Component {
               ])}/${encodeURIComponent([
                 personalAnalysisResult.lastName,
                 personalAnalysisResultCompare.lastName,
-              ])}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
+              ])}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}}`,
             );
           }}
           badgeTitle="Kurztext"
