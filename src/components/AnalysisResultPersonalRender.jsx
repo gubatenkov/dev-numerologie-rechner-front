@@ -189,7 +189,7 @@ class AnalysisResultPersonalRender extends Component {
                 personalAnalysisResult.firstNames,
               )}/${encodeURIComponent(
                 personalAnalysisResult.lastName,
-              )}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}}`,
+              )}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
             );
           }}
           badgeTitle="Kurztext"
