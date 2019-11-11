@@ -183,6 +183,7 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
       firstNames
       lastName
       dateOfBirth
+      accessLevel
       az {
         ...DefaultAnalysisResultItemFragment
       }
