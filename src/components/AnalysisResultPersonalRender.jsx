@@ -73,16 +73,22 @@ class AnalysisResultPersonalRender extends Component {
    */
   buildTourDataStructure(resultData, configuration) {
     // constructing tourSection element for every table in configuration
-    const tourSections = [];
-    configuration.forEach((resultSection) => {
-      tourSections.push(
-        ...resultSection.tables.map((table) => ({
-          sectionName: table.name,
-          sectionElements: table.numberIds.map((numberId) => _.get(resultData, numberId)),
-        })),
-      );
+    return configuration.map((resultSection) => {
+      const resultSectionNumbers = [];
+      // iterating over result tables of section
+      resultSection.tables.forEach((resultTable) => {
+        // pushing resolved numbers
+        resultSectionNumbers.push(
+          ...resultTable.numberIds.map((numberId) => _.get(resultData, numberId)),
+        );
+      });
+
+      // pushing resulting section  to result
+      return {
+        sectionName: resultSection.name,
+        sectionElements: resultSectionNumbers,
+      };
     });
-    return tourSections;
   }
 
   /**
