@@ -15,8 +15,8 @@ class ResultTable extends Component {
     handleTextDetailClick: PropTypes.func.isRequired,
   };
 
-  handleTextDetailClick = (index) => {
-    this.props.handleTextDetailClick(this.props.dataKey, index);
+  handleTextDetailClick = (numberId) => {
+    this.props.handleTextDetailClick(this.props.dataKey, numberId);
   };
 
   /**
