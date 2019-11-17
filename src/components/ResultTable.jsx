@@ -10,7 +10,10 @@ import '../styles/ResultTable.css';
  */
 class ResultTable extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
+    name: PropTypes.string,
+    numbers: PropTypes.array.isRequired,
+    headings: PropTypes.array,
+    showTitle: PropTypes.bool,
     dataKey: PropTypes.string.isRequired,
     handleTextDetailClick: PropTypes.func.isRequired,
   };
@@ -24,11 +27,11 @@ class ResultTable extends Component {
    */
   renderHeadings() {
     // determining last header element to align properly
-    const lastIndex = this.props.data.headings.length - 1;
+    const lastIndex = this.props.headings.length - 1;
     return (
       <thead>
         <tr>
-          {this.props.data.headings.map((heading, index) => {
+          {this.props.headings.map((heading, index) => {
             // setting style based on index
             let headingStyleClass = '';
             if (index === 0) {
@@ -57,12 +60,13 @@ class ResultTable extends Component {
   render() {
     return [
       <table
-        key={`ResultTable ${this.props.data.name}`}
+        key={`ResultTable ${this.props.name}`}
         className="ResultTable table table-striped ResultTable--non-selectable ResultTable--non-printable"
       >
-        {this.props.data.headings && this.renderHeadings()}
+        {this.props.showTitle && <caption>{this.props.name}</caption>}
+        {this.props.headings && this.renderHeadings()}
         <tbody>
-          {this.props.data.numbers.map((item, index) => (
+          {this.props.numbers.map((item, index) => (
             <ResultTableRow
               key={`ResultTableRow ${item.numberId}`}
               item={item}

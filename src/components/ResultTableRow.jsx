@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Interweave from 'interweave';
 import { Button } from 'react-bootstrap';
 
 import '../styles/ResultTableRow.css';
@@ -19,7 +18,7 @@ const DESCRIPTION_PREVIEW_LENGTH = 50;
 /**
  * row rendering a single row item of an analysis result
  */
-class ResultTableRow extends Component {  
+class ResultTableRow extends Component {
   /**
    * returns the row representation of the text passed by the server (html)
    * If the description text is larger than a defined (static) threshold, it is truncated
@@ -113,39 +112,27 @@ class ResultTableRow extends Component {
    * renders the cells of a custom item
    */
   renderCustomRow(rowItem) {
-    // determining last element to align properly
-    const lastIndex = rowItem.values.length - 1;
-    const { descriptionTextIndex } = rowItem;
+    // determining if the current row is unlocked
+    const locked = rowItem.values[rowItem.descriptionTextIndex].length === 0;
+
+    // rendering name, value and action columns
     return (
       <tr
         key={rowItem.numberId}
         className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
-        {rowItem.values.map((value, index) => {
-          // defining style of cell
-          let cellStyle = '';
-          let cellValue = value;
-          if (index === lastIndex) {
-            cellStyle += 'tableRow__text';
-            cellValue = <Interweave content={value} />;
-          }
-          if (index === descriptionTextIndex) {
-            cellStyle += 'tableRow__text';
-            cellValue = this.renderTextColumn(value, rowItem.numberId);
-          }
-          if (index === 0) {
-            cellStyle += 'tableRow__name table--bold';
-          }
-
-          return (
-            <td
-              className={cellStyle}
-              key={rowItem.numberId + index + cellValue}
-            >
-              {cellValue}
-            </td>
-          );
-        })}
+        <td className="table--bold tableRow__name">
+          {rowItem.values[rowItem.nameIndex]}
+        </td>
+        <td className="table--bold">{rowItem.values[rowItem.valueIndex]}</td>
+        <td>
+          <button
+            onClick={() => !locked && this.props.onTextDetailClick(rowItem.numberId)
+            }
+          >
+            {locked ? 'Locked' : 'Play'}
+          </button>
+        </td>
       </tr>
     );
   }
@@ -164,6 +151,9 @@ class ResultTableRow extends Component {
       contentColumn = this.renderResultMatrix(rowItem);
     }
 
+    // determining if the current row is unlocked
+    const locked = rowItem.descriptionText.length === 0;
+
     // returning standard row
     return (
       <tr
@@ -171,13 +161,14 @@ class ResultTableRow extends Component {
         className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
         <td className="table--bold tableRow__name">{rowItem.name}</td>
-        <td className="tableRow__id ">{rowItem.numberId}</td>
         <td className="table--bold">{contentColumn}</td>
-        <td className="tableRow__text">
-          {this.renderTextColumn(rowItem.descriptionText, rowItem.numberId)}
-        </td>
-        <td className="tableRow__text ">
-          <Interweave content={rowItem.bookReference} />
+        <td>
+          <button
+            onClick={() => !locked && this.props.onTextDetailClick(rowItem.numberId)
+            }
+          >
+            {locked ? 'Locked' : 'Play'}
+          </button>
         </td>
       </tr>
     );

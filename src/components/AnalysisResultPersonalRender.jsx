@@ -234,12 +234,12 @@ class AnalysisResultPersonalRender extends Component {
                 {resultSection.tables.map((tableData) => (
                   // returning table with result data for each number id
                   <ResultTable
-                    data={{
-                      numbers: tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId)),
-                      headings: tableData.headings,
-                    }}
+                    name={tableData.name}
+                    numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
+                    headings={tableData.headings}
+                    showTitle={tableData.showTitle}
                     dataKey={resultSection.name}
-                    key={`${resultSection.name + tableData.headings}`}
+                    key={`${resultSection.name + tableData.name}`}
                     handleTextDetailClick={this.handleItemDetailClick}
                   />
                 ))}
