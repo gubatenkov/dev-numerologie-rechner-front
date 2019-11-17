@@ -264,16 +264,28 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
         }
       }
       hfhp {
-        hfHp1 {
+        hf1 {
           ...CustomAnalysisResultItemFragment
         }
-        hfHp2 {
+        hf2 {
           ...CustomAnalysisResultItemFragment
         }
-        hfHp3 {
+        hf3 {
           ...CustomAnalysisResultItemFragment
         }
-        hfHp4 {
+        hf4 {
+          ...CustomAnalysisResultItemFragment
+        }
+        hp1 {
+          ...CustomAnalysisResultItemFragment
+        }
+        hp2 {
+          ...CustomAnalysisResultItemFragment
+        }
+        hp3 {
+          ...CustomAnalysisResultItemFragment
+        }
+        hp4 {
           ...CustomAnalysisResultItemFragment
         }
       }

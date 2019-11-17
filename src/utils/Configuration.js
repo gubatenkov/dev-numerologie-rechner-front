@@ -92,12 +92,21 @@ export const PERSONAL_RESULT_CONFIGURATIONS = {
           ],
         },
         {
-          name: 'Herausforderungen und Höhepunkte',
-          numberIds: ['hfhp.hfHp1', 'hfhp.hfHp2', 'hfhp.hfHp3', 'hfhp.hfHp4'],
+          name: 'Herausforderungen',
+          numberIds: ['hfhp.hf1', 'hfhp.hf2', 'hfhp.hf3', 'hfhp.hf4'],
           headings: [
-            'Herausforderungen und Höhepunkte',
-            'HF/HP',
+            'Herausforderungen',
             'HF',
+            'Zeitpunkt',
+            'Beschreibung',
+            'Referenz im Buch',
+          ],
+        },
+        {
+          name: 'Höhepunkte',
+          numberIds: ['hfhp.hp1', 'hfhp.hp2', 'hfhp.hp3', 'hfhp.hp4'],
+          headings: [
+            'Höhepunkte',
             'HP',
             'Zeitpunkt',
             'Beschreibung',
@@ -190,12 +199,21 @@ export const PERSONAL_RESULT_CONFIGURATIONS = {
           ],
         },
         {
-          name: 'Herausforderungen und Höhepunkte',
-          numberIds: ['hfhp.hfHp1', 'hfhp.hfHp2', 'hfhp.hfHp3', 'hfhp.hfHp4'],
+          name: 'Herausforderungen',
+          numberIds: ['hfhp.hf1', 'hfhp.hf2', 'hfhp.hf3', 'hfhp.hf4'],
           headings: [
-            'Herausforderungen und Höhepunkte',
-            'HF/HP',
+            'Herausforderungen',
             'HF',
+            'Zeitpunkt',
+            'Beschreibung',
+            'Referenz im Buch',
+          ],
+        },
+        {
+          name: 'Höhepunkte',
+          numberIds: ['hfhp.hp1', 'hfhp.hp2', 'hfhp.hp3', 'hfhp.hp4'],
+          headings: [
+            'Höhepunkte',
             'HP',
             'Zeitpunkt',
             'Beschreibung',

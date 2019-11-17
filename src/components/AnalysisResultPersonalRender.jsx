@@ -105,7 +105,7 @@ class AnalysisResultPersonalRender extends Component {
    * @param dataKey the name of the table the event was fired
    * @param rowIndex the index of the row inside the table the event was fired for
    */
-  handleItemDetailClick = (dataKey, rowIndex) => {
+  handleItemDetailClick = (dataKey, numberId) => {
     //  getting tour structure
     const tourDataStructure = this.buildTourDataStructure(
       this.props.personalAnalysisResult,
@@ -119,6 +119,17 @@ class AnalysisResultPersonalRender extends Component {
 
     // if data is not here -> skip
     if (sectionIndex < 0) {
+      console.log('Could not find section for row to show details');
+      return;
+    }
+
+    // finding row index of item in section
+    const rowIndex = tourDataStructure[sectionIndex].sectionElements.findIndex(
+      (element) => element.numberId === numberId,
+    );
+
+    if (rowIndex < 0) {
+      console.log('Could not find element in section to show details');
       return;
     }
 
@@ -227,7 +238,7 @@ class AnalysisResultPersonalRender extends Component {
                       numbers: tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId)),
                       headings: tableData.headings,
                     }}
-                    dataKey={tableData.name}
+                    dataKey={resultSection.name}
                     key={`${resultSection.name + tableData.headings}`}
                     handleTextDetailClick={this.handleItemDetailClick}
                   />

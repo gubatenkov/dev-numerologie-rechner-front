@@ -19,13 +19,13 @@ const DESCRIPTION_PREVIEW_LENGTH = 50;
 /**
  * row rendering a single row item of an analysis result
  */
-class ResultTableRow extends Component {
+class ResultTableRow extends Component {  
   /**
    * returns the row representation of the text passed by the server (html)
    * If the description text is larger than a defined (static) threshold, it is truncated
    * and a more button is added leading to the detailed view
    */
-  getTextRepresentation(rowText) {
+  renderTextColumn(rowText, numberId) {
     let rowTextRepresentation = null;
     // if no text => returning null
     if (rowText && rowText.length > 0) {
@@ -42,7 +42,7 @@ class ResultTableRow extends Component {
           <Button
             variant="link"
             key="readIndicator"
-            onClick={() => this.props.onTextDetailClick(this.props.rowIndex)}
+            onClick={() => this.props.onTextDetailClick(numberId)}
           >
             Lesen
           </Button>,
@@ -131,7 +131,7 @@ class ResultTableRow extends Component {
           }
           if (index === descriptionTextIndex) {
             cellStyle += 'tableRow__text';
-            cellValue = this.getTextRepresentation(value);
+            cellValue = this.renderTextColumn(value, rowItem.numberId);
           }
           if (index === 0) {
             cellStyle += 'tableRow__name table--bold';
@@ -174,7 +174,7 @@ class ResultTableRow extends Component {
         <td className="tableRow__id ">{rowItem.numberId}</td>
         <td className="table--bold">{contentColumn}</td>
         <td className="tableRow__text">
-          {this.getTextRepresentation(rowItem.descriptionText)}
+          {this.renderTextColumn(rowItem.descriptionText, rowItem.numberId)}
         </td>
         <td className="tableRow__text ">
           <Interweave content={rowItem.bookReference} />
