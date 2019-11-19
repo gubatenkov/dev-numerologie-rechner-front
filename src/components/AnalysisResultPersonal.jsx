@@ -63,11 +63,8 @@ const AnalysisResultPersonal = (props) => {
   // returning render component with result param set (vs. analysis)
   return (
     <AnalysisResultPersonalRender
-      analysis={null}
       personalAnalysisResult={personalAnalysisResults[0]}
-      personalAnalysisCompareResult={
-        personalAnalysisResults.length > 1 && personalAnalysisResults[1]
-      }
+      personalAnalysisCompareResult={personalAnalysisResults[1]}
       user={props.currentUser.currentUser}
     />
   );

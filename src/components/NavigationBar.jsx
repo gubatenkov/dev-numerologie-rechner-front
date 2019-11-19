@@ -52,59 +52,63 @@ class NavigationBar extends Component {
     // getting auth token for login
     const authUser = getUserAuthData();
 
-    // defining content dependent on if user is logged in
-    const userContent =
-      authUser.token && authUser.email ? (
-        <ul className="nav navbar-toolbar navbar-right">
-          <NavigationDropdownMenu name={`${authUser.email}`} navbar>
-            <NavigationDropdownMenuItem
-              onClick={() => this.props.history.push('/userHome')}
-            >
-              Meine Analysen
-            </NavigationDropdownMenuItem>
-            <NavigationDropdownMenuItem
-              onClick={() =>
-                this.openLinkInNewTab('https://www.psychologischenumerologie.eu/datenschutz/#tab-con-0 ')
-              }
-            >
-              Datenschutzerklärung
-            </NavigationDropdownMenuItem>
-            <NavigationDropdownMenuItem
-              onClick={() =>
-                this.openLinkInNewTab('https://www.psychologischenumerologie.eu/impressum/ ')
-              }
-            >
-              Impressum
-            </NavigationDropdownMenuItem>
-            <NavigationDropdownMenuItem onClick={this.props.handleDeleteUser}>
-              Account löschen
-            </NavigationDropdownMenuItem>
-            <NavigationDropdownMenuItem onClick={this.handleLogout}>
-              Abmelden
-            </NavigationDropdownMenuItem>
-          </NavigationDropdownMenu>
-        </ul>
-      ) : (
-        <ul className="nav navbar-toolbar navbar-right">
-          <Link
-            className="btn btn-default btn-block "
-            to="/login"
-            target="_self"
+    const loginButton = (
+      <Link to="/login" target="_self">
+        <button>Anmelden</button>
+      </Link>
+    );
+
+    const userMenu = (
+      <ul className="nav navbar-toolbar navbar-right">
+        <NavigationDropdownMenu name={`${authUser.email}`} navbar>
+          <NavigationDropdownMenuItem
+            onClick={() => this.props.history.push('/userHome')}
           >
-            Anmelden
-          </Link>
-        </ul>
-      );
+            Meine Analysen
+          </NavigationDropdownMenuItem>
+          <NavigationDropdownMenuItem
+            onClick={() => this.openLinkInNewTab(
+              'https://www.psychologischenumerologie.eu/datenschutz/#tab-con-0 ',
+            )
+            }
+          >
+            Datenschutzerklärung
+          </NavigationDropdownMenuItem>
+          <NavigationDropdownMenuItem
+            onClick={() => this.openLinkInNewTab(
+              'https://www.psychologischenumerologie.eu/impressum/ ',
+            )
+            }
+          >
+            Impressum
+          </NavigationDropdownMenuItem>
+          <NavigationDropdownMenuItem onClick={this.props.handleDeleteUser}>
+            Account löschen
+          </NavigationDropdownMenuItem>
+          <NavigationDropdownMenuItem onClick={this.handleLogout}>
+            Abmelden
+          </NavigationDropdownMenuItem>
+        </NavigationDropdownMenu>
+      </ul>
+    );
+
+    // defining content dependent on if user is logged in
+    const userContent = authUser.token && authUser.email ? userMenu : loginButton;
 
     return (
       <nav className="navbar navbar-inverse">
         <div className="container-fluid">
+          <div>
+            <button>LEFT ACTION</button>
+          </div>
+
           <div className="navbar__brand">
             <a href="https://www.psychologischenumerologie.eu/">
               <img src={logo} alt={logo} />
             </a>
           </div>
-          <div className="collapse navbar-collapse navbar-collapse-toolbar">
+
+          <div>
             <ul className="nav navbar-toolbar navbar-right">{userContent}</ul>
           </div>
         </div>

@@ -14,10 +14,11 @@ import TourView from './TourView';
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
-  getConfigurationForId,
+  getConfigurationForId
 } from '../utils/Configuration';
 
 import '../styles/AnalysisResultPersonal.css';
+import ActionBar from './ActionBar';
 
 /**
  * result screen for personal analysis
@@ -194,76 +195,55 @@ class AnalysisResultPersonalRender extends Component {
     }
   };
 
-  resize = () => this.forceUpdate();
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
-
   /**
    * default render
    */
   render() {
     // responsiveness => if window smaller than defined width => hide side menu
+    // TODO: refactor
     let showSideMenu = window.innerWidth >= 992;
 
     // getting props with two different types on inputs to this component:
     // a) analysis => display
     // b) analysis result => display result
+    // c) compare result => the compare result for a different name (if present)
     const {
-      analysis,
       personalAnalysisResult,
       personalAnalysisCompareResult,
     } = this.props;
-
-    // constructing side menu component
-    let sideMenu = (
-      <div className="ResultContentOverview">
-        <ContentNavigation
-          contentItems={this.buildContentDataStructure(
-            this.state.resultConfiguration,
-            personalAnalysisResult,
-          )}
-          onItemClick={this.navigateToElementHandler}
-          autoAdapt
-        />
-      </div>
-    );
 
     // render table, table shows spinner
     return (
       <div>
         <NavigationBar />
         <TitleBar
-          title="Übersicht der Zahlen"
-          backTitle="Zurück"
-          backRoute="/analysisInput"
-          primaryActionTitle={!analysis ? 'Speichern' : null}
-          onPrimaryAction={() => {
-            this.props.history.push(
-              `/userHome/saveAnalysis/${encodeURIComponent(
-                personalAnalysisResult.firstNames,
-              )}/${encodeURIComponent(
-                personalAnalysisResult.lastName,
-              )}/${encodeURIComponent(personalAnalysisResult.dateOfBirth)}`,
-            );
-          }}
-          badgeTitle="Kurztext"
+          primaryHeading={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+          primarySubheading={personalAnalysisResult.dateOfBirth}
+          secondaryHeading={
+            personalAnalysisCompareResult
+            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+          }
         />
-        <div className="ResultPersonalDataContainer">
-          <div className="ResultPersonalData">
-            <h4>
-              {`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-            </h4>
-            <h4>{personalAnalysisResult.dateOfBirth}</h4>
-          </div>
-        </div>
+
+        <ActionBar>
+          <button>First</button>
+          <button>Second</button>
+          <button>Third</button>
+        </ActionBar>
+
         <div className="ContentArea">
-          {showSideMenu ? sideMenu : null}
+          {showSideMenu && (
+            <div className="ResultContentOverview">
+              <ContentNavigation
+                contentItems={this.buildContentDataStructure(
+                  this.state.resultConfiguration,
+                  personalAnalysisResult,
+                )}
+                onItemClick={this.navigateToElementHandler}
+                autoAdapt
+              />
+            </div>
+          )}
           <div className="ResultContent">
             {// mapping every configuration section to a result panel
             this.state.resultConfiguration.map((resultSection) => (
@@ -279,7 +259,10 @@ class AnalysisResultPersonalRender extends Component {
                   <ResultTable
                     name={tableData.name}
                     numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
-                    compareNumbers={personalAnalysisCompareResult && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))}
+                    compareNumbers={
+                      personalAnalysisCompareResult
+                      && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
+                    }
                     headings={tableData.headings}
                     showTitle={tableData.showTitle}
                     sectionId={resultSection.name}
