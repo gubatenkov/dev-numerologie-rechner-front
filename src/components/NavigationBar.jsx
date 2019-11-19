@@ -59,7 +59,7 @@ class NavigationBar extends Component {
     );
 
     const userMenu = (
-      <ul className="nav navbar-toolbar navbar-right">
+      <ul>
         <NavigationDropdownMenu name={`${authUser.email}`} navbar>
           <NavigationDropdownMenuItem
             onClick={() => this.props.history.push('/userHome')}
@@ -96,20 +96,20 @@ class NavigationBar extends Component {
     const userContent = authUser.token && authUser.email ? userMenu : loginButton;
 
     return (
-      <nav className="navbar navbar-inverse">
-        <div className="container-fluid">
+      <nav>
+        <div>
           <div>
             <button>LEFT ACTION</button>
           </div>
 
-          <div className="navbar__brand">
+          <div>
             <a href="https://www.psychologischenumerologie.eu/">
               <img src={logo} alt={logo} />
             </a>
           </div>
 
           <div>
-            <ul className="nav navbar-toolbar navbar-right">{userContent}</ul>
+            <ul>{userContent}</ul>
           </div>
         </div>
       </nav>
