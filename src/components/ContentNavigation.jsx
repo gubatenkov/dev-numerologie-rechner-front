@@ -1,172 +1,127 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import Stickyfill from 'stickyfilljs';
-
 import '../styles/ContentNavigation.css';
-
 import Panel from './Panel';
-import Steps from './Steps';
-import Step from './Step';
 
-// wiggle room for definition of if element is in viewport in pixels
-const TOLERANCE_INVIEW = 50;
+const ContentNavigation = (props) => {
+  // keeping track of last section item current active
+  const [
+    lastActiveContentSectionIndex,
+    setLastActiveContentSectionIndex,
+  ] = useState(0);
 
-/**
- * the content navigation item to display the content of the result and help navigate
- */
-class ContentNaviation extends Component {
-  static propTypes = {
-    autoAdapt: PropTypes.bool,
-    contentItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-    contentItemAnchors: PropTypes.arrayOf(PropTypes.string),
-    onItemChange: PropTypes.func,
-    onItemClick: PropTypes.func,
-  };
+  // adding and removing listeners to adapt section highlighting
+  useEffect(() => {
+    /**
+     * checks if specific bottom of anchor is currently in viewport
+     * @returns true if the bottom of the anchor is currently visible in the viewport, false else
+     */
+    const checkIfSectionInViewPort = (stepAnchor) => {
+      // getting item from DOM
+      const domElement = document.getElementById(stepAnchor);
 
-  static defaultProps = {
-    contentItemAnchors: [],
-    autoAdapt: false,
-    onItemClick: () => {},
-    onItemChange: () => {},
-  };
+      // if item is presnet, checkinf if in viewport
+      if (domElement) {
+        // in viewport = bottom is visible
+        const elementBottomPosition = domElement.getBoundingClientRect().bottom;
 
-  constructor(props) {
-    // calling super constructor
-    super(props);
-    // setting initial state
-    this.state = {
-      currentIndex: 0,
-    };
-  }
-
-  /**
-   * default react lifecylce
-   */
-  componentDidMount() {
-    // adding polyfill for browsers not yet supporting position: sticky
-    // https://github.com/wilddeer/stickyfill
-    Stickyfill.add(this.self);
-
-    // if component is supposed to self adapt to visible content -> adding scroll listener
-    if (this.props.autoAdapt) {
-      window.addEventListener('scroll', this.checkContentVisibility, false);
-      window.addEventListener('resize', this.checkContentVisibility, false);
-    }
-  }
-
-  /**
-   * default react lifecylce
-   */
-  componentWillUnmount() {
-    // if component is supposed to self adapt to visible content -> adding scroll listener
-    if (this.props.autoAdapt) {
-      window.removeEventListener('scroll', this.checkContentVisibility, false);
-      window.removeEventListener('resize', this.checkContentVisibility, false);
-    }
-  }
-
-  /**
-   * checks if specific bottom of anchor is currently in viewport
-   * @returns true if the bottom of the anchor is currently visible in the viewport
-   */
-  checkStepInViewport(stepAnchor) {
-    // getting item from DOM
-    const stepContentItem = document.getElementById(stepAnchor);
-
-    // if item is presnet, checkinf if in viewport
-    if (stepContentItem) {
-      // in viewport = bottom is visible
-      const itemBottomPosition = stepContentItem.getBoundingClientRect().bottom;
-
-      // calculating if in viewport
-      return itemBottomPosition < window.innerHeight + TOLERANCE_INVIEW;
-    }
-    return false;
-  }
-
-  /**
-   * handler method for clicks on steps
-   */
-  handleStepChange = (clickedStepName) => {
-    // searching for step
-    const stepIndex = this.props.contentItems.indexOf(clickedStepName);
-
-    // if found in steps -> setting new index
-    if (stepIndex > -1) {
-      this.setState({
-        currentIndex: stepIndex,
-      });
-    }
-
-    // if handler is present, invoking now
-    if (this.props.onItemClick) {
-      this.props.onItemClick(
-        clickedStepName,
-        this.props.contentItemAnchors[stepIndex],
-      );
-    }
-  };
-
-  /**
-   * checks last item that is visible in viewport
-   */
-  checkContentVisibility = () => {
-    // assigning anchors
-    const anchors = this.props.contentItemAnchors;
-
-    // finding last index of anchor in viewport
-    let lastIndex = -1;
-    for (let index = anchors.length - 1; index >= 0; index -= 1) {
-      if (this.checkStepInViewport(anchors[index])) {
-        lastIndex = index;
-        break;
+        // calculating if in viewport
+        return elementBottomPosition < window.innerHeight;
       }
+      // section is not in view
+      return false;
+    };
+
+    /**
+     * checks for the last section currently visible and sets the state variable to reflect the index
+     */
+    const updateSectionHighlighting = () => {
+      // assigning anchors
+      const sectionAnchors = props.contentItems.map((item) => item.name);
+
+      // finding last shown anchor of anchors in viewport from back to front
+      const lastAnchorIndexInView = sectionAnchors
+        .reverse()
+        .findIndex((anchor) => checkIfSectionInViewPort(anchor));
+
+      // if any anchor in view => updating index of last anchor in view
+      if (lastAnchorIndexInView > -1) {
+        // note: as used reverse before => we need to transform the index to: last index - found index
+        setLastActiveContentSectionIndex(
+          sectionAnchors.length - 1 - lastAnchorIndexInView,
+        );
+      }
+    };
+
+    // if component is supposed to self adapt to visible content -> adding scroll listener
+    if (props.autoAdapt) {
+      window.addEventListener('scroll', updateSectionHighlighting, false);
+      window.addEventListener('resize', updateSectionHighlighting, false);
     }
 
-    // if index is found -> updating current step
-    if (lastIndex > -1) {
-      this.setState({
-        currentIndex: lastIndex,
-      });
-    }
+    // calling initially
+    updateSectionHighlighting();
 
-    // calling delegate methods
-    if (this.props.onItemChange) {
-      this.props.onItemChange(
-        this.props.contentItems[lastIndex],
-        this.props.contentItems[lastIndex],
-      );
-    }
-  };
+    // returning cleanup code
+    return () => {
+      // if component is supposed to self adapt to visible content -> adding scroll listener
+      if (props.autoAdapt) {
+        window.removeEventListener('scroll', updateSectionHighlighting, false);
+        window.removeEventListener('resize', updateSectionHighlighting, false);
+      }
+    };
+  }, [props.autoAdapt, props.contentItems]);
 
-  /**
-   * default render that renders all steps with their proper attributes
-   */
-  render() {
-    return (
-      <div
-        className="ContentNavigation"
-        ref={(element) => {
-          this.self = element;
-        }}
-      >
-        <Panel title="Inhalt">
-          <Steps>
-            {this.props.contentItems.map((item, index) => (
-              <Step
-                name={item}
-                current={this.state.currentIndex === index}
-                done={index < this.state.currentIndex}
-                onStepClick={this.handleStepChange}
-                key={item}
-              />
-            ))}
-          </Steps>
-        </Panel>
-      </div>
-    );
-  }
-}
+  // returning list of sections with nested list of items
+  return (
+    <div className="ContentNavigation">
+      <Panel title="Inhalt">
+        <ul>
+          {props.contentItems.map((contentSection, index) => (
+            <li key={contentSection.name}>
+              <div
+                className={
+                  index === lastActiveContentSectionIndex
+                    ? 'ContentNavigation--activeSection'
+                    : ''
+                }
+              >
+                {contentSection.name}
+              </div>
+              {contentSection.titles.length > 0 && (
+                <ul>
+                  {contentSection.titles.map((title) => (
+                    <li key={title.title}>
+                      <button onClick={() => props.onItemClick(title.anchor)}>
+                        {title.title}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </Panel>
+    </div>
+  );
+};
 
-export default ContentNaviation;
+// adding proptypes
+ContentNavigation.propTypes = {
+  contentItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      titles: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string,
+          anchor: PropTypes.string,
+        }),
+      ),
+    }),
+  ).isRequired,
+  onItemClick: PropTypes.func,
+};
+
+export default ContentNavigation;

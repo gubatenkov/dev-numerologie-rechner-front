@@ -14,12 +14,12 @@ class ResultTable extends Component {
     numbers: PropTypes.array.isRequired,
     headings: PropTypes.array,
     showTitle: PropTypes.bool,
-    dataKey: PropTypes.string.isRequired,
+    sectionId: PropTypes.string.isRequired,
     handleTextDetailClick: PropTypes.func.isRequired,
   };
 
   handleTextDetailClick = (numberId) => {
-    this.props.handleTextDetailClick(this.props.dataKey, numberId);
+    this.props.handleTextDetailClick(this.props.sectionId, numberId);
   };
 
   /**

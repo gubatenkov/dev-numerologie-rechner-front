@@ -94,18 +94,59 @@ class AnalysisResultPersonalRender extends Component {
   /**
    * builds a data structure used for the content sidebar
    * @param configuration the current result configuration
+   * @param result the result containing ann numbers in the configuration
    */
-  buildContentDataStructure(configuration) {
-    // returning an array of section names
-    return configuration.map((configSection) => configSection.name);
+  buildContentDataStructure(configuration, result) {
+    // returning an array of section names and number names
+    return configuration.map((configSection) => {
+      // getting an array of all items in a section (across tables)
+      const numberTitles = [];
+      // iterating over tables, resolving values for ids
+      configSection.tables.forEach((table) => numberTitles.push(
+        ...table.numberIds.map((numberId) => {
+          // getting result of number id
+          const numberResult = _.get(result, numberId);
+
+          // extracting name and value for different types of row
+          let name;
+          let value;
+          if (numberResult.type === 'customRow') {
+            name = numberResult.values[numberResult.nameIndex];
+            value = numberResult.values[numberResult.valueIndex];
+          } else {
+            name = numberResult.name;
+            const valueResult = numberResult.result;
+            if (valueResult.type === 'number') {
+              value = valueResult.value;
+            }
+          }
+
+          // constructing string of the form name = value to show in content
+          const title =  `${name} ${value ? `= ${value}` : ''}`;
+          
+          // returning element with title and anchor as number id
+          // this anchor is set on the title and can be used for dynamic scrolling later
+          return {
+            title, 
+            anchor: numberResult.numberId,
+          }
+        }),
+      ));
+
+      // returning section item with name and numbers
+      return {
+        name: configSection.name,
+        titles: numberTitles,
+      };
+    });
   }
 
   /**
    *  handles clicks on detail links
-   * @param dataKey the name of the table the event was fired
+   * @param sectionId the name of the table the event was fired
    * @param rowIndex the index of the row inside the table the event was fired for
    */
-  handleItemDetailClick = (dataKey, numberId) => {
+  handleItemDetailClick = (sectionId, numberId) => {
     //  getting tour structure
     const tourDataStructure = this.buildTourDataStructure(
       this.props.personalAnalysisResult,
@@ -114,7 +155,7 @@ class AnalysisResultPersonalRender extends Component {
 
     // finding index with datakey in tour data structure
     const sectionIndex = tourDataStructure.findIndex(
-      (section) => section.sectionName === dataKey,
+      (section) => section.sectionName === sectionId,
     );
 
     // if data is not here -> skip
@@ -143,13 +184,13 @@ class AnalysisResultPersonalRender extends Component {
 
   /**
    * handles the navigation to a specific item
-   * @param anchor the # anchor in the html to navigate to
+   * @param anchor the id of the element in the dom to navigate to
    */
-  navigateToElementHandler = (name, anchor) => {
+  navigateToElementHandler = (anchor) => {
     // scrolling to item if present in DOM
-    const stepContentItem = document.getElementById(anchor);
-    if (stepContentItem) {
-      stepContentItem.scrollIntoView();
+    const domElement = document.getElementById(anchor);
+    if (domElement) {
+      domElement.scrollIntoView();
     }
   };
 
@@ -167,22 +208,6 @@ class AnalysisResultPersonalRender extends Component {
    * default render
    */
   render() {
-    // constructing side menu component
-    let sideMenu = (
-      <div className="ResultContentOverview">
-        <ContentNavigation
-          contentItems={this.buildContentDataStructure(
-            this.state.resultConfiguration,
-          )}
-          contentItemAnchors={this.buildContentDataStructure(
-            this.state.resultConfiguration,
-          )}
-          onItemClick={this.navigateToElementHandler}
-          autoAdapt
-        />
-      </div>
-    );
-
     // responsiveness => if window smaller than defined width => hide side menu
     let showSideMenu = window.innerWidth >= 992;
 
@@ -190,6 +215,20 @@ class AnalysisResultPersonalRender extends Component {
     // a) analysis => display
     // b) analysis result => display result
     const { analysis, personalAnalysisResult } = this.props;
+
+    // constructing side menu component
+    let sideMenu = (
+      <div className="ResultContentOverview">
+        <ContentNavigation
+          contentItems={this.buildContentDataStructure(
+            this.state.resultConfiguration,
+            personalAnalysisResult,
+          )}
+          onItemClick={this.navigateToElementHandler}
+          autoAdapt
+        />
+      </div>
+    );
 
     // render table, table shows spinner
     return (
@@ -238,9 +277,9 @@ class AnalysisResultPersonalRender extends Component {
                     numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
                     headings={tableData.headings}
                     showTitle={tableData.showTitle}
-                    dataKey={resultSection.name}
-                    key={`${resultSection.name + tableData.name}`}
+                    sectionId={resultSection.name}
                     handleTextDetailClick={this.handleItemDetailClick}
+                    key={`${resultSection.name + tableData.name}`}
                   />
                 ))}
               </Panel>

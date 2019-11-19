@@ -12,45 +12,11 @@ export const TYPE_ID_NUMBER = 'number';
 export const TYPE_ID_LIST = 'list';
 export const TYPE_ID_MATRIX = 'matrix';
 
-// chars in description preview
-const DESCRIPTION_PREVIEW_LENGTH = 50;
-
 /**
  * row rendering a single row item of an analysis result
  */
 class ResultTableRow extends Component {
-  /**
-   * returns the row representation of the text passed by the server (html)
-   * If the description text is larger than a defined (static) threshold, it is truncated
-   * and a more button is added leading to the detailed view
-   */
-  renderTextColumn(rowText, numberId) {
-    let rowTextRepresentation = null;
-    // if no text => returning null
-    if (rowText && rowText.length > 0) {
-      // removing html tags for preview
-      rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, '');
-
-      // if text is longer than threshold => truncating and adding more button
-      if (rowTextRepresentation.length > DESCRIPTION_PREVIEW_LENGTH) {
-        rowTextRepresentation = [
-          `${rowTextRepresentation.substring(
-            0,
-            DESCRIPTION_PREVIEW_LENGTH,
-          )}...  `,
-          <Button
-            variant="link"
-            key="readIndicator"
-            onClick={() => this.props.onTextDetailClick(numberId)}
-          >
-            Lesen
-          </Button>,
-        ];
-      }
-    }
-    return rowTextRepresentation;
-  }
-
+ 
   /**
    * renders a result matrix as content of the table
    * @param {} item the item of type 'matrix'
@@ -119,6 +85,7 @@ class ResultTableRow extends Component {
     return (
       <tr
         key={rowItem.numberId}
+        id={rowItem.numberId}
         className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
         <td className="table--bold tableRow__name">
@@ -126,12 +93,12 @@ class ResultTableRow extends Component {
         </td>
         <td className="table--bold">{rowItem.values[rowItem.valueIndex]}</td>
         <td>
-          <button
+          <Button
             onClick={() => !locked && this.props.onTextDetailClick(rowItem.numberId)
             }
           >
             {locked ? 'Locked' : 'Play'}
-          </button>
+          </Button>
         </td>
       </tr>
     );
@@ -158,17 +125,18 @@ class ResultTableRow extends Component {
     return (
       <tr
         key={rowItem.numberId}
+        id={rowItem.numberId}
         className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
       >
         <td className="table--bold tableRow__name">{rowItem.name}</td>
         <td className="table--bold">{contentColumn}</td>
         <td>
-          <button
+          <Button
             onClick={() => !locked && this.props.onTextDetailClick(rowItem.numberId)
             }
           >
             {locked ? 'Locked' : 'Play'}
-          </button>
+          </Button>
         </td>
       </tr>
     );
