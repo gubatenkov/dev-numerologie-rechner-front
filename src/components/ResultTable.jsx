@@ -70,6 +70,7 @@ class ResultTable extends Component {
             <ResultTableRow
               key={`ResultTableRow ${item.numberId}`}
               item={item}
+              compareItem={this.props.compareNumbers[index]}
               rowIndex={index}
               onTextDetailClick={this.handleTextDetailClick}
             />

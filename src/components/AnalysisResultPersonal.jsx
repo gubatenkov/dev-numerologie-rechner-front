@@ -13,7 +13,6 @@ import {
 
 import LoadingIndicator from './LoadingIndicator';
 import AnalysisResultPersonalRender from './AnalysisResultPersonalRender';
-import AnalysisResultPersonalCompareRender from './AnalysisResultPersonalCompareRender';
 
 /**
  * result screen for personal analysis
@@ -61,22 +60,14 @@ const AnalysisResultPersonal = (props) => {
     personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
   }
 
-  // rendering single or compare result based on result
-  if (personalAnalysisResults.length > 1) {
-    return (
-      <AnalysisResultPersonalCompareRender
-        analysis={null}
-        personalAnalysisResults={personalAnalysisResults}
-        user={props.currentUser.currentUser}
-      />
-    );
-  }
-
   // returning render component with result param set (vs. analysis)
   return (
     <AnalysisResultPersonalRender
       analysis={null}
       personalAnalysisResult={personalAnalysisResults[0]}
+      personalAnalysisCompareResult={
+        personalAnalysisResults.length > 1 && personalAnalysisResults[1]
+      }
       user={props.currentUser.currentUser}
     />
   );

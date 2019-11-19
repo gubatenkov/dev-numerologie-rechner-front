@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
 
 import '../styles/ResultTableRow.css';
 
@@ -16,7 +15,6 @@ export const TYPE_ID_MATRIX = 'matrix';
  * row rendering a single row item of an analysis result
  */
 class ResultTableRow extends Component {
- 
   /**
    * renders a result matrix as content of the table
    * @param {} item the item of type 'matrix'
@@ -77,7 +75,7 @@ class ResultTableRow extends Component {
   /**
    * renders the cells of a custom item
    */
-  renderCustomRow(rowItem) {
+  renderCustomRow(rowItem, compareRowItem) {
     // determining if the current row is unlocked
     const locked = rowItem.values[rowItem.descriptionTextIndex].length === 0;
 
@@ -92,13 +90,18 @@ class ResultTableRow extends Component {
           {rowItem.values[rowItem.nameIndex]}
         </td>
         <td className="table--bold">{rowItem.values[rowItem.valueIndex]}</td>
+        {compareRowItem && (
+          <td className="table--bold">
+            {compareRowItem.values[compareRowItem.valueIndex]}
+          </td>
+        )}
         <td>
-          <Button
+          <button
             onClick={() => !locked && this.props.onTextDetailClick(rowItem.numberId)
             }
           >
             {locked ? 'Locked' : 'Play'}
-          </Button>
+          </button>
         </td>
       </tr>
     );
@@ -107,15 +110,19 @@ class ResultTableRow extends Component {
   /**
    * renders a default cell
    */
-  renderDefaultRow(rowItem) {
+  renderDefaultRow(rowItem, compareRowItem) {
     // rendering content based on number type
     let contentColumn;
+    let compareContentColumn;
     if (rowItem.result.type === TYPE_ID_NUMBER) {
       contentColumn = rowItem.result.value;
+      compareContentColumn = compareRowItem && compareRowItem.result.value;
     } else if (rowItem.result.type === TYPE_ID_LIST) {
       contentColumn = this.renderResultList(rowItem);
+      compareContentColumn = compareRowItem && this.renderResultList(compareRowItem);
     } else if (rowItem.result.type === TYPE_ID_MATRIX) {
       contentColumn = this.renderResultMatrix(rowItem);
+      compareContentColumn = compareRowItem && this.renderResultMatrix(compareRowItem);
     }
 
     // determining if the current row is unlocked
@@ -130,27 +137,30 @@ class ResultTableRow extends Component {
       >
         <td className="table--bold tableRow__name">{rowItem.name}</td>
         <td className="table--bold">{contentColumn}</td>
+        {compareContentColumn && (
+          <td className="table--bold">{compareContentColumn}</td>
+        )}
         <td>
-          <Button
+          <button
             onClick={() => !locked && this.props.onTextDetailClick(rowItem.numberId)
             }
           >
             {locked ? 'Locked' : 'Play'}
-          </Button>
+          </button>
         </td>
       </tr>
     );
   }
 
   render() {
-    // getting item from passed props
-    const { item } = this.props;
+    // getting item and compare item from passed props
+    const { item, compareItem } = this.props;
 
     // render custom or default row based on type
     if (item.type === ROW_TYPE_ID_CUSTOM) {
-      return this.renderCustomRow(item);
+      return this.renderCustomRow(item, compareItem);
     }
-    return this.renderDefaultRow(item);
+    return this.renderDefaultRow(item, compareItem);
   }
 }
 

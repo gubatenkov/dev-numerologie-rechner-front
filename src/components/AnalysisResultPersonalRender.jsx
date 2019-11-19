@@ -122,14 +122,14 @@ class AnalysisResultPersonalRender extends Component {
           }
 
           // constructing string of the form name = value to show in content
-          const title =  `${name} ${value ? `= ${value}` : ''}`;
-          
+          const title = `${name} ${value ? `= ${value}` : ''}`;
+
           // returning element with title and anchor as number id
           // this anchor is set on the title and can be used for dynamic scrolling later
           return {
-            title, 
+            title,
             anchor: numberResult.numberId,
-          }
+          };
         }),
       ));
 
@@ -214,7 +214,11 @@ class AnalysisResultPersonalRender extends Component {
     // getting props with two different types on inputs to this component:
     // a) analysis => display
     // b) analysis result => display result
-    const { analysis, personalAnalysisResult } = this.props;
+    const {
+      analysis,
+      personalAnalysisResult,
+      personalAnalysisCompareResult,
+    } = this.props;
 
     // constructing side menu component
     let sideMenu = (
@@ -275,6 +279,7 @@ class AnalysisResultPersonalRender extends Component {
                   <ResultTable
                     name={tableData.name}
                     numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
+                    compareNumbers={personalAnalysisCompareResult && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))}
                     headings={tableData.headings}
                     showTitle={tableData.showTitle}
                     sectionId={resultSection.name}
