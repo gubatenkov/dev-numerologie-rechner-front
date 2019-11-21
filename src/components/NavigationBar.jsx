@@ -1,15 +1,67 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
 
-import NavigationDropdownMenu from './NavigationDropdownMenu';
-import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArrowLeft,
+  faCog,
+  faShoppingCart,
+} from '@fortawesome/free-solid-svg-icons';
 
 import '../styles/NavigationBar.css';
-import logo from '../images/logo_image.png';
+import logo from '../images/logo.png';
 
-import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
+import { deleteUserAuthData } from '../utils/AuthUtils';
+
+const NavbarContainer = styled.nav`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 130px;
+`;
+
+const IconButton = styled.button`
+  background-color: #f3f9fa;
+  width: 36px;
+  height: 36px;
+
+  padding: 6px;
+
+  border-radius: 6px;
+  border-style: none;
+
+  color: #01b2d4;
+`;
+
+const Logo = styled.img`
+  height: 86px;
+  margin-top: 22px;
+`;
+
+const ActionGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 32px;
+  margin-left: 32px;
+  margin-right: 32px;
+
+  button {
+    margin-right: 16px;
+  }
+`;
+
+const UserAvatar = styled.div`
+  width: 36px;
+  height: 36px;
+  background-color: gray;
+  border-radius: 50%;
+`;
 
 /**
  * the navigation bar for the application on top
@@ -38,81 +90,31 @@ class NavigationBar extends Component {
   };
 
   /**
-   * opens a url passed in a new tab
-   */
-  openLinkInNewTab = (url) => {
-    const win = window.open(url);
-    win.focus();
-  };
-
-  /**
    * renders the navbar with brand, user name as dropdown and avatar
    */
   render() {
-    // getting auth token for login
-    const authUser = getUserAuthData();
-
-    const loginButton = (
-      <Link to="/login" target="_self">
-        <button>Anmelden</button>
-      </Link>
-    );
-
-    const userMenu = (
-      <ul>
-        <NavigationDropdownMenu name={`${authUser.email}`} navbar>
-          <NavigationDropdownMenuItem
-            onClick={() => this.props.history.push('/userHome')}
-          >
-            Meine Analysen
-          </NavigationDropdownMenuItem>
-          <NavigationDropdownMenuItem
-            onClick={() => this.openLinkInNewTab(
-              'https://www.psychologischenumerologie.eu/datenschutz/#tab-con-0 ',
-            )
-            }
-          >
-            Datenschutzerklärung
-          </NavigationDropdownMenuItem>
-          <NavigationDropdownMenuItem
-            onClick={() => this.openLinkInNewTab(
-              'https://www.psychologischenumerologie.eu/impressum/ ',
-            )
-            }
-          >
-            Impressum
-          </NavigationDropdownMenuItem>
-          <NavigationDropdownMenuItem onClick={this.props.handleDeleteUser}>
-            Account löschen
-          </NavigationDropdownMenuItem>
-          <NavigationDropdownMenuItem onClick={this.handleLogout}>
-            Abmelden
-          </NavigationDropdownMenuItem>
-        </NavigationDropdownMenu>
-      </ul>
-    );
-
-    // defining content dependent on if user is logged in
-    const userContent = authUser.token && authUser.email ? userMenu : loginButton;
-
     return (
-      <nav>
-        <div>
-          <div>
-            <button>LEFT ACTION</button>
-          </div>
+      <NavbarContainer>
+        <ActionGroup>
+          <IconButton>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </IconButton>
+        </ActionGroup>
 
-          <div>
-            <a href="https://www.psychologischenumerologie.eu/">
-              <img src={logo} alt={logo} />
-            </a>
-          </div>
+        <a href="https://www.psychologischenumerologie.eu/" target="_blank" rel="noopener noreferrer">
+          <Logo src={logo} alt={logo} />
+        </a>
 
-          <div>
-            <ul>{userContent}</ul>
-          </div>
-        </div>
-      </nav>
+        <ActionGroup>
+          <IconButton>
+            <FontAwesomeIcon icon={faCog} />
+          </IconButton>
+          <IconButton>
+            <FontAwesomeIcon icon={faShoppingCart} />
+          </IconButton>
+          <UserAvatar />
+        </ActionGroup>
+      </NavbarContainer>
     );
   }
 }

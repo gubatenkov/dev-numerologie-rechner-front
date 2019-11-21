@@ -199,10 +199,6 @@ class AnalysisResultPersonalRender extends Component {
    * default render
    */
   render() {
-    // responsiveness => if window smaller than defined width => hide side menu
-    // TODO: refactor
-    let showSideMenu = window.innerWidth >= 992;
-
     // getting props with two different types on inputs to this component:
     // a) analysis => display
     // b) analysis result => display result
@@ -232,7 +228,7 @@ class AnalysisResultPersonalRender extends Component {
         </ActionBar>
 
         <div className="ContentArea">
-          {showSideMenu && (
+          {
             <div className="ResultContentOverview">
               <ContentNavigation
                 contentItems={this.buildContentDataStructure(
@@ -243,7 +239,7 @@ class AnalysisResultPersonalRender extends Component {
                 autoAdapt
               />
             </div>
-          )}
+          }
           <div className="ResultContent">
             {// mapping every configuration section to a result panel
             this.state.resultConfiguration.map((resultSection) => (

@@ -1,24 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const TitleBarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 45px;
+  margin-bottom: 58px;
+`;
+
+const TitleBarItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const TitleHeading = styled.h1`
+  color: #323232;
+  font-family: Roboto;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 58px;
+  text-align: center;
+`;
+
+const TitleSubHeading = styled.h2`
+  color: #323232;
+  font-family: Roboto;
+  font-size: 18px;
+  line-height: 30px;
+  text-align: center;
+`;
 
 /**
  * title bar on top of screen featuring a page title showing the user
  * names and dob of the currently displayed analysis
  */
 const TitleBar = (props) => (
-  <div>
-    <div>
-      <h1>{props.primaryHeading}</h1>
-      <h2>{props.primarySubheading}</h2>
-    </div>
-    <div>
-      <h1>{props.secondaryHeading}</h1>
-      <h2>{props.secondarySubHeading}</h2>
-      <div>
-        {(props.secondaryHeading || props.secondarySubHeading) && <div>x</div>}
-      </div>
-    </div>
-  </div>
+  <TitleBarContainer>
+    <TitleBarItem>
+      <TitleHeading>{props.primaryHeading}</TitleHeading>
+      <TitleSubHeading>{props.primarySubheading}</TitleSubHeading>
+    </TitleBarItem>
+    <TitleBarItem>
+      <TitleHeading>{props.secondaryHeading}</TitleHeading>
+      <TitleSubHeading>{props.secondarySubHeading}</TitleSubHeading>
+      {(props.secondaryHeading || props.secondarySubHeading) && <div>x</div>}
+    </TitleBarItem>
+  </TitleBarContainer>
 );
 
 TitleBar.propTypes = {
