@@ -13,6 +13,10 @@ import ResultTable from './ResultTable';
 import TourView from './TourView';
 
 import {
+  faArrowLeft
+} from '@fortawesome/free-solid-svg-icons';
+
+import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
   getConfigurationForId,
 } from '../utils/Configuration';
@@ -201,7 +205,7 @@ class AnalysisResultPersonalRender extends Component {
     // render table, table shows spinner
     return (
       <div>
-        <NavigationBar />
+        <NavigationBar leftButtonIcon={faArrowLeft} leftButtonOnClick={() => window.alert('Going back soon...')}/>
         <TitleBar
           primaryHeading={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
           primarySubheading={personalAnalysisResult.dateOfBirth}

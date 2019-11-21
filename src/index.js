@@ -36,7 +36,15 @@ import './styles/web-icons/web-icons.min.css';
 import './styles/font-awesome/font-awesome.min.css';
 import './styles/theme.css';
 
+import { ThemeProvider } from 'styled-components';
+
 import { GRAPHQL_ENDPOINT } from './utils/Configuration';
+
+// defining UI themes
+const lightTheme = {
+  primary: '#01b2d4',
+  primaryLight: '#f3f9fa',
+};
 
 // configuring dotenv
 dotenv.config();
@@ -72,35 +80,37 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <BrowserRouter >
-      <Switch>
-        <Route path="/login" component={withTracker(Login)} />
-        <Route path="/register" component={withTracker(Register)} />
-        <Route path="/reset" component={withTracker(ResetPassword)} />
-        <Route
-          path="/input-set-password/:token?"
-          component={withTracker(SetPassword)}
-        />
-        <Route
-          exact
-          path="/resultPersonal/:analysisId/:resultConfigurationId?"
-          component={withTracker(AnalysisResultPersonal)}
-        />
-        <Route
-          exact
-          path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
-          component={withTracker(AnalysisResultPersonal)}
-        />
-        <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
-        <PrivateRoute
-          path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
-          isAuthenticated={isUserAuthenticated}
-          loginPath="/login"
-          component={withTracker(UserHome)}
-        />
-        <Route path="/" component={withTracker(AnalysisInput)} />
-      </Switch>
-    </BrowserRouter>
+    <ThemeProvider theme={lightTheme}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/login" component={withTracker(Login)} />
+          <Route path="/register" component={withTracker(Register)} />
+          <Route path="/reset" component={withTracker(ResetPassword)} />
+          <Route
+            path="/input-set-password/:token?"
+            component={withTracker(SetPassword)}
+          />
+          <Route
+            exact
+            path="/resultPersonal/:analysisId/:resultConfigurationId?"
+            component={withTracker(AnalysisResultPersonal)}
+          />
+          <Route
+            exact
+            path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
+            component={withTracker(AnalysisResultPersonal)}
+          />
+          <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
+          <PrivateRoute
+            path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
+            isAuthenticated={isUserAuthenticated}
+            loginPath="/login"
+            component={withTracker(UserHome)}
+          />
+          <Route path="/" component={withTracker(AnalysisInput)} />
+        </Switch>
+      </BrowserRouter>
+    </ThemeProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 );
