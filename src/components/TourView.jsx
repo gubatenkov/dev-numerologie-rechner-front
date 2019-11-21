@@ -96,27 +96,15 @@ const TourView = (props) => {
     if (!element) {
       return [null, null];
     }
-    // determining title and content of element
-    let elementTitle;
-    let elementContent;
-    if (element.type === 'row') {
-      // if element is default result => using standard result
-      // title is name and value
-      elementTitle = `${element.name} = ${element.result.value
-        || element.result.values
-        || element.result.list}`;
 
-      // content is description
-      elementContent = element.descriptionText;
-    } else {
-      // title needs to be extracted from custom element
-      elementTitle = `${element.values[element.nameIndex]} = ${
-        element.values[element.valueIndex]
-      }`;
+    // if element is default result => using standard result
+    // title is name and value
+    const elementTitle = `${element.name} = ${element.result.value
+      || element.result.values
+      || element.result.list}`;
 
-      // description text needs to be extracted from custom values
-      elementContent = element.values[element.descriptionTextIndex];
-    }
+    // content is description
+    const elementContent = element.descriptionText;
 
     return [elementTitle, elementContent];
   };
@@ -210,10 +198,7 @@ const TourView = (props) => {
         </div>
         {compareTourData && (
           <div className="">
-            <Panel
-              className="TourView__Panel"
-              title={compareElementTitle}
-            >
+            <Panel className="TourView__Panel" title={compareElementTitle}>
               <div className="TourView__text TourView--non-printable">
                 <Interweave
                   content={

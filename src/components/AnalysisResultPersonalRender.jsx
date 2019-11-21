@@ -14,7 +14,7 @@ import TourView from './TourView';
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
-  getConfigurationForId
+  getConfigurationForId,
 } from '../utils/Configuration';
 
 import '../styles/AnalysisResultPersonal.css';
@@ -109,18 +109,8 @@ class AnalysisResultPersonalRender extends Component {
           const numberResult = _.get(result, numberId);
 
           // extracting name and value for different types of row
-          let name;
-          let value;
-          if (numberResult.type === 'customRow') {
-            name = numberResult.values[numberResult.nameIndex];
-            value = numberResult.values[numberResult.valueIndex];
-          } else {
-            name = numberResult.name;
-            const valueResult = numberResult.result;
-            if (valueResult.type === 'number') {
-              value = valueResult.value;
-            }
-          }
+          const { name } = numberResult;
+          const value = numberResult.result.type === 'number' ? numberResult.result.value : null;
 
           // constructing string of the form name = value to show in content
           const title = `${name} ${value ? `= ${value}` : ''}`;
