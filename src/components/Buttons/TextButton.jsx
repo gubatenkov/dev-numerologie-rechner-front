@@ -4,15 +4,18 @@ import styled from 'styled-components';
 const StyledButton = styled.button`
   height: 40px;
   width: 120px;
-
+  
   border-radius: 6px;
   border-style: none;
 
   padding: 5px 12px 5px 12px;
 
-  background-color: ${(props) => props.theme.primaryLight};
-  color: ${(props) => props.theme.primary};
-
+  background-color: ${(props) => (props.primary ? props.theme.primary : props.theme.primaryLight)};
+  color: ${(props) => (props.primary ? props.theme.white : props.theme.primary)};
+  padding: ${(props) => {
+    console.log(props.primary);
+    return 0;
+  }};
   font-family: ${(props) => props.theme.fontFamily};
 
   font-size: 16px;
@@ -30,7 +33,9 @@ const StyledButton = styled.button`
  * Button that wraps a FA icon
  */
 const TextButton = (props) => (
-  <StyledButton onClick={props.onClick}>{props.title}</StyledButton>
+    <StyledButton className={props.className} primary={props.primary} onClick={props.onClick}>
+      {props.title}
+    </StyledButton>
 );
 
 export default TextButton;
