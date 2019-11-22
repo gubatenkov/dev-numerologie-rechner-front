@@ -69,7 +69,7 @@ export const deleteUserMutation = gql`
 
 export const useCreditMutation = gql`
   mutation useCredit($analysisId: ID!, $type: String!) {
-    useCredit(analysisId: $analysisId type: $type) {
+    useCredit(analysisId: $analysisId, type: $type) {
       id
       name
       usedCreditTypes
@@ -84,5 +84,25 @@ export const createWindowTokenMutation = gql`
       userId
       windowToken
     }
+  }
+`;
+
+export const saveUserSettingsMutation = gql`
+  mutation saveUserSettings(
+    $resultConfiguration: AnalysisResultConfiguration!
+    $showBookRecommendations: Boolean!
+    $showBookReferences: Boolean!
+    $showCategoryExplanations: Boolean!
+    $showNumberMeaningExplanations: Boolean!
+    $showNumberCalculationExplanations: Boolean!
+  ) {
+    saveUserSettings(
+      resultConfiguration: $resultConfiguration
+      showBookRecommendations: $showBookRecommendations
+      showBookReferences: $showBookReferences
+      showCategoryExplanations: $showCategoryExplanations
+      showNumberMeaningExplanations: $showNumberMeaningExplanations
+      showNumberCalculationExplanations: $showNumberCalculationExplanations
+    )
   }
 `;

@@ -22,8 +22,6 @@ export const currentUserQuery = gql`
   query currentUser {
     currentUser {
       email
-      wpAccessToken
-      wpTokenExpiredAt
       resultConfiguration
       groups {
         id
@@ -52,11 +50,16 @@ export const currentUserQuery = gql`
 `;
 
 // queries the current user's result configuration
-export const currentUserBasicQuery = gql`
+export const userSettingsQuery = gql`
   query currentUserResultConfiguration {
     currentUser {
       email
       resultConfiguration
+      showBookRecommendations
+      showBookReferences
+      showCategoryExplanations
+      showNumberMeaningExplanations
+      showNumberCalculationExplanations
     }
   }
 `;

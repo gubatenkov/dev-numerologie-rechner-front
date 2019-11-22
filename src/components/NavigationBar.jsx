@@ -7,9 +7,11 @@ import { graphql, withApollo } from 'react-apollo';
 import styled from 'styled-components';
 
 import { faCog, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { currentUserBasicQuery } from '../graphql/Queries';
+import { userSettingsQuery } from '../graphql/Queries';
+import { saveUserSettingsMutation } from '../graphql/Mutations';
 
 import IconButton from './Buttons/IconButton';
+import TextButton from './Buttons/TextButton';
 import logo from '../images/logo.png';
 
 // container component styling navbar as grid
@@ -57,6 +59,11 @@ const UserAvatar = styled.div`
   border-radius: 50%;
 `;
 
+const LoginButton = styled(TextButton)`
+  grid-column-start: 5;
+  grid-column-end: 7;
+`;
+
 /**
  * the navigation bar for the application on top
  */
@@ -66,6 +73,17 @@ const UserAvatar = styled.div`
 const NavigationBar = (props) => {
   console.log(props.data.loading);
   console.log(props.data.currentUser);
+  const loggedIn = props.data.currentUser && props.data.currentUser.email;
+
+  props.saveUserSettings({variables: {
+    resultConfiguration: 'levels', 
+    showBookRecommendations: false,
+    showBookReferences: false,
+    showCategoryExplanations: false,
+    showNumberMeaningExplanations: false,
+    showNumberCalculationExplanations: false,
+  }});
+
   return (
     <NavbarContainer>
       {props.leftButtonIcon && (
@@ -83,19 +101,34 @@ const NavigationBar = (props) => {
         <Logo src={logo} alt={logo} />
       </LogoContainer>
 
-      <SettingsIconButton
-        icon={faCog}
-        onClick={() => window.alert('Settings whrere are you?')}
-      />
-      <CartIconButton
-        icon={faShoppingCart}
-        onClick={() => window.alert('Cart where are you?')}
-      />
-      <UserAvatar />
+      {loggedIn && (
+        <SettingsIconButton
+          icon={faCog}
+          onClick={() => window.alert('Settings whrere are you?')}
+        />
+      )}
+      {loggedIn && (
+        <CartIconButton
+          icon={faShoppingCart}
+          onClick={() => window.open('https://www.bios-shop.eu/', '_blank')}
+        />
+      )}
+      {loggedIn && <UserAvatar />}
+      {!loggedIn && (
+        <LoginButton
+          title={props.register ? 'Registrieren' : 'Anmelden'}
+          onClick={
+            props.register
+              ? () => props.history.push('/register')
+              : () => props.history.push('/login')
+          }
+        />
+      )}
     </NavbarContainer>
   );
 };
 
 export default compose(
-  graphql(currentUserBasicQuery),
+  graphql(userSettingsQuery),
+  graphql(saveUserSettingsMutation, { name: 'saveUserSettings' }),
 )(withApollo(withRouter(NavigationBar)));

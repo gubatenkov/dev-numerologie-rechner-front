@@ -44,6 +44,7 @@ import { GRAPHQL_ENDPOINT } from './utils/Configuration';
 const lightTheme = {
   primary: '#01b2d4',
   primaryLight: '#f3f9fa',
+  fontFamily: 'Roboto',
 };
 
 // configuring dotenv

@@ -8,7 +8,7 @@ import * as compose from 'lodash.flowright';
 import {
   buildPersonalAnalysisByNameQuery,
   buildPersonalAnalysisByIdQuery,
-  currentUserBasicQuery,
+  userSettingsQuery,
 } from '../graphql/Queries';
 
 import LoadingIndicator from './LoadingIndicator';
@@ -87,7 +87,7 @@ AnalysisResultPersonal.propTypes = {
 
 // constructing query with input parameters taken from URL params
 export default compose(
-  graphql(currentUserBasicQuery, {
+  graphql(userSettingsQuery, {
     name: 'currentUser',
   }),
   graphql(buildPersonalAnalysisByIdQuery(false), {
