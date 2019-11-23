@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 
+// graphql/apollo related
 import * as compose from 'lodash.flowright';
 import { graphql, withApollo } from 'react-apollo';
 
+// styling related
 import styled from 'styled-components';
 
+// components
 import { faCog, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Avatar from 'react-avatar';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { userSettingsQuery } from '../graphql/Queries';
+import { saveUserSettingsMutation } from '../graphql/Mutations';
 import Popover, {
   PopoverTextContent,
   PopoverTextItem,
   PopoverSettingsContent,
   PopoverSettingsSection,
-  PopoverSettingsHeader,
+  SwitchSettingItem,
 } from './Popover';
-
-import { saveUserSettingsMutation } from '../graphql/Mutations';
-import { userSettingsQuery } from '../graphql/Queries';
-
 import IconButton from './Buttons/IconButton';
 import TextButton from './Buttons/TextButton';
-import Switch from './Switches/Switch';
 import logo from '../images/logo.png';
-import { deleteUserAuthData } from '../utils/AuthUtils';
+
+// auth utils
+import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
 
 // container component of navbar
 const NavbarContainer = styled.nav`
@@ -94,29 +96,19 @@ const UserAvatar = styled(Avatar)`
   height: 36px !important;
 `;
 
-const SwitchSettingItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`;
-
-const SwitchSettingTitle = styled.div`
-  color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.fontFamily};
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 30px;
-`;
-
+// container for segmented button group
 const SegmentContainer = styled(ButtonGroup)`
+  /* making sure it spreads out in container */
   width: 100%;
+
+  /* we want both items to take 50% of the horizontal space in the container. 
+  Therefore setting space around here and applying flex-grow: 1 to buttons*/
   justify-content: space-around;
 `;
 
+// the text button in the segmented button group
 const SegmentButton = styled(TextButton)`
+  /* making sure button grows to equal share with other children */
   flex-grow: 1;
 `;
 /**
@@ -148,9 +140,12 @@ const NavigationBar = (props) => {
     setShowNumberCalculationExplanations,
   ] = useState(currentUser.showNumberCalculationExplanations);
 
-  // checking if user is logged in
-  // TODO auth utils check if token is stored locally
-  const loggedIn = props.data.currentUser && props.data.currentUser.email;
+  // checking if user is logged in in two ways
+  // a) query returned user information b) we have a token stored locally.
+  // if a) but not b), we have inconsistent state
+  const loggedIn = props.data.currentUser
+    && props.data.currentUser.email
+    && getUserAuthData().token;
 
   // handles a logout of the user
   const handleLogout = () => {
@@ -189,8 +184,7 @@ const NavigationBar = (props) => {
   const settingsPopup = (
     <Popover>
       <PopoverSettingsContent>
-        <PopoverSettingsSection>
-          <PopoverSettingsHeader>Übersicht und Tour</PopoverSettingsHeader>
+        <PopoverSettingsSection title="Übersicht und Tour">
           <SegmentContainer>
             <SegmentButton
               primary={resultConfiguration === 'starter'}
@@ -203,49 +197,38 @@ const NavigationBar = (props) => {
               onClick={() => setResultConfiguration('levels')}
             />
           </SegmentContainer>
-          <SwitchSettingItem>
-            <SwitchSettingTitle>Buchempfehlungen</SwitchSettingTitle>
-            <Switch
-              onChange={() => setShowBookRecommendations(!showBookRecommendations)
-              }
-              checked={showBookRecommendations}
-            />
-          </SwitchSettingItem>
-          <SwitchSettingItem>
-            <SwitchSettingTitle>Buchreferenzen</SwitchSettingTitle>
-            <Switch
-              onChange={() => setShowBookReferences(!showBookReferences)}
-              checked={showBookReferences}
-            />
-          </SwitchSettingItem>
-          <SwitchSettingItem>
-            <SwitchSettingTitle>Erklärungen zu Kategorien</SwitchSettingTitle>
-            <Switch
-              onChange={() => setShowCategoryExplanations(!showCategoryExplanations)
-              }
-              checked={showCategoryExplanations}
-            />
-          </SwitchSettingItem>
-          <SwitchSettingItem>
-            <SwitchSettingTitle>Erklärungen zu Zahlen</SwitchSettingTitle>
-            <Switch
-              onChange={() => setShowNumberMeaningExplanations(!showNumberMeaningExplanations)
-              }
-              checked={showNumberMeaningExplanations}
-            />
-          </SwitchSettingItem>
-          <SwitchSettingItem>
-            <SwitchSettingTitle>
-              Erklärungen zur Zahlenberechnung
-            </SwitchSettingTitle>
-            <Switch
-              onChange={() => setShowNumberCalculationExplanations(
-                !showNumberCalculationExplanations,
-              )
-              }
-              checked={showNumberCalculationExplanations}
-            />
-          </SwitchSettingItem>
+          <SwitchSettingItem
+            title="Buchempfehlungen"
+            onChange={() => setShowBookRecommendations(!showBookRecommendations)
+            }
+            checked={showBookRecommendations}
+          />
+          <SwitchSettingItem
+            title="Buchreferenzen"
+            onChange={() => setShowBookReferences(!showBookReferences)}
+            checked={showBookReferences}
+          />
+          <SwitchSettingItem
+            title="Erklärungen zu Kategorien"
+            onChange={() => setShowCategoryExplanations(!showCategoryExplanations)
+            }
+            checked={showCategoryExplanations}
+          />
+          <SwitchSettingItem
+            title="Erklärungen zu Zahlen"
+            onChange={() => setShowNumberMeaningExplanations(!showNumberMeaningExplanations)
+            }
+            checked={showNumberMeaningExplanations}
+          />
+
+          <SwitchSettingItem
+            title="Erklärungen zur Zahlenberechnung"
+            onChange={() => setShowNumberCalculationExplanations(
+              !showNumberCalculationExplanations,
+            )
+            }
+            checked={showNumberCalculationExplanations}
+          />
         </PopoverSettingsSection>
       </PopoverSettingsContent>
     </Popover>

@@ -1,5 +1,8 @@
-import BoostrapPopover from 'react-bootstrap/Popover';
+import React from 'react';
 import styled from 'styled-components';
+
+import BoostrapPopover from 'react-bootstrap/Popover';
+import Switch from './Switches/Switch';
 
 // applying custom style to boostrap popover
 const Popover = styled(BoostrapPopover)`
@@ -63,44 +66,100 @@ export const PopoverTextItem = styled.a`
   }
 `;
 
+// content container for a settings popover
 export const PopoverSettingsContent = styled(Popover.Content)`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  width: 400px !important;
-  margin: 24px;
-
-  /*resetting boostrap padding*/
-  padding: 0 !important;
-`;
-
-export const PopoverSettingsSection = styled.div`
+  /* one column of sections*/
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+
+  /* align top left */
   justify-content: flex-start;
   align-items: flex-start;
 
-  /*resetting boostrap padding*/
+  /* setting fixed with of settings content */
+  width: 400px !important;
+
+  /* same margin on every edge */
+  margin: 24px;
+
+  /* overwriting boostrap padding */
   padding: 0 !important;
+`;
+
+// item for settings popover
+const PopoverSettingsSectionContainer = styled.div`
+  /* one column where all the items go*/
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  /* align top left */
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  /*overwriting boostrap padding*/
+  padding: 0 !important;
+
+  /* making sure sections fills whole container*/
   width: 100%;
 
-  /* space between items */
+  /* space between items in section*/
   > div + div {
     margin-top: 32px;
   }
 `;
 
-export const PopoverSettingsHeader = styled.h2`
+// header for settings section
+const PopoverSettingsHeader = styled.h2`
+  /* text styling */
   color: ${(props) => props.theme.darkGrey} !important;
   font-family: ${(props) => props.theme.fontFamily} !important;
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
 
+  /* margin between section header and first content item*/
   margin-bottom: 8px;
 `;
+
+// section containing of a container, title (title prop) and all children passed into it
+export const PopoverSettingsSection = (props) => (
+  <PopoverSettingsSectionContainer className={props.className}>
+    {props.title && (
+      <PopoverSettingsHeader>{props.title}</PopoverSettingsHeader>
+    )}
+    {props.children}
+  </PopoverSettingsSectionContainer>
+);
+
+// container for the settings switch element
+const SwitchSettingItemContainer = styled.div`
+  /* flex row with items left and right*/
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+// title of the swtich item
+const SwitchSettingTitle = styled.div`
+  /* basic text styling */
+  color: ${(props) => props.theme.darkGrey};
+  font-family: ${(props) => props.theme.fontFamily};
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+`;
+
+// item containing of a title and switch for settings
+export const SwitchSettingItem = (props) => (
+  <SwitchSettingItemContainer className={props.className}>
+    {props.title && <SwitchSettingTitle>{props.title}</SwitchSettingTitle>}
+    <Switch onChange={props.onChange} checked={props.checked} />
+  </SwitchSettingItemContainer>
+);
+
 export default Popover;
