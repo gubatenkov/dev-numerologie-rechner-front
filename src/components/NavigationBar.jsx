@@ -9,8 +9,14 @@ import styled from 'styled-components';
 import { faCog, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Avatar from 'react-avatar';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Popover, {
+  PopoverTextContent,
+  PopoverTextItem,
+  PopoverSettingsContent,
+  PopoverSettingsSection,
+  PopoverSettingsHeader,
+} from './Popover';
 
 import { saveUserSettingsMutation } from '../graphql/Mutations';
 import { userSettingsQuery } from '../graphql/Queries';
@@ -21,108 +27,71 @@ import Switch from './Switches/Switch';
 import logo from '../images/logo.png';
 import { deleteUserAuthData } from '../utils/AuthUtils';
 
-// container component styling navbar as grid
+// container component of navbar
 const NavbarContainer = styled.nav`
+  /* fixed bar height*/
   height: 130px;
 
+  /* layout of navbar is a grid of: 3 slots for items to the left, 
+  3 slots for items to the right and one true center logo*/
   display: grid;
   grid-template-columns: repeat(3, 36px) auto repeat(3, 36px);
+
+  /* 16px gap between all items in grid (horizontally)*/
   grid-column-gap: 16px;
 
-  margin-left: 32px;
-  margin-right: 32px;
-  margin-top: 32px;
+  /* margin top, left and right*/
+  margin: 32px 32px 0 32px;
 `;
 
-// left button that is dynamically configured externally
+// styling icon button for left element (icon is passed externally)
 const LeftIconButton = styled(IconButton)`
+  /* positioning at start of the navbar (first element to the left)*/
   grid-column-start: 1;
 `;
 
-// styling size of logo image
-const Logo = styled.img`
-  height: 86px;
-`;
-
-// styling logo container
+// styling logo container => center
 const LogoContainer = styled.a`
+  /* positioning in the (true) center */
   grid-column-start: 4;
+
+  /* centering content in container*/
   justify-self: center;
+
+  /* setting maximum height of images in container*/
+  img {
+    max-height: 86px;
+  }
 `;
 
+// styling setting icon button to the right (shown if user is logged in)
 const SettingsIconButton = styled(IconButton)`
+  /* positioning at start of area for element to the right */
   grid-column-start: 5;
 `;
 
+// styling shopping cart icon button to the right (shown if user is logged in)
 const CartIconButton = styled(IconButton)`
+  /* positioning at center of area for elements to the right */
   grid-column-start: 6;
 `;
 
-const UserAvatar = styled(Avatar)`
-  grid-column-start: 7;
-  width: 36px !important;
-  height: 36px !important;
-`;
-
+// styling button element that is displayed to the right if user not logged in
 const RightActionButton = styled(TextButton)`
+  /* right action spans across all of are for elements to the right */
   grid-column-start: 5;
   grid-column-end: 7;
 `;
 
-const NavbarPopover = styled(Popover)`
-  border-radius: 8px !important;
-  background-color: #ffffff !important;
-  box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.08) !important;
-  border: 1px solid rgba(204, 213, 219, 0.5) !important;
+// user avatar image (based on avatar library)
+const UserAvatar = styled(Avatar)`
+  /* last element to the right */
+  grid-column-start: 7;
 
-  max-width: 600px !important;
-  width: auto !important;
-`;
-
-const PopoverTextContent = styled(NavbarPopover.Content)`
-  /* vertical flex column */
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  margin: 25px 32px 25px 32px !important;
-
-  /*resetting boostrap padding*/
-  padding: 0 !important;
-
-  /*the space between any children in the content should be 14px*/
-  * + * {
-    margin-top: 14px !important;
-  }
-`;
-
-const PopoverTextItem = styled.a`
-  color: ${props => props.theme.darkGrey} !important;
-  font-family: ${props => props.theme.fontFamily} !important;
-  font-size: 18px !important;
-  line-height: 30px !important;
-
-  cursor: pointer;
-
-  :hover {
-    text-decoration: none;
-  }
-`;
-
-const PopoverSettingsContent = styled(NavbarPopover.Content)`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  width: 400px !important;
-  margin: 24px;
-
-  /*resetting boostrap padding*/
-  padding: 0 !important;
+  /* making sure it does not exceed cell size, 
+  overriding as external library styling */
+  width: 36px !important;
+  height: 36px !important;
 `;
 
 const SwitchSettingItem = styled.div`
@@ -134,36 +103,9 @@ const SwitchSettingItem = styled.div`
   width: 100%;
 `;
 
-const PopoverSettingsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  /*resetting boostrap padding*/
-  padding: 0 !important;
-  width: 100%;
-
-  /* space between items */
-  > div + div {
-    margin-top: 32px;
-  }
-`;
-
-const PopoverSettingsHeader = styled.h2`
-  color: ${props => props.theme.darkGrey} !important;
-  font-family: ${props => props.theme.fontFamily} !important;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 30px;
-
-  margin-bottom: 8px;
-`;
-
 const SwitchSettingTitle = styled.div`
-  color: ${props => props.theme.darkGrey};
-  font-family: ${props => props.theme.fontFamily};
+  color: ${(props) => props.theme.darkGrey};
+  font-family: ${(props) => props.theme.fontFamily};
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
@@ -180,7 +122,7 @@ const SegmentButton = styled(TextButton)`
 /**
  * the navigation bar for the application on top
  */
-const NavigationBar = props => {
+const NavigationBar = (props) => {
   // extracting prop value
   const { currentUser, loading } = props.data;
 
@@ -245,7 +187,7 @@ const NavigationBar = props => {
 
   // defining popover for settings button
   const settingsPopup = (
-    <NavbarPopover>
+    <Popover>
       <PopoverSettingsContent>
         <PopoverSettingsSection>
           <PopoverSettingsHeader>Übersicht und Tour</PopoverSettingsHeader>
@@ -264,8 +206,7 @@ const NavigationBar = props => {
           <SwitchSettingItem>
             <SwitchSettingTitle>Buchempfehlungen</SwitchSettingTitle>
             <Switch
-              onChange={() =>
-                setShowBookRecommendations(!showBookRecommendations)
+              onChange={() => setShowBookRecommendations(!showBookRecommendations)
               }
               checked={showBookRecommendations}
             />
@@ -280,8 +221,7 @@ const NavigationBar = props => {
           <SwitchSettingItem>
             <SwitchSettingTitle>Erklärungen zu Kategorien</SwitchSettingTitle>
             <Switch
-              onChange={() =>
-                setShowCategoryExplanations(!showCategoryExplanations)
+              onChange={() => setShowCategoryExplanations(!showCategoryExplanations)
               }
               checked={showCategoryExplanations}
             />
@@ -289,8 +229,7 @@ const NavigationBar = props => {
           <SwitchSettingItem>
             <SwitchSettingTitle>Erklärungen zu Zahlen</SwitchSettingTitle>
             <Switch
-              onChange={() =>
-                setShowNumberMeaningExplanations(!showNumberMeaningExplanations)
+              onChange={() => setShowNumberMeaningExplanations(!showNumberMeaningExplanations)
               }
               checked={showNumberMeaningExplanations}
             />
@@ -300,22 +239,21 @@ const NavigationBar = props => {
               Erklärungen zur Zahlenberechnung
             </SwitchSettingTitle>
             <Switch
-              onChange={() =>
-                setShowNumberCalculationExplanations(
-                  !showNumberCalculationExplanations,
-                )
+              onChange={() => setShowNumberCalculationExplanations(
+                !showNumberCalculationExplanations,
+              )
               }
               checked={showNumberCalculationExplanations}
             />
           </SwitchSettingItem>
         </PopoverSettingsSection>
       </PopoverSettingsContent>
-    </NavbarPopover>
+    </Popover>
   );
 
   // defining popover for avatar
   const avatarPopup = (
-    <NavbarPopover>
+    <Popover>
       <PopoverTextContent>
         <PopoverTextItem href="www.google.com" target="_blank">
           Meine Analysen
@@ -325,7 +263,7 @@ const NavigationBar = props => {
         </PopoverTextItem>
         <PopoverTextItem onClick={handleLogout}>Abmelden</PopoverTextItem>
       </PopoverTextContent>
-    </NavbarPopover>
+    </Popover>
   );
 
   return (
@@ -341,7 +279,7 @@ const NavigationBar = props => {
         href="https://www.psychologischenumerologie.eu/"
         target="_blank"
       >
-        <Logo src={logo} alt={logo} />
+        <img src={logo} alt={logo} />
       </LogoContainer>
 
       {loggedIn && (
