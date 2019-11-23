@@ -26,6 +26,9 @@ import IconButton from './Buttons/IconButton';
 import TextButton from './Buttons/TextButton';
 import logo from '../images/logo.png';
 
+// importing threshold to switch to mobile optimized layout
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+
 // auth utils
 import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
 
@@ -63,6 +66,17 @@ const LogoContainer = styled.a`
   /* setting maximum height of images in container*/
   img {
     max-height: 86px;
+  }
+
+  /* mobile phones */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    /* logo moves to after the left icon button */
+    grid-column-start: 2;
+
+    /* logo changes in size */
+    img {
+      max-height: 48px;
+    }
   }
 `;
 
@@ -116,7 +130,7 @@ const SegmentButton = styled(TextButton)`
  */
 const NavigationBar = (props) => {
   // extracting prop value
-  const { currentUser, loading } = props.data;
+  const { currentUser } = props.data;
 
   // defining state and initializing with current user values
   const [resultConfiguration, setResultConfiguration] = useState(

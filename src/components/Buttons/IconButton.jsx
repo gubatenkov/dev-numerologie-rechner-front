@@ -26,7 +26,7 @@ const StyledButton = styled.button`
 // plain button that wraps a FA icon
 // passed icon props need to be FA icons (imported!)
 const IconButton = (props) => (
-  <StyledButton onClick={props.onClick}>
+  <StyledButton className={props.className} onClick={props.onClick}>
     <FontAwesomeIcon icon={props.icon || faArrowLeft} />
   </StyledButton>
 );
