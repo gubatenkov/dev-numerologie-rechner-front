@@ -5,16 +5,19 @@ import { withRouter } from 'react-router-dom';
 
 import * as _ from 'lodash';
 
+import {
+  faArrowLeft,
+  faSave,
+  faBookOpen,
+} from '@fortawesome/free-solid-svg-icons';
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import Panel from './Panel';
 import ResultTable from './ResultTable';
 import TourView from './TourView';
-
-import {
-  faArrowLeft
-} from '@fortawesome/free-solid-svg-icons';
+import TextButton from './Buttons/TextButton';
+import IconButton from './Buttons/IconButton';
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
@@ -114,7 +117,9 @@ class AnalysisResultPersonalRender extends Component {
 
           // extracting name and value for different types of row
           const { name } = numberResult;
-          const value = numberResult.result.type === 'number' ? numberResult.result.value : null;
+          const value = numberResult.result.type === 'number'
+            ? numberResult.result.value
+            : null;
 
           // constructing string of the form name = value to show in content
           const title = `${name} ${value ? `= ${value}` : ''}`;
@@ -149,31 +154,34 @@ class AnalysisResultPersonalRender extends Component {
     );
 
     // finding index with datakey in tour data structure
-    const sectionIndex = tourDataStructure.findIndex(
+    let sectionIndex = tourDataStructure.findIndex(
       (section) => section.sectionName === sectionId,
     );
 
     // if data is not here -> skip
     if (sectionIndex < 0) {
       console.log('Could not find section for row to show details');
-      return;
+      // starting at first section by default
+      sectionIndex = 0;
     }
 
     // finding row index of item in section
-    const rowIndex = tourDataStructure[sectionIndex].sectionElements.findIndex(
-      (element) => element.numberId === numberId,
-    );
+    let elementIndex = tourDataStructure[
+      sectionIndex
+    ].sectionElements.findIndex((element) => element.numberId === numberId);
 
-    if (rowIndex < 0) {
+    if (elementIndex < 0) {
       console.log('Could not find element in section to show details');
-      return;
+
+      // starting at first number by default
+      elementIndex = 0;
     }
 
     // opening detail view with right section index
     this.setState({
       resultTextDetailViewOpen: true,
       resultTextDetailViewSectionIndex: sectionIndex,
-      resultTextDetailViewElementIndex: rowIndex,
+      resultTextDetailViewElementIndex: elementIndex,
     });
   };
 
@@ -187,6 +195,33 @@ class AnalysisResultPersonalRender extends Component {
     if (domElement) {
       domElement.scrollIntoView();
     }
+  };
+
+  /**
+   * handles the saving of the displayed analysis given the input parameters
+   */
+  handleSaveAnalysis = () => {
+    // extracting props
+    const {
+      personalAnalysisResult,
+      personalAnalysisCompareResult,
+    } = this.props;
+
+    // extracting parameters to save from input analysis results
+    const firstNames = [personalAnalysisResult.firstNames];
+    const lastNames = [personalAnalysisResult.lastName];
+    if (personalAnalysisCompareResult) {
+      firstNames.push(personalAnalysisCompareResult.firstNames);
+      lastNames.push(personalAnalysisCompareResult.lastName);
+    }
+    // navigating to component to handle save
+    this.props.history.push(
+      `/userHome/saveAnalysis/${encodeURIComponent(
+        firstNames,
+      )}/${encodeURIComponent(lastNames)}/${encodeURIComponent(
+        personalAnalysisResult.dateOfBirth,
+      )}`,
+    );
   };
 
   /**
@@ -205,7 +240,10 @@ class AnalysisResultPersonalRender extends Component {
     // render table, table shows spinner
     return (
       <div>
-        <NavigationBar leftButtonIcon={faArrowLeft} leftButtonOnClick={() => window.alert('Going back soon...')}/>
+        <NavigationBar
+          leftButtonIcon={faArrowLeft}
+          leftButtonOnClick={() => this.props.history.goBack()}
+        />
         <TitleBar
           primaryHeading={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
           primarySubheading={personalAnalysisResult.dateOfBirth}
@@ -216,9 +254,22 @@ class AnalysisResultPersonalRender extends Component {
         />
 
         <ActionBar>
-          <button>First</button>
-          <button>Second</button>
-          <button>Third</button>
+          <TextButton
+            title="Namen vergleichen"
+            onClick={() => window.alert('TODO: Implement compare')}
+          />
+          <IconButton icon={faSave} onClick={() => this.handleSaveAnalysis()} />
+          <TextButton
+            primary
+            icon={faBookOpen}
+            title="Alle lesen"
+            onClick={() => this.setState({
+              resultTextDetailViewOpen: true,
+              resultTextDetailViewSectionIndex: 0,
+              resultTextDetailViewElementIndex: 0,
+            })
+            }
+          />
         </ActionBar>
 
         <div className="ContentArea">

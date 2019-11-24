@@ -103,7 +103,7 @@ export default compose(
         isPdf: false,
         longTexts: false,
       },
-      fetchPolicy: 'network-only',
+      update: 'network-only',
     }),
     // skipping this query if no id is provided
     skip: (params) => !params.match.params.analysisId,

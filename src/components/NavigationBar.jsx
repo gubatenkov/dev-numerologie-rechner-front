@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-
-// graphql/apollo related
-import * as compose from 'lodash.flowright';
-import { graphql, withApollo } from 'react-apollo';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 // styling related
 import styled from 'styled-components';
+
+// graphql
 
 // components
 import { faCog, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Avatar from 'react-avatar';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Spinner from 'react-bootstrap/Spinner';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { userSettingsQuery } from '../graphql/Queries';
 import { saveUserSettingsMutation } from '../graphql/Mutations';
+import { userSettingsQuery } from '../graphql/Queries';
 import Popover, {
   PopoverTextContent,
   PopoverTextItem,
@@ -24,6 +24,8 @@ import Popover, {
 } from './Popover';
 import IconButton from './Buttons/IconButton';
 import TextButton from './Buttons/TextButton';
+
+// images
 import logo from '../images/logo.png';
 
 // importing threshold to switch to mobile optimized layout
@@ -49,8 +51,14 @@ const NavbarContainer = styled.nav`
   margin: 32px 32px 0 32px;
 `;
 
+// resizing button for bar use
+const NavBarIconButton = styled(IconButton)`
+  width: 36px;
+  height: 36px;
+`;
+
 // styling icon button for left element (icon is passed externally)
-const LeftIconButton = styled(IconButton)`
+const LeftIconButton = styled(NavBarIconButton)`
   /* positioning at start of the navbar (first element to the left)*/
   grid-column-start: 1;
 `;
@@ -81,13 +89,13 @@ const LogoContainer = styled.a`
 `;
 
 // styling setting icon button to the right (shown if user is logged in)
-const SettingsIconButton = styled(IconButton)`
+const SettingsIconButton = styled(NavBarIconButton)`
   /* positioning at start of area for element to the right */
   grid-column-start: 5;
 `;
 
 // styling shopping cart icon button to the right (shown if user is logged in)
-const CartIconButton = styled(IconButton)`
+const CartIconButton = styled(NavBarIconButton)`
   /* positioning at center of area for elements to the right */
   grid-column-start: 6;
 `;
@@ -97,6 +105,12 @@ const RightActionButton = styled(TextButton)`
   /* right action spans across all of are for elements to the right */
   grid-column-start: 5;
   grid-column-end: 7;
+
+  padding: 5px 12px 5px 12px;
+
+  /* reducing standard height ob text button*/
+  height: 40px;
+  font-size: 16px;
 `;
 
 // user avatar image (based on avatar library)
@@ -124,42 +138,102 @@ const SegmentContainer = styled(ButtonGroup)`
 const SegmentButton = styled(TextButton)`
   /* making sure button grows to equal share with other children */
   flex-grow: 1;
+
+  padding: 4px 12px 4px 12px;
+
+  /* reducing standard height of text button */
+  height: 38px;
 `;
+
+// spinner when loading
+const NavbarSpinner = styled(Spinner)`
+  /* spinner is placed to the right */
+  grid-column-start: 7;
+`;
+
 /**
  * the navigation bar for the application on top
  */
 const NavigationBar = (props) => {
-  // extracting prop value
-  const { currentUser } = props.data;
+  // defining state as user settings
+  const [userSettings, setUserSettings] = useState({
+    resultConfiguration: null,
+    showBookRecommendations: false,
+    showBookReferences: false,
+    showCategoryExplanations: false,
+    showNumberMeaningExplanations: false,
+    showNumberCalculationExplanations: false,
+  });
 
-  // defining state and initializing with current user values
-  const [resultConfiguration, setResultConfiguration] = useState(
-    currentUser.resultConfiguration,
-  );
-  const [showBookRecommendations, setShowBookRecommendations] = useState(
-    currentUser.showBookRecommendations,
-  );
-  const [showBookReferences, setShowBookReferences] = useState(
-    currentUser.showBookReferences,
-  );
-  const [showCategoryExplanations, setShowCategoryExplanations] = useState(
-    currentUser.showCategoryExplanations,
-  );
-  const [
-    showNumberMeaningExplanations,
-    setShowNumberMeaningExplanations,
-  ] = useState(currentUser.showNumberMeaningExplanations);
-  const [
-    showNumberCalculationExplanations,
-    setShowNumberCalculationExplanations,
-  ] = useState(currentUser.showNumberCalculationExplanations);
+  // state flag indicating if the state of this component has already been properly initialized by server call
+  const [componentInitialized, setComponentInitialized] = useState(false);
+
+  // defining mutation used to update user settings on backend
+  const [saveUserSettings] = useMutation(saveUserSettingsMutation);
+
+  // defining query loading user data and setting state upon completion
+  // setting fetch policy to prevent caching issues
+  const { loading, data } = useQuery(userSettingsQuery, {
+    fetchPolicy: 'network-only',
+    onCompleted: (data) => {
+      // extractin user result data
+      const { currentUser } = data;
+
+      // setting initial state of the component based on result
+      setUserSettings({
+        ...userSettings,
+        resultConfiguration: currentUser.resultConfiguration,
+        showBookRecommendations: currentUser.showBookRecommendations,
+        showBookReferences: currentUser.showBookReferences,
+        showCategoryExplanations: currentUser.showCategoryExplanations,
+        showNumberMeaningExplanations:
+          currentUser.showNumberMeaningExplanations,
+        showNumberCalculationExplanations:
+          currentUser.showNumberCalculationExplanations,
+      });
+
+      // setting initialized flag to indicate properly initialized state
+      setComponentInitialized(true);
+    },
+  });
+
+  // defining effect that calls server whenever settings change
+  useEffect(() => {
+    // only applying change to server if not loadign, data is present and flag for proper initialization has been set
+    if (!loading && data && componentInitialized) {
+      // extracting user data from prop
+      const { currentUser } = data;
+
+      // checking if any of the values changed
+      const settingsChanged = !Object.entries(userSettings).every(
+        ([settingKey, settingValue]) => currentUser[settingKey] === settingValue,
+      );
+
+      // if settings changed => calling server to apply change
+      if (settingsChanged) {
+        saveUserSettings({
+          variables: userSettings,
+        });
+      }
+    }
+  }, [userSettings, loading, data, saveUserSettings, componentInitialized]);
+
+  // returning loading indicator if data is still loading
+  if (loading) {
+    return (
+      <NavbarContainer>
+        <NavbarSpinner animation="border" role="status" variant="dark" />
+      </NavbarContainer>
+    );
+  }
+
+  // extracting user data from prop
+  const { currentUser } = data;
 
   // checking if user is logged in in two ways
   // a) query returned user information b) we have a token stored locally.
   // if a) but not b), we have inconsistent state
-  const loggedIn = props.data.currentUser
-    && props.data.currentUser.email
-    && getUserAuthData().token;
+  const loggedIn = currentUser && currentUser.email && getUserAuthData().token;
 
   // handles a logout of the user
   const handleLogout = () => {
@@ -170,30 +244,6 @@ const NavigationBar = (props) => {
     props.history.push('/login');
   };
 
-  // defining effect that calls server whenever settings change
-  const { saveUserSettings } = props;
-  useEffect(() => {
-    // triggering mutation to change values on server
-    saveUserSettings({
-      variables: {
-        resultConfiguration,
-        showBookRecommendations,
-        showBookReferences,
-        showCategoryExplanations,
-        showNumberMeaningExplanations,
-        showNumberCalculationExplanations,
-      },
-    });
-  }, [
-    resultConfiguration,
-    showBookRecommendations,
-    showBookReferences,
-    showCategoryExplanations,
-    showNumberMeaningExplanations,
-    showNumberCalculationExplanations,
-    saveUserSettings,
-  ]);
-
   // defining popover for settings button
   const settingsPopup = (
     <Popover>
@@ -201,47 +251,66 @@ const NavigationBar = (props) => {
         <PopoverSettingsSection title="Übersicht und Tour">
           <SegmentContainer>
             <SegmentButton
-              primary={resultConfiguration === 'starter'}
+              primary={userSettings.resultConfiguration === 'starter'}
               title={'Einfach'}
-              onClick={() => setResultConfiguration('starter')}
+              onClick={() => setUserSettings({
+                ...userSettings,
+                resultConfiguration: 'starter',
+              })
+              }
             />
             <SegmentButton
-              primary={resultConfiguration === 'levels'}
+              primary={userSettings.resultConfiguration === 'levels'}
               title={'Fortgeschritten'}
-              onClick={() => setResultConfiguration('levels')}
+              onClick={() => setUserSettings({
+                ...userSettings,
+                resultConfiguration: 'levels',
+              })
+              }
             />
           </SegmentContainer>
           <SwitchSettingItem
             title="Buchempfehlungen"
-            onChange={() => setShowBookRecommendations(!showBookRecommendations)
+            onChange={(newValue) => setUserSettings({
+              ...userSettings,
+              showBookRecommendations: newValue,
+            })
             }
-            checked={showBookRecommendations}
+            checked={userSettings.showBookRecommendations}
           />
           <SwitchSettingItem
             title="Buchreferenzen"
-            onChange={() => setShowBookReferences(!showBookReferences)}
-            checked={showBookReferences}
+            onChange={(newValue) => setUserSettings({ ...userSettings, showBookReferences: newValue })
+            }
+            checked={userSettings.showBookReferences}
           />
           <SwitchSettingItem
             title="Erklärungen zu Kategorien"
-            onChange={() => setShowCategoryExplanations(!showCategoryExplanations)
+            onChange={(newValue) => setUserSettings({
+              ...userSettings,
+              showCategoryExplanations: newValue,
+            })
             }
-            checked={showCategoryExplanations}
+            checked={userSettings.showCategoryExplanations}
           />
           <SwitchSettingItem
             title="Erklärungen zu Zahlen"
-            onChange={() => setShowNumberMeaningExplanations(!showNumberMeaningExplanations)
+            onChange={(newValue) => setUserSettings({
+              ...userSettings,
+              showNumberMeaningExplanations: newValue,
+            })
             }
-            checked={showNumberMeaningExplanations}
+            checked={userSettings.showNumberMeaningExplanations}
           />
 
           <SwitchSettingItem
             title="Erklärungen zur Zahlenberechnung"
-            onChange={() => setShowNumberCalculationExplanations(
-              !showNumberCalculationExplanations,
-            )
+            onChange={(newValue) => setUserSettings({
+              ...userSettings,
+              showNumberCalculationExplanations: newValue,
+            })
             }
-            checked={showNumberCalculationExplanations}
+            checked={userSettings.showNumberCalculationExplanations}
           />
         </PopoverSettingsSection>
       </PopoverSettingsContent>
@@ -252,7 +321,7 @@ const NavigationBar = (props) => {
   const avatarPopup = (
     <Popover>
       <PopoverTextContent>
-        <PopoverTextItem href="www.google.com" target="_blank">
+        <PopoverTextItem onClick={() => props.history.push('/userHome')}>
           Meine Analysen
         </PopoverTextItem>
         <PopoverTextItem onClick={() => props.history.push('/userHome')}>
@@ -326,7 +395,4 @@ const NavigationBar = (props) => {
   );
 };
 
-export default compose(
-  graphql(userSettingsQuery),
-  graphql(saveUserSettingsMutation, { name: 'saveUserSettings' }),
-)(withApollo(withRouter(NavigationBar)));
+export default withRouter(NavigationBar);

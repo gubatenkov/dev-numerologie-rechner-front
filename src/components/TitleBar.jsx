@@ -7,7 +7,7 @@ const TitleBarContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 45px;
+  margin-top: 20px;
   margin-bottom: 58px;
 `;
 
