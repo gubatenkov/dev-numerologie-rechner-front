@@ -148,7 +148,10 @@ const SegmentButton = styled(TextButton)`
 // spinner when loading
 const NavbarSpinner = styled(Spinner)`
   /* spinner is placed to the right */
-  grid-column-start: 7;
+  grid-column-start: 4;
+
+  /* centering spinner */
+  justify-self: center;
 `;
 
 /**

@@ -245,12 +245,18 @@ class AnalysisResultPersonalRender extends Component {
           leftButtonOnClick={() => this.props.history.goBack()}
         />
         <TitleBar
-          primaryHeading={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-          primarySubheading={personalAnalysisResult.dateOfBirth}
-          secondaryHeading={
+          primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+          primaryDate={personalAnalysisResult.dateOfBirth}
+          secondaryName={
             personalAnalysisCompareResult
             && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
           }
+          onRemoveCompareName={() => {
+            console.log('Removing name');
+            this.props.history.push(
+              `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
+            );
+          }}
         />
 
         <ActionBar>
