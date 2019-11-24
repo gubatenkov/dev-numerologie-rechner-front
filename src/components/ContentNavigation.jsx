@@ -9,7 +9,7 @@ import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 const ContentSidebar = styled.div`
   position: -webkit-sticky;
   position: sticky;
-  top: 20px;
+  top: 40px;
 
   /* margins in layout*/
   margin-left: 90px;
@@ -130,21 +130,24 @@ const ContentNavigation = (props) => {
   }, [props.autoAdapt, props.contentItems]);
 
   // returning list of sections with nested list of items
+  // NOTE!! container div is needed for positio sticky to work
   return (
-    <ContentSidebar>
-      <ContentTitel>Inhalt</ContentTitel>
-      <ContentItemContainer>
-        {props.contentItems.map((contentSection, index) => (
-          <ContentItem
-            key={contentSection.name}
-            active={index === lastActiveContentSectionIndex}
-            onClick={() => props.onItemClick(contentSection.name)}
-          >
-            {contentSection.name}
-          </ContentItem>
-        ))}
-      </ContentItemContainer>
-    </ContentSidebar>
+    <div>
+      <ContentSidebar>
+        <ContentTitel>Inhalt</ContentTitel>
+        <ContentItemContainer>
+          {props.contentItems.map((contentSection, index) => (
+            <ContentItem
+              key={contentSection.name}
+              active={index === lastActiveContentSectionIndex}
+              onClick={() => props.onItemClick(contentSection.name)}
+            >
+              {contentSection.name}
+            </ContentItem>
+          ))}
+        </ContentItemContainer>
+      </ContentSidebar>
+    </div>
   );
 };
 

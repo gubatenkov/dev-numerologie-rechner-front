@@ -263,6 +263,7 @@ class AnalysisResultPersonalRender extends Component {
             && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
           }
           onRemoveSecondaryName={() => {
+            console.log('Removing name');
             this.props.history.push(
               `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
             );
@@ -289,14 +290,14 @@ class AnalysisResultPersonalRender extends Component {
         </ActionBar>
 
         <ContentArea>
-            <ContentNavigation
-              contentItems={this.buildContentDataStructure(
-                this.state.resultConfiguration,
-                personalAnalysisResult,
-              )}
-              onItemClick={this.navigateToElementHandler}
-              autoAdapt
-            />
+          <ContentNavigation
+            contentItems={this.buildContentDataStructure(
+              this.state.resultConfiguration,
+              personalAnalysisResult,
+            )}
+            onItemClick={this.navigateToElementHandler}
+            autoAdapt
+          />
           <ResultContent>
             {// mapping every configuration section to a result panel
             this.state.resultConfiguration.map((resultSection) => (
