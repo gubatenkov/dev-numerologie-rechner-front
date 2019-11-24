@@ -1,9 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-import '../styles/ContentNavigation.css';
-import Panel from './Panel';
+// importing threshold to switch to mobile optimized layout
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
+// container for navigation
+const ContentSidebar = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 20px;
+
+  /* margins in layout*/
+  margin-left: 90px;
+  margin-right: 74px;
+
+  /* mobile phones */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    /* hiding whole sidebar on phones */
+    display: none;
+  }
+`;
+
+// title of the sidebar
+const ContentTitel = styled.div`
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 40px;
+
+  /* margin to item container at the bottom*/
+  margin-bottom: 20px;
+  font-family: ${(props) => props.theme.fontFamily};
+  color: ${(props) => props.theme.darkGrey};
+`;
+
+// container for items
+const ContentItemContainer = styled.div`
+  /* one column aligned top right */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  /* gap between items */
+  > * + * {
+    margin-top: 24px;
+  }
+`;
+
+// an content item shown in the sidebar
+const ContentItem = styled.div`
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 500;
+  color: ${(props) => (props.active ? props.theme.darkGrey : props.theme.lighterGrey)};
+  font-family: ${(props) => props.theme.fontFamily};
+
+  cursor: pointer;
+`;
+
+// component displaying table of contents and navigation at the left hand side
 const ContentNavigation = (props) => {
   // keeping track of last section item current active
   const [
@@ -75,36 +131,20 @@ const ContentNavigation = (props) => {
 
   // returning list of sections with nested list of items
   return (
-    <div className="ContentNavigation">
-      <Panel title="Inhalt">
-        <ul>
-          {props.contentItems.map((contentSection, index) => (
-            <li key={contentSection.name}>
-              <div
-                className={
-                  index === lastActiveContentSectionIndex
-                    ? 'ContentNavigation--activeSection'
-                    : ''
-                }
-              >
-                {contentSection.name}
-              </div>
-              {contentSection.titles.length > 0 && (
-                <ul>
-                  {contentSection.titles.map((title) => (
-                    <li key={title.title}>
-                      <button onClick={() => props.onItemClick(title.anchor)}>
-                        {title.title}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
-      </Panel>
-    </div>
+    <ContentSidebar>
+      <ContentTitel>Inhalt</ContentTitel>
+      <ContentItemContainer>
+        {props.contentItems.map((contentSection, index) => (
+          <ContentItem
+            key={contentSection.name}
+            active={index === lastActiveContentSectionIndex}
+            onClick={() => props.onItemClick(contentSection.name)}
+          >
+            {contentSection.name}
+          </ContentItem>
+        ))}
+      </ContentItemContainer>
+    </ContentSidebar>
   );
 };
 

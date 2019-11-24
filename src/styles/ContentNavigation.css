@@ -1,9 +1,0 @@
-.ContentNavigation {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 20px;
-}
-
-.ContentNavigation--activeSection {
-    font-weight: 500;
-}

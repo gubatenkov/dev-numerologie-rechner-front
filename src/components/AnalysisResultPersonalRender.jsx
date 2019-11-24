@@ -32,11 +32,6 @@ const ContentArea = styled.div`
   flex-direction: row;
 `;
 
-const ResultContentOverview = styled.div`
-  margin-left: 90px;
-  margin-right: 74px;
-`;
-
 const ResultContent = styled.div`
   margin-right: 50px;
   margin-left: 30px;
@@ -267,8 +262,7 @@ class AnalysisResultPersonalRender extends Component {
             personalAnalysisCompareResult
             && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
           }
-          onRemoveCompareName={() => {
-            console.log('Removing name');
+          onRemoveSecondaryName={() => {
             this.props.history.push(
               `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
             );
@@ -295,7 +289,6 @@ class AnalysisResultPersonalRender extends Component {
         </ActionBar>
 
         <ContentArea>
-          <ResultContentOverview>
             <ContentNavigation
               contentItems={this.buildContentDataStructure(
                 this.state.resultConfiguration,
@@ -304,7 +297,6 @@ class AnalysisResultPersonalRender extends Component {
               onItemClick={this.navigateToElementHandler}
               autoAdapt
             />
-          </ResultContentOverview>
           <ResultContent>
             {// mapping every configuration section to a result panel
             this.state.resultConfiguration.map((resultSection) => (
