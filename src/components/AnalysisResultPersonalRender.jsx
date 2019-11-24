@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
-
-import * as _ from 'lodash';
+import _ from 'lodash';
+import styled from 'styled-components';
 
 import {
   faArrowLeft,
@@ -24,8 +24,24 @@ import {
   getConfigurationForId,
 } from '../utils/Configuration';
 
-import '../styles/AnalysisResultPersonal.css';
 import ActionBar from './ActionBar';
+
+const ContentArea = styled.div`
+  display: flex;
+  align-content: flex-start;
+  flex-direction: row;
+`;
+
+const ResultContentOverview = styled.div`
+  margin-left: 90px;
+  margin-right: 74px;
+`;
+
+const ResultContent = styled.div`
+  margin-right: 50px;
+  margin-left: 30px;
+  width: 100%;
+`;
 
 /**
  * result screen for personal analysis
@@ -278,27 +294,24 @@ class AnalysisResultPersonalRender extends Component {
           />
         </ActionBar>
 
-        <div className="ContentArea">
-          {
-            <div className="ResultContentOverview">
-              <ContentNavigation
-                contentItems={this.buildContentDataStructure(
-                  this.state.resultConfiguration,
-                  personalAnalysisResult,
-                )}
-                onItemClick={this.navigateToElementHandler}
-                autoAdapt
-              />
-            </div>
-          }
-          <div className="ResultContent">
+        <ContentArea>
+          <ResultContentOverview>
+            <ContentNavigation
+              contentItems={this.buildContentDataStructure(
+                this.state.resultConfiguration,
+                personalAnalysisResult,
+              )}
+              onItemClick={this.navigateToElementHandler}
+              autoAdapt
+            />
+          </ResultContentOverview>
+          <ResultContent>
             {// mapping every configuration section to a result panel
             this.state.resultConfiguration.map((resultSection) => (
               // returning panel and result table with filtered data
               <Panel
                 title={resultSection.name}
                 id={resultSection.name}
-                className="panelResult"
                 key={resultSection.name}
               >
                 {resultSection.tables.map((tableData) => (
@@ -319,8 +332,8 @@ class AnalysisResultPersonalRender extends Component {
                 ))}
               </Panel>
             ))}
-          </div>
-        </div>
+          </ResultContent>
+        </ContentArea>
         <TourView
           isOpen={this.state.resultTextDetailViewOpen}
           onClose={() => this.setState({ resultTextDetailViewOpen: false })}
