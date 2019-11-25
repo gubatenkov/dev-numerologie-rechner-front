@@ -46,6 +46,7 @@ const lightTheme = {
   white: '#FFFFFF',
   primaryLight: '#f3f9fa',
   darkGrey: '#323232',
+  darkGrey2: '#b8b8b8',
   lightGrey: '#eaeaea',
   lighterGrey: '#a8a8a8',
   lightestGrey: '#f8f8f8',

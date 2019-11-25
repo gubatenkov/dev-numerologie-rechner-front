@@ -24,6 +24,7 @@ const PanelHeader = styled.div`
   /* aligning items at the end (=bottom) so they align at the bottom*/
   align-items: end;
   margin-bottom: 32px;
+  margin-right: 8px;
 `;
 
 // left action in the header

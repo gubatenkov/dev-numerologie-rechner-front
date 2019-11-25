@@ -8,6 +8,11 @@ import ResultTableRow from './ResultTableRow';
 const ResultTableStyled = styled.table`
   /* styling basic table properties*/
   table-layout: fixed;
+  border-collapse: separate;
+
+  border-spacing: 0 8px;
+
+  width: 100%;
 
   /* making sure the user cannot select any values in table*/
   user-select: none;
@@ -57,7 +62,7 @@ const ResultTable = (props) => {
         ))}
       </tbody>
     </ResultTableStyled>,
-    <ResultWatermark className="ResultTable--printWatermark" key="watermark">
+    <ResultWatermark key="watermark">
       Bitte kaufen Sie ein PDF Paket um ein PDF der Analyse zu generieren.
     </ResultWatermark>,
   ];

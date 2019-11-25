@@ -277,7 +277,8 @@ const AnalysisResultPersonalRender = (props) => {
             <ResultPanel
               title={resultSection.name}
               rightActionIcon={faBookOpen}
-              onRightActionClick={() => console.log('open tour!!!')}
+              onRightActionClick={() => handleItemDetailClick(resultSection.name)
+              }
               id={resultSection.name}
               key={resultSection.name}
             >
