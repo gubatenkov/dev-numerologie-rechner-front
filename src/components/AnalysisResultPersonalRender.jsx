@@ -14,7 +14,7 @@ import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
 import ResultPanel from './ResultPanel';
-import ResultTableStyled from './ResultTable';
+import ResultTable from './ResultTable';
 import TourView from './TourView';
 import TextButton from './Buttons/TextButton';
 import IconButton from './Buttons/IconButton';
@@ -284,7 +284,7 @@ const AnalysisResultPersonalRender = (props) => {
             >
               {resultSection.tables.map((tableData) => (
                 // returning table with result data for each number id
-                <ResultTableStyled
+                <ResultTable
                   name={tableData.name}
                   numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
                   compareNumbers={

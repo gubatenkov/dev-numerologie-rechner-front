@@ -82,7 +82,7 @@ export const PERSONAL_RESULT_CONFIGURATIONS = {
         {
           name: 'Vibratorische Zyklen',
           numberIds: ['vz.vzb', 'vz.vzp', 'vz.vze'],
-          headings: null,
+          showTitle: true,
         },
         {
           name: 'Herausforderungen',
