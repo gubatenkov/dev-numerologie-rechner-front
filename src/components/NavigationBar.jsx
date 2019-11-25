@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
@@ -396,6 +397,15 @@ const NavigationBar = (props) => {
       )}
     </NavbarContainer>
   );
+};
+
+// defining proptypes
+NavigationBar.propTypes = {
+  leftButtonIcon: PropTypes.object,
+  leftButtonOnClick: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
 };
 
 export default withRouter(NavigationBar);

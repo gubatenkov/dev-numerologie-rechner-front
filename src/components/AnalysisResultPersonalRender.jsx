@@ -298,6 +298,7 @@ class AnalysisResultPersonalRender extends Component {
             onItemClick={this.navigateToElementHandler}
             autoAdapt
           />
+
           <ResultContent>
             {// mapping every configuration section to a result panel
             this.state.resultConfiguration.map((resultSection) => (
@@ -326,6 +327,7 @@ class AnalysisResultPersonalRender extends Component {
               </Panel>
             ))}
           </ResultContent>
+          
         </ContentArea>
         <TourView
           isOpen={this.state.resultTextDetailViewOpen}
