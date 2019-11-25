@@ -18,7 +18,7 @@ const TitleBarContainer = styled.div`
 
   /* margin to other layers*/
   margin-top: 20px;
-  margin-bottom: 58px;
+  margin-bottom: 42px;
 
   /* gap between children */
   > * + * {
@@ -93,8 +93,8 @@ const TitleBarName = styled.div`
 
   /* mobile phones: reducing fotn sizes*/
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    font-size: 24px;
-    line-height: 32px;
+    font-size: ${(props) => (props.compare ? '24px' : '40px')};
+    line-height: ${(props) => (props.compare ? '32px' : '50px')};
   }
 `;
 
@@ -125,7 +125,9 @@ const TitleBarItem = (props) => (
     <CloseIconContainer>
       {props.removeable && <CloseIcon icon={faTimes} />}
     </CloseIconContainer>
-    <TitleBarName>{_.truncate(props.name, { legnth: 20 })}</TitleBarName>
+    <TitleBarName compare={props.compare}>
+      {_.truncate(props.name, { legnth: 20 })}
+    </TitleBarName>
     <TitleBarDate>{props.date}</TitleBarDate>
   </TitleBarItemContainer>
 );
@@ -136,11 +138,16 @@ const TitleBarItem = (props) => (
  */
 const TitleBar = (props) => (
   <TitleBarContainer>
-    <TitleBarItem name={props.primaryName} date={props.primaryDate} />
+    <TitleBarItem
+      name={props.primaryName}
+      date={props.primaryDate}
+      compare={props.secondaryName}
+    />
     {props.secondaryName && (
       <TitleBarItem
         name={props.secondaryName}
         date={props.secondaryDate}
+        compare={props.secondaryName}
         removeable
         onClick={() => props.onRemoveSecondaryName()}
       />

@@ -18,6 +18,10 @@ const ActionBar = styled.div`
   > * + * {
     margin-left: 16px;
   }
+  /* in case or wrap => spacing between rows*/
+  > * {
+    margin-top: 16px;
+  }
 `;
 
 export default ActionBar;
