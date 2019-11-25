@@ -43,6 +43,7 @@ import { GRAPHQL_ENDPOINT } from './utils/Configuration';
 // defining UI themes
 const lightTheme = {
   primary: '#01b2d4',
+  black: 'black',
   white: '#FFFFFF',
   primaryLight: '#f3f9fa',
   darkGrey: '#323232',

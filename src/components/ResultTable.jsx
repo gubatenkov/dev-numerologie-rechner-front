@@ -34,6 +34,15 @@ const ResultWatermark = styled.h3`
   }
 `;
 
+const TableCaption = styled.caption`
+  caption-side: top;
+  text-transform: uppercase;
+  margin-left: 24px;
+  font-size: 20px;
+  font-weight: 600;
+  color: ${(props) => props.theme.black};
+`;
+
 /**
  * table capable of rendering calculation and number results
  * returned from the server
@@ -49,7 +58,7 @@ const ResultTable = (props) => {
 
   return [
     <ResultTableStyled key={`ResultTable ${props.name}`}>
-      {props.showTitle && <caption>{props.name}</caption>}
+      {props.showTitle && <TableCaption>{props.name}</TableCaption>}
       <tbody>
         {props.numbers.map((item, index) => (
           <ResultTableRow
