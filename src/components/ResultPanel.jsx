@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import IconButton from './Buttons/IconButton';
 
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+
 // the container => body of the panel
 const PanelContainer = styled.div`
   /* basic padding of content inside the container*/
@@ -37,6 +39,11 @@ const LeftPanelAction = styled.div`
 const RightPanelAction = styled.div`
   /* positioning at the right*/
   grid-column-start: 3;
+
+  /* hiding on mobile phones*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    display: none
+  }
 `;
 
 // the title displayed at the top center of the panel
