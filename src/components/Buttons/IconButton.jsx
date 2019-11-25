@@ -13,12 +13,12 @@ const StyledButton = styled.button`
   border-style: none;
 
   /* getting proper colors from base theme, inverted means on dark background*/
-  background-color: ${(props) => (props.disabled
+  background-color: ${(props) => (props.inactive
     ? props.theme.lightestGrey
     : props.inverted
       ? props.theme.white
-      : props.theme.primaryLight)}
-  color: ${(props) => (props.disabled ? props.theme.darkGrey2 : props.theme.primary)};
+      : props.theme.primaryLight)};
+  color: ${(props) => (props.inactive ? props.theme.darkGrey2 : props.theme.primary)};
 
   /* setting shadow if inverted*/
   box-shadow: ${(props) => (props.inverted ? '0 0 8px 0 rgba(50,50,50,0.08)' : 'none')};
@@ -39,7 +39,7 @@ const IconButton = (props) => (
     className={props.className}
     onClick={props.onClick}
     inverted={props.inverted}
-    disabled={props.disabled}
+    inactive={props.inactive}
   >
     <FontAwesomeIcon icon={props.icon} />
   </StyledButton>

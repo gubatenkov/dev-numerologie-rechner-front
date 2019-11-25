@@ -40,17 +40,34 @@ const NameColumn = styled.td`
   width: 35%;
   text-align: left;
   padding-left: 24px;
+
+  ${ResultTableRowStyled}:hover & {
+    border-left: solid ${(props) => props.theme.primary} 1px;
+    border-top: solid ${(props) => props.theme.primary} 1px;
+    border-bottom: solid ${(props) => props.theme.primary} 1px;
+  }
 `;
 
 const ResultColumn = styled.td`
   width: ${(props) => (props.compare ? '25%' : '50%')};
   text-align: center;
+
+  ${ResultTableRowStyled}:hover & {
+    border-top: solid ${(props) => props.theme.primary} 1px;
+    border-bottom: solid ${(props) => props.theme.primary} 1px;
+  }
 `;
 
 const ActionColumn = styled.td`
   width: 15%;
   text-align: right;
   padding-right: 12px;
+
+  ${ResultTableRowStyled}:hover & {
+    border-right: solid ${(props) => props.theme.primary} 1px;
+    border-top: solid ${(props) => props.theme.primary} 1px;
+    border-bottom: solid ${(props) => props.theme.primary} 1px;
+  }
 `;
 
 const MatrixTable = styled.table`
@@ -206,8 +223,8 @@ const ResultTableRow = (props) => {
       <ActionColumn>
         <RowIconButton
           icon={rowIsLocked ? faLock : faBookOpen}
-          disabled={rowIsLocked}
-          onClick={() => !rowIsLocked && props.onTextDetailClick(item.numberId)}
+          inactive={rowIsLocked}
+          onClick={() => props.onTextDetailClick(item.numberId)}
         />
       </ActionColumn>
     </ResultTableRowStyled>
