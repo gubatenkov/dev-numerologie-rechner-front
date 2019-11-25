@@ -37,7 +37,7 @@ const ResultTableRowStyled = styled.tr`
 `;
 
 const NameColumn = styled.td`
-  width: 30%;
+  width: 35%;
   text-align: left;
   padding-left: 24px;
 `;
@@ -48,7 +48,7 @@ const ResultColumn = styled.td`
 `;
 
 const ActionColumn = styled.td`
-  width: 20%;
+  width: 15%;
   text-align: right;
   padding-right: 12px;
 `;
