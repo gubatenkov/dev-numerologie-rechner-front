@@ -50,6 +50,8 @@ const lightTheme = {
   lightGrey: '#eaeaea',
   lighterGrey: '#a8a8a8',
   lightestGrey: '#f8f8f8',
+  matrixBorderGrey: '#D6D6D6',
+  matrixRed: 'rgba(255, 3, 3, .3)',
   fontFamily: 'Roboto',
 };
 

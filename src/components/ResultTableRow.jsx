@@ -21,43 +21,73 @@ const ResultTableRowStyled = styled.tr`
   font-weight: 500;
   line-height: 30px;
 
-  td:first-child {
+  > td:first-child {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
   }
 
-  td:last-child {
+  > td:last-child {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
   }
-  
-  td {
+
+  > td {
     background-color: ${(props) => props.theme.white};
   }
 `;
 
 const NameColumn = styled.td`
-  width: 50%;
+  width: 30%;
   text-align: left;
   padding-left: 24px;
 `;
 
 const ResultColumn = styled.td`
-  width: 40%;
-  text-align: left;
+  width: ${(props) => (props.compare ? '25%' : '50%')};
+  text-align: center;
 `;
 
 const ActionColumn = styled.td`
-  width: 10%;
+  width: 20%;
   text-align: right;
   padding-right: 12px;
 `;
 
 const MatrixTable = styled.table`
-  width: 20vh !important;
-  height: 20vh !important;
   text-align: center;
-  margin-bottom: 0 !important;
+  height: 225px;
+  width: 225px;
+
+  border-collapse: collapse;
+  border-style: hidden;
+
+  td {
+    /* border: solid ${(props) => props.theme.lighterGrey} 1px;*/
+    width: 75px;
+    height: 75px;
+
+    border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
+  }
+  
+  tr:first-child td:first-child {
+    border-top-left-radius: 8px;
+  }
+
+  tr:first-child td:last-child {
+    border-top-right-radius: 8px;
+  }
+
+  tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+  }
+
+  tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+  }
+`;
+
+const MatrixCell = styled.td`
+  background-color: ${(props) => (props.highlighted ? props.theme.matrixRed : '')};
 `;
 
 const RowIconButton = styled(IconButton)`
@@ -65,10 +95,18 @@ const RowIconButton = styled(IconButton)`
   width: 40px;
 `;
 
+const MatrixContainer = styled.div`
+  border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
+  border-radius: 8px;
+
+  width: 227px;
+  height: 227px;
+  margin: 12px auto 12px auto;
+`;
+
 /**
  * row rendering a single row item of an analysis result
  */
-
 const ResultTableRow = (props) => {
   // getting item and compare item from passed props
   const { item, compareItem } = props;
@@ -81,38 +119,48 @@ const ResultTableRow = (props) => {
     // extracting dimensions
     const matrixDimensions = resultItem.result.dimensions;
 
+    // extracting highlighted indices
+    const highlightedIndices = resultItem.result.highlighted;
+
     // rendering and returning matrix
     return (
-      <MatrixTable>
-        <tbody>
-          {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
-            <tr
-              key={
-                resultItem.name
-                + resultItem.numberId
-                + rowIndex
-                + resultItem.result.values[rowIndex]
-              }
-            >
-              {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
-                // determining current index composed of cols and rows
-                const currentIndex = rowIndex * matrixDimensions.cols + colIndex;
+      <MatrixContainer>
+        <MatrixTable>
+          <tbody>
+            {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
+              <tr
+                key={
+                  resultItem.name
+                  + resultItem.numberId
+                  + rowIndex
+                  + resultItem.result.values[rowIndex]
+                }
+              >
+                {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
+                  // determining current index composed of cols and rows
+                  const currentIndex = rowIndex * matrixDimensions.cols + colIndex;
+                  const highlighted = highlightedIndices[currentIndex];
 
-                // returning cell for element
-                return (
-                  <td key={resultItem.name + currentIndex}>
-                    <div>
-                      {resultItem.result.values[currentIndex]
-                        ? resultItem.result.values[currentIndex]
-                        : '-'}
-                    </div>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </MatrixTable>
+                  // extracting result value or placeholder
+                  const resultValue = resultItem.result.values[currentIndex] || '';
+
+                  // returning cell for element
+                  return (
+                    <MatrixCell
+                      highlighted={highlighted}
+                      key={resultItem.name + currentIndex}
+                    >
+                      {resultValue.length > 3
+                        ? `${resultValue.substr(0, 3)}...`
+                        : resultValue}
+                    </MatrixCell>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </MatrixTable>
+      </MatrixContainer>
     );
   };
 
@@ -147,9 +195,13 @@ const ResultTableRow = (props) => {
       highlighted={item.highlighted}
     >
       <NameColumn>{item.name}</NameColumn>
-      <ResultColumn>{contentColumn}</ResultColumn>
+      <ResultColumn compare={compareContentColumn}>
+        {contentColumn}
+      </ResultColumn>
       {compareContentColumn && (
-        <ResultColumn>{compareContentColumn}</ResultColumn>
+        <ResultColumn compare={compareContentColumn}>
+          {compareContentColumn}
+        </ResultColumn>
       )}
       <ActionColumn>
         <RowIconButton
