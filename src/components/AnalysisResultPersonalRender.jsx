@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
@@ -13,8 +13,8 @@ import {
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
-import Panel from './Panel';
-import ResultTable from './ResultTable';
+import ResultPanel from './ResultPanel';
+import ResultTableStyled from './ResultTable';
 import TourView from './TourView';
 import TextButton from './Buttons/TextButton';
 import IconButton from './Buttons/IconButton';
@@ -41,48 +41,33 @@ const ResultContent = styled.div`
 /**
  * result screen for personal analysis
  */
-class AnalysisResultPersonalRender extends Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired,
-    }).isRequired,
-  };
+const AnalysisResultPersonalRender = (props) => {
+  // getting relevant parameters from props
+  const { user } = props;
+  const { resultConfigurationId } = props.match.params;
 
-  constructor(props) {
-    // super constructor
-    super(props);
+  // determining configuration for result
+  // 3) if no user and param set => using default
+  let resultConfig = PERSONAL_RESULT_CONFIGURATION_DEFAULT;
 
-    // getting relevant parameters from props
-    const { user } = props;
-    const { resultConfigurationId } = props.match.params;
-
-    // determining configuration for result
-    // 3) if no user and param set => using default
-    let resultConfiguration = PERSONAL_RESULT_CONFIGURATION_DEFAULT;
-
-    // 1) if param is set => using this one
-    if (resultConfigurationId && getConfigurationForId(resultConfigurationId)) {
-      resultConfiguration = getConfigurationForId(resultConfigurationId);
-    }
-    // 2) if no param set and user => using user default
-    else if (
-      user
-      && user.resultConfiguration
-      && getConfigurationForId(user.resultConfiguration)
-    ) {
-      resultConfiguration = getConfigurationForId(user.resultConfiguration);
-    }
-
-    // setting initial state based on calculations
-    this.state = {
-      loading: false,
-      loadingText: null,
-      resultTextDetailViewOpen: false,
-      resultTextDetailViewSectionIndex: 0,
-      resultTextDetailViewElementIndex: 0,
-      resultConfiguration,
-    };
+  // 1) if param is set => using this one
+  if (resultConfigurationId && getConfigurationForId(resultConfigurationId)) {
+    resultConfig = getConfigurationForId(resultConfigurationId);
   }
+
+  // 2) if no param set and user => using user default
+  else if (
+    user
+    && user.resultConfiguration
+    && getConfigurationForId(user.resultConfiguration)
+  ) {
+    resultConfig = getConfigurationForId(user.resultConfiguration);
+  }
+
+  // defining component state
+  const [isTourOpen, setIsTourOpen] = useState(false);
+  const [tourSectionIndex, setTourSectionIndex] = useState(0);
+  const [tourElementIndex, setTourElementIndex] = useState(0);
 
   /**
    * transforms the analysis results and configuration into a tour data structure used for the detailed tour
@@ -90,11 +75,11 @@ class AnalysisResultPersonalRender extends Component {
    * @param configuration the current result configuration
    * @returns an array of tour sections containing section name and result items
    */
-  buildTourDataStructure(resultData, configuration) {
+  const buildTourDataStructure = (resultData, configuration) =>
     // constructing tourSection element for every table in configuration
-    return configuration.map((resultSection) => {
+    configuration.map((resultSection) => {
       const resultSectionNumbers = [];
-      // iterating over result tables of section
+      // iterating over result tables of sectionp
       resultSection.tables.forEach((resultTable) => {
         // pushing resolved numbers
         resultSectionNumbers.push(
@@ -108,16 +93,15 @@ class AnalysisResultPersonalRender extends Component {
         sectionElements: resultSectionNumbers,
       };
     });
-  }
 
   /**
    * builds a data structure used for the content sidebar
    * @param configuration the current result configuration
    * @param result the result containing ann numbers in the configuration
    */
-  buildContentDataStructure(configuration, result) {
+  const buildContentDataStructure = (configuration, result) =>
     // returning an array of section names and number names
-    return configuration.map((configSection) => {
+    configuration.map((configSection) => {
       // getting an array of all items in a section (across tables)
       const numberTitles = [];
       // iterating over tables, resolving values for ids
@@ -150,18 +134,17 @@ class AnalysisResultPersonalRender extends Component {
         titles: numberTitles,
       };
     });
-  }
 
   /**
    *  handles clicks on detail links
    * @param sectionId the name of the table the event was fired
    * @param rowIndex the index of the row inside the table the event was fired for
    */
-  handleItemDetailClick = (sectionId, numberId) => {
+  const handleItemDetailClick = (sectionId, numberId) => {
     //  getting tour structure
-    const tourDataStructure = this.buildTourDataStructure(
-      this.props.personalAnalysisResult,
-      this.state.resultConfiguration,
+    const tourDataStructure = buildTourDataStructure(
+      props.personalAnalysisResult,
+      resultConfig,
     );
 
     // finding index with datakey in tour data structure
@@ -189,18 +172,16 @@ class AnalysisResultPersonalRender extends Component {
     }
 
     // opening detail view with right section index
-    this.setState({
-      resultTextDetailViewOpen: true,
-      resultTextDetailViewSectionIndex: sectionIndex,
-      resultTextDetailViewElementIndex: elementIndex,
-    });
+    setIsTourOpen(true);
+    setTourSectionIndex(sectionIndex);
+    setTourElementIndex(elementIndex);
   };
 
   /**
    * handles the navigation to a specific item
    * @param anchor the id of the element in the dom to navigate to
    */
-  navigateToElementHandler = (anchor) => {
+  const navigateToElementHandler = (anchor) => {
     // scrolling to item if present in DOM
     const domElement = document.getElementById(anchor);
     if (domElement) {
@@ -211,12 +192,9 @@ class AnalysisResultPersonalRender extends Component {
   /**
    * handles the saving of the displayed analysis given the input parameters
    */
-  handleSaveAnalysis = () => {
+  const handleSaveAnalysis = () => {
     // extracting props
-    const {
-      personalAnalysisResult,
-      personalAnalysisCompareResult,
-    } = this.props;
+    const { personalAnalysisResult, personalAnalysisCompareResult } = props;
 
     // extracting parameters to save from input analysis results
     const firstNames = [personalAnalysisResult.firstNames];
@@ -226,7 +204,7 @@ class AnalysisResultPersonalRender extends Component {
       lastNames.push(personalAnalysisCompareResult.lastName);
     }
     // navigating to component to handle save
-    this.props.history.push(
+    props.history.push(
       `/userHome/saveAnalysis/${encodeURIComponent(
         firstNames,
       )}/${encodeURIComponent(lastNames)}/${encodeURIComponent(
@@ -235,120 +213,115 @@ class AnalysisResultPersonalRender extends Component {
     );
   };
 
-  /**
-   * default render
-   */
-  render() {
-    // getting props with two different types on inputs to this component:
-    // a) analysis => display
-    // b) analysis result => display result
-    // c) compare result => the compare result for a different name (if present)
-    const {
-      personalAnalysisResult,
-      personalAnalysisCompareResult,
-    } = this.props;
+  // getting props with two different types on inputs to this component:
+  // a) analysis => display
+  // b) analysis result => display result
+  // c) compare result => the compare result for a different name (if present)
+  const { personalAnalysisResult, personalAnalysisCompareResult } = props;
 
-    // render table, table shows spinner
-    return (
-      <div>
-        <NavigationBar
-          leftButtonIcon={faArrowLeft}
-          leftButtonOnClick={() => this.props.history.goBack()}
+  // render table, table shows spinner
+  return (
+    <div>
+      <NavigationBar
+        leftButtonIcon={faArrowLeft}
+        leftButtonOnClick={() => props.history.goBack()}
+      />
+      <TitleBar
+        primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+        primaryDate={personalAnalysisResult.dateOfBirth}
+        secondaryName={
+          personalAnalysisCompareResult
+          && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+        }
+        onRemoveSecondaryName={() => {
+          console.log('Removing name');
+          props.history.push(
+            `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
+          );
+        }}
+      />
+
+      <ActionBar>
+        <TextButton
+          title="Namen vergleichen"
+          onClick={() => window.alert('TODO: Implement compare')}
         />
-        <TitleBar
-          primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-          primaryDate={personalAnalysisResult.dateOfBirth}
-          secondaryName={
-            personalAnalysisCompareResult
-            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
-          }
-          onRemoveSecondaryName={() => {
-            console.log('Removing name');
-            this.props.history.push(
-              `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
-            );
+        <IconButton icon={faSave} onClick={() => handleSaveAnalysis()} />
+        <TextButton
+          primary
+          icon={faBookOpen}
+          title="Alle lesen"
+          onClick={() => {
+            // opening tour view at start
+            setIsTourOpen(true);
+            setTourSectionIndex(0);
+            setTourElementIndex(0);
           }}
         />
+      </ActionBar>
 
-        <ActionBar>
-          <TextButton
-            title="Namen vergleichen"
-            onClick={() => window.alert('TODO: Implement compare')}
-          />
-          <IconButton icon={faSave} onClick={() => this.handleSaveAnalysis()} />
-          <TextButton
-            primary
-            icon={faBookOpen}
-            title="Alle lesen"
-            onClick={() => this.setState({
-              resultTextDetailViewOpen: true,
-              resultTextDetailViewSectionIndex: 0,
-              resultTextDetailViewElementIndex: 0,
-            })
-            }
-          />
-        </ActionBar>
-
-        <ContentArea>
-          <ContentNavigation
-            contentItems={this.buildContentDataStructure(
-              this.state.resultConfiguration,
-              personalAnalysisResult,
-            )}
-            onItemClick={this.navigateToElementHandler}
-            autoAdapt
-          />
-
-          <ResultContent>
-            {// mapping every configuration section to a result panel
-            this.state.resultConfiguration.map((resultSection) => (
-              // returning panel and result table with filtered data
-              <Panel
-                title={resultSection.name}
-                id={resultSection.name}
-                key={resultSection.name}
-              >
-                {resultSection.tables.map((tableData) => (
-                  // returning table with result data for each number id
-                  <ResultTable
-                    name={tableData.name}
-                    numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
-                    compareNumbers={
-                      personalAnalysisCompareResult
-                      && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
-                    }
-                    headings={tableData.headings}
-                    showTitle={tableData.showTitle}
-                    sectionId={resultSection.name}
-                    handleTextDetailClick={this.handleItemDetailClick}
-                    key={`${resultSection.name + tableData.name}`}
-                  />
-                ))}
-              </Panel>
-            ))}
-          </ResultContent>
-          
-        </ContentArea>
-        <TourView
-          isOpen={this.state.resultTextDetailViewOpen}
-          onClose={() => this.setState({ resultTextDetailViewOpen: false })}
-          tourData={this.buildTourDataStructure(
+      <ContentArea>
+        <ContentNavigation
+          contentItems={buildContentDataStructure(
+            resultConfig,
             personalAnalysisResult,
-            this.state.resultConfiguration,
           )}
-          sectionIndex={this.state.resultTextDetailViewSectionIndex}
-          elementIndex={this.state.resultTextDetailViewElementIndex}
-          onIndexChange={(sectionIndex, elementIndex) => {
-            // if index changes by interaction with component => updating state to re-render accordingly
-            this.setState({
-              resultTextDetailViewSectionIndex: sectionIndex,
-              resultTextDetailViewElementIndex: elementIndex,
-            });
-          }}
+          onItemClick={navigateToElementHandler}
+          autoAdapt
         />
-      </div>
-    );
-  }
-}
+
+        <ResultContent>
+          {// mapping every configuration section to a result panel
+          resultConfig.map((resultSection) => (
+            // returning panel and result table with filtered data
+            <ResultPanel
+              title={resultSection.name}
+              rightActionIcon={faBookOpen}
+              onRightActionClick={() => console.log('open tour!!!')}
+              id={resultSection.name}
+              key={resultSection.name}
+            >
+              {resultSection.tables.map((tableData) => (
+                // returning table with result data for each number id
+                <ResultTableStyled
+                  name={tableData.name}
+                  numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
+                  compareNumbers={
+                    personalAnalysisCompareResult
+                    && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
+                  }
+                  headings={tableData.headings}
+                  showTitle={tableData.showTitle}
+                  handleTextDetailClick={handleItemDetailClick}
+                  sectionId={resultSection.name}
+                  key={`${resultSection.name + tableData.name}`}
+                />
+              ))}
+            </ResultPanel>
+          ))}
+        </ResultContent>
+      </ContentArea>
+      <TourView
+        isOpen={isTourOpen}
+        onClose={() => setIsTourOpen(false)}
+        tourData={buildTourDataStructure(personalAnalysisResult, resultConfig)}
+        sectionIndex={tourSectionIndex}
+        elementIndex={tourElementIndex}
+        onIndexChange={(sectionIndex, elementIndex) => {
+          // if index changes by interaction with component => updating state to re-render accordingly
+          setTourSectionIndex(sectionIndex);
+          setTourElementIndex(elementIndex);
+        }}
+      />
+    </div>
+  );
+};
+
+// setting proptypes
+AnalysisResultPersonalRender.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default withRouter(AnalysisResultPersonalRender);

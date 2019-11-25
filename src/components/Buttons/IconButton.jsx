@@ -12,9 +12,12 @@ const StyledButton = styled.button`
   border-radius: 6px;
   border-style: none;
 
-  /* getting proper colors from base theme */
-  background-color: ${(props) => props.theme.primaryLight};
+  /* getting proper colors from base theme, inverted means on dark background*/
+  background-color: ${(props) => (props.inverted ? props.theme.white : props.theme.primaryLight)};
   color: ${(props) => props.theme.primary};
+
+  /* setting shadow if inverted*/
+  box-shadow: ${(props) => (props.inverted ? '0 0 8px 0 rgba(50,50,50,0.08)' : 'none')};
 
   /* setting font size as this will determine size of icon */
   font-size: 18px;
@@ -28,7 +31,11 @@ const StyledButton = styled.button`
 // plain button that wraps a FA icon
 // passed icon props need to be FA icons (imported!)
 const IconButton = (props) => (
-  <StyledButton className={props.className} onClick={props.onClick}>
+  <StyledButton
+    className={props.className}
+    onClick={props.onClick}
+    inverted={props.inverted}
+  >
     <FontAwesomeIcon icon={props.icon} />
   </StyledButton>
 );

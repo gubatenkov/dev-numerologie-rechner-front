@@ -48,6 +48,7 @@ const lightTheme = {
   darkGrey: '#323232',
   lightGrey: '#eaeaea',
   lighterGrey: '#a8a8a8',
+  lightestGrey: '#f8f8f8',
   fontFamily: 'Roboto',
 };
 
