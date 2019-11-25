@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { faLock, faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import IconButton from './Buttons/IconButton';
 
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+
 // identifiers for results
 export const TYPE_ID_NUMBER = 'number';
 export const TYPE_ID_LIST = 'list';
@@ -45,6 +47,13 @@ const NameColumn = styled.td`
     border-left: solid ${(props) => props.theme.primary} 1px;
     border-top: solid ${(props) => props.theme.primary} 1px;
     border-bottom: solid ${(props) => props.theme.primary} 1px;
+  }
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
   }
 `;
 
