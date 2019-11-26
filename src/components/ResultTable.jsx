@@ -5,14 +5,15 @@ import styled from 'styled-components';
 import ResultTableRow from './ResultTableRow';
 
 // result table root element
-const ResultTableStyled = styled.table`
-  /* styling basic table properties*/
-  table-layout: fixed;
-  border-collapse: separate;
-
-  border-spacing: 0 8px;
-
+const ResultTableStyled = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  > div + div {
+    margin-top: 8px;
+  }
 
   /* making sure the user cannot select any values in table*/
   user-select: none;
@@ -34,10 +35,11 @@ const ResultWatermark = styled.h3`
   }
 `;
 
-const TableCaption = styled.caption`
+const TableCaption = styled.div`
   caption-side: top;
   text-transform: uppercase;
   margin-left: 24px;
+  margin-bottom: 4px;
   font-size: 20px;
   font-weight: 600;
   color: ${(props) => props.theme.black};
@@ -59,17 +61,14 @@ const ResultTable = (props) => {
   return [
     <ResultTableStyled key={`ResultTable ${props.name}`}>
       {props.showTitle && <TableCaption>{props.name}</TableCaption>}
-      <tbody>
-        {props.numbers.map((item, index) => (
-          <ResultTableRow
-            key={`ResultTableRow ${item.numberId}`}
-            item={item}
-            compareItem={props.compareNumbers && props.compareNumbers[index]}
-            rowIndex={index}
-            onTextDetailClick={handleTextDetailClick}
-          />
-        ))}
-      </tbody>
+      {props.numbers.map((item, index) => (
+        <ResultTableRow
+          key={`ResultTableRow ${item.numberId}`}
+          item={item}
+          compareItem={props.compareNumbers && props.compareNumbers[index]}
+          onTextDetailClick={handleTextDetailClick}
+        />
+      ))}
     </ResultTableStyled>,
     <ResultWatermark key="watermark">
       Bitte kaufen Sie ein PDF Paket um ein PDF der Analyse zu generieren.

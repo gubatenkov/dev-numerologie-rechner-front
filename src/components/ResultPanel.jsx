@@ -42,7 +42,7 @@ const RightPanelAction = styled.div`
 
   /* hiding on mobile phones*/
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    display: none
+    display: none;
   }
 `;
 
@@ -72,6 +72,10 @@ const PanelTitle = styled.div`
   }
 `;
 
+const PanelTitleContainer = styled.div`
+  overflow: hidden;
+`;
+
 // icon button used for left and right action
 const PanelIconButton = styled(IconButton)`
   /* adapting from larger standard size*/
@@ -80,7 +84,11 @@ const PanelIconButton = styled(IconButton)`
 `;
 
 // the body of the panel
-const PanelBody = styled.div``;
+const PanelBody = styled.div`
+  > * + * {
+    margin-top: 40px;
+  }
+`;
 
 const ResultPanel = (props) => (
   <PanelContainer id={props.id}>
@@ -94,7 +102,9 @@ const ResultPanel = (props) => (
           />
         )}
       </LeftPanelAction>
-      <PanelTitle>{props.title}</PanelTitle>
+      <PanelTitleContainer>
+        <PanelTitle>{props.title}</PanelTitle>
+      </PanelTitleContainer>
       <RightPanelAction>
         <PanelIconButton
           icon={props.rightActionIcon}
