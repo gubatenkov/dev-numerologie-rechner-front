@@ -61,6 +61,15 @@ const PanelTitle = styled.div`
   font-weight: 500;
   line-height: 50px;
   text-align: center;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    font-size: 32px;
+    line-height: 42px;
+  }
 `;
 
 // icon button used for left and right action

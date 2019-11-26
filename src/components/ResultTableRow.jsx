@@ -53,7 +53,7 @@ const NameColumn = styled.td`
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+  @media (max-width: 1450px) {
   }
 `;
 
@@ -94,6 +94,16 @@ const MatrixTable = styled.table`
 
     border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
   }
+
+  @media (max-width: 1450px) {
+    height: 112px;
+    width: 112px;
+
+    td {
+      width: 38px;
+      height: 38px;
+    }
+  }
   
   tr:first-child td:first-child {
     border-top-left-radius: 8px;
@@ -114,6 +124,10 @@ const MatrixTable = styled.table`
 
 const MatrixCell = styled.td`
   background-color: ${(props) => (props.highlighted ? props.theme.matrixRed : '')};
+
+  @media (max-width: 1450px) {
+    font-size: 12px; 
+  }
 `;
 
 const RowIconButton = styled(IconButton)`
@@ -128,6 +142,11 @@ const MatrixContainer = styled.div`
   width: 227px;
   height: 227px;
   margin: 12px auto 12px auto;
+
+  @media (max-width: 1450px) {
+    height: 114px;
+    width: 114px;
+  }
 `;
 
 /**
