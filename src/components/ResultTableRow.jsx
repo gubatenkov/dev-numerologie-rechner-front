@@ -24,10 +24,11 @@ const ResultTableRowStyled = styled.div`
 
   /* basic row box styling*/
   min-height: 60px;
-  background-color: ${(props) => props.theme.white};
+  background-color: ${(props) => (props.highlighted ? props.theme.highlightedRow : props.theme.white)};
   box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.08);
   border-radius: 8px;
   padding: 15px 12px 15px 24px;
+  border: ${(props) => (props.highlighted ? `solid ${props.theme.white} 4px` : 'none')};
 
   /* text styling */
   font-family: ${(props) => props.theme.fontFamily};
@@ -280,6 +281,7 @@ const ResultTableRow = (props) => {
         <RowIconButton
           icon={rowIsLocked ? faLock : faBookOpen}
           inactive={rowIsLocked}
+          inverted={item.highlighted}
           onClick={() => props.onTextDetailClick(item.numberId)}
         />
       </ActionColumn>
