@@ -12,141 +12,164 @@ export const TYPE_ID_NUMBER = 'number';
 export const TYPE_ID_LIST = 'list';
 export const TYPE_ID_MATRIX = 'matrix';
 
-const ResultTableRowStyled = styled.tr`
-  height: 60px;
+// the row in the results table
+const ResultTableRowStyled = styled.div`
+  /* flexbox row with action item to the right and content taking rest of width*/
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  /* children are the action tot the right and the rest of the content on the left*/
+  justify-content: space-between;
+
+  /* basic row box styling*/
+  min-height: 60px;
+  background-color: ${(props) => props.theme.white};
   box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.08);
+  border-radius: 8px;
+  padding: 15px 12px 15px 24px;
 
-  color: ${(props) => props.theme.darkGrey};
+  /* text styling */
   font-family: ${(props) => props.theme.fontFamily};
-
+  color: ${(props) => props.theme.darkGrey};
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
 
-  > td:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-  }
-
-  > td:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-
-  > td {
-    background-color: ${(props) => props.theme.white};
+  /* adding primary color border on hover*/
+  :hover {
+    border: solid ${(props) => props.theme.primary} 1px;
   }
 `;
 
-const NameColumn = styled.td`
-  width: 35%;
-  text-align: left;
-  padding-left: 24px;
+// Column holding the whole content of the row (=name + all values)
+const ContentColumn = styled.div`
+  /* flex row that takes all remaining space (except action at right). 
+  This container is used to wrap results on low resolutions*/
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+  /* vertically centering all items */
+  align-items: center;
 
-  ${ResultTableRowStyled}:hover & {
-    border-left: solid ${(props) => props.theme.primary} 1px;
-    border-top: solid ${(props) => props.theme.primary} 1px;
-    border-bottom: solid ${(props) => props.theme.primary} 1px;
-  }
-
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  @media (max-width: 1450px) {
-  }
+  /* this container should wrap so result content items can flow onto the next line */
+  flex-wrap: wrap;
 `;
 
-const ResultColumn = styled.td`
-  width: ${(props) => (props.compare ? '25%' : '50%')};
+// element holding the name of the result
+const NameColumn = styled.div`
+  /* 40% of the width */
+  flex-basis: 40%;
+
+  /* allow it to grow in case other elements flow to next row. E.g. 
+  content results flow to next line: we want this to take up 100% of the width */
+  flex-grow: 1;
+`;
+
+/* container holding all results (might be multiple ones). This container is needed as we
+don't want results to be wrapped independently = results on different rows */
+const ResultContainer = styled.div`
+  /* 60% of width which is then split up between all results */
+  flex-basis: 60%;
+
+  /* allow container to grow */
+  flex-grow: 1;
+
+  /* container is row in itself of all results */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* allowing results to wrap on smallest devices*/
+  flex-wrap: wrap;
+`;
+
+// element holding the result value (matrix, list or number)
+const ResultColumn = styled.div`
+  /* centering horizontally */
   text-align: center;
 
-  ${ResultTableRowStyled}:hover & {
-    border-top: solid ${(props) => props.theme.primary} 1px;
-    border-bottom: solid ${(props) => props.theme.primary} 1px;
-  }
+  /* results take up equal space in container*/
+  flex-grow: 1;
+
+  /* padding results to make sure that two elements next to each other can be distinguished */
+  padding: 5px;
 `;
 
-const ActionColumn = styled.td`
-  width: 15%;
-  text-align: right;
-  padding-right: 12px;
-
-  ${ResultTableRowStyled}:hover & {
-    border-right: solid ${(props) => props.theme.primary} 1px;
-    border-top: solid ${(props) => props.theme.primary} 1px;
-    border-bottom: solid ${(props) => props.theme.primary} 1px;
-  }
+// element to the very right holidng action button
+const ActionColumn = styled.div`
+  /* vertically aligning button at start as supposed to stick at top of container */
+  align-self: flex-start;
 `;
 
+// the result matrix table
 const MatrixTable = styled.table`
+  /* centering text in cells*/
   text-align: center;
+
+  /* setting fixed size of table*/
   height: 225px;
   width: 225px;
 
+  /* setting border collapse to not have separate borders for cells and table
+  Note: we style rounded corners on outer table while having all inner borders as follows: 
+  1) remove outer border of table
+  2) wrap in container that mimics outer border*/
   border-collapse: collapse;
+
+  /* hiding outer table borders */
   border-style: hidden;
 
-  td {
-    /* border: solid ${(props) => props.theme.lighterGrey} 1px;*/
-    width: 75px;
-    height: 75px;
-
-    border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
-  }
-
-  @media (max-width: 1450px) {
-    height: 112px;
-    width: 112px;
-
-    td {
-      width: 38px;
-      height: 38px;
-    }
-  }
-  
-  tr:first-child td:first-child {
-    border-top-left-radius: 8px;
-  }
-
-  tr:first-child td:last-child {
-    border-top-right-radius: 8px;
-  }
-
-  tr:last-child td:first-child {
-    border-bottom-left-radius: 8px;
-  }
-
-  tr:last-child td:last-child {
-    border-bottom-right-radius: 8px;
+  /* on mobile => making matrix and font size smaller*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    height: 114px;
+    width: 114px;
+    font-size: 14px;
   }
 `;
 
+// cell of the matrix table
 const MatrixCell = styled.td`
+  /* if in highlighted state => adapting background color */
   background-color: ${(props) => (props.highlighted ? props.theme.matrixRed : '')};
 
-  @media (max-width: 1450px) {
-    font-size: 12px; 
+  /* setting fixed width of cell */
+  width: 75px;
+  height: 75px;
+
+  /* setting border on every cell */
+  border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
+
+  /* on mobile => making cells smaller*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    height: 38px;
+    width: 38px;
   }
 `;
 
-const RowIconButton = styled(IconButton)`
-  height: 40px;
-  width: 40px;
-`;
-
+// container around matrix used to draw rounded border
 const MatrixContainer = styled.div`
+  /* defining border around matrix*/
   border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
   border-radius: 8px;
 
+  /* setting width of container = size of matrix + 1px for border on every side*/
   width: 227px;
   height: 227px;
+
+  /* setting margin of container to center in container*/
   margin: 12px auto 12px auto;
 
-  @media (max-width: 1450px) {
-    height: 114px;
-    width: 114px;
+  /* on mobile => making container same size as smaller matrix */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    height: 116px;
+    width: 116px;
   }
+`;
+
+// custom icon button with different size
+const RowIconButton = styled(IconButton)`
+  height: 40px;
+  width: 40px;
 `;
 
 /**
@@ -239,15 +262,20 @@ const ResultTableRow = (props) => {
       id={item.numberId}
       highlighted={item.highlighted}
     >
-      <NameColumn>{item.name}</NameColumn>
-      <ResultColumn compare={compareContentColumn}>
-        {contentColumn}
-      </ResultColumn>
-      {compareContentColumn && (
-        <ResultColumn compare={compareContentColumn}>
-          {compareContentColumn}
-        </ResultColumn>
-      )}
+      <ContentColumn>
+        <NameColumn compare={!!compareContentColumn}>{item.name}</NameColumn>
+        <ResultContainer>
+          <ResultColumn compare={!!compareContentColumn}>
+            {contentColumn}
+          </ResultColumn>
+          {compareContentColumn && (
+            <ResultColumn compare={compareContentColumn}>
+              {compareContentColumn}
+            </ResultColumn>
+          )}
+        </ResultContainer>
+      </ContentColumn>
+
       <ActionColumn>
         <RowIconButton
           icon={rowIsLocked ? faLock : faBookOpen}
@@ -263,7 +291,6 @@ const ResultTableRow = (props) => {
 ResultTableRow.propTypes = {
   item: PropTypes.object.isRequired,
   onTextDetailClick: PropTypes.func.isRequired,
-  rowIndex: PropTypes.number.isRequired,
 };
 
 export default ResultTableRow;
