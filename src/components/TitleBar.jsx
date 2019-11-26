@@ -24,6 +24,13 @@ const TitleBarContainer = styled.div`
   > * + * {
     margin-left: 95px;
   }
+
+  /* reucing space between primary and secondary name on mobile*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    > * + * {
+      margin-left: 10px;
+    }
+  }
 `;
 
 // an item in the title bar
@@ -126,7 +133,7 @@ const TitleBarItem = (props) => (
       {props.removeable && <CloseIcon icon={faTimes} />}
     </CloseIconContainer>
     <TitleBarName compare={props.compare}>
-      {_.truncate(props.name, { legnth: 20 })}
+      {_.truncate(props.name, { legnth: 15 })}
     </TitleBarName>
     <TitleBarDate>{props.date}</TitleBarDate>
   </TitleBarItemContainer>
