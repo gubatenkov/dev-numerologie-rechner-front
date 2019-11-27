@@ -32,7 +32,8 @@ const StyledButton = styled.button`
   }
 `;
 
-const IconImage = styled.img``;
+const IconImage = styled.img`
+`;
 
 // plain button that wraps a FA icon
 // passed icon props need to be FA icons (imported!)

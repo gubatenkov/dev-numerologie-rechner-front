@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useQuery } from '@apollo/react-hooks';
 
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
@@ -26,7 +27,12 @@ import {
   getConfigurationForId,
 } from '../utils/Configuration';
 
+import { introTextQuery } from '../graphql/Queries';
+
+import { OVERALL_INTRO_KEY } from '../utils/Constants';
+
 import ActionBar from './ActionBar';
+import LoadingIndicator from './LoadingIndicator';
 
 const ContentArea = styled.div`
   display: flex;
@@ -66,18 +72,43 @@ const AnalysisResultPersonalRender = (props) => {
     resultConfig = getConfigurationForId(user.resultConfiguration);
   }
 
+  // filtering names of all intro texts
+  const sectionIds = resultConfig.map((section) => section.name);
+  sectionIds.push(OVERALL_INTRO_KEY);
+
+  // fetching intro texts for given configuration sections
+  const { loading, error, data } = useQuery(introTextQuery, {
+    variables: {
+      sectionIds,
+      isPdf: false,
+      longText: false,
+    },
+  });
+
   // defining component state
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [tourSectionIndex, setTourSectionIndex] = useState(0);
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
+  if (loading) {
+    return <LoadingIndicator text={'Erstelle Auswertung...'} />;
+  }
+
+  if (error) {
+    return <LoadingIndicator text={'Error while fetching intro texts'} />;
+  }
+
+  // extracting intro texts from result
+  const { introTexts } = data;
+
   /**
    * transforms the analysis results and configuration into a tour data structure used for the detailed tour
    * @param resultData the result data for the analysis
    * @param configuration the current result configuration
+   * @param introTexts the intro texts of the current configuration to bake into the data structure as they are shown in the tour
    * @returns an array of tour sections containing section name and result items
    */
-  const buildTourDataStructure = (resultData, configuration) =>
+  const buildTourDataStructure = (resultData, configuration, introTexts) =>
     // constructing tourSection element for every table in configuration
     configuration.map((resultSection) => {
       const resultSectionNumbers = [];
@@ -89,9 +120,15 @@ const AnalysisResultPersonalRender = (props) => {
         );
       });
 
+      // finding intro text for section
+      const sectionIntroText = introTexts.filter(
+        (text) => text.sectionId === resultSection.name,
+      )[0];
+
       // pushing resulting section  to result
       return {
         sectionName: resultSection.name,
+        sectionIntro: sectionIntroText,
         sectionElements: resultSectionNumbers,
       };
     });
@@ -147,7 +184,10 @@ const AnalysisResultPersonalRender = (props) => {
     const tourDataStructure = buildTourDataStructure(
       props.personalAnalysisResult,
       resultConfig,
+      introTexts,
     );
+
+    console.log(tourDataStructure);
 
     // finding index with datakey in tour data structure
     let sectionIndex = tourDataStructure.findIndex(
@@ -308,7 +348,11 @@ const AnalysisResultPersonalRender = (props) => {
       <TourView
         isOpen={isTourOpen}
         onClose={() => setIsTourOpen(false)}
-        tourData={buildTourDataStructure(personalAnalysisResult, resultConfig)}
+        tourData={buildTourDataStructure(
+          personalAnalysisResult,
+          resultConfig,
+          introTexts,
+        )}
         sectionIndex={tourSectionIndex}
         elementIndex={tourElementIndex}
         onIndexChange={(sectionIndex, elementIndex) => {
