@@ -8,9 +8,17 @@ import IconButton from './Buttons/IconButton';
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
 // identifiers for results
-export const TYPE_ID_NUMBER = 'number';
-export const TYPE_ID_LIST = 'list';
-export const TYPE_ID_MATRIX = 'matrix';
+const TYPE_ID_NUMBER = 'number';
+const TYPE_ID_LIST = 'list';
+const TYPE_ID_MATRIX = 'matrix';
+
+// mapping from access level to used icon in row
+const ACCESS_LEVEL_ICON_MAPPING = {
+  ACCESS_LEVEL_GUEST: faBookOpen,
+  ACCESS_LEVEL_USER: faBookOpen,
+  ACCESS_LEVEL_PAID_SHORT: faBookOpen,
+  ACCESS_LEVEL_PAID_LONG: faBookOpen,
+};
 
 // the row in the results table
 const ResultTableRowStyled = styled.div`
@@ -27,7 +35,11 @@ const ResultTableRowStyled = styled.div`
   background-color: ${(props) => (props.highlighted ? props.theme.highlightedRow : props.theme.white)};
   box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.08);
   border-radius: 8px;
-  padding: 15px 12px 15px 24px;
+  /* defining padding: if the cell is highlighted, we have a border around (4px). Therefore we need to adapt
+  left and right padding for row to be aligned with others*/
+  padding: ${(props) => `15px ${props.highlighted ? '8px' : '12px'} 15px ${
+    props.highlighted ? '20px' : '24px'
+  }`};
   border: ${(props) => (props.highlighted ? `solid ${props.theme.white} 4px` : 'none')};
 
   /* text styling */
@@ -36,11 +48,6 @@ const ResultTableRowStyled = styled.div`
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
-
-  /* adding primary color border on hover*/
-  :hover {
-    border: solid ${(props) => props.theme.primary} 1px;
-  }
 `;
 
 // Column holding the whole content of the row (=name + all values)
@@ -256,6 +263,9 @@ const ResultTableRow = (props) => {
   // determining if the current row is unlocked
   const rowIsLocked = item.descriptionText.length === 0;
 
+  // getting icon for row based on user access level
+  const rowIcon = ACCESS_LEVEL_ICON_MAPPING[props.accessLevel];
+
   // returning table row
   return (
     <ResultTableRowStyled
@@ -279,7 +289,7 @@ const ResultTableRow = (props) => {
 
       <ActionColumn>
         <RowIconButton
-          icon={rowIsLocked ? faLock : faBookOpen}
+          faIcon={rowIsLocked ? faLock : rowIcon}
           inactive={rowIsLocked}
           inverted={item.highlighted}
           onClick={() => props.onTextDetailClick(item.numberId)}
@@ -293,6 +303,7 @@ const ResultTableRow = (props) => {
 ResultTableRow.propTypes = {
   item: PropTypes.object.isRequired,
   onTextDetailClick: PropTypes.func.isRequired,
+  accessLevel: PropTypes.string.isRequired,
 };
 
 export default ResultTableRow;

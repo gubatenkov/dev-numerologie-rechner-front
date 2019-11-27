@@ -340,7 +340,7 @@ const NavigationBar = (props) => {
     <NavbarContainer>
       {props.leftButtonIcon && (
         <LeftIconButton
-          icon={props.leftButtonIcon}
+          faIcon={props.leftButtonIcon}
           onClick={props.leftButtonOnClick}
         />
       )}
@@ -360,12 +360,12 @@ const NavigationBar = (props) => {
           overlay={settingsPopup}
           rootClose
         >
-          <SettingsIconButton icon={faCog} />
+          <SettingsIconButton faIcon={faCog} />
         </OverlayTrigger>
       )}
       {loggedIn && (
         <CartIconButton
-          icon={faShoppingCart}
+          faIcon={faShoppingCart}
           onClick={() => window.open('https://www.bios-shop.eu/', '_blank')}
         />
       )}

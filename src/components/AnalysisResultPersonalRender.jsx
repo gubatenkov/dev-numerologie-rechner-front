@@ -246,7 +246,7 @@ const AnalysisResultPersonalRender = (props) => {
           title="Namen vergleichen"
           onClick={() => window.alert('TODO: Implement compare')}
         />
-        <IconButton icon={faSave} onClick={() => handleSaveAnalysis()} />
+        <IconButton faIcon={faSave} onClick={() => handleSaveAnalysis()} />
         <TextButton
           primary
           icon={faBookOpen}
@@ -295,6 +295,7 @@ const AnalysisResultPersonalRender = (props) => {
                   showTitle={tableData.showTitle}
                   handleTextDetailClick={handleItemDetailClick}
                   sectionId={resultSection.name}
+                  accessLevel={personalAnalysisResult.accessLevel}
                   key={`${resultSection.name + tableData.name}`}
                 />
               ))}

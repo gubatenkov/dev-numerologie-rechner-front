@@ -67,6 +67,7 @@ const ResultTable = (props) => {
           item={item}
           compareItem={props.compareNumbers && props.compareNumbers[index]}
           onTextDetailClick={handleTextDetailClick}
+          accessLevel={props.accessLevel}
         />
       ))}
     </ResultTableStyled>,
@@ -84,6 +85,7 @@ ResultTable.propTypes = {
   showTitle: PropTypes.bool,
   sectionId: PropTypes.string.isRequired,
   handleTextDetailClick: PropTypes.func.isRequired,
+  accessLevel: PropTypes.string.isRequired,
 };
 
 export default ResultTable;

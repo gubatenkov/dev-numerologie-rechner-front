@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -7,7 +8,6 @@ const StyledButton = styled.button`
   /* Icon buttons are square */
   width: 48px;
   height: 48px;
-  padding: 6px;
 
   border-radius: 6px;
   border-style: none;
@@ -32,6 +32,12 @@ const StyledButton = styled.button`
   }
 `;
 
+const IconImage = styled.img`
+  width: 42px;
+  height: 42px;
+  margin: auto;
+`;
+
 // plain button that wraps a FA icon
 // passed icon props need to be FA icons (imported!)
 const IconButton = (props) => (
@@ -41,8 +47,20 @@ const IconButton = (props) => (
     inverted={props.inverted}
     inactive={props.inactive}
   >
-    <FontAwesomeIcon icon={props.icon} />
+    {props.faIcon && <FontAwesomeIcon icon={props.faIcon} />}
+    {!props.faIcon && props.image && (
+      <IconImage src={props.image} alt={props.image} />
+    )}
   </StyledButton>
 );
+
+IconButton.propTypes = {
+  onClick: PropTypes.func,
+  inverted: PropTypes.bool,
+  inactive: PropTypes.bool,
+  primary: PropTypes.bool,
+  faIcon: PropTypes.object,
+  image: PropTypes.string,
+};
 
 export default IconButton;

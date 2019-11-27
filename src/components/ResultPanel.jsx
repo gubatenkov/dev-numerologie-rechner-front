@@ -96,7 +96,7 @@ const ResultPanel = (props) => (
       <LeftPanelAction>
         {props.leftActionIcon && (
           <PanelIconButton
-            icon={props.leftActionIcon}
+            faIcon={props.leftActionIcon}
             onClick={() => props.onLeftActionClick()}
             inverted
           />
@@ -107,7 +107,7 @@ const ResultPanel = (props) => (
       </PanelTitleContainer>
       <RightPanelAction>
         <PanelIconButton
-          icon={props.rightActionIcon}
+          faIcon={props.rightActionIcon}
           onClick={() => props.onRightActionClick()}
           inverted
         />
