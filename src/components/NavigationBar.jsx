@@ -179,7 +179,6 @@ const NavigationBar = (props) => {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       if (error) {
-        console.log(error);
         return;
       }
 
@@ -232,10 +231,6 @@ const NavigationBar = (props) => {
         <NavbarSpinner animation="border" role="status" variant="dark" />
       </NavbarContainer>
     );
-  }
-
-  if (error) {
-    console.log(error);
   }
 
   // checking if user is logged in in two ways
