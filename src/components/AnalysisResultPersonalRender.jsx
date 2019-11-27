@@ -156,7 +156,6 @@ const AnalysisResultPersonalRender = (props) => {
 
     // if data is not here -> skip
     if (sectionIndex < 0) {
-      console.log('Could not find section for row to show details');
       // starting at first section by default
       sectionIndex = 0;
     }
@@ -167,8 +166,6 @@ const AnalysisResultPersonalRender = (props) => {
     ].sectionElements.findIndex((element) => element.numberId === numberId);
 
     if (elementIndex < 0) {
-      console.log('Could not find element in section to show details');
-
       // starting at first number by default
       elementIndex = 0;
     }
