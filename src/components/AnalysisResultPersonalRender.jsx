@@ -273,7 +273,6 @@ const AnalysisResultPersonalRender = (props) => {
           && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
         }
         onRemoveSecondaryName={() => {
-          console.log('Removing name');
           props.history.push(
             `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
           );

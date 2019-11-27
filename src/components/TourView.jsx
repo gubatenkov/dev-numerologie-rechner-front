@@ -39,7 +39,7 @@ const TourView = (props) => {
     } else if (sectionIndex > 0) {
       onIndexChange(
         sectionIndex - 1,
-        tourData[sectionIndex - 1].sectionElements.length - 1,
+        tourData[sectionIndex - 1].sectionElements.length,
       );
     }
   };
@@ -47,7 +47,7 @@ const TourView = (props) => {
   // handler for click on the next button
   const handleNextClick = () => {
     // navigate within section
-    if (elementIndex < tourData[sectionIndex].sectionElements.length - 1) {
+    if (elementIndex < tourData[sectionIndex].sectionElements.length) {
       onIndexChange(sectionIndex, elementIndex + 1);
       // navigate to first element of next section
     } else if (sectionIndex < tourData.length - 1) {
@@ -87,24 +87,32 @@ const TourView = (props) => {
   });
 
   /**
+   * builds a tour element for an introduction text into a section
+   * @param sectionIntro the section intro object
+   */
+  const buildIntroTextTourStep = (sectionIntro) => {
+    // building title and content for introduction text to section
+    const elementTitle = `Einführung ${sectionIntro.title}`;
+    const elementContent = sectionIntro.text;
+
+    // returning result
+    return [elementTitle, elementContent];
+  };
+
+  /**
    * extracts the title and content from the passed result element
    * and returns both parameters as array
-   * @param element the result element to build title and content from
+   * @param numberResult the result element to build title and content from
    */
-  const buildElementContent = (element) => {
-    // if no element passed => returning null for all value
-    if (!element) {
-      return [null, null];
-    }
-
+  const buildNumberTourStep = (numberResult) => {
     // if element is default result => using standard result
     // title is name and value
-    const elementTitle = `${element.name} = ${element.result.value
-      || element.result.values
-      || element.result.list}`;
+    const elementTitle = `${numberResult.name} = ${numberResult.result.value
+      || numberResult.result.values
+      || numberResult.result.list}`;
 
     // content is description
-    const elementContent = element.descriptionText;
+    const elementContent = numberResult.descriptionText;
 
     return [elementTitle, elementContent];
   };
@@ -114,25 +122,31 @@ const TourView = (props) => {
     return null;
   }
 
-  // getting current element
-  const currentElement = tourData[sectionIndex].sectionElements[elementIndex];
+  // defining content and compare content
+  let tourStepTitle;
+  let tourStepCompareTitle;
+  let tourStepContent;
+  let tourStepCompareContent;
 
-  // getting current compare element if persent
-  let currentCompareElement;
-  if (compareTourData) {
-    currentCompareElement = compareTourData[sectionIndex].sectionElements[elementIndex];
+  // if first element => building intro text element
+  if (elementIndex === 0) {
+    // building step from section intro
+    [tourStepTitle, tourStepContent] = buildIntroTextTourStep(
+      tourData[sectionIndex].sectionIntro,
+    );
+  } else {
+    // building tour step for result item
+    [tourStepTitle, tourStepContent] = buildNumberTourStep(
+      tourData[sectionIndex].sectionElements[elementIndex - 1],
+    );
+
+    // if present, building tour step for compare result item
+    if (compareTourData) {
+      [tourStepCompareTitle, tourStepCompareContent] = buildNumberTourStep(
+        compareTourData[sectionIndex].sectionElements[elementIndex - 1],
+      );
+    }
   }
-
-  // if for some reason, the current element is invalid > rendering nothing
-  if (!currentElement || (compareTourData && !currentCompareElement)) {
-    return null;
-  }
-
-  // determining title and content of elements
-  const [elementTitle, elementContent] = buildElementContent(currentElement);
-  const [compareElementTitle, compareElementContent] = buildElementContent(
-    currentCompareElement,
-  );
 
   return (
     <div
@@ -188,9 +202,9 @@ const TourView = (props) => {
           </button>
         </div>
         <div>
-          <Panel className="TourView__Panel" title={elementTitle}>
+          <Panel className="TourView__Panel" title={tourStepTitle}>
             <div className="TourView__text TourView--non-printable" />
-            <Interweave content={elementContent} />
+            <Interweave content={tourStepContent} />
             <h3 className="TourView--printWatermark">
               Die Resultate können nur mit Druckpaket ausgedruckt werden.
             </h3>
@@ -198,13 +212,18 @@ const TourView = (props) => {
         </div>
         {compareTourData && (
           <div className="">
-            <Panel className="TourView__Panel" title={compareElementTitle}>
+            <Panel className="TourView__Panel" title={tourStepCompareTitle}>
               <div className="TourView__text TourView--non-printable">
                 <Interweave
                   content={
-                    _.isEqual(currentCompareElement, currentElement)
+                    _.isEqual(
+                      tourData[sectionIndex].sectionElements[elementIndex],
+                      compareTourData[sectionIndex].sectionElements[
+                        elementIndex
+                      ],
+                    )
                       ? 'Gleich wie links.'
-                      : compareElementContent
+                      : tourStepCompareContent
                   }
                 />
               </div>
