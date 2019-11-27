@@ -175,9 +175,14 @@ const NavigationBar = (props) => {
 
   // defining query loading user data and setting state upon completion
   // setting fetch policy to prevent caching issues
-  const { loading, data } = useQuery(userSettingsQuery, {
+  const { loading, data, error } = useQuery(userSettingsQuery, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+
       // extractin user result data
       const { currentUser } = data;
 
@@ -229,13 +234,14 @@ const NavigationBar = (props) => {
     );
   }
 
-  // extracting user data from prop
-  const { currentUser } = data;
+  if (error) {
+    console.log(error);
+  }
 
   // checking if user is logged in in two ways
   // a) query returned user information b) we have a token stored locally.
   // if a) but not b), we have inconsistent state
-  const loggedIn = currentUser && currentUser.email && getUserAuthData().token;
+  const loggedIn = data && data.currentUser && data.currentUser.email && getUserAuthData().token;
 
   // handles a logout of the user
   const handleLogout = () => {
@@ -376,8 +382,8 @@ const NavigationBar = (props) => {
           rootClose
         >
           <UserAvatar
-            email={currentUser.email}
-            name={currentUser.email}
+            email={data.currentUser.email}
+            name={data.currentUser.email}
             round={true}
           />
         </OverlayTrigger>
