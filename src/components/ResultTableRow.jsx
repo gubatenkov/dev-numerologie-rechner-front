@@ -2,9 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { faLock, faBookOpen } from '@fortawesome/free-solid-svg-icons';
+// importing all icons used as actions in the row
+import bookIcon from '../images/icon_openBook_primary.svg';
+import bookShortIcon from '../images/icon_textShort.svg';
+import bookLongLongIcon from '../images/icon_textLong.svg';
+import lockIcon from '../images/icon_lock.svg';
+
 import IconButton from './Buttons/IconButton';
 
+// constants around responsiveness
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
 // identifiers for results
@@ -14,10 +20,10 @@ const TYPE_ID_MATRIX = 'matrix';
 
 // mapping from access level to used icon in row
 const ACCESS_LEVEL_ICON_MAPPING = {
-  ACCESS_LEVEL_GUEST: faBookOpen,
-  ACCESS_LEVEL_USER: faBookOpen,
-  ACCESS_LEVEL_PAID_SHORT: faBookOpen,
-  ACCESS_LEVEL_PAID_LONG: faBookOpen,
+  ACCESS_LEVEL_GUEST: bookIcon,
+  ACCESS_LEVEL_USER: bookIcon,
+  ACCESS_LEVEL_PAID_SHORT: bookShortIcon,
+  ACCESS_LEVEL_PAID_LONG: bookLongLongIcon,
 };
 
 // the row in the results table
@@ -249,15 +255,19 @@ const ResultTableRow = (props) => {
   // rendering content for result and compare column based on number type
   let contentColumn;
   let compareContentColumn;
+  let emptyResult = false;
   if (item.result.type === TYPE_ID_NUMBER) {
     contentColumn = item.result.value;
     compareContentColumn = compareItem && compareItem.result.value;
+    emptyResult = !item.result.value;
   } else if (item.result.type === TYPE_ID_LIST) {
     contentColumn = renderResultList(item);
     compareContentColumn = compareItem && renderResultList(compareItem);
+    emptyResult = item.result.list.length === 0;
   } else if (item.result.type === TYPE_ID_MATRIX) {
     contentColumn = renderResultMatrix(item);
     compareContentColumn = compareItem && renderResultMatrix(compareItem);
+    emptyResult = item.result.values.length === 0;
   }
 
   // determining if the current row is unlocked
@@ -288,12 +298,14 @@ const ResultTableRow = (props) => {
       </ContentColumn>
 
       <ActionColumn>
-        <RowIconButton
-          faIcon={rowIsLocked ? faLock : rowIcon}
-          inactive={rowIsLocked}
-          inverted={item.highlighted}
-          onClick={() => props.onTextDetailClick(item.numberId)}
-        />
+        {!emptyResult && item.result.type !== TYPE_ID_MATRIX && (
+          <RowIconButton
+            imageIcon={rowIsLocked ? lockIcon : rowIcon}
+            inactive={rowIsLocked}
+            inverted={item.highlighted}
+            onClick={() => props.onTextDetailClick(item.numberId)}
+          />
+        )}
       </ActionColumn>
     </ResultTableRowStyled>
   );

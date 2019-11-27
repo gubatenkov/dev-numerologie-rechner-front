@@ -32,11 +32,7 @@ const StyledButton = styled.button`
   }
 `;
 
-const IconImage = styled.img`
-  width: 42px;
-  height: 42px;
-  margin: auto;
-`;
+const IconImage = styled.img``;
 
 // plain button that wraps a FA icon
 // passed icon props need to be FA icons (imported!)
@@ -48,8 +44,8 @@ const IconButton = (props) => (
     inactive={props.inactive}
   >
     {props.faIcon && <FontAwesomeIcon icon={props.faIcon} />}
-    {!props.faIcon && props.image && (
-      <IconImage src={props.image} alt={props.image} />
+    {!props.faIcon && props.imageIcon && (
+      <IconImage src={props.imageIcon} alt={props.imageIcon} />
     )}
   </StyledButton>
 );
@@ -60,7 +56,7 @@ IconButton.propTypes = {
   inactive: PropTypes.bool,
   primary: PropTypes.bool,
   faIcon: PropTypes.object,
-  image: PropTypes.string,
+  imageIcon: PropTypes.string,
 };
 
 export default IconButton;

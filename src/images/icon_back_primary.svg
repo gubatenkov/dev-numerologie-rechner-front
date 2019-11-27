@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>baseline-arrow_back-24px</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons-/-Arrow-Left" transform="translate(-10.000000, -10.000000)">
+            <g id="baseline-arrow_back-24px" transform="translate(6.000000, 6.000000)">
+                <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                <path d="M19,11 L7.83,11 L7.83,11 L12.7124956,6.11750442 C13.1018612,5.7281388 13.1018612,5.0968524 12.7124956,4.70748678 C12.7116652,4.70665638 12.7108333,4.70582746 12.71,4.705 C12.3174727,4.31523693 11.6836432,4.31635677 11.2924956,4.70750442 L4.70710678,11.2928932 C4.31658249,11.6834175 4.31658249,12.3165825 4.70710678,12.7071068 L11.295,19.295 C11.6843607,19.6843607 12.3156393,19.6843607 12.705,19.295 C13.0944628,18.9055372 13.0947454,18.2741804 12.7056314,17.8843691 L7.83,13 L7.83,13 L19,13 C19.5522847,13 20,12.5522847 20,12 C20,11.4477153 19.5522847,11 19,11 Z" id="Path" fill="#01B2D4"></path>
+            </g>
+        </g>
+    </g>
+</svg>

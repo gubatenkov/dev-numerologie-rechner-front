@@ -6,14 +6,12 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 // styling related
 import styled from 'styled-components';
 
-// graphql
-
-// components
-import { faCog, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Avatar from 'react-avatar';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Spinner from 'react-bootstrap/Spinner';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import iconCartPrimary from '../images/icon_cart_primary.svg';
+import iconSettingsPrimary from '../images/icon_settings_primary.svg';
 import { saveUserSettingsMutation } from '../graphql/Mutations';
 import { userSettingsQuery } from '../graphql/Queries';
 import Popover, {
@@ -340,7 +338,7 @@ const NavigationBar = (props) => {
     <NavbarContainer>
       {props.leftButtonIcon && (
         <LeftIconButton
-          faIcon={props.leftButtonIcon}
+          imageIcon={props.leftButtonIcon}
           onClick={props.leftButtonOnClick}
         />
       )}
@@ -360,12 +358,12 @@ const NavigationBar = (props) => {
           overlay={settingsPopup}
           rootClose
         >
-          <SettingsIconButton faIcon={faCog} />
+          <SettingsIconButton imageIcon={iconSettingsPrimary} />
         </OverlayTrigger>
       )}
       {loggedIn && (
         <CartIconButton
-          faIcon={faShoppingCart}
+          imageIcon={iconCartPrimary}
           onClick={() => window.open('https://www.bios-shop.eu/', '_blank')}
         />
       )}
@@ -401,7 +399,7 @@ const NavigationBar = (props) => {
 
 // defining proptypes
 NavigationBar.propTypes = {
-  leftButtonIcon: PropTypes.object,
+  leftButtonIcon: PropTypes.string,
   leftButtonOnClick: PropTypes.func,
   history: PropTypes.shape({
     push: PropTypes.func,

@@ -32,10 +32,9 @@ const AnalysisResultPersonal = (props) => {
   }
 
   // if gql state error => displaying error in loader to make it more visible for debugging
-  if (
-    (personalAnalysesById && personalAnalysesById.error)
-    || (personalAnalysesByNames && personalAnalysesByNames.error)
-  ) {
+  const error = (personalAnalysesById && personalAnalysesById.error) || (personalAnalysesByNames && personalAnalysesByNames.error);
+  if (error) {
+    console.error(error);
     return (
       <LoadingIndicator
         text={'A critical error occurred when fetching data...'}

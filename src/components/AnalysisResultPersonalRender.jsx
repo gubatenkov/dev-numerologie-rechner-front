@@ -5,11 +5,13 @@ import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import styled from 'styled-components';
 
-import {
-  faArrowLeft,
-  faSave,
-  faBookOpen,
-} from '@fortawesome/free-solid-svg-icons';
+// icons
+import bookIconWhite from '../images/icon_openBook_white.svg';
+import bookIconPrimary from '../images/icon_openBook_primary.svg';
+import saveIconPrimary from '../images/icon_save_primary.svg';
+import iconBackPrimary from '../images/icon_back_primary.svg';
+
+// components
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import ContentNavigation from './ContentNavigation';
@@ -223,7 +225,7 @@ const AnalysisResultPersonalRender = (props) => {
   return (
     <div>
       <NavigationBar
-        leftButtonIcon={faArrowLeft}
+        leftButtonIcon={iconBackPrimary}
         leftButtonOnClick={() => props.history.goBack()}
       />
       <TitleBar
@@ -246,10 +248,13 @@ const AnalysisResultPersonalRender = (props) => {
           title="Namen vergleichen"
           onClick={() => window.alert('TODO: Implement compare')}
         />
-        <IconButton faIcon={faSave} onClick={() => handleSaveAnalysis()} />
+        <IconButton
+          imageIcon={saveIconPrimary}
+          onClick={() => handleSaveAnalysis()}
+        />
         <TextButton
           primary
-          icon={faBookOpen}
+          icon={bookIconWhite}
           title="Alle lesen"
           onClick={() => {
             // opening tour view at start
@@ -276,7 +281,7 @@ const AnalysisResultPersonalRender = (props) => {
             // returning panel and result table with filtered data
             <ResultPanel
               title={resultSection.name}
-              rightActionIcon={faBookOpen}
+              rightActionIcon={bookIconPrimary}
               onRightActionClick={() => handleItemDetailClick(resultSection.name)
               }
               id={resultSection.name}
