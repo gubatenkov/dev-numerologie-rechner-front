@@ -85,6 +85,10 @@ export const webAnalysisResultItemFragment = gql`
     name
     numberId
     descriptionText
+    numberDescription {
+      description
+      calculationDescription
+    }
     bookReference
     highlighted
     result {

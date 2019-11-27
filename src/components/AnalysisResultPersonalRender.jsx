@@ -187,8 +187,6 @@ const AnalysisResultPersonalRender = (props) => {
       introTexts,
     );
 
-    console.log(tourDataStructure);
-
     // finding index with datakey in tour data structure
     let sectionIndex = tourDataStructure.findIndex(
       (section) => section.sectionName === sectionId,
@@ -208,6 +206,9 @@ const AnalysisResultPersonalRender = (props) => {
     if (elementIndex < 0) {
       // starting at first number by default
       elementIndex = 0;
+    } else {
+      // adding one to index as intro text is displayed at index 0
+      elementIndex += 1;
     }
 
     // opening detail view with right section index
@@ -359,6 +360,7 @@ const AnalysisResultPersonalRender = (props) => {
           setTourSectionIndex(sectionIndex);
           setTourElementIndex(elementIndex);
         }}
+        user={props.user}
       />
     </div>
   );

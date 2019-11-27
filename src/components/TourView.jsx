@@ -9,7 +9,7 @@ import Panel from './Panel';
 import Steps from './Steps';
 import Step from './Step';
 
-const TourView = (props) => {
+const TourView = props => {
   // getting used values out of props
   const {
     sectionIndex,
@@ -22,10 +22,10 @@ const TourView = (props) => {
   } = props;
 
   // handler for clicks on the steps directly in the overview
-  const handleStepClick = (sectionTitleClicked) => {
+  const handleStepClick = sectionTitleClicked => {
     // getting index of section title clicked and setting it's index as current section index
     const index = tourData.findIndex(
-      (item) => item.sectionName === sectionTitleClicked,
+      item => item.sectionName === sectionTitleClicked,
     );
     if (index > -1) {
       onIndexChange(index, 0);
@@ -56,7 +56,7 @@ const TourView = (props) => {
   };
 
   // handler for key press
-  const handleKeyDown = (event) => {
+  const handleKeyDown = event => {
     switch (event.key) {
       // determining which key was pressed
       case 'ArrowRight':
@@ -90,7 +90,7 @@ const TourView = (props) => {
    * builds a tour element for an introduction text into a section
    * @param sectionIntro the section intro object
    */
-  const buildIntroTextTourStep = (sectionIntro) => {
+  const buildIntroTextTourStep = sectionIntro => {
     // building title and content for introduction text to section
     const elementTitle = `Einführung ${sectionIntro.title}`;
     const elementContent = sectionIntro.text;
@@ -104,15 +104,39 @@ const TourView = (props) => {
    * and returns both parameters as array
    * @param numberResult the result element to build title and content from
    */
-  const buildNumberTourStep = (numberResult) => {
+  const buildNumberTourStep = numberResult => {
     // if element is default result => using standard result
     // title is name and value
-    const elementTitle = `${numberResult.name} = ${numberResult.result.value
-      || numberResult.result.values
-      || numberResult.result.list}`;
+    const elementTitle = `${numberResult.name} ${numberResult.result.value ||
+      numberResult.result.list}`;
 
-    // content is description
-    const elementContent = numberResult.descriptionText;
+    // if item is locked => returning promotion
+    if (numberResult.descriptionText.length === 0) {
+      // TODO: add promotion elements here
+      return [elementTitle, null];
+    }
+
+    // building content based on user preferences
+    let elementContent = '';
+
+    // adding number explanation text if configured
+    if (props.user.showNumberMeaningExplanations) {
+      elementContent += numberResult.numberDescription.description;
+    }
+
+    // adding number calcuation explanation text if configured
+    if (props.user.showNumberCalculationExplanations) {
+      elementContent +=
+        '<br/>' + numberResult.numberDescription.calculationDescription;
+    }
+
+    // adding description text of result
+    elementContent += `<br/>b` + numberResult.descriptionText;
+
+    // adding book references if configured
+    if (props.user.showBookReferences) {
+      elementContent += '<br/>' + numberResult.bookReference;
+    }
 
     return [elementTitle, elementContent];
   };
