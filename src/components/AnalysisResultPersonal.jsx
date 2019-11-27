@@ -8,12 +8,11 @@ import * as compose from 'lodash.flowright';
 import {
   buildPersonalAnalysisByNameQuery,
   buildPersonalAnalysisByIdQuery,
-  currentUserBasicQuery,
+  userSettingsQuery,
 } from '../graphql/Queries';
 
 import LoadingIndicator from './LoadingIndicator';
 import AnalysisResultPersonalRender from './AnalysisResultPersonalRender';
-import AnalysisResultPersonalCompareRender from './AnalysisResultPersonalCompareRender';
 
 /**
  * result screen for personal analysis
@@ -33,10 +32,9 @@ const AnalysisResultPersonal = (props) => {
   }
 
   // if gql state error => displaying error in loader to make it more visible for debugging
-  if (
-    (personalAnalysesById && personalAnalysesById.error)
-    || (personalAnalysesByNames && personalAnalysesByNames.error)
-  ) {
+  const error = (personalAnalysesById && personalAnalysesById.error) || (personalAnalysesByNames && personalAnalysesByNames.error);
+  if (error) {
+    console.error(error);
     return (
       <LoadingIndicator
         text={'A critical error occurred when fetching data...'}
@@ -61,22 +59,11 @@ const AnalysisResultPersonal = (props) => {
     personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
   }
 
-  // rendering single or compare result based on result
-  if (personalAnalysisResults.length > 1) {
-    return (
-      <AnalysisResultPersonalCompareRender
-        analysis={null}
-        personalAnalysisResults={personalAnalysisResults}
-        user={props.currentUser.currentUser}
-      />
-    );
-  }
-
   // returning render component with result param set (vs. analysis)
   return (
     <AnalysisResultPersonalRender
-      analysis={null}
       personalAnalysisResult={personalAnalysisResults[0]}
+      personalAnalysisCompareResult={personalAnalysisResults[1]}
       user={props.currentUser.currentUser}
     />
   );
@@ -99,7 +86,7 @@ AnalysisResultPersonal.propTypes = {
 
 // constructing query with input parameters taken from URL params
 export default compose(
-  graphql(currentUserBasicQuery, {
+  graphql(userSettingsQuery, {
     name: 'currentUser',
   }),
   graphql(buildPersonalAnalysisByIdQuery(false), {
@@ -115,7 +102,7 @@ export default compose(
         isPdf: false,
         longTexts: false,
       },
-      fetchPolicy: 'network-only',
+      update: 'network-only',
     }),
     // skipping this query if no id is provided
     skip: (params) => !params.match.params.analysisId,

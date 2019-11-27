@@ -63,23 +63,6 @@
         },
         {
           "kind": "UNION",
-          "name": "AnalysisResultItem",
-          "possibleTypes": [
-            {
-              "name": "DefaultAnalysisResultItem"
-            },
-            {
-              "name": "CustomAnalysisResultItem"
-            }
-          ]
-        },
-        {
-          "kind": "OBJECT",
-          "name": "DefaultAnalysisResultItem",
-          "possibleTypes": null
-        },
-        {
-          "kind": "UNION",
           "name": "AnalysisResultValue",
           "possibleTypes": [
             {
@@ -116,11 +99,6 @@
         {
           "kind": "SCALAR",
           "name": "Boolean",
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CustomAnalysisResultItem",
           "possibleTypes": null
         },
         {

@@ -14,7 +14,7 @@ export const CI_COLOR_IDS = {
   GREY: 'GREY',
   BLACK: 'BLACK',
   WHITE: 'WHITE',
-}
+};
 
 // used colors (mapping from color ids)
 export const CI_COLORS = {
@@ -30,3 +30,7 @@ export const CI_COLORS = {
   BLACK: '#262626',
   WHITE: '#FFFFFF',
 };
+
+// threshold for switching to the mobile optimized styling
+// this refers to horizontal pixels of the resulotion of the users device
+export const MOBILE_RESOLUTION_THRESHOLD = 767;

@@ -339,7 +339,6 @@ const AnalysisBrowser = (props) => {
           analysisId,
           type,
         },
-        update: (store, { data: { useCredit: analysis } }) => {},
       });
       props.onUsedCredit();
       ToastNotifications.success(

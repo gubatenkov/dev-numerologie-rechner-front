@@ -162,72 +162,51 @@ function areResultValuesEqual(resultValue, compareResultValue) {
 /**
  * extracts from the number item a value suitable for display in the overview table
  */
-function extractTableValueFromItem(numberItem) {
-  let value;
-  // assigning value based on type of result
-  if (numberItem.type === 'row') {
-    if (numberItem.result.type === 'number') {
-      value = { text: numberItem.result.value, alignment: 'left' };
-    } else if (numberItem.result.type === 'list') {
-      value = {
-        text: numberItem.result.list.join(','),
-        alignment: 'left',
-      };
-    } else {
-      const matrix = numberItem.result.values.map((item) => (item && item.length > 0 ? item : '     '));
-      value = {
-        table: {
-          dontBreakRows: true,
-          heights: 40,
-          widths: [40, 40, 40],
-          body: [
-            [
-              { text: matrix[0], alignment: 'center' },
-              { text: matrix[1], alignment: 'center' },
-              { text: matrix[2], alignment: 'center' },
-            ],
-            [
-              { text: matrix[3], alignment: 'center' },
-              { text: matrix[4], alignment: 'center' },
-              { text: matrix[5], alignment: 'center' },
-            ],
-            [
-              { text: matrix[6], alignment: 'center' },
-              { text: matrix[7], alignment: 'center' },
-              { text: matrix[8], alignment: 'center' },
-            ],
-          ],
-          alignment: 'left',
-        },
-      };
-    }
-  } else {
-    let textValue = numberItem.values[numberItem.valueIndex];
-    if (numberItem.numberId.startsWith('HF/HP')) {
-      textValue = `${numberItem.values[2]} / ${numberItem.values[3]}`;
-    }
-    value = {
-      text: textValue,
+function createOverviewTableItem(numberItem) {
+  // defining overview table element and constructing based on type of result
+  let overviewTableElement;
+  // case a) number => display simple number
+  // case b) list => show whole list
+  // case c) matrix => showing table
+  if (numberItem.result.type === 'number') {
+    overviewTableElement = { text: numberItem.result.value, alignment: 'left' };
+  } else if (numberItem.result.type === 'list') {
+    overviewTableElement = {
+      text: numberItem.result.list.join(','),
       alignment: 'left',
+    };
+  } else {
+    const matrix = numberItem.result.values.map((item) => (item && item.length > 0 ? item : '     '));
+    overviewTableElement = {
+      table: {
+        dontBreakRows: true,
+        heights: 40,
+        widths: [40, 40, 40],
+        body: [
+          [
+            { text: matrix[0], alignment: 'center' },
+            { text: matrix[1], alignment: 'center' },
+            { text: matrix[2], alignment: 'center' },
+          ],
+          [
+            { text: matrix[3], alignment: 'center' },
+            { text: matrix[4], alignment: 'center' },
+            { text: matrix[5], alignment: 'center' },
+          ],
+          [
+            { text: matrix[6], alignment: 'center' },
+            { text: matrix[7], alignment: 'center' },
+            { text: matrix[8], alignment: 'center' },
+          ],
+        ],
+        alignment: 'left',
+      },
     };
   }
 
   // bold if highlighted
-  value.bold = numberItem.highlighted;
-  return value;
-}
-
-/**
- * extracts the number name from an item dependent on the type
- */
-function extractTableNameFromItem(numberItem) {
-  // if default item => has member
-  if (numberItem.type === 'row') {
-    return numberItem.name;
-  }
-
-  // if custom row => using values array and index
-  return numberItem.values[numberItem.nameIndex];
+  overviewTableElement.bold = numberItem.highlighted;
+  return overviewTableElement;
 }
 
 /**
@@ -277,15 +256,15 @@ function calculateResultOverviewTable(
     const compareResult = compareResults ? compareResults[resultIndex] : null;
     resultItem.numbers.forEach((numberItem, numberIndex) => {
       // getting table value for item
-      const value = extractTableValueFromItem(numberItem);
-      const name = extractTableNameFromItem(numberItem);
+      const value = createOverviewTableItem(numberItem);
+      const { name } = numberItem;
 
       // getting compare value for item
       const compareNumberItem = compareResult
         ? compareResult.numbers[numberIndex]
         : null;
       const compareValue = compareNumberItem
-        ? extractTableValueFromItem(compareNumberItem)
+        ? createOverviewTableItem(compareNumberItem)
         : null;
 
       // pushing value onto table body object
@@ -352,82 +331,6 @@ export function buildResultDataStructure(
       numbers,
     };
   });
-}
-
-/**
- * @param item a result item to extract information based on type from
- * @returns a string representing the item description
- */
-function extractDescriptionTextFromItem(item) {
-  // normal row => directly access member
-  if (item.type === 'row') {
-    return item.descriptionText;
-  }
-
-  // if custom row => using values and provided index
-  if (item.type === 'customRow') {
-    return item.values[item.descriptionTextIndex];
-  }
-
-  return null;
-}
-
-/**
- * extracts item name and value from
- */
-function extractNameAndValueFromItem(item) {
-  let itemName = null;
-  let itemValue = null;
-
-  // determining name of element
-  if (
-    item.type === 'row'
-    && (item.result.value || item.result.values || item.result.list)
-  ) {
-    itemName = item.name;
-    itemValue = item.result.value || item.result.values || item.result.list;
-
-    // if item is matrix => not showing value in titel
-    if (item.result.type === 'matrix') {
-      itemValue = ' ';
-    }
-  } else if (
-    item.type === 'customRow'
-    && item.values
-    && item.nameIndex !== null
-    && item.values[item.nameIndex]
-    && item.valueIndex !== null
-  ) {
-    // sad special treatment of hf/hp
-    if (item.numberId.startsWith('HF/HP')) {
-      itemName = `${item.values[1]}. Herausforderung = ${item.values[2]} | ${
-        item.values[1]
-      }. Höhepunkt = ${item.values[3]}`;
-      itemValue = ` (${item.values[4]})`;
-    } else if (['PJ', 'PJ (+1)'].includes(item.numberId)) {
-      itemName = `${item.values[item.nameIndex]} = ${
-        item.values[item.valueIndex]
-      }  (${item.values[3]})`;
-      itemValue = ' ';
-    } else if (item.numberId === 'VZ-B') {
-      itemName = 'Vibratorische Zyklen - Bildungszyklus';
-      itemValue = item.values[item.valueIndex];
-    } else if (item.numberId === 'VZ-P') {
-      itemName = 'Vibratorische Zyklen - Produktivitätszyklus';
-      itemValue = item.values[item.valueIndex];
-    } else if (item.numberId === 'VZ-E') {
-      itemName = 'Vibratorische Zyklen - Erntezyklus';
-      itemValue = item.values[item.valueIndex];
-    } else {
-      itemName = item.values[item.nameIndex];
-      itemValue = item.values[item.valueIndex];
-    }
-  }
-
-  return {
-    itemName,
-    itemValue,
-  };
 }
 
 /**
@@ -619,8 +522,7 @@ export async function createPDFFromAnalysisResult(
           }
 
           // setting stop page correlating with start index
-          if (value.endIndex)
-          sectionPositionInformation[key].endPage = docDefinition.content[value.endIndex].positions[0].pageNumber;
+          if (value.endIndex) sectionPositionInformation[key].endPage = docDefinition.content[value.endIndex].positions[0].pageNumber;
         });
       }
     },
@@ -665,7 +567,7 @@ export async function createPDFFromAnalysisResult(
     .filter((resultSection) =>
       // checking if any numbers on the section has description text => excluding section if not. Rule: No empty sections (just intro text)
       resultSection.numbers.some((number) => {
-        const itemDescriptionText = extractDescriptionTextFromItem(number);
+        const itemDescriptionText = number.descriptionText;
         return itemDescriptionText && itemDescriptionText.length > 0;
       }))
     .forEach((resultSection, index) => {
@@ -704,22 +606,27 @@ export async function createPDFFromAnalysisResult(
       resultSection.numbers
         .filter((number) => {
           // filter out numbers without description text. Rule: No numbers without description text (only result)
-          const itemDescriptionText = extractDescriptionTextFromItem(number);
+          const itemDescriptionText = number.descriptionText;
           return itemDescriptionText && itemDescriptionText.length > 0;
         })
         .forEach((number, resultIndex) => {
-          // extracting values from number result item
-          const { itemName, itemValue } = extractNameAndValueFromItem(number);
+          // getting name and value of
+          const itemName = number.name;
+          const itemValue = number.result.type !== 'matrix'
+            && (number.result.value || number.result.list);
 
           // getting if there is a compare item
           let compareItem = null;
           let compareItemName = null;
           let compareItemValue = null;
           if (resultCompareSection) {
+            // getting comparer result item
             compareItem = resultCompareSection.numbers[resultIndex];
-            const extractedResult = extractNameAndValueFromItem(compareItem);
-            compareItemName = extractedResult.itemName;
-            compareItemValue = extractedResult.itemValue;
+
+            // getting name and value of compare item
+            compareItemName = compareItem.name;
+            compareItemValue = compareItem.result.type !== 'matrix'
+              && (compareItem.result.value || compareItem.result.list);
           }
 
           // checking if item is empty
@@ -789,7 +696,7 @@ export async function createPDFFromAnalysisResult(
             }
 
             // pushing description text
-            let descriptionText = extractDescriptionTextFromItem(number);
+            let { descriptionText } = number;
 
             // if description text is present => adding to content
             if (descriptionText) {
@@ -825,9 +732,7 @@ export async function createPDFFromAnalysisResult(
               });
 
               // pushing description text
-              let compareDescriptionText = extractDescriptionTextFromItem(
-                compareItem,
-              );
+              let compareDescriptionText = compareItem.descriptionText;
 
               // if description text is present => adding to content
               if (compareDescriptionText) {

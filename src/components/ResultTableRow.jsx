@@ -1,205 +1,321 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import Interweave from 'interweave';
-import { Button } from 'react-bootstrap';
+import styled from 'styled-components';
 
-import '../styles/ResultTableRow.css';
+// importing all icons used as actions in the row
+import bookIcon from '../images/icon_openBook_primary.svg';
+import bookShortIcon from '../images/icon_textShort.svg';
+import bookLongLongIcon from '../images/icon_textLong.svg';
+import lockIcon from '../images/icon_lock.svg';
 
-// identifiers for row types
-export const ROW_TYPE_ID_CUSTOM = 'customRow';
+import IconButton from './Buttons/IconButton';
+
+// constants around responsiveness
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
 // identifiers for results
-export const TYPE_ID_NUMBER = 'number';
-export const TYPE_ID_LIST = 'list';
-export const TYPE_ID_MATRIX = 'matrix';
+const TYPE_ID_NUMBER = 'number';
+const TYPE_ID_LIST = 'list';
+const TYPE_ID_MATRIX = 'matrix';
 
-// chars in description preview
-const DESCRIPTION_PREVIEW_LENGTH = 50;
+// mapping from access level to used icon in row
+const ACCESS_LEVEL_ICON_MAPPING = {
+  ACCESS_LEVEL_GUEST: bookIcon,
+  ACCESS_LEVEL_USER: bookIcon,
+  ACCESS_LEVEL_PAID_SHORT: bookShortIcon,
+  ACCESS_LEVEL_PAID_LONG: bookLongLongIcon,
+};
+
+// the row in the results table
+const ResultTableRowStyled = styled.div`
+  /* flexbox row with action item to the right and content taking rest of width*/
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  /* children are the action tot the right and the rest of the content on the left*/
+  justify-content: space-between;
+
+  /* basic row box styling*/
+  min-height: 60px;
+  background-color: ${(props) => (props.highlighted ? props.theme.highlightedRow : props.theme.white)};
+  box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.08);
+  border-radius: 8px;
+  /* defining padding: if the cell is highlighted, we have a border around (4px). Therefore we need to adapt
+  left and right padding for row to be aligned with others*/
+  padding: ${(props) => `15px ${props.highlighted ? '8px' : '12px'} 15px ${
+    props.highlighted ? '20px' : '24px'
+  }`};
+  border: ${(props) => (props.highlighted ? `solid ${props.theme.white} 4px` : 'none')};
+
+  /* text styling */
+  font-family: ${(props) => props.theme.fontFamily};
+  color: ${(props) => props.theme.darkGrey};
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+`;
+
+// Column holding the whole content of the row (=name + all values)
+const ContentColumn = styled.div`
+  /* flex row that takes all remaining space (except action at right). 
+  This container is used to wrap results on low resolutions*/
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+  /* vertically centering all items */
+  align-items: center;
+
+  /* this container should wrap so result content items can flow onto the next line */
+  flex-wrap: wrap;
+`;
+
+// element holding the name of the result
+const NameColumn = styled.div`
+  /* 40% of the width */
+  flex-basis: 40%;
+
+  /* allow it to grow in case other elements flow to next row. E.g. 
+  content results flow to next line: we want this to take up 100% of the width */
+  flex-grow: 1;
+`;
+
+/* container holding all results (might be multiple ones). This container is needed as we
+don't want results to be wrapped independently = results on different rows */
+const ResultContainer = styled.div`
+  /* 60% of width which is then split up between all results */
+  flex-basis: 60%;
+
+  /* allow container to grow */
+  flex-grow: 1;
+
+  /* container is row in itself of all results */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* allowing results to wrap on smallest devices*/
+  flex-wrap: wrap;
+`;
+
+// element holding the result value (matrix, list or number)
+const ResultColumn = styled.div`
+  /* centering horizontally */
+  text-align: center;
+
+  /* results take up equal space in container*/
+  flex-grow: 1;
+
+  /* padding results to make sure that two elements next to each other can be distinguished */
+  padding: 5px;
+`;
+
+// element to the very right holidng action button
+const ActionColumn = styled.div`
+  /* vertically aligning button at start as supposed to stick at top of container */
+  align-self: flex-start;
+`;
+
+// the result matrix table
+const MatrixTable = styled.table`
+  /* centering text in cells*/
+  text-align: center;
+
+  /* setting fixed size of table*/
+  height: 225px;
+  width: 225px;
+
+  /* setting border collapse to not have separate borders for cells and table
+  Note: we style rounded corners on outer table while having all inner borders as follows: 
+  1) remove outer border of table
+  2) wrap in container that mimics outer border*/
+  border-collapse: collapse;
+
+  /* hiding outer table borders */
+  border-style: hidden;
+
+  /* on mobile => making matrix and font size smaller*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    height: 114px;
+    width: 114px;
+    font-size: 14px;
+  }
+`;
+
+// cell of the matrix table
+const MatrixCell = styled.td`
+  /* if in highlighted state => adapting background color */
+  background-color: ${(props) => (props.highlighted ? props.theme.matrixRed : '')};
+
+  /* setting fixed width of cell */
+  width: 75px;
+  height: 75px;
+
+  /* setting border on every cell */
+  border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
+
+  /* on mobile => making cells smaller*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    height: 38px;
+    width: 38px;
+  }
+`;
+
+// container around matrix used to draw rounded border
+const MatrixContainer = styled.div`
+  /* defining border around matrix*/
+  border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
+  border-radius: 8px;
+
+  /* setting width of container = size of matrix + 1px for border on every side*/
+  width: 227px;
+  height: 227px;
+
+  /* setting margin of container to center in container*/
+  margin: 12px auto 12px auto;
+
+  /* on mobile => making container same size as smaller matrix */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    height: 116px;
+    width: 116px;
+  }
+`;
+
+// custom icon button with different size
+const RowIconButton = styled(IconButton)`
+  height: 40px;
+  width: 40px;
+`;
 
 /**
  * row rendering a single row item of an analysis result
  */
-class ResultTableRow extends Component {  
-  /**
-   * returns the row representation of the text passed by the server (html)
-   * If the description text is larger than a defined (static) threshold, it is truncated
-   * and a more button is added leading to the detailed view
-   */
-  renderTextColumn(rowText, numberId) {
-    let rowTextRepresentation = null;
-    // if no text => returning null
-    if (rowText && rowText.length > 0) {
-      // removing html tags for preview
-      rowTextRepresentation = rowText.replace(/<(.|\n)*?>/g, '');
-
-      // if text is longer than threshold => truncating and adding more button
-      if (rowTextRepresentation.length > DESCRIPTION_PREVIEW_LENGTH) {
-        rowTextRepresentation = [
-          `${rowTextRepresentation.substring(
-            0,
-            DESCRIPTION_PREVIEW_LENGTH,
-          )}...  `,
-          <Button
-            variant="link"
-            key="readIndicator"
-            onClick={() => this.props.onTextDetailClick(numberId)}
-          >
-            Lesen
-          </Button>,
-        ];
-      }
-    }
-    return rowTextRepresentation;
-  }
+const ResultTableRow = (props) => {
+  // getting item and compare item from passed props
+  const { item, compareItem } = props;
 
   /**
    * renders a result matrix as content of the table
-   * @param {} item the item of type 'matrix'
+   * @param item the item of type 'matrix'
    */
-  renderResultMatrix(resultItem) {
+  const renderResultMatrix = (resultItem) => {
     // extracting dimensions
     const matrixDimensions = resultItem.result.dimensions;
 
+    // extracting highlighted indices
+    const highlightedIndices = resultItem.result.highlighted;
+
     // rendering and returning matrix
     return (
-      <table className="table table-bordered tableRow__matrix">
-        <tbody>
-          {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
-            <tr
-              key={
-                resultItem.name
-                + resultItem.numberId
-                + rowIndex
-                + resultItem.result.values[rowIndex]
-              }
-            >
-              {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
-                // determining current index composed of cols and rows
-                const currentIndex = rowIndex * matrixDimensions.cols + colIndex;
+      <MatrixContainer>
+        <MatrixTable>
+          <tbody>
+            {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
+              <tr
+                key={
+                  resultItem.name
+                  + resultItem.numberId
+                  + rowIndex
+                  + resultItem.result.values[rowIndex]
+                }
+              >
+                {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
+                  // determining current index composed of cols and rows
+                  const currentIndex = rowIndex * matrixDimensions.cols + colIndex;
+                  const highlighted = highlightedIndices[currentIndex];
 
-                // checking if index is highlighted
-                const highlighted = resultItem.result.highlighted.indexOf(currentIndex) > -1;
+                  // extracting result value or placeholder
+                  const resultValue = resultItem.result.values[currentIndex] || '';
 
-                // returning cell for element
-                return (
-                  <td
-                    key={resultItem.name + currentIndex}
-                    className={highlighted ? ' ResultTable--highlighted' : ''}
-                  >
-                    <div className="content">
-                      {resultItem.result.values[currentIndex]
-                        ? resultItem.result.values[currentIndex]
-                        : '-'}
-                    </div>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  // returning cell for element
+                  return (
+                    <MatrixCell
+                      highlighted={highlighted}
+                      key={resultItem.name + currentIndex}
+                    >
+                      {resultValue.length > 3
+                        ? `${resultValue.substr(0, 3)}...`
+                        : resultValue}
+                    </MatrixCell>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </MatrixTable>
+      </MatrixContainer>
     );
-  }
+  };
 
   /**
    * renders a readable represetnation of the list result item type
-   * @param {*} resultItem the received result item of type list
+   * @param resultItem the received result item of type list
    */
-  renderResultList(resultItem) {
-    return resultItem.result.list.map((item) => ` ${item}`);
+  const renderResultList = (resultItem) => resultItem.result.list.map((item) => ` ${item}`);
+
+  // rendering content for result and compare column based on number type
+  let contentColumn;
+  let compareContentColumn;
+  let emptyResult = false;
+  if (item.result.type === TYPE_ID_NUMBER) {
+    contentColumn = item.result.value;
+    compareContentColumn = compareItem && compareItem.result.value;
+    emptyResult = !item.result.value;
+  } else if (item.result.type === TYPE_ID_LIST) {
+    contentColumn = renderResultList(item);
+    compareContentColumn = compareItem && renderResultList(compareItem);
+    emptyResult = item.result.list.length === 0;
+  } else if (item.result.type === TYPE_ID_MATRIX) {
+    contentColumn = renderResultMatrix(item);
+    compareContentColumn = compareItem && renderResultMatrix(compareItem);
+    emptyResult = item.result.values.length === 0;
   }
 
-  /**
-   * renders the cells of a custom item
-   */
-  renderCustomRow(rowItem) {
-    // determining last element to align properly
-    const lastIndex = rowItem.values.length - 1;
-    const { descriptionTextIndex } = rowItem;
-    return (
-      <tr
-        key={rowItem.numberId}
-        className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
-      >
-        {rowItem.values.map((value, index) => {
-          // defining style of cell
-          let cellStyle = '';
-          let cellValue = value;
-          if (index === lastIndex) {
-            cellStyle += 'tableRow__text';
-            cellValue = <Interweave content={value} />;
-          }
-          if (index === descriptionTextIndex) {
-            cellStyle += 'tableRow__text';
-            cellValue = this.renderTextColumn(value, rowItem.numberId);
-          }
-          if (index === 0) {
-            cellStyle += 'tableRow__name table--bold';
-          }
+  // determining if the current row is unlocked
+  const rowIsLocked = item.descriptionText.length === 0;
 
-          return (
-            <td
-              className={cellStyle}
-              key={rowItem.numberId + index + cellValue}
-            >
-              {cellValue}
-            </td>
-          );
-        })}
-      </tr>
-    );
-  }
+  // getting icon for row based on user access level
+  const rowIcon = ACCESS_LEVEL_ICON_MAPPING[props.accessLevel];
 
-  /**
-   * renders a default cell
-   */
-  renderDefaultRow(rowItem) {
-    // rendering content based on number type
-    let contentColumn;
-    if (rowItem.result.type === TYPE_ID_NUMBER) {
-      contentColumn = rowItem.result.value;
-    } else if (rowItem.result.type === TYPE_ID_LIST) {
-      contentColumn = this.renderResultList(rowItem);
-    } else if (rowItem.result.type === TYPE_ID_MATRIX) {
-      contentColumn = this.renderResultMatrix(rowItem);
-    }
+  // returning table row
+  return (
+    <ResultTableRowStyled
+      key={item.numberId}
+      id={item.numberId}
+      highlighted={item.highlighted}
+    >
+      <ContentColumn>
+        <NameColumn compare={!!compareContentColumn}>{item.name}</NameColumn>
+        <ResultContainer>
+          <ResultColumn compare={!!compareContentColumn}>
+            {contentColumn}
+          </ResultColumn>
+          {compareContentColumn && (
+            <ResultColumn compare={compareContentColumn}>
+              {compareContentColumn}
+            </ResultColumn>
+          )}
+        </ResultContainer>
+      </ContentColumn>
 
-    // returning standard row
-    return (
-      <tr
-        key={rowItem.numberId}
-        className={rowItem.highlighted ? 'tableRow--highlighted' : ''}
-      >
-        <td className="table--bold tableRow__name">{rowItem.name}</td>
-        <td className="tableRow__id ">{rowItem.numberId}</td>
-        <td className="table--bold">{contentColumn}</td>
-        <td className="tableRow__text">
-          {this.renderTextColumn(rowItem.descriptionText, rowItem.numberId)}
-        </td>
-        <td className="tableRow__text ">
-          <Interweave content={rowItem.bookReference} />
-        </td>
-      </tr>
-    );
-  }
-
-  render() {
-    // getting item from passed props
-    const { item } = this.props;
-
-    // render custom or default row based on type
-    if (item.type === ROW_TYPE_ID_CUSTOM) {
-      return this.renderCustomRow(item);
-    }
-    return this.renderDefaultRow(item);
-  }
-}
+      <ActionColumn>
+        {!emptyResult && item.result.type !== TYPE_ID_MATRIX && (
+          <RowIconButton
+            imageIcon={rowIsLocked ? lockIcon : rowIcon}
+            inactive={rowIsLocked}
+            inverted={item.highlighted}
+            onClick={() => props.onTextDetailClick(item.numberId)}
+          />
+        )}
+      </ActionColumn>
+    </ResultTableRowStyled>
+  );
+};
 
 // propTypes
 ResultTableRow.propTypes = {
   item: PropTypes.object.isRequired,
   onTextDetailClick: PropTypes.func.isRequired,
-  rowIndex: PropTypes.number.isRequired,
+  accessLevel: PropTypes.string.isRequired,
 };
 
 export default ResultTableRow;

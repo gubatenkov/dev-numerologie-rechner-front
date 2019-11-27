@@ -5,7 +5,6 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { graphql } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 import ToastNotifications from 'cogo-toast';
-import Button from 'react-bootstrap/Button';
 
 import '../styles/UserHome.css';
 
@@ -14,7 +13,6 @@ import BANNER_BOTTOM from '../images/banner_numerologie_ausbildung.gif';
 import BANNER_BOOK_1 from '../images/banner_numerologie-buecher-1.png';
 import BANNER_BOOK_2 from '../images/banner_numerologie-buecher-2.png';
 
-import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
 import AdArea from './AdArea';
 import AdAreaItem from './AdAreaItem';
@@ -22,7 +20,6 @@ import AnalysisBrowser from './AnalysisBrowser';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
 import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
-import CreditsInfoButton from './CreditsInfoButton';
 import CreditsBuyModal from './CreditsBuyModal';
 
 import { currentUserQuery } from '../graphql/Queries';
@@ -211,27 +208,6 @@ class UserHome extends Component {
         <NavigationBar
           handleDeleteUser={() => this.setState({ userDeletionDialogOpen: true })
           }
-        />
-        <TitleBar
-          primaryActionTitle="Anfrage an Berater"
-          secondaryActionTitle="Neue Analyse"
-          onSecondaryAction={() => this.props.history.push('/analysisInput')}
-          onPrimaryAction={() => {
-            ToastNotifications.error(
-              'Anfragen an Numerologie-Berater sind derzeit nicht verfügbar.',
-              { position: 'top-right' },
-            );
-          }}
-          renderLeftButtons={() => (
-            <>
-              <CreditsInfoButton
-                credits={this.props.data.currentUser.credits}
-              />
-              <Button variant="success" onClick={this.toggleBuyModal}>
-                <i className="fa fa-icon fa-shopping-cart" /> Guthaben kaufen
-              </Button>
-            </>
-          )}
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeLeftAdArea">

@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 // disabling frament warning caused by dynamic query building (pdf vs web)
 // see here for more information: https://github.com/apollographql/graphql-tag/issues/269
 import { disableFragmentWarnings } from 'graphql-tag';
-disableFragmentWarnings()
 
+disableFragmentWarnings();
 
 // query for the window token used to identify purchases with open shop windows
 export const currentWindowToken = gql`
@@ -22,8 +22,6 @@ export const currentUserQuery = gql`
   query currentUser {
     currentUser {
       email
-      wpAccessToken
-      wpTokenExpiredAt
       resultConfiguration
       groups {
         id
@@ -52,11 +50,16 @@ export const currentUserQuery = gql`
 `;
 
 // queries the current user's result configuration
-export const currentUserBasicQuery = gql`
+export const userSettingsQuery = gql`
   query currentUserResultConfiguration {
     currentUser {
       email
       resultConfiguration
+      showBookRecommendations
+      showBookReferences
+      showCategoryExplanations
+      showNumberMeaningExplanations
+      showNumberCalculationExplanations
     }
   }
 `;
@@ -77,9 +80,8 @@ export const introTextQuery = gql`
 `;
 
 // result fragment for default analysis result item for the analysis on the web (not pdf)
-export const webDefaultAnalysisResultItemFragment = gql`
-  fragment DefaultAnalysisResultItemFragment on DefaultAnalysisResultItem {
-    type
+export const webAnalysisResultItemFragment = gql`
+  fragment AnalysisResultItemFragment on AnalysisResultItem {
     name
     numberId
     descriptionText
@@ -108,9 +110,8 @@ export const webDefaultAnalysisResultItemFragment = gql`
 `;
 
 // result fragment for default analysis result item for the analysis in a pdf to be generated
-export const pdfDefaultAnalysisResultItemFragment = gql`
-  fragment DefaultAnalysisResultItemFragment on DefaultAnalysisResultItem {
-    type
+export const pdfAnalysisResultItemFragment = gql`
+  fragment AnalysisResultItemFragment on AnalysisResultItem {
     name
     numberId
     descriptionText
@@ -142,36 +143,6 @@ export const pdfDefaultAnalysisResultItemFragment = gql`
   }
 `;
 
-// result fragment for default analysis result item for the analysis on the web (not pdf)
-export const webCustomAnalysisResultItemFragment = gql`
-  fragment CustomAnalysisResultItemFragment on CustomAnalysisResultItem {
-    type
-    numberId
-    values
-    highlighted
-    descriptionTextIndex
-    bookReferenceIndex
-    nameIndex
-    valueIndex
-    compareIndices
-  }
-`;
-
-// result fragment for default analysis result item for the analysis in a pdf to be generated
-export const pdfCustomAnalysisResultItemFragment = gql`
-  fragment CustomAnalysisResultItemFragment on CustomAnalysisResultItem {
-    type
-    numberId
-    values
-    highlighted
-    descriptionTextIndex
-    bookReferenceIndex
-    nameIndex
-    valueIndex
-    compareIndices
-  }
-`;
-
 /**
  * generates the result fragment for a personal analysis result
  * @param {Boolean} isPdf true if the result is used for a pdf generation, false else
@@ -185,125 +156,120 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
       dateOfBirth
       accessLevel
       az {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       lz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       bz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       nnz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       wz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       iz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       gz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       gdr {
         gdr {
-          ...DefaultAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         gdrv {
-          ...DefaultAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         gdrf {
-          ...DefaultAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         gdri {
-          ...DefaultAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
       }
       visz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       tz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       kz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       bfz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       visz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       sz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       iniz {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       sm {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       smv {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       kl {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       zsa {
-        ...DefaultAnalysisResultItemFragment
+        ...AnalysisResultItemFragment
       }
       vz {
         vzb {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         vzp {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         vze {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
       }
       hfhp {
         hf1 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         hf2 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         hf3 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         hf4 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         hp1 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         hp2 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         hp3 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         hp4 {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
       }
       pj {
         pj {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
         pjnj {
-          ...CustomAnalysisResultItemFragment
+          ...AnalysisResultItemFragment
         }
       }
     }
-    ${isPdf
-    ? pdfDefaultAnalysisResultItemFragment
-    : webDefaultAnalysisResultItemFragment}
-    ${isPdf
-    ? pdfCustomAnalysisResultItemFragment
-    : webCustomAnalysisResultItemFragment}
+    ${isPdf ? pdfAnalysisResultItemFragment : webAnalysisResultItemFragment}
   `;
 }
 
@@ -330,20 +296,24 @@ export function buildPersonalAnalysisByNameQuery(isPdf) {
  */
 export function buildPersonalAnalysisByIdQuery(isPdf) {
   return gql`
-  query personalAnalysesById($id: ID!, $isPdf: Boolean!, $longTexts: Boolean!) {
-    analysis(id: $id) {
-      id
-      name
-      inputs {
-        firstNames
-        lastName
-        dateOfBirth
-      }
-      personalAnalysisResults(isPdf: $isPdf, longTexts: $longTexts) {
-        ...PersonalAnalysisResultFragment
+    query personalAnalysesById(
+      $id: ID!
+      $isPdf: Boolean!
+      $longTexts: Boolean!
+    ) {
+      analysis(id: $id) {
+        id
+        name
+        inputs {
+          firstNames
+          lastName
+          dateOfBirth
+        }
+        personalAnalysisResults(isPdf: $isPdf, longTexts: $longTexts) {
+          ...PersonalAnalysisResultFragment
+        }
       }
     }
-  }
-  ${buildPersonalAnalysisResultFragment(isPdf)}
-`;
+    ${buildPersonalAnalysisResultFragment(isPdf)}
+  `;
 }
