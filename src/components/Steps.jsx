@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 // styling container fro steps elements. Most of the styling ist handled by the container for the elements

@@ -1,25 +1,36 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import Interweave from 'interweave';
 import styled from 'styled-components';
 
 import IconButton from './Buttons/IconButton';
-import '../styles/TourView.css';
+import { Steps, Step } from './Steps';
 
+// icons
 import iconBackPrimary from '../images/icon_back_primary.svg';
 import iconForwardPrimary from '../images/icon_forward_primary.svg';
 
-import Panel from './Panel';
-import { Steps, Step } from './Steps';
-
+// treshhold for mobile view
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
+// constants used for content styling
+const CONTENT_STYLING_CLASS_SUBHEADING = 'subheading';
+const CONTENT_STYLING_CLASS_BOOK_REFERENCE = 'bookReference';
+const CONTENT_STYLING_CLASS_DESCRIPTION = 'descriptionText';
+
+// main container for view layout
 const TourContentContainer = styled.div`
-  border: solid black 1px;
+  /* one row that contains a spacer (invisible), the content and the promotion sidebar*/
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+
+  /* this element is focused upon opening the tour as the keydown handlers for
+  shortcuts are registered to it. To prevent a blue shadow from the focused element, this is needed*/
+  :focus {
+    border: none;
+    outline: none;
+  }
 
   /* enabling wrapping on mobile phones */
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
@@ -27,8 +38,12 @@ const TourContentContainer = styled.div`
   }
 `;
 
+// an invisible spacer element to the left
 const Spacer = styled.div`
+  /* max size of 300px and the only element in the row that shrinks*/
   flex-basis: 300px;
+
+  /* cannot take any additional space and shrinks as only element */
   flex-grow: 0;
   flex-shrink: 1;
 
@@ -38,42 +53,86 @@ const Spacer = styled.div`
   }
 `;
 
+// the content element rendering the result text
+// Note: this contains styling for the container but also
+// for how result text coming from the server as HTML is styled
 const ContentArea = styled.div`
+  /* takes up all space in the row with minimum size */
   flex-grow: 1;
-  flex-basis: 500px;
-  /*margin-right: 70px;
-  margin-left: 70px;*/
+  flex-basis: 630px;
+
+  /* basic box rules */
+  margin: 0 70px 15px 70px;
+
+  /* styling standard text within container*/
+  font-family: ${(props) => props.theme.fontFamily};
+  color: ${(props) => props.theme.black};
+  font-size: 18px;
+  line-height: 30px;
+
+  /* adapting margins on mobile */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    margin: 0 16px 15px 16px;
+  }
+
+  /* content specific styling*/
+  .${CONTENT_STYLING_CLASS_SUBHEADING} {
+    color: ${(props) => props.theme.lighterGrey};
+  }
+
+  .${CONTENT_STYLING_CLASS_DESCRIPTION} {
+    margin-top: 20px;
+  }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 58px;
+  }
+
+  h2 {
+    margin-top: 10px;
+  }
+
+  h3 {
+    margin-top: 10px;
+  }
 `;
 
+// promotion are to the right
 const PromotionArea = styled.div`
+  /* fixed size that cannot shrink or grow */
   flex-basis: 300px;
   flex-grow: 0;
   flex-shrink: 0;
 `;
 
+// promotion container for the next user level
 const UserlevelPromotion = styled.div`
   width: 300px;
 `;
 
+// promotion container for the book
 const BookPromotion = styled.div`
   width: 300px;
 `;
 
+// container for the fixed overview component at the bottom
 const TourOverView = styled.div`
-  background-color: ${(props) => props.theme.white};
+  /* basic box styling */
   height: 80px;
   width: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: ${(props) => props.theme.white};
+  border-top: solid ${(props) => props.theme.primaryLight} 1px;
 
+  /* element stays fixed at the bottom of view */
   position: fixed;
   bottom: 0;
 
-  border-top: solid ${(props) => props.theme.primaryLight} 1px;
-
+  /* element ist structured as grid with three columns*/
   display: grid;
-
-  padding-left: 30px;
-  padding-right: 30px;
-
   grid-template-columns: 36px auto 36px;
 
   /* hiding on mobile phones*/
@@ -82,7 +141,9 @@ const TourOverView = styled.div`
   }
 `;
 
+// button used in the tour overview
 const TourOverViewButton = styled(IconButton)`
+  /* adapting size and alignemnt*/
   width: 36px;
   height: 36px;
   align-self: center;
@@ -91,25 +152,34 @@ const TourOverViewButton = styled(IconButton)`
   margin-bottom: 22px;
 `;
 
+// button to the left to navigate back
 const TourOverViewBackButton = styled(TourOverViewButton)`
+  /* colmn to the very left */
   grid-column-start: 1;
 `;
 
+// button to the right to navigate forth
 const TourOverViewForwardButton = styled(TourOverViewButton)`
+  /* column to the very right */
   grid-column-start: 3;
 `;
 
+// customizing steps component to fit into layout
 const TourOverviewSteps = styled(Steps)`
+  /* fixed size */
   width: 804px;
   height: 44px;
 
+  /* aligning center */
   justify-self: center;
   align-self: center;
 
+  /* setting custom margins*/
   margin-top: 20px;
   margin-bottom: 16px;
 `;
 
+// tour view component allowing users to explore their analysis results
 const TourView = (props) => {
   // getting used values out of props
   const {
@@ -173,7 +243,7 @@ const TourView = (props) => {
     }
   };
 
-  // ref to focus container
+  // ref to root container to focus upon mount (needed for shortcuts to work)
   const componentContainer = useRef();
 
   // disabling/enabling scrolling and focus for key input if is shown/hidden
@@ -206,7 +276,8 @@ const TourView = (props) => {
     // if element is default result => using standard result
     // title is name and value
     const elementTitle = `${numberResult.name} ${numberResult.result.value
-      || numberResult.result.list}`;
+      || numberResult.result.list
+      || ''}`;
 
     // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
@@ -219,20 +290,20 @@ const TourView = (props) => {
 
     // adding number explanation text if configured
     if (props.user.showNumberMeaningExplanations) {
-      elementContent += numberResult.numberDescription.description;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
     }
 
     // adding number calcuation explanation text if configured
     if (props.user.showNumberCalculationExplanations) {
-      elementContent += `<br/>${numberResult.numberDescription.calculationDescription}`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
     }
 
     // adding description text of result
-    elementContent += `<br/>b${numberResult.descriptionText}`;
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     // adding book references if configured
     if (props.user.showBookReferences) {
-      elementContent += `<br/>${numberResult.bookReference}`;
+      elementContent += `<p class=${CONTENT_STYLING_CLASS_BOOK_REFERENCE}>${numberResult.bookReference}</p>`;
     }
 
     return [elementTitle, elementContent];
@@ -265,15 +336,23 @@ const TourView = (props) => {
   }
 
   return [
-    <TourContentContainer>
+    <TourContentContainer
+      onKeyDown={(event) => handleKeyDown(event)}
+      ref={componentContainer}
+      tabIndex="0"
+      key="tourContainer"
+    >
       <Spacer></Spacer>
-      <ContentArea>Content</ContentArea>
+      <ContentArea>
+        <h1>{tourStepTitle}</h1>
+        <Interweave content={tourStepContent} />
+      </ContentArea>
       <PromotionArea>
         <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
         <BookPromotion>Book Promotion</BookPromotion>
       </PromotionArea>
     </TourContentContainer>,
-    <TourOverView>
+    <TourOverView key="tourOverview">
       <TourOverViewBackButton
         imageIcon={iconBackPrimary}
         onClick={() => handleBackClick()}
@@ -294,109 +373,6 @@ const TourView = (props) => {
       />
     </TourOverView>,
   ];
-
-  return (
-    <div
-      className="TourView__Container modal-backdrop"
-      onKeyDown={handleKeyDown}
-      role="link"
-      tabIndex="0"
-      ref={componentContainer}
-    >
-      <div className="TourView__Content">
-        <div className="TourView__ButtonArea">
-          <button
-            type="button"
-            className="TourView__NavigationButton"
-            onClick={handleBackClick}
-          >
-            <i className="icon wb-chevron-left" />
-          </button>
-        </div>
-        <div>
-          <Panel className="TourView__Panel" title={tourStepTitle}>
-            <div className="TourView__text TourView--non-printable" />
-            <Interweave content={tourStepContent} />
-            <h3 className="TourView--printWatermark">
-              Die Resultate können nur mit Druckpaket ausgedruckt werden.
-            </h3>
-          </Panel>
-        </div>
-        {compareTourData && (
-          <div className="">
-            <Panel className="TourView__Panel" title={tourStepCompareTitle}>
-              <div className="TourView__text TourView--non-printable">
-                <Interweave
-                  content={
-                    _.isEqual(
-                      tourData[sectionIndex].sectionElements[elementIndex],
-                      compareTourData[sectionIndex].sectionElements[
-                        elementIndex
-                      ],
-                    )
-                      ? 'Gleich wie links.'
-                      : tourStepCompareContent
-                  }
-                />
-              </div>
-              <h3 className="TourView--printWatermark">
-                Die Resultate können nur mit Druckpaket ausgedruckt werden.
-              </h3>
-            </Panel>
-          </div>
-        )}
-        <div className="TourView__ButtonArea">
-          <button
-            type="button"
-            className="TourView__NavigationButton"
-            onClick={handleNextClick}
-          >
-            <i className="icon wb-chevron-right" />
-          </button>
-        </div>
-      </div>
-      <div className="TourView__BottomActions">
-        <button type="button" className="btn btn-default" onClick={onClose}>
-          Schließen
-        </button>
-      </div>
-      <div className="TourView__ContentOverview">
-        <Steps horizontal>
-          {tourData.map((tourSection, tourSectionIndex) => {
-            // getting length of current section (only elements that have content)
-            const currentSectionLength = tourSection.sectionElements.length;
-
-            // determining index to display for step
-            let stepElementIndex = 0;
-            if (tourSectionIndex === sectionIndex) {
-              stepElementIndex = elementIndex;
-            } else if (tourSectionIndex < sectionIndex) {
-              stepElementIndex = currentSectionLength - 1;
-            }
-
-            // determining the name of the item to display
-            // if if is the current section, an indication for
-            // the element position in the current section is given
-            let stepName = tourSection.sectionName;
-            if (tourSectionIndex === sectionIndex) {
-              stepName += ` (${stepElementIndex + 1}/${currentSectionLength})`;
-            }
-
-            return (
-              <Step
-                key={tourSection.sectionName}
-                name={stepName}
-                current={tourSectionIndex === sectionIndex}
-                done={tourSectionIndex < sectionIndex}
-                onStepClick={handleStepClick}
-                horizontal
-              />
-            );
-          })}
-        </Steps>
-      </div>
-    </div>
-  );
 };
 
 // defining proptypes
