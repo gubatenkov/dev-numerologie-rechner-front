@@ -54,6 +54,7 @@ const lightTheme = {
   matrixBorderGrey: '#D6D6D6',
   matrixRed: 'rgba(255, 3, 3, .3)',
   highlightedRow: 'rgba(1, 178, 212, 0.15)',
+  bookPromotionBackground: '#8FBD36',
   fontFamily: 'Roboto',
 };
 

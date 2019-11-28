@@ -10,6 +10,10 @@ import { Steps, Step } from './Steps';
 import iconBackPrimary from '../images/icon_back_primary.svg';
 import iconForwardPrimary from '../images/icon_forward_primary.svg';
 
+// images for promotions
+import book1Cover from '../images/book_1.svg';
+import book2Cover from '../images/book_2.svg';
+
 // treshhold for mobile view
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
@@ -63,6 +67,7 @@ const ContentArea = styled.div`
 
   /* basic box rules */
   margin: 0 70px 15px 70px;
+  padding-bottom: 80px;
 
   /* styling standard text within container*/
   font-family: ${(props) => props.theme.fontFamily};
@@ -105,16 +110,66 @@ const PromotionArea = styled.div`
   flex-basis: 300px;
   flex-grow: 0;
   flex-shrink: 0;
+
+  margin-right: 35px;
 `;
 
 // promotion container for the next user level
 const UserlevelPromotion = styled.div`
   width: 300px;
+  height: 350px;
+  border-radius: 6px;
+  background-color: ${(props) => props.theme.lightestGrey};
 `;
 
 // promotion container for the book
 const BookPromotion = styled.div`
   width: 300px;
+  height: 316px;
+  border-radius: 6px;
+
+  /* basic background color*/
+  background-color: ${(props) => props.theme.lightestGrey};
+
+  /* partial color as background image*/
+  background-image: linear-gradient(
+    0deg,
+    #8fbd36,
+    #8fbd36 33%,
+    transparent 33%,
+    transparent 100%
+  );
+
+  padding: 16px;
+  margin-top: 30px;
+
+  color: #323232;
+  font-family: Roboto;
+
+  background-image: linear-gradient(
+    top,
+    red,
+    red 70%,
+    transparent 70%,
+    transparent 100%
+  );
+
+  h4 {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 30px;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 26px;
+  }
+`;
+
+const BookPromotionImageContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 `;
 
 // container for the fixed overview component at the bottom
@@ -349,7 +404,21 @@ const TourView = (props) => {
       </ContentArea>
       <PromotionArea>
         <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
-        <BookPromotion>Book Promotion</BookPromotion>
+        <BookPromotion>
+          <h4>Defaillierte Beschreibungen</h4>
+          <p>
+            ...über Ihre <b>{`${tourStepTitle}`}</b> finden Sie in unserem Buch {' '}
+            <Interweave
+              content={
+                tourData[sectionIndex].sectionElements[elementIndex - 1]
+                  .bookReference
+              }
+            />
+          </p>
+          <BookPromotionImageContainer>
+            <img src={book1Cover} />
+          </BookPromotionImageContainer>
+        </BookPromotion>
       </PromotionArea>
     </TourContentContainer>,
     <TourOverView key="tourOverview">
