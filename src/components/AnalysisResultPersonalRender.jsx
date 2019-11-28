@@ -11,6 +11,7 @@ import bookIconWhite from '../images/icon_openBook_white.svg';
 import bookIconPrimary from '../images/icon_openBook_primary.svg';
 import saveIconPrimary from '../images/icon_save_primary.svg';
 import iconBackPrimary from '../images/icon_back_primary.svg';
+import iconClosePrimary from '../images/icon_close_primary.svg';
 
 // components
 import TitleBar from './TitleBar';
@@ -263,105 +264,112 @@ const AnalysisResultPersonalRender = (props) => {
   return (
     <div>
       <NavigationBar
-        leftButtonIcon={iconBackPrimary}
-        leftButtonOnClick={() => props.history.goBack()}
-      />
-      <TitleBar
-        primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-        primaryDate={personalAnalysisResult.dateOfBirth}
-        secondaryName={
-          personalAnalysisCompareResult
-          && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+        leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
+        leftButtonOnClick={
+          isTourOpen ? () => setIsTourOpen(false) : () => props.history.goBack()
         }
-        onRemoveSecondaryName={() => {
-          props.history.push(
-            `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
-          );
-        }}
       />
-
-      <ActionBar>
-        <TextButton
-          title="Namen vergleichen"
-          onClick={() => window.alert('TODO: Implement compare')}
-        />
-        <IconButton
-          imageIcon={saveIconPrimary}
-          onClick={() => handleSaveAnalysis()}
-        />
-        <TextButton
-          primary
-          icon={bookIconWhite}
-          title="Alle lesen"
-          onClick={() => {
-            // opening tour view at start
-            setIsTourOpen(true);
-            setTourSectionIndex(0);
-            setTourElementIndex(0);
+      {/* displaying content if tour is not open */}
+      {!isTourOpen && [
+        <TitleBar
+          primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+          primaryDate={personalAnalysisResult.dateOfBirth}
+          secondaryName={
+            personalAnalysisCompareResult
+            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+          }
+          onRemoveSecondaryName={() => {
+            props.history.push(
+              `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
+            );
           }}
-        />
-      </ActionBar>
+          key="titlebar"
+        />,
+        <ActionBar key="actionbar">
+          <TextButton
+            title="Namen vergleichen"
+            onClick={() => window.alert('TODO: Implement compare')}
+          />
+          <IconButton
+            imageIcon={saveIconPrimary}
+            onClick={() => handleSaveAnalysis()}
+          />
+          <TextButton
+            primary
+            icon={bookIconWhite}
+            title="Alle lesen"
+            onClick={() => {
+              // opening tour view at start
+              setIsTourOpen(true);
+              setTourSectionIndex(0);
+              setTourElementIndex(0);
+            }}
+          />
+        </ActionBar>,
+        <ContentArea key="resultContent">
+          <ContentNavigation
+            contentItems={buildContentDataStructure(
+              resultConfig,
+              personalAnalysisResult,
+            )}
+            onItemClick={navigateToElementHandler}
+            autoAdapt
+          />
 
-      <ContentArea>
-        <ContentNavigation
-          contentItems={buildContentDataStructure(
-            resultConfig,
+          <ResultContent>
+            {// mapping every configuration section to a result panel
+            resultConfig.map((resultSection) => (
+              // returning panel and result table with filtered data
+              <ResultPanel
+                title={resultSection.name}
+                rightActionIcon={bookIconPrimary}
+                onRightActionClick={() => handleItemDetailClick(resultSection.name)
+                }
+                id={resultSection.name}
+                key={resultSection.name}
+              >
+                {resultSection.tables.map((tableData) => (
+                  // returning table with result data for each number id
+                  <ResultTable
+                    name={tableData.name}
+                    numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
+                    compareNumbers={
+                      personalAnalysisCompareResult
+                      && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
+                    }
+                    headings={tableData.headings}
+                    showTitle={tableData.showTitle}
+                    handleTextDetailClick={handleItemDetailClick}
+                    sectionId={resultSection.name}
+                    accessLevel={personalAnalysisResult.accessLevel}
+                    key={`${resultSection.name + tableData.name}`}
+                  />
+                ))}
+              </ResultPanel>
+            ))}
+          </ResultContent>
+        </ContentArea>,
+      ]}
+
+      {/* displaying tour if open */}
+      {isTourOpen && (
+        <TourView
+          onClose={() => setIsTourOpen(false)}
+          tourData={buildTourDataStructure(
             personalAnalysisResult,
+            resultConfig,
+            introTexts,
           )}
-          onItemClick={navigateToElementHandler}
-          autoAdapt
+          sectionIndex={tourSectionIndex}
+          elementIndex={tourElementIndex}
+          onIndexChange={(sectionIndex, elementIndex) => {
+            // if index changes by interaction with component => updating state to re-render accordingly
+            setTourSectionIndex(sectionIndex);
+            setTourElementIndex(elementIndex);
+          }}
+          user={props.user}
         />
-
-        <ResultContent>
-          {// mapping every configuration section to a result panel
-          resultConfig.map((resultSection) => (
-            // returning panel and result table with filtered data
-            <ResultPanel
-              title={resultSection.name}
-              rightActionIcon={bookIconPrimary}
-              onRightActionClick={() => handleItemDetailClick(resultSection.name)
-              }
-              id={resultSection.name}
-              key={resultSection.name}
-            >
-              {resultSection.tables.map((tableData) => (
-                // returning table with result data for each number id
-                <ResultTable
-                  name={tableData.name}
-                  numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
-                  compareNumbers={
-                    personalAnalysisCompareResult
-                    && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
-                  }
-                  headings={tableData.headings}
-                  showTitle={tableData.showTitle}
-                  handleTextDetailClick={handleItemDetailClick}
-                  sectionId={resultSection.name}
-                  accessLevel={personalAnalysisResult.accessLevel}
-                  key={`${resultSection.name + tableData.name}`}
-                />
-              ))}
-            </ResultPanel>
-          ))}
-        </ResultContent>
-      </ContentArea>
-      <TourView
-        isOpen={isTourOpen}
-        onClose={() => setIsTourOpen(false)}
-        tourData={buildTourDataStructure(
-          personalAnalysisResult,
-          resultConfig,
-          introTexts,
-        )}
-        sectionIndex={tourSectionIndex}
-        elementIndex={tourElementIndex}
-        onIndexChange={(sectionIndex, elementIndex) => {
-          // if index changes by interaction with component => updating state to re-render accordingly
-          setTourSectionIndex(sectionIndex);
-          setTourElementIndex(elementIndex);
-        }}
-        user={props.user}
-      />
+      )}
     </div>
   );
 };

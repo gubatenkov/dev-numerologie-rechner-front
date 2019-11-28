@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Interweave from 'interweave';
+import styled from 'styled-components';
 
 import '../styles/TourView.css';
 
@@ -9,7 +10,66 @@ import Panel from './Panel';
 import Steps from './Steps';
 import Step from './Step';
 
-const TourView = props => {
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+
+const TourContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const TourContentContainer = styled.div`
+  border: solid black 1px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  /* enabling wrapping on mobile phones */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    flex-wrap: wrap;
+  }
+`;
+
+const Spacer = styled.div`
+  flex-basis: 300px;
+  flex-grow: 0;
+  flex-shrink: 1;
+  border: solid black 1px;
+
+  /* hiding on mobile phones*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    display: none;
+  }
+`;
+
+const ContentArea = styled.div`
+  border: solid black 1px;
+  flex-grow: 1;
+  flex-basis: 500px;
+  /*margin-right: 70px;
+  margin-left: 70px;*/
+`;
+
+const PromotionArea = styled.div`
+  border: solid black 1px;
+  flex-basis: 300px;
+  flex-grow: 0;
+  flex-shrink: 0;
+`;
+
+const UserlevelPromotion = styled.div`
+  width: 300px;
+`;
+
+const BookPromotion = styled.div`
+  width: 300px;
+`;
+
+const TourOverView = styled.div`
+  border: solid black 1px;
+  width: 100%;
+`;
+
+const TourView = (props) => {
   // getting used values out of props
   const {
     sectionIndex,
@@ -18,14 +78,13 @@ const TourView = props => {
     compareTourData,
     onClose,
     onIndexChange,
-    isOpen,
   } = props;
 
   // handler for clicks on the steps directly in the overview
-  const handleStepClick = sectionTitleClicked => {
+  const handleStepClick = (sectionTitleClicked) => {
     // getting index of section title clicked and setting it's index as current section index
     const index = tourData.findIndex(
-      item => item.sectionName === sectionTitleClicked,
+      (item) => item.sectionName === sectionTitleClicked,
     );
     if (index > -1) {
       onIndexChange(index, 0);
@@ -56,7 +115,7 @@ const TourView = props => {
   };
 
   // handler for key press
-  const handleKeyDown = event => {
+  const handleKeyDown = (event) => {
     switch (event.key) {
       // determining which key was pressed
       case 'ArrowRight':
@@ -77,11 +136,8 @@ const TourView = props => {
 
   // disabling/enabling scrolling and focus for key input if is shown/hidden
   useEffect(() => {
-    // updating body class of the site to prevent scrolling
-    document.body.classList.toggle('noScroll', isOpen);
-
     // if modal is shown, getting focus so key inputs work
-    if (componentContainer && componentContainer.current && isOpen) {
+    if (componentContainer && componentContainer.current) {
       componentContainer.current.focus();
     }
   });
@@ -90,7 +146,7 @@ const TourView = props => {
    * builds a tour element for an introduction text into a section
    * @param sectionIntro the section intro object
    */
-  const buildIntroTextTourStep = sectionIntro => {
+  const buildIntroTextTourStep = (sectionIntro) => {
     // building title and content for introduction text to section
     const elementTitle = `Einführung ${sectionIntro.title}`;
     const elementContent = sectionIntro.text;
@@ -104,11 +160,11 @@ const TourView = props => {
    * and returns both parameters as array
    * @param numberResult the result element to build title and content from
    */
-  const buildNumberTourStep = numberResult => {
+  const buildNumberTourStep = (numberResult) => {
     // if element is default result => using standard result
     // title is name and value
-    const elementTitle = `${numberResult.name} ${numberResult.result.value ||
-      numberResult.result.list}`;
+    const elementTitle = `${numberResult.name} ${numberResult.result.value
+      || numberResult.result.list}`;
 
     // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
@@ -126,25 +182,19 @@ const TourView = props => {
 
     // adding number calcuation explanation text if configured
     if (props.user.showNumberCalculationExplanations) {
-      elementContent +=
-        '<br/>' + numberResult.numberDescription.calculationDescription;
+      elementContent += `<br/>${numberResult.numberDescription.calculationDescription}`;
     }
 
     // adding description text of result
-    elementContent += `<br/>b` + numberResult.descriptionText;
+    elementContent += `<br/>b${numberResult.descriptionText}`;
 
     // adding book references if configured
     if (props.user.showBookReferences) {
-      elementContent += '<br/>' + numberResult.bookReference;
+      elementContent += `<br/>${numberResult.bookReference}`;
     }
 
     return [elementTitle, elementContent];
   };
-
-  // if detail view not open -> not showing it
-  if (isOpen === false) {
-    return null;
-  }
 
   // defining content and compare content
   let tourStepTitle;
@@ -173,6 +223,20 @@ const TourView = props => {
   }
 
   return (
+    <TourContainer>
+      <TourContentContainer>
+        <Spacer>Spacer</Spacer>
+        <ContentArea>Content</ContentArea>
+        <PromotionArea>
+          <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
+          <BookPromotion>Book Promotion</BookPromotion>
+        </PromotionArea>
+      </TourContentContainer>
+      <TourOverView>Overview</TourOverView>
+    </TourContainer>
+  );
+
+  return (
     <div
       className="TourView__Container modal-backdrop"
       onKeyDown={handleKeyDown}
@@ -180,41 +244,6 @@ const TourView = props => {
       tabIndex="0"
       ref={componentContainer}
     >
-      <div className="TourView__ContentOverview">
-        <Steps horizontal>
-          {tourData.map((tourSection, tourSectionIndex) => {
-            // getting length of current section (only elements that have content)
-            const currentSectionLength = tourSection.sectionElements.length;
-
-            // determining index to display for step
-            let stepElementIndex = 0;
-            if (tourSectionIndex === sectionIndex) {
-              stepElementIndex = elementIndex;
-            } else if (tourSectionIndex < sectionIndex) {
-              stepElementIndex = currentSectionLength - 1;
-            }
-
-            // determining the name of the item to display
-            // if if is the current section, an indication for
-            // the element position in the current section is given
-            let stepName = tourSection.sectionName;
-            if (tourSectionIndex === sectionIndex) {
-              stepName += ` (${stepElementIndex + 1}/${currentSectionLength})`;
-            }
-
-            return (
-              <Step
-                key={tourSection.sectionName}
-                name={stepName}
-                current={tourSectionIndex === sectionIndex}
-                done={tourSectionIndex < sectionIndex}
-                onStepClick={handleStepClick}
-                horizontal
-              />
-            );
-          })}
-        </Steps>
-      </div>
       <div className="TourView__Content">
         <div className="TourView__ButtonArea">
           <button
@@ -272,6 +301,41 @@ const TourView = props => {
           Schließen
         </button>
       </div>
+      <div className="TourView__ContentOverview">
+        <Steps horizontal>
+          {tourData.map((tourSection, tourSectionIndex) => {
+            // getting length of current section (only elements that have content)
+            const currentSectionLength = tourSection.sectionElements.length;
+
+            // determining index to display for step
+            let stepElementIndex = 0;
+            if (tourSectionIndex === sectionIndex) {
+              stepElementIndex = elementIndex;
+            } else if (tourSectionIndex < sectionIndex) {
+              stepElementIndex = currentSectionLength - 1;
+            }
+
+            // determining the name of the item to display
+            // if if is the current section, an indication for
+            // the element position in the current section is given
+            let stepName = tourSection.sectionName;
+            if (tourSectionIndex === sectionIndex) {
+              stepName += ` (${stepElementIndex + 1}/${currentSectionLength})`;
+            }
+
+            return (
+              <Step
+                key={tourSection.sectionName}
+                name={stepName}
+                current={tourSectionIndex === sectionIndex}
+                done={tourSectionIndex < sectionIndex}
+                onStepClick={handleStepClick}
+                horizontal
+              />
+            );
+          })}
+        </Steps>
+      </div>
     </div>
   );
 };
@@ -280,7 +344,6 @@ const TourView = props => {
 TourView.propTypes = {
   tourData: PropTypes.array.isRequired,
   compareTourData: PropTypes.array,
-  isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   sectionIndex: PropTypes.number,
   elementIndex: PropTypes.number,
