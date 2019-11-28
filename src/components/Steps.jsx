@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import _ from 'lodash';
 
 // styling container fro steps elements. Most of the styling ist handled by the container for the elements
 const StepsContainer = styled.div`
@@ -85,6 +86,6 @@ export const Step = (props) => (
     active={props.active}
     onClick={() => props.onStepClick(props.name)}
   >
-    {props.name}
+    {_.truncate(props.name, { length: 15 })}
   </StyledStep>
 );

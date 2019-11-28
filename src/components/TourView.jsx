@@ -125,7 +125,6 @@ const UserlevelPromotion = styled.div`
 // promotion container for the book
 const BookPromotion = styled.div`
   width: 300px;
-  height: 316px;
   border-radius: 6px;
 
   /* basic background color*/
@@ -390,6 +389,9 @@ const TourView = (props) => {
     }
   }
 
+  // getting result item for render
+  const resultItem = tourData[sectionIndex].sectionElements[elementIndex - 1];
+
   return [
     <TourContentContainer
       onKeyDown={(event) => handleKeyDown(event)}
@@ -404,21 +406,25 @@ const TourView = (props) => {
       </ContentArea>
       <PromotionArea>
         <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
-        <BookPromotion>
-          <h4>Defaillierte Beschreibungen</h4>
-          <p>
-            ...über Ihre <b>{`${tourStepTitle}`}</b> finden Sie in unserem Buch {' '}
-            <Interweave
-              content={
-                tourData[sectionIndex].sectionElements[elementIndex - 1]
-                  .bookReference
-              }
-            />
-          </p>
-          <BookPromotionImageContainer>
-            <img src={book1Cover} />
-          </BookPromotionImageContainer>
-        </BookPromotion>
+        {elementIndex > 0 && (
+          <BookPromotion>
+            <h4>Defaillierte Beschreibungen</h4>
+            <p>
+              ...über Ihre <b>{`${tourStepTitle}`}</b> finden Sie in unserem
+              Buch <Interweave content={resultItem.bookReference} />
+            </p>
+
+            <BookPromotionImageContainer>
+              <img
+                src={
+                  resultItem.bookReference.includes('Band 1')
+                    ? book1Cover
+                    : book2Cover
+                }
+              />
+            </BookPromotionImageContainer>
+          </BookPromotion>
+        )}
       </PromotionArea>
     </TourContentContainer>,
     <TourOverView key="tourOverview">
