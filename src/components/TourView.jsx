@@ -11,8 +11,8 @@ import iconBackPrimary from '../images/icon_back_primary.svg';
 import iconForwardPrimary from '../images/icon_forward_primary.svg';
 
 // images for promotions
-import book1Cover from '../images/book_1.svg';
-import book2Cover from '../images/book_2.svg';
+import book1Cover from '../images/book_1.png';
+import book2Cover from '../images/book_2.png';
 
 // treshhold for mobile view
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
