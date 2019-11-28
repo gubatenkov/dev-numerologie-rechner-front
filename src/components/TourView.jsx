@@ -4,18 +4,16 @@ import _ from 'lodash';
 import Interweave from 'interweave';
 import styled from 'styled-components';
 
+import IconButton from './Buttons/IconButton';
 import '../styles/TourView.css';
 
+import iconBackPrimary from '../images/icon_back_primary.svg';
+import iconForwardPrimary from '../images/icon_forward_primary.svg';
+
 import Panel from './Panel';
-import Steps from './Steps';
-import Step from './Step';
+import { Steps, Step } from './Steps';
 
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
-
-const TourContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 const TourContentContainer = styled.div`
   border: solid black 1px;
@@ -33,7 +31,6 @@ const Spacer = styled.div`
   flex-basis: 300px;
   flex-grow: 0;
   flex-shrink: 1;
-  border: solid black 1px;
 
   /* hiding on mobile phones*/
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
@@ -42,7 +39,6 @@ const Spacer = styled.div`
 `;
 
 const ContentArea = styled.div`
-  border: solid black 1px;
   flex-grow: 1;
   flex-basis: 500px;
   /*margin-right: 70px;
@@ -50,7 +46,6 @@ const ContentArea = styled.div`
 `;
 
 const PromotionArea = styled.div`
-  border: solid black 1px;
   flex-basis: 300px;
   flex-grow: 0;
   flex-shrink: 0;
@@ -65,8 +60,54 @@ const BookPromotion = styled.div`
 `;
 
 const TourOverView = styled.div`
-  border: solid black 1px;
+  background-color: ${(props) => props.theme.white};
+  height: 80px;
   width: 100%;
+
+  position: fixed;
+  bottom: 0;
+
+  border-top: solid ${(props) => props.theme.primaryLight} 1px;
+
+  display: grid;
+
+  padding-left: 30px;
+  padding-right: 30px;
+
+  grid-template-columns: 36px auto 36px;
+
+  /* hiding on mobile phones*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    display: none;
+  }
+`;
+
+const TourOverViewButton = styled(IconButton)`
+  width: 36px;
+  height: 36px;
+  align-self: center;
+
+  margin-top: 22px;
+  margin-bottom: 22px;
+`;
+
+const TourOverViewBackButton = styled(TourOverViewButton)`
+  grid-column-start: 1;
+`;
+
+const TourOverViewForwardButton = styled(TourOverViewButton)`
+  grid-column-start: 3;
+`;
+
+const TourOverviewSteps = styled(Steps)`
+  width: 804px;
+  height: 44px;
+
+  justify-self: center;
+  align-self: center;
+
+  margin-top: 20px;
+  margin-bottom: 16px;
 `;
 
 const TourView = (props) => {
@@ -86,6 +127,7 @@ const TourView = (props) => {
     const index = tourData.findIndex(
       (item) => item.sectionName === sectionTitleClicked,
     );
+
     if (index > -1) {
       onIndexChange(index, 0);
     }
@@ -222,19 +264,36 @@ const TourView = (props) => {
     }
   }
 
-  return (
-    <TourContainer>
-      <TourContentContainer>
-        <Spacer>Spacer</Spacer>
-        <ContentArea>Content</ContentArea>
-        <PromotionArea>
-          <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
-          <BookPromotion>Book Promotion</BookPromotion>
-        </PromotionArea>
-      </TourContentContainer>
-      <TourOverView>Overview</TourOverView>
-    </TourContainer>
-  );
+  return [
+    <TourContentContainer>
+      <Spacer></Spacer>
+      <ContentArea>Content</ContentArea>
+      <PromotionArea>
+        <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
+        <BookPromotion>Book Promotion</BookPromotion>
+      </PromotionArea>
+    </TourContentContainer>,
+    <TourOverView>
+      <TourOverViewBackButton
+        imageIcon={iconBackPrimary}
+        onClick={() => handleBackClick()}
+      />
+      <TourOverviewSteps horizontal>
+        {tourData.map((tourSection, tourSectionIndex) => (
+          <Step
+            key={tourSection.sectionName}
+            name={tourSection.sectionName}
+            active={tourSectionIndex <= sectionIndex}
+            onStepClick={(name) => handleStepClick(name)}
+          />
+        ))}
+      </TourOverviewSteps>
+      <TourOverViewForwardButton
+        imageIcon={iconForwardPrimary}
+        onClick={() => handleNextClick()}
+      />
+    </TourOverView>,
+  ];
 
   return (
     <div

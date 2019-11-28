@@ -363,11 +363,12 @@ const AnalysisResultPersonalRender = (props) => {
           sectionIndex={tourSectionIndex}
           elementIndex={tourElementIndex}
           onIndexChange={(sectionIndex, elementIndex) => {
+            console.log('ON INDEX CHANGE');
             // if index changes by interaction with component => updating state to re-render accordingly
             setTourSectionIndex(sectionIndex);
             setTourElementIndex(elementIndex);
           }}
-          user={props.user}
+          user={props.user} 
         />
       )}
     </div>
