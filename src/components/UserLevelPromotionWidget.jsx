@@ -3,11 +3,16 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import PromotionAccordion from './PromotionAccordion';
 import TextButton from './Buttons/TextButton';
+import IconButton from './Buttons/IconButton';
+
+// icons
+import lockIcon from '../images/icon_lock.svg';
+import bookIconPremium from '../images/icon_openBookPremium_primary.svg';
 
 // promotion content based on user level
 const UserLevelPromotionTexts = {
-  ACCESS_LEVEL_USER_FREE: {
-    icon: '',
+  ACCESS_LEVEL_GUEST: {
+    icon: lockIcon,
     title: 'Registrieren Sie sich kostenlos und erhalten Sie Zugriff auf:',
     text: (
       <ul>
@@ -25,10 +30,10 @@ const UserLevelPromotionTexts = {
       </ul>
     ),
     action: 'Registrieren',
-    link: '/login',
+    link: '/register',
   },
   ACCESS_LEVEL_USER: {
-    icon: '',
+    icon: bookIconPremium,
     title: 'Lesen Sie alle Texte einer kurzen numerologischen Analyse!',
     text: [
       <p key="userLevelPromotionText">
@@ -83,18 +88,65 @@ const UserLevelPromotionTexts = {
     link: 'https://www.bios-shop.eu/',
   },
   ACCESS_LEVEL_PAID_SHORT: {
-    icon: '',
+    icon: bookIconPremium,
     title: 'Lesen Sie die vollständige numerologische Persönlichkeitsanalyse!',
-    text: (
-      <p>
+    text: [
+      <p key="userLevelPromotionText">
         Schalten Sie sich alle Texte eines <b>vollständigen Numeroskops</b> mit
         ausführlichen, langen Beschreibungen mit <b>ca. 100-120 Seiten A4</b>{' '}
         und{' '}
         <b>zahlreichen Übungen und Selbstreflexionen zum persönlich Wachsen</b>{' '}
         für Ihre aktuelle Berechnung frei und erhalten Sie dazu noch ein schön
         gestaltetes <b>PDF zum Ausdrucken! Preis: € 59,-</b>
-      </p>
-    ),
+      </p>,
+      <PromotionAccordion
+        title="Mehr Infos zu Inhalten und Übungen"
+        key="More Info"
+      >
+        {[
+          <h5 key="content">Inhalte:</h5>,
+          <ul key="contentList">
+            <li>
+              lange Beschreibungstexte von allen Zahlen der
+              Premium-Kurz-Version, zusätzlich:
+            </li>
+            <li>
+              Alle Zahlen der Ebene „Potenzial und Berufung“ mit: Talentzahl,
+              Ausdruckszahl, Kreativitätszahl (Vornamenszahl), Nachnamenszahl,
+              Berufszahl, Visionszahl, Berufungszahl
+            </li>
+          </ul>,
+          <h5 key="functions">
+            Alle weiteren Texte, um persönlich zu wachsen, sowie zahlreiche
+            Übungen und Selbstreflexionen:
+          </h5>,
+          <ul key="functionsList">
+            <li>
+              Lebenszahl: Abschnitte: Seelische Verletzung und Schattenseiten,
+              Lebensaufgaben, Selbstreflexion und Affirmationen
+            </li>
+            <li>3 Selbstcoaching Übungen zu den Wurzelzahlen</li>
+            <li>
+              Gesundheitszahl - inklusive Empfehlungen, Therapiemöglichkeiten,
+              Übungen
+            </li>
+            <li>
+              Seelenzahl: Abschnitte: Denkmuster und Verhaltensstrategie, Fragen
+              zur Selbstreflexion
+            </li>
+            <li>
+              Seelische Matrix - vorhandene Zahlen: Emotionale Verletzung und
+              Häufigkeit
+            </li>
+            <li>Karmische Lektionen: Lernaufgabe und Seelische Verletzung</li>
+            <li>
+              Empfehlungen für das Persönliches Jahr und das nächste Jahr des
+              Persönlichen Jahres
+            </li>
+          </ul>,
+        ]}
+      </PromotionAccordion>,
+    ],
     action: 'Premium Langversion kaufen',
     lonk: 'https://www.bios-shop.eu/',
   },
@@ -123,10 +175,9 @@ const UserlevelPromotionContainer = styled.div`
 
   /* some subtitles in content have h5*/
   h5 {
-      font-size: 18px;
-      font-weight: 500;
-      line-height: 30px;
-    }
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 30px;
   }
 
   /* list styling with colored dots and custom spacing*/
@@ -136,7 +187,7 @@ const UserlevelPromotionContainer = styled.div`
 
     /* resetting margin and padding to have a green field for our own bullet*/
     padding: 0;
-    margin: 0 0 12px 0; 
+    margin: 0 0 12px 0;
   }
 
   li {
@@ -156,10 +207,29 @@ const UserlevelPromotionContainer = styled.div`
   }
 `;
 
+// container for title and icon
+const TitleContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
 // custom butto  for the action at the bottom
 const ActionTextButton = styled(TextButton)`
   margin-top: 12px;
   width: 100%;
+`;
+
+// custom styled button icon
+const PromotionIconButton = styled(IconButton)`
+  width: 32px;
+  height: 32px;
+
+  img {
+    height: 19px;
+  }
 `;
 
 // widget displaying promotion content based on the user access level
@@ -174,7 +244,10 @@ const UserLevelPromotionWidget = (props) => {
 
   return (
     <UserlevelPromotionContainer className={props.className}>
-      <h4>{userLevelPromotionText.title}</h4>
+      <TitleContainer>
+        <h4>{userLevelPromotionText.title}</h4>
+        <PromotionIconButton imageIcon={userLevelPromotionText.icon} inverted />
+      </TitleContainer>
       {userLevelPromotionText.text}
       <ActionTextButton
         title={userLevelPromotionText.action}

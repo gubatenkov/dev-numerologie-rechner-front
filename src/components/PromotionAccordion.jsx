@@ -41,8 +41,6 @@ const PromotionAccordion = (props) => {
   // state indicating if the accordion is open
   const [open, setOpen] = useState(false);
 
-  console.log(props);
-
   return (
     <Accordion defaultActiveKey={null} className={props.className}>
       <PromotionCard>
