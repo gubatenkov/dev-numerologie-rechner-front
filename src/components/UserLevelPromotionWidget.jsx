@@ -19,9 +19,9 @@ const UserLevelPromotionTexts = {
         <li>Ihre Lebenszahl in Beziehungen und Partnerschaft</li>
         <li>Lernaufgaben Ihrer Seelenzahl</li>
         <li>
-          Ihre Prüfungen auf dem Lebensweg: Ihr aktueller Vibratorischer Zyklus,
-          Ihre aktuelle Herausforderung und deren Höhepunkt und Ihr aktuelles
-          Persönliches Jahr
+          Ihre Prüfungen auf dem Lebensweg: Ihr <b>aktueller</b> Vibratorischer
+          Zyklus, Ihre aktuelle Herausforderung und deren Höhepunkt und Ihr
+          aktuelles Persönliches Jahr
         </li>
         <li>
           Bei jeder Zahl: Anzeige der Seitenzahl zum Nachschlagen und Lesen der
@@ -84,7 +84,7 @@ const UserLevelPromotionTexts = {
         ]}
       </PromotionAccordion>,
     ],
-    action: 'Premium Kurversion kaufen',
+    action: 'Kurversion kaufen',
     link: 'https://www.bios-shop.eu/',
   },
   ACCESS_LEVEL_PAID_SHORT: {
@@ -107,47 +107,52 @@ const UserLevelPromotionTexts = {
           <h5 key="content">Inhalte:</h5>,
           <ul key="contentList">
             <li>
-              lange Beschreibungstexte von allen Zahlen der
+              <b>lange Beschreibungstexte</b> von allen Zahlen der
               Premium-Kurz-Version, zusätzlich:
             </li>
             <li>
-              Alle Zahlen der Ebene „Potenzial und Berufung“ mit: Talentzahl,
-              Ausdruckszahl, Kreativitätszahl (Vornamenszahl), Nachnamenszahl,
-              Berufszahl, Visionszahl, Berufungszahl
+              <b>Alle Zahlen der Ebene „Potenzial und Berufung“</b> mit:
+              Talentzahl, Ausdruckszahl, Kreativitätszahl (Vornamenszahl),
+              Nachnamenszahl, Berufszahl, Visionszahl, Berufungszahl
             </li>
           </ul>,
           <h5 key="functions">
-            Alle weiteren Texte, um persönlich zu wachsen, sowie zahlreiche
-            Übungen und Selbstreflexionen:
+            Alle weiteren Texte, um <b>persönlich zu wachsen</b>, sowie
+            zahlreiche
+            <b>Übungen und Selbstreflexionen:</b>
           </h5>,
           <ul key="functionsList">
             <li>
-              Lebenszahl: Abschnitte: Seelische Verletzung und Schattenseiten,
-              Lebensaufgaben, Selbstreflexion und Affirmationen
-            </li>
-            <li>3 Selbstcoaching Übungen zu den Wurzelzahlen</li>
-            <li>
-              Gesundheitszahl - inklusive Empfehlungen, Therapiemöglichkeiten,
-              Übungen
+              <b>Lebenszahl:</b> Abschnitte: Seelische Verletzung und
+              Schattenseiten, Lebensaufgaben, Selbstreflexion und Affirmationen
             </li>
             <li>
-              Seelenzahl: Abschnitte: Denkmuster und Verhaltensstrategie, Fragen
-              zur Selbstreflexion
+              <b>3 Selbstcoaching Übungen zu den Wurzelzahlen</b>
             </li>
             <li>
-              Seelische Matrix - vorhandene Zahlen: Emotionale Verletzung und
-              Häufigkeit
+              <b>Gesundheitszahl</b> - inklusive Empfehlungen,
+              Therapiemöglichkeiten, Übungen
             </li>
-            <li>Karmische Lektionen: Lernaufgabe und Seelische Verletzung</li>
             <li>
-              Empfehlungen für das Persönliches Jahr und das nächste Jahr des
-              Persönlichen Jahres
+              <b>Seelenzahl:</b> Abschnitte: Denkmuster und Verhaltensstrategie,
+              Fragen zur Selbstreflexion
+            </li>
+            <li>
+              Seelische Matrix - vorhandene Zahlen: <b>Emotionale Verletzung</b>{' '}
+              und Häufigkeit
+            </li>
+            <li>
+              Karmische Lektionen: Lernaufgabe und <b>Seelische Verletzung</b>
+            </li>
+            <li>
+              <b>Empfehlungen</b> für das Persönliches Jahr und das nächste Jahr
+              des Persönlichen Jahres
             </li>
           </ul>,
         ]}
       </PromotionAccordion>,
     ],
-    action: 'Premium Langversion kaufen',
+    action: 'Langversion kaufen',
     lonk: 'https://www.bios-shop.eu/',
   },
 };
@@ -155,7 +160,6 @@ const UserLevelPromotionTexts = {
 // promotion container for the next user level
 const UserlevelPromotionContainer = styled.div`
   /* basic box styling*/
-  width: 300px;
   padding: 16px;
   border-radius: 6px;
   background-color: ${(props) => props.theme.lightestGrey};
@@ -197,6 +201,10 @@ const UserlevelPromotionContainer = styled.div`
 
     /* space between items*/
     margin-top: 12px;
+  }
+
+  b {
+    font-weight: 600;
   }
 
   /* drawing bullet with custom color*/

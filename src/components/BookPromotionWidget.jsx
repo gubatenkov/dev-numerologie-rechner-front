@@ -9,7 +9,6 @@ import book2Cover from '../images/book_2.png';
 
 // widget container for the book
 const BookPromotion = styled.div`
-  width: 300px;
   border-radius: 6px;
 
   /* basic background color*/

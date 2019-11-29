@@ -73,9 +73,13 @@ const ContentArea = styled.div`
   font-size: 18px;
   line-height: 30px;
 
+  /* if the text contains tables => they won't be responsive => this puts at least a scrollbar on them*/
+  overflow-x: auto;
+
   /* adapting margins on mobile */
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
     margin: 0 16px 15px 16px;
+    padding-bottom: 0px;
   }
 
   /* content specific styling*/
@@ -110,6 +114,12 @@ const PromotionArea = styled.div`
   flex-shrink: 0;
 
   margin-right: 35px;
+
+  /* adapting margins on mobile and letting container grow on own row */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    margin: 0 16px 30px 16px;
+    flex-grow: 1;
+  }
 `;
 
 // container for the fixed overview component at the bottom
@@ -247,6 +257,11 @@ const TourView = (props) => {
     if (componentContainer && componentContainer.current) {
       componentContainer.current.focus();
     }
+  });
+
+  // scrolling to top after change in step
+  useEffect(() => {
+    window.scrollTo(0, 0);
   });
 
   /**
