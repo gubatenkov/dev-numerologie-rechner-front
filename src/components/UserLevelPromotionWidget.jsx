@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
+import PromotionAccordion from './PromotionAccordion';
 import TextButton from './Buttons/TextButton';
 
 // promotion content based on user level
@@ -30,14 +30,55 @@ const UserLevelPromotionTexts = {
   ACCESS_LEVEL_USER: {
     icon: '',
     title: 'Lesen Sie alle Texte einer kurzen numerologischen Analyse!',
-    text: (
-      <p>
+    text: [
+      <p key="userLevelPromotionText">
         Schalten Sie sich alle Texte eines{' '}
         <b>kurzen Numeroskops mit ca. 45 Seiten A4</b> für Ihre aktuelle
         Berechnung zum online Lesen frei und erhalten Sie dazu noch ein schön
         gestaltetes <b>PDF zum Ausdrucken. Preis: € 29,-</b>
-      </p>
-    ),
+      </p>,
+      <PromotionAccordion
+        title="Mehr Infos dazu"
+        key="userLevelPromotionAccordion"
+      >
+        {[
+          <h5 key="content">Inhalte:</h5>,
+          <ul key="contentList">
+            <li>
+              <b>Ihre Lebenszahl</b> mit den weiteren Abschnitten: das
+              Familienthema der Ursprungsfamilie, die Lebensphasen sowie
+              Denkmuster und Verhaltensstrategien
+            </li>
+            <li>Ihre Wurzelzahl</li>
+            <li>
+              <b>Auf Seelen-Ebene:</b> die Intensitätszahl und die
+              Initiationszahl
+            </li>
+            <li>
+              <b>Die Facetten der Persönlichkeit:</b> das Geburtsdatumraster
+              (mit den vorhandenen, fehlenden und isolierten Zahlen) und die
+              Seelische Matrix mit den Karmischen Lektionen und der Zahl des
+              Seelischen Ausgleichs
+            </li>
+            <li>
+              <b>alle</b> Ihre Prüfungen auf dem Lebensweg: d.h. <b>alle</b>
+              Vibratorischen Zyklen, Herausforderungen und Höhepunkte und die
+              Vorausschau aufs nächste Jahr des Persönlichen Jahres
+            </li>
+          </ul>,
+          <h5 key="functions">Funktionen:</h5>,
+          <ul key="functionsList">
+            <li>
+              Vergleiche unterschiedliche Namen einer Person (Geburtsname,
+              Wohlfühlname, etc.) miteinander
+            </li>
+            <li>
+              Fortgeschrittene Ordnung der Zahlen nach dem „Eisberg-Modell“
+            </li>
+          </ul>,
+        ]}
+      </PromotionAccordion>,
+    ],
     action: 'Premium Kurversion kaufen',
     link: 'https://www.bios-shop.eu/',
   },

@@ -350,7 +350,10 @@ const TourView = (props) => {
       <PromotionArea>
         <UserLevelPromotionWidget accessLevel={props.accessLevel} />
         {showBookPromotion && (
-          <BookPromotionWidget bookReference={resultItem.bookReference} />
+          <BookPromotionWidget
+            resultTitle={tourStepTitle}
+            bookReference={resultItem.bookReference}
+          />
         )}
       </PromotionArea>
     </TourContentContainer>,
