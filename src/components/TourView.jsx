@@ -8,6 +8,7 @@ import IconButton from './Buttons/IconButton';
 import { Steps, Step } from './Steps';
 import UserLevelPromotionWidget from './UserLevelPromotionWidget';
 import BookPromotionWidget from './BookPromotionWidget';
+import ResultLockedWidget from './ResultLockedWidget';
 
 // icons
 import iconBackPrimary from '../images/icon_back_primary.svg';
@@ -307,7 +308,7 @@ const TourView = (props) => {
 
     // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
-      // TODO: add promotion elements here
+      // returning title and locked widget element
       return [elementTitle, null];
     }
 
@@ -341,7 +342,6 @@ const TourView = (props) => {
 
     // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
-      // TODO: add promotion elements here
       return [elementTitle, null];
     }
 
@@ -429,7 +429,11 @@ const TourView = (props) => {
       <Spacer></Spacer>
       <ContentArea>
         <h1>{tourStepTitle}</h1>
-        <Interweave content={tourStepContent} />
+        {tourStepContent ? (
+          <Interweave content={tourStepContent} />
+        ) : (
+          <ResultLockedWidget accessLevel={props.accessLevel} />
+        )}
       </ContentArea>
       <PromotionArea>
         <UserLevelPromotionWidget accessLevel={props.accessLevel} />
