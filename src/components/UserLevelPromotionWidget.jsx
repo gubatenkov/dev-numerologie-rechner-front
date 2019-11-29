@@ -236,7 +236,8 @@ const PromotionIconButton = styled(IconButton)`
   height: 32px;
 
   img {
-    height: 19px;
+    padding-bottom: 4px;
+    height: 23px;
   }
 `;
 

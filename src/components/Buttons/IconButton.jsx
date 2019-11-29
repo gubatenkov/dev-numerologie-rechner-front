@@ -11,6 +11,7 @@ const StyledButton = styled.button`
 
   border-radius: 6px;
   border-style: none;
+  position: relative;
 
   /* getting proper colors from base theme, inverted means on dark background*/
   background-color: ${(props) => (props.inactive
@@ -34,7 +35,8 @@ const StyledButton = styled.button`
   }
 `;
 
-const IconImage = styled.img``;
+const IconImage = styled.img`
+`;
 
 // plain button that wraps a FA icon
 // passed icon props need to be FA icons (imported!)
@@ -48,7 +50,10 @@ const IconButton = (props) => (
   >
     {props.faIcon && <FontAwesomeIcon icon={props.faIcon} />}
     {!props.faIcon && props.imageIcon && (
-      <IconImage src={props.imageIcon} alt={props.imageIcon} />
+      <IconImage
+        src={props.imageIcon}
+        alt={props.imageIcon}
+      />
     )}
   </StyledButton>
 );

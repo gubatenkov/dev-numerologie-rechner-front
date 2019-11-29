@@ -186,6 +186,11 @@ const RowIconButton = styled(IconButton)`
   width: 40px;
 
   ${(props) => (props.yellow ? `background-color: ${props.theme.yellow}` : '')};
+
+  /* as we use non-square icons with a badge, we need to adjust this here...not nice! */
+  img {
+    padding-bottom: ${(props) => (props.badge ? '4px' : '0px')};
+  }
 `;
 
 /**
@@ -306,6 +311,10 @@ const ResultTableRow = (props) => {
             inactive={rowIsLocked}
             inverted={item.highlighted}
             primary={props.accessLevel === 'ACCESS_LEVEL_PAID_SHORT'}
+            badge={
+              props.accessLevel === 'ACCESS_LEVEL_PAID_SHORT'
+              || props.accessLevel === 'ACCESS_LEVEL_PAID_LONG'
+            }
             onClick={() => props.onTextDetailClick(item.numberId)}
           />
         )}
