@@ -126,7 +126,8 @@ const AnalysisResultPersonalRender = (props) => {
       const resultSectionElements = [];
 
       // if section intro texts are enabled in user settings => pushing intro text element to result
-      if (user.showCategoryExplanations) {
+      // also default if user not registered
+      if (!user || user.showCategoryExplanations) {
         resultSectionElements.push({
           type: 'sectionIntroText',
           title: sectionIntroText.title,
@@ -385,6 +386,7 @@ const AnalysisResultPersonalRender = (props) => {
             setTourElementIndex(elementIndex);
           }}
           user={props.user}
+          accessLevel={personalAnalysisResult.accessLevel}
         />
       )}
     </div>

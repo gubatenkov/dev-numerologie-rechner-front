@@ -45,6 +45,7 @@ const lightTheme = {
   primary: '#01b2d4',
   black: 'black',
   white: '#FFFFFF',
+  yellow: '#FBC02D',
   primaryLight: '#f3f9fa',
   darkGrey: '#323232',
   darkGrey2: '#b8b8b8',

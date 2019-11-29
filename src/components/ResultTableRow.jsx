@@ -184,6 +184,8 @@ const MatrixContainer = styled.div`
 const RowIconButton = styled(IconButton)`
   height: 40px;
   width: 40px;
+
+  ${(props) => (props.yellow ? `background-color: ${props.theme.yellow}` : '')};
 `;
 
 /**
@@ -303,6 +305,7 @@ const ResultTableRow = (props) => {
             imageIcon={rowIsLocked ? lockIcon : rowIcon}
             inactive={rowIsLocked}
             inverted={item.highlighted}
+            primary={props.accessLevel === 'ACCESS_LEVEL_PAID_SHORT'}
             onClick={() => props.onTextDetailClick(item.numberId)}
           />
         )}

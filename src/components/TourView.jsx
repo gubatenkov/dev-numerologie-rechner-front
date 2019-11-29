@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import IconButton from './Buttons/IconButton';
 import { Steps, Step } from './Steps';
+import UserLevelPromotionWidget from './UserLevelPromotionWidget';
 
 // icons
 import iconBackPrimary from '../images/icon_back_primary.svg';
@@ -114,14 +115,6 @@ const PromotionArea = styled.div`
   margin-right: 35px;
 `;
 
-// promotion container for the next user level
-const UserlevelPromotion = styled.div`
-  width: 300px;
-  height: 350px;
-  border-radius: 6px;
-  background-color: ${(props) => props.theme.lightestGrey};
-`;
-
 // promotion container for the book
 const BookPromotion = styled.div`
   width: 300px;
@@ -142,8 +135,8 @@ const BookPromotion = styled.div`
   padding: 16px;
   margin-top: 30px;
 
-  color: #323232;
-  font-family: Roboto;
+  color: ${(props) => props.theme.darkGrey};
+  font-family: ${(props) => props.theme.fontFamily};
 
   background-image: linear-gradient(
     top,
@@ -343,12 +336,12 @@ const TourView = (props) => {
     let elementContent = '';
 
     // adding number explanation text if configured
-    if (props.user.showNumberMeaningExplanations) {
+    if (!props.user || props.user.showNumberMeaningExplanations) {
       elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
     }
 
     // adding number calcuation explanation text if configured
-    if (props.user.showNumberCalculationExplanations) {
+    if (props.user && props.user.showNumberCalculationExplanations) {
       elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
     }
 
@@ -356,7 +349,7 @@ const TourView = (props) => {
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     // adding book references if configured
-    if (props.user.showBookReferences) {
+    if (props.user && props.user.showBookReferences) {
       elementContent += `<p class=${CONTENT_STYLING_CLASS_BOOK_REFERENCE}>${numberResult.bookReference}</p>`;
     }
 
@@ -370,7 +363,7 @@ const TourView = (props) => {
   let tourStepCompareContent;
 
   // determining if book promotion should be shown (not for intro text and based on user config)
-  let showBookPromotion = props.user.showBookRecommendations;
+  let showBookPromotion = !props.user || props.user.showBookRecommendations;
 
   // getting result item to render given current section and element index
   const resultItem = tourData[sectionIndex].sectionElements[elementIndex];
@@ -407,7 +400,7 @@ const TourView = (props) => {
         <Interweave content={tourStepContent} />
       </ContentArea>
       <PromotionArea>
-        <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
+        <UserLevelPromotionWidget accessLevel={props.accessLevel} />
         {showBookPromotion && (
           <BookPromotion>
             <h4>Defaillierte Beschreibungen</h4>
@@ -458,8 +451,10 @@ TourView.propTypes = {
   tourData: PropTypes.array.isRequired,
   compareTourData: PropTypes.array,
   onClose: PropTypes.func.isRequired,
-  sectionIndex: PropTypes.number,
-  elementIndex: PropTypes.number,
+  sectionIndex: PropTypes.number.isRequired,
+  elementIndex: PropTypes.number.isRequired,
+  user: PropTypes.object,
+  accessLevel: PropTypes.string.isRequired,
 };
 
 // defining default props
