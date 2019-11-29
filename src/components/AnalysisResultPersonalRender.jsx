@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useQuery } from '@apollo/react-hooks';
 
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
@@ -10,6 +11,7 @@ import bookIconWhite from '../images/icon_openBook_white.svg';
 import bookIconPrimary from '../images/icon_openBook_primary.svg';
 import saveIconPrimary from '../images/icon_save_primary.svg';
 import iconBackPrimary from '../images/icon_back_primary.svg';
+import iconClosePrimary from '../images/icon_close_primary.svg';
 
 // components
 import TitleBar from './TitleBar';
@@ -26,7 +28,12 @@ import {
   getConfigurationForId,
 } from '../utils/Configuration';
 
+import { introTextQuery } from '../graphql/Queries';
+
+import { OVERALL_INTRO_KEY } from '../utils/Constants';
+
 import ActionBar from './ActionBar';
+import LoadingIndicator from './LoadingIndicator';
 
 const ContentArea = styled.div`
   display: flex;
@@ -66,33 +73,83 @@ const AnalysisResultPersonalRender = (props) => {
     resultConfig = getConfigurationForId(user.resultConfiguration);
   }
 
+  // filtering names of all intro texts
+  const sectionIds = resultConfig.map((section) => section.name);
+  sectionIds.push(OVERALL_INTRO_KEY);
+
+  // fetching intro texts for given configuration sections
+  const { loading, error, data } = useQuery(introTextQuery, {
+    variables: {
+      sectionIds,
+      isPdf: false,
+      longText: false,
+    },
+  });
+
   // defining component state
   const [isTourOpen, setIsTourOpen] = useState(false);
   const [tourSectionIndex, setTourSectionIndex] = useState(0);
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
+  if (loading) {
+    return <LoadingIndicator text={'Erstelle Auswertung...'} />;
+  }
+
+  if (error) {
+    return <LoadingIndicator text={'Error while fetching intro texts'} />;
+  }
+
+  // extracting intro texts from result
+  const { introTexts } = data;
+
   /**
    * transforms the analysis results and configuration into a tour data structure used for the detailed tour
    * @param resultData the result data for the analysis
    * @param configuration the current result configuration
+   * @param introTexts the intro texts of the current configuration to bake into the data structure as they are shown in the tour
    * @returns an array of tour sections containing section name and result items
    */
-  const buildTourDataStructure = (resultData, configuration) =>
+  const buildTourDataStructure = (
+    resultData,
+    configuration,
+    introTexts,
+    user,
+  ) =>
     // constructing tourSection element for every table in configuration
     configuration.map((resultSection) => {
-      const resultSectionNumbers = [];
+      // finding intro text for section
+      const sectionIntroText = introTexts.filter(
+        (text) => text.sectionId === resultSection.name,
+      )[0];
+
+      // defining resulting elements for section in tour
+      const resultSectionElements = [];
+
+      // if section intro texts are enabled in user settings => pushing intro text element to result
+      // also default if user not registered
+      if (!user || user.showCategoryExplanations) {
+        resultSectionElements.push({
+          type: 'sectionIntroText',
+          title: sectionIntroText.title,
+          text: sectionIntroText.text,
+        });
+      }
+
       // iterating over result tables of sectionp
       resultSection.tables.forEach((resultTable) => {
         // pushing resolved numbers
-        resultSectionNumbers.push(
-          ...resultTable.numberIds.map((numberId) => _.get(resultData, numberId)),
+        resultSectionElements.push(
+          ...resultTable.numberIds.map((numberId) => ({
+            ..._.get(resultData, numberId),
+            type: 'resultText',
+          })),
         );
       });
 
       // pushing resulting section  to result
       return {
         sectionName: resultSection.name,
-        sectionElements: resultSectionNumbers,
+        sectionElements: resultSectionElements,
       };
     });
 
@@ -147,6 +204,8 @@ const AnalysisResultPersonalRender = (props) => {
     const tourDataStructure = buildTourDataStructure(
       props.personalAnalysisResult,
       resultConfig,
+      introTexts,
+      user,
     );
 
     // finding index with datakey in tour data structure
@@ -154,7 +213,7 @@ const AnalysisResultPersonalRender = (props) => {
       (section) => section.sectionName === sectionId,
     );
 
-    // if data is not here -> skip
+    // if data not found => starting at first index
     if (sectionIndex < 0) {
       // starting at first section by default
       sectionIndex = 0;
@@ -166,7 +225,7 @@ const AnalysisResultPersonalRender = (props) => {
     ].sectionElements.findIndex((element) => element.numberId === numberId);
 
     if (elementIndex < 0) {
-      // starting at first number by default
+      // starting at first element by default
       elementIndex = 0;
     }
 
@@ -222,101 +281,128 @@ const AnalysisResultPersonalRender = (props) => {
   return (
     <div>
       <NavigationBar
-        leftButtonIcon={iconBackPrimary}
-        leftButtonOnClick={() => props.history.goBack()}
-      />
-      <TitleBar
-        primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-        primaryDate={personalAnalysisResult.dateOfBirth}
-        secondaryName={
-          personalAnalysisCompareResult
-          && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+        leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
+        leftButtonOnClick={
+          isTourOpen ? () => setIsTourOpen(false) : () => props.history.goBack()
         }
-        onRemoveSecondaryName={() => {
-          console.log('Removing name');
-          props.history.push(
-            `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
-          );
-        }}
       />
-
-      <ActionBar>
-        <TextButton
-          title="Namen vergleichen"
-          onClick={() => window.alert('TODO: Implement compare')}
-        />
-        <IconButton
-          imageIcon={saveIconPrimary}
-          onClick={() => handleSaveAnalysis()}
-        />
-        <TextButton
-          primary
-          icon={bookIconWhite}
-          title="Alle lesen"
-          onClick={() => {
-            // opening tour view at start
-            setIsTourOpen(true);
-            setTourSectionIndex(0);
-            setTourElementIndex(0);
+      {/* displaying content if tour is not open */}
+      {!isTourOpen && [
+        <TitleBar
+          primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+          primaryDate={personalAnalysisResult.dateOfBirth}
+          secondaryName={
+            personalAnalysisCompareResult
+            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+          }
+          onRemoveSecondaryName={() => {
+            props.history.push(
+              `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
+            );
           }}
-        />
-      </ActionBar>
+          key="titlebar"
+        />,
+        <ActionBar key="actionbar">
+          <TextButton
+            title="Namen vergleichen"
+            onClick={() => window.alert('TODO: Implement compare')}
+          />
+          <IconButton
+            imageIcon={saveIconPrimary}
+            onClick={() => handleSaveAnalysis()}
+          />
+          <TextButton
+            primary
+            icon={bookIconWhite}
+            title="Alle lesen"
+            onClick={() => {
+              // opening tour view at start
+              setIsTourOpen(true);
+              setTourSectionIndex(0);
+              setTourElementIndex(0);
+            }}
+          />
+        </ActionBar>,
+        <ContentArea key="resultContent">
+          <ContentNavigation
+            contentItems={buildContentDataStructure(
+              resultConfig,
+              personalAnalysisResult,
+            )}
+            onItemClick={navigateToElementHandler}
+            autoAdapt
+          />
 
-      <ContentArea>
-        <ContentNavigation
-          contentItems={buildContentDataStructure(
-            resultConfig,
+          <ResultContent>
+            {// mapping every configuration section to a result panel
+            resultConfig.map((resultSection) => (
+              // returning panel and result table with filtered data
+              <ResultPanel
+                title={resultSection.name}
+                rightActionIcon={bookIconPrimary}
+                onRightActionClick={() => handleItemDetailClick(resultSection.name)
+                }
+                id={resultSection.name}
+                key={resultSection.name}
+              >
+                {resultSection.tables.map((tableData) => (
+                  // returning table with result data for each number id
+                  <ResultTable
+                    name={tableData.name}
+                    numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
+                    compareNumbers={
+                      personalAnalysisCompareResult
+                      && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
+                    }
+                    headings={tableData.headings}
+                    showTitle={tableData.showTitle}
+                    handleTextDetailClick={handleItemDetailClick}
+                    sectionId={resultSection.name}
+                    accessLevel={personalAnalysisResult.accessLevel}
+                    key={`${resultSection.name + tableData.name}`}
+                  />
+                ))}
+              </ResultPanel>
+            ))}
+          </ResultContent>
+        </ContentArea>,
+      ]}
+
+      {/* displaying tour if open */}
+      {isTourOpen && (
+        <TourView
+          onClose={() => setIsTourOpen(false)}
+          tourData={buildTourDataStructure(
             personalAnalysisResult,
+            resultConfig,
+            introTexts,
+            user,
           )}
-          onItemClick={navigateToElementHandler}
-          autoAdapt
+          name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+          compareTourData={
+            personalAnalysisCompareResult
+            && buildTourDataStructure(
+              personalAnalysisCompareResult,
+              resultConfig,
+              introTexts,
+              user,
+            )
+          }
+          compareName={
+            personalAnalysisCompareResult
+            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+          }
+          sectionIndex={tourSectionIndex}
+          elementIndex={tourElementIndex}
+          onIndexChange={(sectionIndex, elementIndex) => {
+            // if index changes by interaction with component => updating state to re-render accordingly
+            setTourSectionIndex(sectionIndex);
+            setTourElementIndex(elementIndex);
+          }}
+          user={props.user}
+          accessLevel={personalAnalysisResult.accessLevel}
         />
-
-        <ResultContent>
-          {// mapping every configuration section to a result panel
-          resultConfig.map((resultSection) => (
-            // returning panel and result table with filtered data
-            <ResultPanel
-              title={resultSection.name}
-              rightActionIcon={bookIconPrimary}
-              onRightActionClick={() => handleItemDetailClick(resultSection.name)
-              }
-              id={resultSection.name}
-              key={resultSection.name}
-            >
-              {resultSection.tables.map((tableData) => (
-                // returning table with result data for each number id
-                <ResultTable
-                  name={tableData.name}
-                  numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
-                  compareNumbers={
-                    personalAnalysisCompareResult
-                    && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
-                  }
-                  headings={tableData.headings}
-                  showTitle={tableData.showTitle}
-                  handleTextDetailClick={handleItemDetailClick}
-                  sectionId={resultSection.name}
-                  accessLevel={personalAnalysisResult.accessLevel}
-                  key={`${resultSection.name + tableData.name}`}
-                />
-              ))}
-            </ResultPanel>
-          ))}
-        </ResultContent>
-      </ContentArea>
-      <TourView
-        isOpen={isTourOpen}
-        onClose={() => setIsTourOpen(false)}
-        tourData={buildTourDataStructure(personalAnalysisResult, resultConfig)}
-        sectionIndex={tourSectionIndex}
-        elementIndex={tourElementIndex}
-        onIndexChange={(sectionIndex, elementIndex) => {
-          // if index changes by interaction with component => updating state to re-render accordingly
-          setTourSectionIndex(sectionIndex);
-          setTourElementIndex(elementIndex);
-        }}
-      />
+      )}
     </div>
   );
 };

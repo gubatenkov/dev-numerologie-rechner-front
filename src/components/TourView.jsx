@@ -1,14 +1,207 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import Interweave from 'interweave';
+import styled from 'styled-components';
+import _ from 'lodash';
 
-import '../styles/TourView.css';
+import IconButton from './Buttons/IconButton';
+import { Steps, Step } from './Steps';
+import UserLevelPromotionWidget from './UserLevelPromotionWidget';
+import BookPromotionWidget from './BookPromotionWidget';
+import ResultLockedWidget from './ResultLockedWidget';
 
-import Panel from './Panel';
-import Steps from './Steps';
-import Step from './Step';
+// icons
+import iconBackPrimary from '../images/icon_back_primary.svg';
+import iconForwardPrimary from '../images/icon_forward_primary.svg';
 
+// treshhold for mobile view
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+
+// constants used for content styling
+const CONTENT_STYLING_CLASS_SUBHEADING = 'subheading';
+const CONTENT_STYLING_CLASS_DESCRIPTION = 'descriptionText';
+const CONTENT_STYLING_CLASS_NAME_HEADER = 'nameHeading';
+const CONTENT_STYLING_CLASS_HEADER = 'resultHeading';
+
+// main container for view layout
+const TourContentContainer = styled.div`
+  /* one row that contains a spacer (invisible), the content and the promotion sidebar*/
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  /* this element is focused upon opening the tour as the keydown handlers for
+  shortcuts are registered to it. To prevent a blue shadow from the focused element, this is needed*/
+  :focus {
+    border: none;
+    outline: none;
+  }
+
+  /* enabling wrapping on mobile phones */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    flex-wrap: wrap;
+  }
+`;
+
+// an invisible spacer element to the left
+const Spacer = styled.div`
+  /* max size of 300px and the only element in the row that shrinks*/
+  flex-basis: 300px;
+
+  /* cannot take any additional space and shrinks as only element */
+  flex-grow: 0;
+  flex-shrink: 1;
+
+  /* hiding on mobile phones*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    display: none;
+  }
+`;
+
+// the content element rendering the result text
+// Note: this contains styling for the container but also
+// for how result text coming from the server as HTML is styled
+const ContentArea = styled.div`
+  /* takes up all space in the row with minimum size */
+  flex-grow: 1;
+  flex-basis: 630px;
+
+  /* basic box rules */
+  margin: 0 70px 15px 70px;
+  padding-bottom: 80px;
+
+  /* styling standard text within container*/
+  font-family: ${(props) => props.theme.fontFamily};
+  color: ${(props) => props.theme.black};
+  font-size: 18px;
+  line-height: 30px;
+
+  /* if the text contains tables => they won't be responsive => this puts at least a scrollbar on them*/
+  overflow-x: auto;
+
+  /* adapting margins on mobile */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    margin: 0 16px 15px 16px;
+    padding-bottom: 0px;
+  }
+
+  /* content specific styling*/
+  .${CONTENT_STYLING_CLASS_SUBHEADING} {
+    color: ${(props) => props.theme.lighterGrey};
+  }
+
+  .${CONTENT_STYLING_CLASS_DESCRIPTION} {
+    margin-top: 20px;
+  }
+
+  .${CONTENT_STYLING_CLASS_NAME_HEADER} {
+    color: ${(props) => props.theme.lighterGrey};
+  }
+
+  .${CONTENT_STYLING_CLASS_HEADER} {
+    margin-top: 40px;
+    font-size: 32px;
+    font-weight: 400;
+
+    div {
+      display: inline;
+    }
+  }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 58px;
+  }
+
+  h2 {
+    margin-top: 10px;
+  }
+
+  h3 {
+    margin-top: 10px;
+  }
+`;
+
+// promotion are to the right
+const PromotionArea = styled.div`
+  /* fixed size that cannot shrink or grow */
+  flex-basis: 300px;
+  flex-grow: 0;
+  flex-shrink: 0;
+
+  margin-right: 35px;
+
+  /* adapting margins on mobile and letting container grow on own row */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    margin: 0 16px 30px 16px;
+    flex-grow: 1;
+  }
+`;
+
+// container for the fixed overview component at the bottom
+const TourOverView = styled.div`
+  /* basic box styling */
+  height: 80px;
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: ${(props) => props.theme.white};
+  border-top: solid ${(props) => props.theme.primaryLight} 1px;
+
+  /* element stays fixed at the bottom of view */
+  position: fixed;
+  bottom: 0;
+
+  /* element ist structured as grid with three columns*/
+  display: grid;
+  grid-template-columns: 36px auto 36px;
+
+  /* hiding on mobile phones*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    display: none;
+  }
+`;
+
+// button used in the tour overview
+const TourOverViewButton = styled(IconButton)`
+  /* adapting size and alignemnt*/
+  width: 36px;
+  height: 36px;
+  align-self: center;
+
+  margin-top: 22px;
+  margin-bottom: 22px;
+`;
+
+// button to the left to navigate back
+const TourOverViewBackButton = styled(TourOverViewButton)`
+  /* colmn to the very left */
+  grid-column-start: 1;
+`;
+
+// button to the right to navigate forth
+const TourOverViewForwardButton = styled(TourOverViewButton)`
+  /* column to the very right */
+  grid-column-start: 3;
+`;
+
+// customizing steps component to fit into layout
+const TourOverviewSteps = styled(Steps)`
+  /* fixed size */
+  width: 804px;
+  height: 44px;
+
+  /* aligning center */
+  justify-self: center;
+  align-self: center;
+
+  /* setting custom margins*/
+  margin-top: 20px;
+  margin-bottom: 16px;
+`;
+
+// tour view component allowing users to explore their analysis results
 const TourView = (props) => {
   // getting used values out of props
   const {
@@ -16,9 +209,9 @@ const TourView = (props) => {
     elementIndex,
     tourData,
     compareTourData,
-    onClose,
     onIndexChange,
-    isOpen,
+    name,
+    compareName,
   } = props;
 
   // handler for clicks on the steps directly in the overview
@@ -27,6 +220,7 @@ const TourView = (props) => {
     const index = tourData.findIndex(
       (item) => item.sectionName === sectionTitleClicked,
     );
+
     if (index > -1) {
       onIndexChange(index, 0);
     }
@@ -72,175 +266,217 @@ const TourView = (props) => {
     }
   };
 
-  // ref to focus container
+  // ref to root container to focus upon mount (needed for shortcuts to work)
   const componentContainer = useRef();
 
   // disabling/enabling scrolling and focus for key input if is shown/hidden
   useEffect(() => {
-    // updating body class of the site to prevent scrolling
-    document.body.classList.toggle('noScroll', isOpen);
-
     // if modal is shown, getting focus so key inputs work
-    if (componentContainer && componentContainer.current && isOpen) {
+    if (componentContainer && componentContainer.current) {
       componentContainer.current.focus();
     }
   });
 
-  /**
-   * extracts the title and content from the passed result element
-   * and returns both parameters as array
-   * @param element the result element to build title and content from
-   */
-  const buildElementContent = (element) => {
-    // if no element passed => returning null for all value
-    if (!element) {
-      return [null, null];
-    }
+  // scrolling to top after change in step
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
+  /**
+   * builds a tour element for an introduction text into a section
+   * @param sectionIntro the section intro object
+   */
+  const buildIntroTextTourStep = (sectionIntro) => {
+    // building title and content for introduction text to section
+    const elementTitle = `Einführung ${sectionIntro.title}`;
+    const elementContent = sectionIntro.text;
+
+    // returning result
+    return [elementTitle, elementContent];
+  };
+
+  /**
+   * build title and content for a number result item and returns it as an array
+   * @param numberResult the result element to build title and content from
+   */
+  const buildNumberTourStep = (numberResult) => {
     // if element is default result => using standard result
     // title is name and value
-    const elementTitle = `${element.name} = ${element.result.value
-      || element.result.values
-      || element.result.list}`;
+    const elementTitle = `${numberResult.name} ${numberResult.result.value
+      || numberResult.result.list
+      || ''}`;
 
-    // content is description
-    const elementContent = element.descriptionText;
+    // if item is locked => returning promotion
+    if (numberResult.descriptionText.length === 0) {
+      // returning title and locked widget element
+      return [elementTitle, null];
+    }
+
+    // building content based on user preferences
+    let elementContent = '';
+
+    // adding number explanation text if configured
+    if (!props.user || props.user.showNumberMeaningExplanations) {
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+    }
+
+    // adding number calcuation explanation text if configured
+    if (props.user && props.user.showNumberCalculationExplanations) {
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
+    }
+
+    // adding description text of result
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     return [elementTitle, elementContent];
   };
 
-  // if detail view not open -> not showing it
-  if (isOpen === false) {
-    return null;
+  /**
+   * build title and content for two number result items in compare mode and returns it as an array
+   * @param numberResult the result element
+   * @param numberCompareResult the compare result element
+   */
+  const buildNumberTourCompareStep = (numberResult, numberCompareResult) => {
+    // title is name
+    const elementTitle = numberResult.name;
+
+    // if item is locked => returning promotion
+    if (numberResult.descriptionText.length === 0) {
+      return [elementTitle, null];
+    }
+
+    // building content based on user preferences
+    let elementContent = '';
+
+    // adding number explanation text if configured
+    if (!props.user || props.user.showNumberMeaningExplanations) {
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+    }
+
+    // adding number calcuation explanation text if configured
+    if (props.user && props.user.showNumberCalculationExplanations) {
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
+    }
+
+    // adding result for first name
+    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberResult
+      .result.value
+      || numberResult.result.list
+      || ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
+
+    // adding description text for first name
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
+
+    // adding result for second name
+    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberCompareResult
+      .result.value
+      || numberCompareResult.result.list
+      || ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
+
+    // if results for both names are equal => only showing info text.
+    // otheriwse including description text for second name
+    if (_.isEqual(numberResult.result, numberCompareResult.result)) {
+      elementContent
+        += '</br> Die Beschreibung dieser Zahl entspricht der vorherigen Zahlbeschreibung oben.';
+    } else {
+      // adding description text for second name
+      elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
+    }
+
+    return [elementTitle, elementContent];
+  };
+
+  // defining content and compare content
+  let tourStepTitle;
+  let tourStepContent;
+
+  // determining if book promotion should be shown (not for intro text and based on user config)
+  let showBookPromotion = !props.user || props.user.showBookRecommendations;
+  // getting result item to render given current section and element index
+  const resultItem = tourData[sectionIndex].sectionElements[elementIndex];
+
+  // if first element => building intro text element
+  if (resultItem.type === 'sectionIntroText') {
+    // building step from section intro
+    [tourStepTitle, tourStepContent] = buildIntroTextTourStep(resultItem);
+
+    // not showing book promotion for intro text
+    showBookPromotion = false;
+  } else {
+    // no compare result
+    if (!compareTourData) {
+      // building tour step for result item
+      [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
+    } else {
+      // getting compare item
+      const compareResultItem = compareTourData[sectionIndex].sectionElements[elementIndex];
+
+      // building compare content
+      [tourStepTitle, tourStepContent] = buildNumberTourCompareStep(
+        resultItem,
+        compareResultItem,
+      );
+    }
   }
 
-  // getting current element
-  const currentElement = tourData[sectionIndex].sectionElements[elementIndex];
-
-  // getting current compare element if persent
-  let currentCompareElement;
-  if (compareTourData) {
-    currentCompareElement = compareTourData[sectionIndex].sectionElements[elementIndex];
-  }
-
-  // if for some reason, the current element is invalid > rendering nothing
-  if (!currentElement || (compareTourData && !currentCompareElement)) {
-    return null;
-  }
-
-  // determining title and content of elements
-  const [elementTitle, elementContent] = buildElementContent(currentElement);
-  const [compareElementTitle, compareElementContent] = buildElementContent(
-    currentCompareElement,
-  );
-
-  return (
-    <div
-      className="TourView__Container modal-backdrop"
-      onKeyDown={handleKeyDown}
-      role="link"
-      tabIndex="0"
+  return [
+    <TourContentContainer
+      onKeyDown={(event) => handleKeyDown(event)}
       ref={componentContainer}
+      tabIndex="0"
+      key="tourContainer"
     >
-      <div className="TourView__ContentOverview">
-        <Steps horizontal>
-          {tourData.map((tourSection, tourSectionIndex) => {
-            // getting length of current section (only elements that have content)
-            const currentSectionLength = tourSection.sectionElements.length;
-
-            // determining index to display for step
-            let stepElementIndex = 0;
-            if (tourSectionIndex === sectionIndex) {
-              stepElementIndex = elementIndex;
-            } else if (tourSectionIndex < sectionIndex) {
-              stepElementIndex = currentSectionLength - 1;
-            }
-
-            // determining the name of the item to display
-            // if if is the current section, an indication for
-            // the element position in the current section is given
-            let stepName = tourSection.sectionName;
-            if (tourSectionIndex === sectionIndex) {
-              stepName += ` (${stepElementIndex + 1}/${currentSectionLength})`;
-            }
-
-            return (
-              <Step
-                key={tourSection.sectionName}
-                name={stepName}
-                current={tourSectionIndex === sectionIndex}
-                done={tourSectionIndex < sectionIndex}
-                onStepClick={handleStepClick}
-                horizontal
-              />
-            );
-          })}
-        </Steps>
-      </div>
-      <div className="TourView__Content">
-        <div className="TourView__ButtonArea">
-          <button
-            type="button"
-            className="TourView__NavigationButton"
-            onClick={handleBackClick}
-          >
-            <i className="icon wb-chevron-left" />
-          </button>
-        </div>
-        <div>
-          <Panel className="TourView__Panel" title={elementTitle}>
-            <div className="TourView__text TourView--non-printable" />
-            <Interweave content={elementContent} />
-            <h3 className="TourView--printWatermark">
-              Die Resultate können nur mit Druckpaket ausgedruckt werden.
-            </h3>
-          </Panel>
-        </div>
-        {compareTourData && (
-          <div className="">
-            <Panel className="TourView__Panel" title={compareElementTitle}>
-              <div className="TourView__text TourView--non-printable">
-                <Interweave
-                  content={
-                    _.isEqual(currentCompareElement, currentElement)
-                      ? 'Gleich wie links.'
-                      : compareElementContent
-                  }
-                />
-              </div>
-              <h3 className="TourView--printWatermark">
-                Die Resultate können nur mit Druckpaket ausgedruckt werden.
-              </h3>
-            </Panel>
-          </div>
+      <Spacer></Spacer>
+      <ContentArea>
+        <h1>{tourStepTitle}</h1>
+        {tourStepContent ? (
+          <Interweave content={tourStepContent} />
+        ) : (
+          <ResultLockedWidget accessLevel={props.accessLevel} />
         )}
-        <div className="TourView__ButtonArea">
-          <button
-            type="button"
-            className="TourView__NavigationButton"
-            onClick={handleNextClick}
-          >
-            <i className="icon wb-chevron-right" />
-          </button>
-        </div>
-      </div>
-      <div className="TourView__BottomActions">
-        <button type="button" className="btn btn-default" onClick={onClose}>
-          Schließen
-        </button>
-      </div>
-    </div>
-  );
+      </ContentArea>
+      <PromotionArea>
+        <UserLevelPromotionWidget accessLevel={props.accessLevel} />
+        {showBookPromotion && (
+          <BookPromotionWidget
+            resultTitle={tourStepTitle}
+            bookReference={resultItem.bookReference}
+          />
+        )}
+      </PromotionArea>
+    </TourContentContainer>,
+    <TourOverView key="tourOverview">
+      <TourOverViewBackButton
+        imageIcon={iconBackPrimary}
+        onClick={() => handleBackClick()}
+      />
+      <TourOverviewSteps horizontal>
+        {tourData.map((tourSection, tourSectionIndex) => (
+          <Step
+            key={tourSection.sectionName}
+            name={tourSection.sectionName}
+            active={tourSectionIndex <= sectionIndex}
+            onStepClick={(name) => handleStepClick(name)}
+          />
+        ))}
+      </TourOverviewSteps>
+      <TourOverViewForwardButton
+        imageIcon={iconForwardPrimary}
+        onClick={() => handleNextClick()}
+      />
+    </TourOverView>,
+  ];
 };
 
 // defining proptypes
 TourView.propTypes = {
   tourData: PropTypes.array.isRequired,
   compareTourData: PropTypes.array,
-  isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  sectionIndex: PropTypes.number,
-  elementIndex: PropTypes.number,
+  sectionIndex: PropTypes.number.isRequired,
+  elementIndex: PropTypes.number.isRequired,
+  user: PropTypes.object,
+  accessLevel: PropTypes.string.isRequired,
 };
 
 // defining default props
