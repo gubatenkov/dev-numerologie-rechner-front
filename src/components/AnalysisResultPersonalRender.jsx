@@ -207,8 +207,6 @@ const AnalysisResultPersonalRender = (props) => {
       user,
     );
 
-    console.log(tourDataStructure);
-
     // finding index with datakey in tour data structure
     let sectionIndex = tourDataStructure.findIndex(
       (section) => section.sectionName === sectionId,
