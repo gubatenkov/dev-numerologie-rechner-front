@@ -17,8 +17,9 @@ import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
 // constants used for content styling
 const CONTENT_STYLING_CLASS_SUBHEADING = 'subheading';
-const CONTENT_STYLING_CLASS_BOOK_REFERENCE = 'bookReference';
 const CONTENT_STYLING_CLASS_DESCRIPTION = 'descriptionText';
+const CONTENT_STYLING_CLASS_NAME_HEADER = 'nameHeading';
+const CONTENT_STYLING_CLASS_HEADER = 'resultHeading';
 
 // main container for view layout
 const TourContentContainer = styled.div`
@@ -89,6 +90,20 @@ const ContentArea = styled.div`
 
   .${CONTENT_STYLING_CLASS_DESCRIPTION} {
     margin-top: 20px;
+  }
+
+  .${CONTENT_STYLING_CLASS_NAME_HEADER} {
+    color: ${(props) => props.theme.lighterGrey};
+  }
+
+  .${CONTENT_STYLING_CLASS_HEADER} {
+    margin-top: 40px;
+    font-size: 32px;
+    font-weight: 400;
+
+    div {
+      display: inline;
+    }
   }
 
   h1 {
@@ -192,8 +207,9 @@ const TourView = (props) => {
     elementIndex,
     tourData,
     compareTourData,
-    onClose,
     onIndexChange,
+    name,
+    compareName,
   } = props;
 
   // handler for clicks on the steps directly in the overview
@@ -278,8 +294,7 @@ const TourView = (props) => {
   };
 
   /**
-   * extracts the title and content from the passed result element
-   * and returns both parameters as array
+   * build title and content for a number result item and returns it as an array
    * @param numberResult the result element to build title and content from
    */
   const buildNumberTourStep = (numberResult) => {
@@ -311,23 +326,64 @@ const TourView = (props) => {
     // adding description text of result
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
-    // adding book references if configured
-    if (props.user && props.user.showBookReferences) {
-      elementContent += `<p class=${CONTENT_STYLING_CLASS_BOOK_REFERENCE}>${numberResult.bookReference}</p>`;
+    return [elementTitle, elementContent];
+  };
+
+  /**
+   * build title and content for two number result items in compare mode and returns it as an array
+   * @param numberResult the result element
+   * @param numberCompareResult the compare result element
+   */
+  const buildNumberTourCompareStep = (numberResult, numberCompareResult) => {
+    // title is name
+    const elementTitle = numberResult.name;
+
+    // if item is locked => returning promotion
+    if (numberResult.descriptionText.length === 0) {
+      // TODO: add promotion elements here
+      return [elementTitle, null];
     }
+
+    // building content based on user preferences
+    let elementContent = '';
+
+    // adding number explanation text if configured
+    if (!props.user || props.user.showNumberMeaningExplanations) {
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+    }
+
+    // adding number calcuation explanation text if configured
+    if (props.user && props.user.showNumberCalculationExplanations) {
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
+    }
+
+    // adding result for first name
+    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberResult
+      .result.value
+      || numberResult.result.list
+      || ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
+
+    // adding description text for first name
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
+
+    // adding result for second name
+    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberCompareResult
+      .result.value
+      || numberCompareResult.result.list
+      || ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
+
+    // adding description text for first name
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
 
     return [elementTitle, elementContent];
   };
 
   // defining content and compare content
   let tourStepTitle;
-  let tourStepCompareTitle;
   let tourStepContent;
-  let tourStepCompareContent;
 
   // determining if book promotion should be shown (not for intro text and based on user config)
   let showBookPromotion = !props.user || props.user.showBookRecommendations;
-
   // getting result item to render given current section and element index
   const resultItem = tourData[sectionIndex].sectionElements[elementIndex];
 
@@ -339,13 +395,18 @@ const TourView = (props) => {
     // not showing book promotion for intro text
     showBookPromotion = false;
   } else {
-    // building tour step for result item
-    [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
+    // no compare result
+    if (!compareTourData) {
+      // building tour step for result item
+      [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
+    } else {
+      // getting compare item
+      const compareResultItem = compareTourData[sectionIndex].sectionElements[elementIndex];
 
-    // if present, building tour step for compare result item
-    if (compareTourData) {
-      [tourStepCompareTitle, tourStepCompareContent] = buildNumberTourStep(
-        compareTourData[sectionIndex].sectionElements[elementIndex],
+      // building compare content
+      [tourStepTitle, tourStepContent] = buildNumberTourCompareStep(
+        resultItem,
+        compareResultItem,
       );
     }
   }

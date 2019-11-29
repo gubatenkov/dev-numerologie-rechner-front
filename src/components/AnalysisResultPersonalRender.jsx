@@ -378,6 +378,20 @@ const AnalysisResultPersonalRender = (props) => {
             introTexts,
             user,
           )}
+          name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+          compareTourData={
+            personalAnalysisCompareResult
+            && buildTourDataStructure(
+              personalAnalysisCompareResult,
+              resultConfig,
+              introTexts,
+              user,
+            )
+          }
+          compareName={
+            personalAnalysisCompareResult
+            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+          }
           sectionIndex={tourSectionIndex}
           elementIndex={tourElementIndex}
           onIndexChange={(sectionIndex, elementIndex) => {
