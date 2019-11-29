@@ -392,6 +392,9 @@ const TourView = (props) => {
   // getting result item for render
   const resultItem = tourData[sectionIndex].sectionElements[elementIndex - 1];
 
+  // determining if book promotion should be shown (not for intro text and based on user config)
+  const showBookPromotion = props.user.showBookRecommendations && elementIndex > 0;
+
   return [
     <TourContentContainer
       onKeyDown={(event) => handleKeyDown(event)}
@@ -406,7 +409,7 @@ const TourView = (props) => {
       </ContentArea>
       <PromotionArea>
         <UserlevelPromotion>Userlevel Promotion</UserlevelPromotion>
-        {elementIndex > 0 && (
+        {showBookPromotion && (
           <BookPromotion>
             <h4>Defaillierte Beschreibungen</h4>
             <p>
