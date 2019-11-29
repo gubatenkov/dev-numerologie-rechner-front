@@ -109,28 +109,46 @@ const AnalysisResultPersonalRender = (props) => {
    * @param introTexts the intro texts of the current configuration to bake into the data structure as they are shown in the tour
    * @returns an array of tour sections containing section name and result items
    */
-  const buildTourDataStructure = (resultData, configuration, introTexts) =>
+  const buildTourDataStructure = (
+    resultData,
+    configuration,
+    introTexts,
+    user,
+  ) =>
     // constructing tourSection element for every table in configuration
     configuration.map((resultSection) => {
-      const resultSectionNumbers = [];
-      // iterating over result tables of sectionp
-      resultSection.tables.forEach((resultTable) => {
-        // pushing resolved numbers
-        resultSectionNumbers.push(
-          ...resultTable.numberIds.map((numberId) => _.get(resultData, numberId)),
-        );
-      });
-
       // finding intro text for section
       const sectionIntroText = introTexts.filter(
         (text) => text.sectionId === resultSection.name,
       )[0];
 
+      // defining resulting elements for section in tour
+      const resultSectionElements = [];
+
+      // if section intro texts are enabled in user settings => pushing intro text element to result
+      if (user.showCategoryExplanations) {
+        resultSectionElements.push({
+          type: 'sectionIntroText',
+          title: sectionIntroText.title,
+          text: sectionIntroText.text,
+        });
+      }
+
+      // iterating over result tables of sectionp
+      resultSection.tables.forEach((resultTable) => {
+        // pushing resolved numbers
+        resultSectionElements.push(
+          ...resultTable.numberIds.map((numberId) => ({
+            ..._.get(resultData, numberId),
+            type: 'resultText',
+          })),
+        );
+      });
+
       // pushing resulting section  to result
       return {
         sectionName: resultSection.name,
-        sectionIntro: sectionIntroText,
-        sectionElements: resultSectionNumbers,
+        sectionElements: resultSectionElements,
       };
     });
 
@@ -186,14 +204,17 @@ const AnalysisResultPersonalRender = (props) => {
       props.personalAnalysisResult,
       resultConfig,
       introTexts,
+      user,
     );
+
+    console.log(tourDataStructure);
 
     // finding index with datakey in tour data structure
     let sectionIndex = tourDataStructure.findIndex(
       (section) => section.sectionName === sectionId,
     );
 
-    // if data is not here -> skip
+    // if data not found => starting at first index
     if (sectionIndex < 0) {
       // starting at first section by default
       sectionIndex = 0;
@@ -205,11 +226,8 @@ const AnalysisResultPersonalRender = (props) => {
     ].sectionElements.findIndex((element) => element.numberId === numberId);
 
     if (elementIndex < 0) {
-      // starting at first number by default
+      // starting at first element by default
       elementIndex = 0;
-    } else {
-      // adding one to index as intro text is displayed at index 0
-      elementIndex += 1;
     }
 
     // opening detail view with right section index
@@ -359,6 +377,7 @@ const AnalysisResultPersonalRender = (props) => {
             personalAnalysisResult,
             resultConfig,
             introTexts,
+            user,
           )}
           sectionIndex={tourSectionIndex}
           elementIndex={tourElementIndex}
@@ -367,7 +386,7 @@ const AnalysisResultPersonalRender = (props) => {
             setTourSectionIndex(sectionIndex);
             setTourElementIndex(elementIndex);
           }}
-          user={props.user} 
+          user={props.user}
         />
       )}
     </div>

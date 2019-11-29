@@ -272,7 +272,7 @@ const TourView = (props) => {
   // handler for click on the next button
   const handleNextClick = () => {
     // navigate within section
-    if (elementIndex < tourData[sectionIndex].sectionElements.length) {
+    if (elementIndex < tourData[sectionIndex].sectionElements.length - 1) {
       onIndexChange(sectionIndex, elementIndex + 1);
       // navigate to first element of next section
     } else if (sectionIndex < tourData.length - 1) {
@@ -369,31 +369,30 @@ const TourView = (props) => {
   let tourStepContent;
   let tourStepCompareContent;
 
+  // determining if book promotion should be shown (not for intro text and based on user config)
+  let showBookPromotion = props.user.showBookRecommendations;
+
+  // getting result item to render given current section and element index
+  const resultItem = tourData[sectionIndex].sectionElements[elementIndex];
+
   // if first element => building intro text element
-  if (elementIndex === 0) {
+  if (resultItem.type === 'sectionIntroText') {
     // building step from section intro
-    [tourStepTitle, tourStepContent] = buildIntroTextTourStep(
-      tourData[sectionIndex].sectionIntro,
-    );
+    [tourStepTitle, tourStepContent] = buildIntroTextTourStep(resultItem);
+
+    // not showing book promotion for intro text
+    showBookPromotion = false;
   } else {
     // building tour step for result item
-    [tourStepTitle, tourStepContent] = buildNumberTourStep(
-      tourData[sectionIndex].sectionElements[elementIndex - 1],
-    );
+    [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
 
     // if present, building tour step for compare result item
     if (compareTourData) {
       [tourStepCompareTitle, tourStepCompareContent] = buildNumberTourStep(
-        compareTourData[sectionIndex].sectionElements[elementIndex - 1],
+        compareTourData[sectionIndex].sectionElements[elementIndex],
       );
     }
   }
-
-  // getting result item for render
-  const resultItem = tourData[sectionIndex].sectionElements[elementIndex - 1];
-
-  // determining if book promotion should be shown (not for intro text and based on user config)
-  const showBookPromotion = props.user.showBookRecommendations && elementIndex > 0;
 
   return [
     <TourContentContainer
