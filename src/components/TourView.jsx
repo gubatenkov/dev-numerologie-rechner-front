@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Interweave from 'interweave';
 import styled from 'styled-components';
+import _ from 'lodash';
 
 import IconButton from './Buttons/IconButton';
 import { Steps, Step } from './Steps';
@@ -372,8 +373,15 @@ const TourView = (props) => {
       || numberCompareResult.result.list
       || ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
 
-    // adding description text for first name
-    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
+    // if results for both names are equal => only showing info text.
+    // otheriwse including description text for second name
+    if (_.isEqual(numberResult.result, numberCompareResult.result)) {
+      elementContent
+        += '</br> Die Beschreibung dieser Zahl entspricht der vorherigen Zahlbeschreibung oben.';
+    } else {
+      // adding description text for second name
+      elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
+    }
 
     return [elementTitle, elementContent];
   };
