@@ -6,14 +6,11 @@ import styled from 'styled-components';
 import IconButton from './Buttons/IconButton';
 import { Steps, Step } from './Steps';
 import UserLevelPromotionWidget from './UserLevelPromotionWidget';
+import BookPromotionWidget from './BookPromotionWidget';
 
 // icons
 import iconBackPrimary from '../images/icon_back_primary.svg';
 import iconForwardPrimary from '../images/icon_forward_primary.svg';
-
-// images for promotions
-import book1Cover from '../images/book_1.png';
-import book2Cover from '../images/book_2.png';
 
 // treshhold for mobile view
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
@@ -113,55 +110,6 @@ const PromotionArea = styled.div`
   flex-shrink: 0;
 
   margin-right: 35px;
-`;
-
-// promotion container for the book
-const BookPromotion = styled.div`
-  width: 300px;
-  border-radius: 6px;
-
-  /* basic background color*/
-  background-color: ${(props) => props.theme.lightestGrey};
-
-  /* partial color as background image*/
-  background-image: linear-gradient(
-    0deg,
-    #8fbd36,
-    #8fbd36 33%,
-    transparent 33%,
-    transparent 100%
-  );
-
-  padding: 16px;
-  margin-top: 30px;
-
-  color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.fontFamily};
-
-  background-image: linear-gradient(
-    top,
-    red,
-    red 70%,
-    transparent 70%,
-    transparent 100%
-  );
-
-  h4 {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 30px;
-  }
-
-  p {
-    font-size: 16px;
-    line-height: 26px;
-  }
-`;
-
-const BookPromotionImageContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
 `;
 
 // container for the fixed overview component at the bottom
@@ -402,24 +350,7 @@ const TourView = (props) => {
       <PromotionArea>
         <UserLevelPromotionWidget accessLevel={props.accessLevel} />
         {showBookPromotion && (
-          <BookPromotion>
-            <h4>Defaillierte Beschreibungen</h4>
-            <p>
-              ...über Ihre <b>{`${tourStepTitle}`}</b> finden Sie in unserem
-              Buch <Interweave content={resultItem.bookReference} />
-            </p>
-
-            <BookPromotionImageContainer>
-              <img
-                src={
-                  resultItem.bookReference.includes('Band 1')
-                    ? book1Cover
-                    : book2Cover
-                }
-                alt="book_cover"
-              />
-            </BookPromotionImageContainer>
-          </BookPromotion>
+          <BookPromotionWidget bookReference={resultItem.bookReference} />
         )}
       </PromotionArea>
     </TourContentContainer>,

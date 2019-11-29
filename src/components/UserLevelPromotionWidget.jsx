@@ -61,35 +61,45 @@ const UserLevelPromotionTexts = {
 
 // promotion container for the next user level
 const UserlevelPromotionContainer = styled.div`
+  /* basic box styling*/
   width: 300px;
   padding: 16px;
-
   border-radius: 6px;
   background-color: ${(props) => props.theme.lightestGrey};
 
+  /* basic font styling*/
   color: ${(props) => props.theme.darkGrey};
   font-family: ${(props) => props.theme.fontFamily};
   font-size: 14px;
   line-height: 24px;
 
+  /* title is h4*/
   h4 {
     font-size: 20px;
     font-weight: 500;
     line-height: 30px;
   }
 
+  /* list styling with colored dots and custom spacing*/
   ul {
+    /* removing list style as we need to draw own bullets*/
     list-style: none;
+
+    /* resetting margin and padding to have a green field for our own bullet*/
     padding: 0;
     margin: 0;
   }
 
   li {
+    /* padding we need for the bullet*/
     padding-left: 1em;
     text-indent: -1em;
+
+    /* space between items*/
     margin-top: 12px;
   }
 
+  /* drawing bullet with custom color*/
   li::before {
     content: '•';
     color: ${(props) => props.theme.primary};
@@ -97,6 +107,7 @@ const UserlevelPromotionContainer = styled.div`
   }
 `;
 
+// custom butto  for the action at the bottom
 const ActionTextButton = styled(TextButton)`
   margin-top: 24px;
   width: 100%;
