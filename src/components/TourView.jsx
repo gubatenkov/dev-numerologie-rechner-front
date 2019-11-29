@@ -264,7 +264,7 @@ const TourView = (props) => {
     } else if (sectionIndex > 0) {
       onIndexChange(
         sectionIndex - 1,
-        tourData[sectionIndex - 1].sectionElements.length,
+        tourData[sectionIndex - 1].sectionElements.length - 1,
       );
     }
   };
@@ -423,6 +423,7 @@ const TourView = (props) => {
                     ? book1Cover
                     : book2Cover
                 }
+                alt="book_cover"
               />
             </BookPromotionImageContainer>
           </BookPromotion>
