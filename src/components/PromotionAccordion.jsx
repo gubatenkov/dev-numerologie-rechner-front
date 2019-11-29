@@ -12,6 +12,7 @@ import Card from 'react-bootstrap/Card';
 const PromotionCard = styled(Card)`
   background-color: transparent !important;
   border: none !important;
+  margin: 0 !important;
 `;
 
 // card header = title

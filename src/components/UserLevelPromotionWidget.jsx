@@ -121,6 +121,14 @@ const UserlevelPromotionContainer = styled.div`
     line-height: 30px;
   }
 
+  /* some subtitles in content have h5*/
+  h5 {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 30px;
+    }
+  }
+
   /* list styling with colored dots and custom spacing*/
   ul {
     /* removing list style as we need to draw own bullets*/
@@ -128,7 +136,7 @@ const UserlevelPromotionContainer = styled.div`
 
     /* resetting margin and padding to have a green field for our own bullet*/
     padding: 0;
-    margin: 0;
+    margin: 0 0 12px 0; 
   }
 
   li {
@@ -150,7 +158,7 @@ const UserlevelPromotionContainer = styled.div`
 
 // custom butto  for the action at the bottom
 const ActionTextButton = styled(TextButton)`
-  margin-top: 24px;
+  margin-top: 12px;
   width: 100%;
 `;
 
