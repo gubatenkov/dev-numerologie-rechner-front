@@ -417,14 +417,57 @@ const AnalysisResultPersonalRender = (props) => {
         onHide={() => setIsNameDialogOpen(false)}
         firstNames={personalAnalysisResult.firstNames}
         lastName={personalAnalysisResult.lastName}
-        comparefirstNames={
+        compareFirstNames={
           personalAnalysisCompareResult
           && personalAnalysisCompareResult.firstNames
         }
-        comparelastName={
+        compareLastName={
           personalAnalysisCompareResult
           && personalAnalysisCompareResult.lastName
         }
+        onChange={(
+          firstNames,
+          lastName,
+          compareFirstNames,
+          compareLastName,
+        ) => {
+          // checking if any of the names has changed
+          const hasCompareName = !!(compareFirstNames.length > 0) || !!(compareLastName.length > 0);
+
+          // checking primary name
+          let hasNameChanged = firstNames !== personalAnalysisResult.firstNames
+            || lastName !== personalAnalysisResult.lastName;
+
+          // if compare result already => checking if names changed
+          if (personalAnalysisCompareResult) {
+            hasNameChanged = hasNameChanged
+              || compareFirstNames !== personalAnalysisCompareResult.firstNames
+              || compareLastName !== personalAnalysisCompareResult.lastName;
+          } else {
+            // if not compare => checking if compare name was added
+            hasNameChanged = hasNameChanged || hasCompareName;
+          }
+
+          // if name has changed => triggering new analysis
+          if (hasNameChanged) {
+            let firstNameParam;
+            let lastNameParam;
+
+            // setting parameters based on results
+            if (hasCompareName) {
+              firstNameParam = [firstNames, compareFirstNames];
+              lastNameParam = [lastName, compareLastName];
+            } else {
+              firstNameParam = firstNames;
+              lastNameParam = lastName;
+            }
+
+            // navigating to new result
+            props.history.push(
+              `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`,
+            );
+          }
+        }}
       />
     </div>
   );
