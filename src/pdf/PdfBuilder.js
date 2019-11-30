@@ -124,7 +124,7 @@ function buildSectionPositionInformation(configuration) {
   const result = {};
 
   // keeping track of the location of every section in the config
-  configuration.forEach((configSection) => {
+  configuration.forEach(configSection => {
     result[configSection.name] = {
       startIndex: null,
       endIndex: null,
@@ -154,7 +154,7 @@ function areResultValuesEqual(resultValue, compareResultValue) {
   }
 
   if (Array.isArray(resultValue) && Array.isArray(compareResultValue)) {
-    return resultValue.every((item) => compareResultValue.includes(item));
+    return resultValue.every(item => compareResultValue.includes(item));
   }
   return false;
 }
@@ -176,7 +176,9 @@ function createOverviewTableItem(numberItem) {
       alignment: 'left',
     };
   } else {
-    const matrix = numberItem.result.values.map((item) => (item && item.length > 0 ? item : '     '));
+    const matrix = numberItem.result.values.map(item =>
+      item && item.length > 0 ? item : '     ',
+    );
     overviewTableElement = {
       table: {
         dontBreakRows: true,
@@ -307,20 +309,20 @@ export function buildResultDataStructure(
     return null;
   }
   // mapping sections to result items with all numbers of tables aggregated and resolved against result
-  return configuration.map((configSection) => {
+  return configuration.map(configSection => {
     // container for all numbers in section (not ids but resolved result objects)
     const numbers = [];
     // iterating over tables and aggregating numbers
-    configSection.tables.forEach((table) => {
+    configSection.tables.forEach(table => {
       // adding numbers (resolved  for result objects) to numbers
       numbers.push(
-        ...table.numberIds.map((numberId) => _.get(resultData, numberId)),
+        ...table.numberIds.map(numberId => _.get(resultData, numberId)),
       );
     });
 
     // finding intro text in input param
     const sectionIntroText = introTexts.filter(
-      (text) => text.sectionId === configSection.name,
+      text => text.sectionId === configSection.name,
     )[0];
 
     // returning full section with resolved and aggregated numbers
@@ -348,6 +350,7 @@ export function buildResultDataStructure(
 export async function createPDFFromAnalysisResult(
   analysisResult,
   configuration,
+  configurationId,
   introTexts,
   firstNames,
   lastName,
@@ -373,7 +376,7 @@ export async function createPDFFromAnalysisResult(
 
   // getting pdf Intro text
   const pdfIntroText = introTexts.filter(
-    (text) => text.sectionId === OVERALL_INTRO_KEY,
+    text => text.sectionId === OVERALL_INTRO_KEY(configurationId),
   )[0];
 
   // building section location info object. This is used to keep track
@@ -412,14 +415,14 @@ export async function createPDFFromAnalysisResult(
 
       // getting section color
       let currentResultSection = resultSections.filter(
-        (section) => section.name === currentSectionName,
+        section => section.name === currentSectionName,
       )[0];
 
       // if current page is in level rage => setting corresponding background image
       if (
-        currentResultSection
-        && currentResultSection.color
-        && BACKGROUND_IMAGES[currentResultSection.color]
+        currentResultSection &&
+        currentResultSection.color &&
+        BACKGROUND_IMAGES[currentResultSection.color]
       ) {
         return [
           {
@@ -501,16 +504,16 @@ export async function createPDFFromAnalysisResult(
 
       // heading with subheadings is last element before footer
       if (
-        currentNode.headlineLevel
-        && followingNodesOnPage[0].headlineLevel
-        && followingNodesOnPage.length === 4
+        currentNode.headlineLevel &&
+        followingNodesOnPage[0].headlineLevel &&
+        followingNodesOnPage.length === 4
       ) {
         return true;
       }
 
       return false;
     },
-    header: (currentPage) => {
+    header: currentPage => {
       if (currentPage === 1) {
         // first page in created document (page numbers are final) =>
         // getting information about the start pages of the different levels
@@ -518,15 +521,18 @@ export async function createPDFFromAnalysisResult(
         levelEntries.forEach(([key, value]) => {
           // setting start page correlating with start index
           if (value.startIndex) {
-            sectionPositionInformation[key].startPage = docDefinition.content[value.startIndex].positions[0].pageNumber;
+            sectionPositionInformation[key].startPage =
+              docDefinition.content[value.startIndex].positions[0].pageNumber;
           }
 
           // setting stop page correlating with start index
-          if (value.endIndex) sectionPositionInformation[key].endPage = docDefinition.content[value.endIndex].positions[0].pageNumber;
+          if (value.endIndex)
+            sectionPositionInformation[key].endPage =
+              docDefinition.content[value.endIndex].positions[0].pageNumber;
         });
       }
     },
-    footer: (currentPage) => {
+    footer: currentPage => {
       // no footer of first page
       if (currentPage === 1) {
         return {
@@ -564,17 +570,19 @@ export async function createPDFFromAnalysisResult(
 
   // pushing content to pdf => each level
   resultSections
-    .filter((resultSection) =>
+    .filter(resultSection =>
       // checking if any numbers on the section has description text => excluding section if not. Rule: No empty sections (just intro text)
-      resultSection.numbers.some((number) => {
+      resultSection.numbers.some(number => {
         const itemDescriptionText = number.descriptionText;
         return itemDescriptionText && itemDescriptionText.length > 0;
-      }))
+      }),
+    )
     .forEach((resultSection, index) => {
       // getting color for current level
-      const resultColor = resultSection.color && CI_COLORS[resultSection.color]
-        ? CI_COLORS[resultSection.color]
-        : '';
+      const resultColor =
+        resultSection.color && CI_COLORS[resultSection.color]
+          ? CI_COLORS[resultSection.color]
+          : '';
 
       // getting compare result
       let resultCompareSection = null;
@@ -584,7 +592,8 @@ export async function createPDFFromAnalysisResult(
 
       // saving information about first element of level -> the index saved will be the first index
       // of this level
-      sectionPositionInformation[resultSection.name].startIndex = docDefinition.content.length;
+      sectionPositionInformation[resultSection.name].startIndex =
+        docDefinition.content.length;
 
       // adding level intro
       if (resultSection.introText) {
@@ -604,7 +613,7 @@ export async function createPDFFromAnalysisResult(
 
       // adding number results for all numbers with descriptionText
       resultSection.numbers
-        .filter((number) => {
+        .filter(number => {
           // filter out numbers without description text. Rule: No numbers without description text (only result)
           const itemDescriptionText = number.descriptionText;
           return itemDescriptionText && itemDescriptionText.length > 0;
@@ -612,8 +621,9 @@ export async function createPDFFromAnalysisResult(
         .forEach((number, resultIndex) => {
           // getting name and value of
           const itemName = number.name;
-          const itemValue = number.result.type !== 'matrix'
-            && (number.result.value || number.result.list);
+          const itemValue =
+            number.result.type !== 'matrix' &&
+            (number.result.value || number.result.list);
 
           // getting if there is a compare item
           let compareItem = null;
@@ -625,12 +635,14 @@ export async function createPDFFromAnalysisResult(
 
             // getting name and value of compare item
             compareItemName = compareItem.name;
-            compareItemValue = compareItem.result.type !== 'matrix'
-              && (compareItem.result.value || compareItem.result.list);
+            compareItemValue =
+              compareItem.result.type !== 'matrix' &&
+              (compareItem.result.value || compareItem.result.list);
           }
 
           // checking if item is empty
-          const itemEmpty = !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
+          const itemEmpty =
+            !itemValue || (Array.isArray(itemValue) && itemValue.length === 0);
 
           // if item name set => adding name and name subtitle
           if (itemName && !itemEmpty) {
@@ -639,8 +651,8 @@ export async function createPDFFromAnalysisResult(
               text: `${itemName} ${itemValue}`,
               style: ['H1', { color: resultColor }],
               marginBottom:
-                compareItem
-                && !areResultValuesEqual(compareItemValue, itemValue)
+                compareItem &&
+                !areResultValuesEqual(compareItemValue, itemValue)
                   ? 0
                   : 20,
               headlineLevel: 'H1',
@@ -651,8 +663,8 @@ export async function createPDFFromAnalysisResult(
 
             // adding subheading with name if compare is present
             if (
-              compareItem
-              && !areResultValuesEqual(compareItemValue, itemValue)
+              compareItem &&
+              !areResultValuesEqual(compareItemValue, itemValue)
             ) {
               docDefinition.content.push({
                 text: `mit Name ${firstNames} ${lastName}`,
@@ -663,8 +675,8 @@ export async function createPDFFromAnalysisResult(
 
             // adding number description if present
             if (
-              number.numberDescription
-              && number.numberDescription.description
+              number.numberDescription &&
+              number.numberDescription.description
             ) {
               docDefinition.content.push({
                 stack: [
@@ -681,8 +693,8 @@ export async function createPDFFromAnalysisResult(
 
             // adding number calculation description if present
             if (
-              number.numberDescription
-              && number.numberDescription.calculationDescription
+              number.numberDescription &&
+              number.numberDescription.calculationDescription
             ) {
               docDefinition.content.push({
                 stack: [
@@ -710,8 +722,8 @@ export async function createPDFFromAnalysisResult(
 
             // adding compare item
             if (
-              compareItem
-              && !areResultValuesEqual(compareItemValue, itemValue)
+              compareItem &&
+              !areResultValuesEqual(compareItemValue, itemValue)
             ) {
               // adding heading for number
               docDefinition.content.push({
@@ -749,7 +761,8 @@ export async function createPDFFromAnalysisResult(
 
       // saving information about last element of level -> the index saved will be the last index
       // of this level
-      sectionPositionInformation[resultSection.name].endIndex = docDefinition.content.length - 1;
+      sectionPositionInformation[resultSection.name].endIndex =
+        docDefinition.content.length - 1;
     });
 
   // if flag is set => adding promotional text
