@@ -31,17 +31,25 @@ const BookPromotion = styled.div`
   color: ${(props) => props.theme.darkGrey};
   font-family: ${(props) => props.theme.fontFamily};
 
+  font-size: 15px;
+  line-height: 24px;
+
   /* title is h4*/
   h4 {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 21px;
+    font-weight: 600;
     line-height: 30px;
   }
 
   /* content text styling*/
   p {
-    font-size: 16px;
-    line-height: 26px;
+    font-size: 15px;
+    line-height: 24px;
+  }
+
+  b {
+    font-weight: 600;
+    color: #161616;
   }
 `;
 
@@ -65,8 +73,8 @@ const BookPromotionWidget = (props) => {
     <BookPromotion className={props.className}>
       <h4>Detaillierte Beschreibungen</h4>
       <p>
-        ...über Ihre/n <b>{`${props.resultTitle}`}</b> finden Sie in unserem Buch{' '}
-        <Interweave content={props.bookReference} />
+        ...über Ihre/n <b>{`${props.resultTitle}`}</b> finden Sie in unserem
+        Buch <Interweave content={props.bookReference} />
       </p>
 
       <BookPromotionImageContainer>
