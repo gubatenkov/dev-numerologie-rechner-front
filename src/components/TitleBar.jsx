@@ -86,7 +86,7 @@ const CloseIcon = styled(FontAwesomeIcon)`
 // name in a title item
 const TitleBarName = styled.div`
   color: ${(props) => props.theme.darkGrey};
-  font-family: Roboto;
+  font-family: ${(props) => props.theme.fontFamily};
   font-size: 48px;
   font-weight: 500;
   line-height: 58px;
@@ -107,7 +107,7 @@ const TitleBarName = styled.div`
 
 const TitleBarDate = styled.div`
   color: ${(props) => props.theme.darkGrey};
-  font-family: Roboto;
+  font-family: ${(props) => props.theme.fontFamily};
   font-size: 20px;
   line-height: 24px;
   text-align: center;
