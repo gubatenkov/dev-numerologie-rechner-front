@@ -89,7 +89,7 @@ const AnalysisResultPersonalRender = (props) => {
 
   // defining component state
   const [isTourOpen, setIsTourOpen] = useState(false);
-  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(true);
   const [tourSectionIndex, setTourSectionIndex] = useState(0);
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
@@ -312,7 +312,7 @@ const AnalysisResultPersonalRender = (props) => {
         <ActionBar key="actionbar">
           <TextButton
             title="Namen vergleichen"
-            onClick={() => window.alert('TODO: Implement compare')}
+            onClick={() => setIsNameDialogOpen(true)}
           />
           <IconButton
             imageIcon={saveIconPrimary}
@@ -412,7 +412,20 @@ const AnalysisResultPersonalRender = (props) => {
       )}
 
       {/* Dialog to change/ and add names to compare */}
-      <NameInputDialog show={isNameDialogOpen || true} />
+      <NameInputDialog
+        show={isNameDialogOpen}
+        onHide={() => setIsNameDialogOpen(false)}
+        firstNames={personalAnalysisResult.firstNames}
+        lastName={personalAnalysisResult.lastName}
+        comparefirstNames={
+          personalAnalysisCompareResult
+          && personalAnalysisCompareResult.firstNames
+        }
+        comparelastName={
+          personalAnalysisCompareResult
+          && personalAnalysisCompareResult.lastName
+        }
+      />
     </div>
   );
 };
