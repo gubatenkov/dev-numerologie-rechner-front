@@ -115,7 +115,7 @@ const PopoverSettingsHeader = styled.h2`
   /* text styling */
   color: ${(props) => props.theme.darkGrey} !important;
   font-family: ${(props) => props.theme.fontFamily} !important;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
   line-height: 30px;
 
@@ -147,9 +147,9 @@ const SwitchSettingItemContainer = styled.div`
 // title of the swtich item
 const SwitchSettingTitle = styled.div`
   /* basic text styling */
-  color: ${(props) => props.theme.darkGrey};
+  color: ${(props) => (props.disabled ? props.theme.lightGrey : props.theme.darkGrey)};
   font-family: ${(props) => props.theme.fontFamily};
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
   line-height: 30px;
 `;
@@ -157,8 +157,16 @@ const SwitchSettingTitle = styled.div`
 // item containing of a title and switch for settings
 export const SwitchSettingItem = (props) => (
   <SwitchSettingItemContainer className={props.className}>
-    {props.title && <SwitchSettingTitle>{props.title}</SwitchSettingTitle>}
-    <Switch onChange={props.onChange} checked={props.checked} />
+    {props.title && (
+      <SwitchSettingTitle disabled={props.disabled}>
+        {props.title}
+      </SwitchSettingTitle>
+    )}
+    <Switch
+      onChange={props.onChange}
+      checked={props.checked}
+      disabled={props.disabled}
+    />
   </SwitchSettingItemContainer>
 );
 

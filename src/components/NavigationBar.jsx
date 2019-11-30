@@ -236,7 +236,10 @@ const NavigationBar = (props) => {
   // checking if user is logged in in two ways
   // a) query returned user information b) we have a token stored locally.
   // if a) but not b), we have inconsistent state
-  const loggedIn = data && data.currentUser && data.currentUser.email && getUserAuthData().token;
+  const loggedIn = data
+    && data.currentUser
+    && data.currentUser.email
+    && getUserAuthData().token;
 
   // handles a logout of the user
   const handleLogout = () => {
@@ -251,11 +254,11 @@ const NavigationBar = (props) => {
   const settingsPopup = (
     <Popover>
       <PopoverSettingsContent>
-        <PopoverSettingsSection title="Übersicht und Tour">
+        <PopoverSettingsSection title="Reihenfolge der Zahlen – Übersicht und Tour">
           <SegmentContainer>
             <SegmentButton
               primary={userSettings.resultConfiguration === 'starter'}
-              title={'Einfach'}
+              title={'Standard'}
               onClick={() => setUserSettings({
                 ...userSettings,
                 resultConfiguration: 'starter',
@@ -273,7 +276,14 @@ const NavigationBar = (props) => {
             />
           </SegmentContainer>
           <SwitchSettingItem
-            title="Buchempfehlungen"
+            title="Seitenzahl zum Nachschlagen – Übersicht"
+            onChange={(newValue) => setUserSettings({ ...userSettings, showBookReferences: newValue })
+            }
+            checked={/* userSettings.showBookReferences */ false}
+            disabled={true}
+          />
+          <SwitchSettingItem
+            title="Buchreferenz mit Seitenzahl – Tour"
             onChange={(newValue) => setUserSettings({
               ...userSettings,
               showBookRecommendations: newValue,
@@ -281,14 +291,9 @@ const NavigationBar = (props) => {
             }
             checked={userSettings.showBookRecommendations}
           />
+
           <SwitchSettingItem
-            title="Buchreferenzen"
-            onChange={(newValue) => setUserSettings({ ...userSettings, showBookReferences: newValue })
-            }
-            checked={userSettings.showBookReferences}
-          />
-          <SwitchSettingItem
-            title="Erklärungen zu Kategorien"
+            title="Erklärungen zu Ebenen / Abschnitten"
             onChange={(newValue) => setUserSettings({
               ...userSettings,
               showCategoryExplanations: newValue,
@@ -297,7 +302,7 @@ const NavigationBar = (props) => {
             checked={userSettings.showCategoryExplanations}
           />
           <SwitchSettingItem
-            title="Erklärungen zu Zahlen"
+            title="Erklärungen zu Bedeutung der Zahlen"
             onChange={(newValue) => setUserSettings({
               ...userSettings,
               showNumberMeaningExplanations: newValue,
