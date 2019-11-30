@@ -22,6 +22,7 @@ import ResultTable from './ResultTable';
 import TourView from './TourView';
 import TextButton from './Buttons/TextButton';
 import IconButton from './Buttons/IconButton';
+import NameInputDialog from './dialogs/NameInputDialog';
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
@@ -88,6 +89,7 @@ const AnalysisResultPersonalRender = (props) => {
 
   // defining component state
   const [isTourOpen, setIsTourOpen] = useState(false);
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
   const [tourSectionIndex, setTourSectionIndex] = useState(0);
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
@@ -310,7 +312,7 @@ const AnalysisResultPersonalRender = (props) => {
         <ActionBar key="actionbar">
           <TextButton
             title="Namen vergleichen"
-            onClick={() => window.alert('TODO: Implement compare')}
+            onClick={() => setIsNameDialogOpen(true)}
           />
           <IconButton
             imageIcon={saveIconPrimary}
@@ -408,6 +410,69 @@ const AnalysisResultPersonalRender = (props) => {
           accessLevel={personalAnalysisResult.accessLevel}
         />
       )}
+
+      {/* Dialog to change/ and add names to compare */}
+      <NameInputDialog
+        show={isNameDialogOpen}
+        onHide={() => setIsNameDialogOpen(false)}
+        firstNames={personalAnalysisResult.firstNames}
+        lastName={personalAnalysisResult.lastName}
+        compareFirstNames={
+          personalAnalysisCompareResult
+          && personalAnalysisCompareResult.firstNames
+        }
+        compareLastName={
+          personalAnalysisCompareResult
+          && personalAnalysisCompareResult.lastName
+        }
+        onChange={(
+          firstNames,
+          lastName,
+          compareFirstNames,
+          compareLastName,
+        ) => {
+          // checking if any of the names has changed
+          const hasCompareName = !!(compareFirstNames.length > 0) || !!(compareLastName.length > 0);
+
+          // checking primary name
+          let hasNameChanged = firstNames !== personalAnalysisResult.firstNames
+            || lastName !== personalAnalysisResult.lastName;
+
+          // if compare result already => checking if names changed
+          if (personalAnalysisCompareResult) {
+            hasNameChanged = hasNameChanged
+              || compareFirstNames !== personalAnalysisCompareResult.firstNames
+              || compareLastName !== personalAnalysisCompareResult.lastName;
+          } else {
+            // if not compare => checking if compare name was added
+            hasNameChanged = hasNameChanged || hasCompareName;
+          }
+
+          // if name has changed => triggering new analysis
+          if (hasNameChanged) {
+            let firstNameParam;
+            let lastNameParam;
+
+            // setting parameters based on results
+            if (hasCompareName) {
+              // setting first name param => default to same as primary name
+              firstNameParam = [firstNames, compareFirstNames || firstNames];
+              lastNameParam = [lastName, compareLastName || lastName];
+            } else {
+              firstNameParam = firstNames;
+              lastNameParam = lastName;
+            }
+
+            // navigating to new result
+            props.history.push(
+              `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`,
+            );
+          } else {
+            // closing dialog
+            setIsNameDialogOpen(false);
+          }
+        }}
+      />
     </div>
   );
 };

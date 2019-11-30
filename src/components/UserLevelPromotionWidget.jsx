@@ -204,7 +204,12 @@ const UserlevelPromotionContainer = styled.div`
   }
 
   b {
-    font-weight: 600;
+    font-weight: 500;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 24px;
   }
 
   /* drawing bullet with custom color*/
