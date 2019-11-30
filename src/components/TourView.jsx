@@ -271,7 +271,7 @@ const TourView = (props) => {
 
   // disabling/enabling scrolling and focus for key input if is shown/hidden
   useEffect(() => {
-    // if modal is shown, getting focus so key inputs work
+    // if tour is visible => focusing container so key inputs work
     if (componentContainer && componentContainer.current) {
       componentContainer.current.focus();
     }

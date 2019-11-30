@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -13,6 +15,7 @@ import {
 import { setContext } from 'apollo-link-context';
 import dotenv from 'dotenv';
 
+import { ThemeProvider } from 'styled-components';
 import withTracker from './utils/tracking/withTracker';
 
 import introspectionQueryResultData from './utils/FragmentTypes.json';
@@ -29,14 +32,6 @@ import PrivateRoute from './utils/routing/PrivateRoute';
 import registerServiceWorker from './utils/registerServiceWorker';
 import { isUserAuthenticated, getUserAuthData } from './utils/AuthUtils';
 
-import './styles/bootstrap-extend.css';
-import './styles/bootstrap.css';
-import './styles/brand-icons/brand-icons.min.css';
-import './styles/web-icons/web-icons.min.css';
-import './styles/font-awesome/font-awesome.min.css';
-import './styles/theme.css';
-
-import { ThemeProvider } from 'styled-components';
 
 import { GRAPHQL_ENDPOINT } from './utils/Configuration';
 
@@ -56,7 +51,7 @@ const lightTheme = {
   matrixRed: 'rgba(255, 3, 3, .3)',
   highlightedRow: 'rgba(1, 178, 212, 0.15)',
   bookPromotionBackground: '#8FBD36',
-  fontFamily: 'Roboto',
+  fontFamily: 'Roboto , sans-serif',
 };
 
 // configuring dotenv

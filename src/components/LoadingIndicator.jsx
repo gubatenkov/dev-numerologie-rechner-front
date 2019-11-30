@@ -21,7 +21,10 @@ const LoadingIndicatorContainer = styled.div`
 
 // styling text
 const LoadingIndicatorText = styled.h4`
+  font-family: ${(props) => props.theme.fontFamily};
+  font-size: 18px;
   margin-top: 20px;
+  font-weight: 500;
 `;
 
 /**

@@ -22,6 +22,7 @@ import ResultTable from './ResultTable';
 import TourView from './TourView';
 import TextButton from './Buttons/TextButton';
 import IconButton from './Buttons/IconButton';
+import NameInputDialog from './dialogs/NameInputDialog';
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
@@ -88,6 +89,7 @@ const AnalysisResultPersonalRender = (props) => {
 
   // defining component state
   const [isTourOpen, setIsTourOpen] = useState(false);
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
   const [tourSectionIndex, setTourSectionIndex] = useState(0);
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
@@ -408,6 +410,9 @@ const AnalysisResultPersonalRender = (props) => {
           accessLevel={personalAnalysisResult.accessLevel}
         />
       )}
+
+      {/* Dialog to change/ and add names to compare */}
+      <NameInputDialog show={isNameDialogOpen || true} />
     </div>
   );
 };
