@@ -21,6 +21,7 @@ import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
 import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
 import CreditsBuyModal from './CreditsBuyModal';
+import Footer from './Footer';
 
 import { currentUserQuery } from '../graphql/Queries';
 import { saveAnalysisMutation, deleteUserMutation } from '../graphql/Mutations';
@@ -229,7 +230,9 @@ class UserHome extends Component {
               credits={this.props.data.currentUser.credits}
               onInsufficientCredits={this.toggleBuyModal}
               onUsedCredit={this.handleUsedCredit}
-              resultConfiguration={this.props.data.currentUser.resultConfiguration}
+              resultConfiguration={
+                this.props.data.currentUser.resultConfiguration
+              }
             />
             <AdArea horizontal>
               <AdAreaItem
@@ -301,6 +304,7 @@ class UserHome extends Component {
           onBuy={this.handleBuy}
           onSuccessfulPurchase={this.handleSuccessfulPurchase}
         />
+        <Footer />
       </div>
     );
   }

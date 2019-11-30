@@ -23,6 +23,7 @@ import TourView from './TourView';
 import TextButton from './Buttons/TextButton';
 import IconButton from './Buttons/IconButton';
 import NameInputDialog from './dialogs/NameInputDialog';
+import Footer from './Footer';
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
@@ -473,6 +474,7 @@ const AnalysisResultPersonalRender = (props) => {
           }
         }}
       />
+      <Footer />
     </div>
   );
 };
