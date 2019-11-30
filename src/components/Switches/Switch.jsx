@@ -14,6 +14,7 @@ const Switch = (props) => (
     handleDiameter={24}
     height={32}
     width={48}
+    disabled={props.disabled}
   />
 );
 
