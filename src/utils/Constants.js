@@ -31,6 +31,11 @@ export const CI_COLORS = {
   WHITE: '#FFFFFF',
 };
 
+// identifiers for results
+export const TYPE_ID_NUMBER = 'number';
+export const TYPE_ID_LIST = 'list';
+export const TYPE_ID_MATRIX = 'matrix';
+
 // threshold for switching to the mobile optimized styling
 // this refers to horizontal pixels of the resulotion of the users device
 export const MOBILE_RESOLUTION_THRESHOLD = 767;

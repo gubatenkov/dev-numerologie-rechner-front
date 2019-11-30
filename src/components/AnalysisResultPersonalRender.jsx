@@ -30,7 +30,7 @@ import {
 
 import { introTextQuery } from '../graphql/Queries';
 
-import { OVERALL_INTRO_KEY } from '../utils/Constants';
+import { OVERALL_INTRO_KEY, TYPE_ID_MATRIX } from '../utils/Constants';
 
 import ActionBar from './ActionBar';
 import LoadingIndicator from './LoadingIndicator';
@@ -139,10 +139,15 @@ const AnalysisResultPersonalRender = (props) => {
       resultSection.tables.forEach((resultTable) => {
         // pushing resolved numbers
         resultSectionElements.push(
-          ...resultTable.numberIds.map((numberId) => ({
-            ..._.get(resultData, numberId),
-            type: 'resultText',
-          })),
+          ...resultTable.numberIds
+            .map((numberId) => ({
+              ..._.get(resultData, numberId),
+              type: 'resultText',
+            }))
+            // filtering out matrix elements => those don't have a tour item
+            .filter((item) => item.result.type !== TYPE_ID_MATRIX)
+            // filtering out empty elements as they don't have a tour item
+            .filter((item) => item.result.value || item.result.list.length > 0),
         );
       });
 

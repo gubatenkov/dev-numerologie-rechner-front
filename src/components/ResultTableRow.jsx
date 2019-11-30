@@ -14,9 +14,11 @@ import IconButton from './Buttons/IconButton';
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
 // identifiers for results
-const TYPE_ID_NUMBER = 'number';
-const TYPE_ID_LIST = 'list';
-const TYPE_ID_MATRIX = 'matrix';
+import {
+  TYPE_ID_NUMBER,
+  TYPE_ID_LIST,
+  TYPE_ID_MATRIX,
+} from '../utils/Constants';
 
 // mapping from access level to used icon in row
 const ACCESS_LEVEL_ICON_MAPPING = {

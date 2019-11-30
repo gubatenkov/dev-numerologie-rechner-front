@@ -430,7 +430,15 @@ const TourView = (props) => {
       <ContentArea>
         <h1>{tourStepTitle}</h1>
         {tourStepContent ? (
-          <Interweave content={tourStepContent} />
+          <Interweave
+            content={tourStepContent}
+            filters={[
+              {
+                // filtering out tables in intro texts as not responsive
+                node: (name, node) => (name === 'table' ? null : node),
+              },
+            ]}
+          />
         ) : (
           <ResultLockedWidget accessLevel={props.accessLevel} />
         )}

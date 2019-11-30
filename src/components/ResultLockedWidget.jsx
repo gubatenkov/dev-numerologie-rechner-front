@@ -89,7 +89,7 @@ const Header = styled.p`
 `;
 
 // message itself
-const Message = styled.p`
+const Message = styled.div`
   color: ${(props) => props.theme.darkGrey};
   font-family: ${(props) => props.theme.fontFamily};
   font-size: 18px;
