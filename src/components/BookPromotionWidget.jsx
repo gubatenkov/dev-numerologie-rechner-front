@@ -63,9 +63,9 @@ const BookPromotionWidget = (props) => {
 
   return (
     <BookPromotion className={props.className}>
-      <h4>Defaillierte Beschreibungen</h4>
+      <h4>Detaillierte Beschreibungen</h4>
       <p>
-        ...über Ihre <b>{`${props.resultTitle}`}</b> finden Sie in unserem Buch{' '}
+        ...über Ihre/n <b>{`${props.resultTitle}`}</b> finden Sie in unserem Buch{' '}
         <Interweave content={props.bookReference} />
       </p>
 
