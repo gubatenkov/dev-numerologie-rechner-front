@@ -85,7 +85,7 @@ const ContentArea = styled.div`
     padding-bottom: 0px;
   }
 
-  /* content specific styling*/
+  /* content specific styling (dynamically parsed from server)*/
   .${CONTENT_STYLING_CLASS_SUBHEADING} {
     color: ${(props) => props.theme.lighterGrey};
   }
@@ -108,18 +108,37 @@ const ContentArea = styled.div`
     }
   }
 
+  /* rules provided by Clemens (client) for styling of content coming from backend*/
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  li {
+    font-family: Open sans;
+  }
+
   h1 {
-    font-size: 48px;
-    font-weight: 500;
-    line-height: 58px;
+    font-size: 44px;
+    font-weight: 600;
+    margin-bottom: 2rem;
   }
 
   h2 {
-    margin-top: 10px;
+    font-size: 27px;
+    line-height: 1.3em;
+    margin-top: 50px;
+    margin-bottom: 30px;
   }
 
   h3 {
-    margin-top: 10px;
+    font-size: 21px;
+    color: #aaa;
+    line-height: 30px;
+    margin-top: 30px !important;
   }
 `;
 

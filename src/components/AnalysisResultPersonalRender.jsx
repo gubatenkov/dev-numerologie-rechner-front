@@ -474,7 +474,7 @@ const AnalysisResultPersonalRender = (props) => {
           }
         }}
       />
-      <Footer />
+      {!isTourOpen && <Footer />}
     </div>
   );
 };

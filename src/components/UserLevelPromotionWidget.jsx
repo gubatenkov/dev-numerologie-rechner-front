@@ -167,20 +167,20 @@ const UserlevelPromotionContainer = styled.div`
   /* basic font styling*/
   color: ${(props) => props.theme.darkGrey};
   font-family: ${(props) => props.theme.fontFamily};
-  font-size: 14px;
+  font-size: 15px;
   line-height: 24px;
 
   /* title is h4*/
   h4 {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 21px;
+    font-weight: 600;
     line-height: 30px;
   }
 
   /* some subtitles in content have h5*/
   h5 {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 30px;
   }
 
@@ -204,7 +204,8 @@ const UserlevelPromotionContainer = styled.div`
   }
 
   b {
-    font-weight: 500;
+    font-weight: 600;
+    color: #161616;
   }
 
   p {
