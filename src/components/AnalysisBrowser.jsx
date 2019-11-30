@@ -20,9 +20,7 @@ import ConfirmAnalysisDeletionDialog from './dialogs/ConfirmAnalysisDeletionDial
 import RenameGroupDialog from './dialogs/RenameGroupDialog';
 import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
 
-import {
-  getConfigurationForId,
-} from '../utils/Configuration';
+import { getConfigurationForId } from '../utils/Configuration';
 import { OVERALL_INTRO_KEY } from '../utils/Constants';
 import { getUserAuthData } from '../utils/AuthUtils';
 import { createPDFFromAnalysisResult } from '../pdf/PdfBuilder';
@@ -41,7 +39,7 @@ import {
 
 import '../styles/AnalysisBrowser.css';
 
-const AnalysisBrowser = (props) => {
+const AnalysisBrowser = props => {
   // declaring state variables
   const [expandedIndex, setExpandedIndex] = useState(-1);
   const [
@@ -69,7 +67,7 @@ const AnalysisBrowser = (props) => {
    * handler for the creation of a group
    * @param groupName the name of the new group to be created
    */
-  const createGroup = async (groupName) => {
+  const createGroup = async groupName => {
     try {
       // performing mutation call to create group
       await props.createGroup({
@@ -133,7 +131,7 @@ const AnalysisBrowser = (props) => {
    * deletes the group identified by id from the server
    * @param id: the id of the group to be deleted
    */
-  const deleteGroup = async (id) => {
+  const deleteGroup = async id => {
     // deleting group
     try {
       const deletedGroup = await props.deleteGroup({
@@ -146,8 +144,9 @@ const AnalysisBrowser = (props) => {
           // getting index of item to delete
           const groupIndex = _.findIndex(
             data.currentUser.groups,
-            (item) => item.id === deleteAnalysisGroup.id
-              && item.name === deleteAnalysisGroup.name,
+            item =>
+              item.id === deleteAnalysisGroup.id &&
+              item.name === deleteAnalysisGroup.name,
           );
 
           // deleting item if present
@@ -179,7 +178,7 @@ const AnalysisBrowser = (props) => {
    * handler for deleting a specific analysis
    * @param id the id of the analysis to be deleted
    */
-  const deleteAnalysis = async (id) => {
+  const deleteAnalysis = async id => {
     // deleting analysis
     try {
       const deletedAnalysis = await props.deleteAnalysis({
@@ -193,7 +192,7 @@ const AnalysisBrowser = (props) => {
           // getting index of item to delete
           const analysisIndex = _.findIndex(
             data.analyses,
-            (item) => item.id === deleteAnalysis.id,
+            item => item.id === deleteAnalysis.id,
           );
 
           // deleting item if present
@@ -223,7 +222,7 @@ const AnalysisBrowser = (props) => {
   /**
    * creates a pdf for the analysis and opens it in a new tab
    */
-  const createAnalysisPdf = async (targetAnalysis) => {
+  const createAnalysisPdf = async targetAnalysis => {
     // checking if logged in => otherwise redirecting to login
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
@@ -247,11 +246,13 @@ const AnalysisBrowser = (props) => {
       });
 
       // getting user default result configuration
-      const resultConfiguration = getConfigurationForId(props.resultConfiguration);
+      const resultConfiguration = getConfigurationForId(
+        props.resultConfiguration,
+      );
 
       // getting section ids to get intro texts for including overall intro text
-      const sectionIds = resultConfiguration.map((section) => section.name);
-      sectionIds.push(OVERALL_INTRO_KEY);
+      const sectionIds = resultConfiguration.map(section => section.name);
+      sectionIds.push(OVERALL_INTRO_KEY(props.resultConfiguration));
 
       // getting intro texts for all sections in configuration
       const { introTexts } = (await props.client.query({
@@ -275,6 +276,7 @@ const AnalysisBrowser = (props) => {
         await createPDFFromAnalysisResult(
           personalAnalysisResult,
           resultConfiguration,
+          props.resultConfiguration,
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
@@ -289,6 +291,7 @@ const AnalysisBrowser = (props) => {
         await createPDFFromAnalysisResult(
           personalAnalysisResult,
           resultConfiguration,
+          props.resultConfiguration,
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
@@ -314,7 +317,7 @@ const AnalysisBrowser = (props) => {
    */
   const handleOnUseCredit = (analysisId, type) => {
     const { credits, onInsufficientCredits } = props;
-    const filtered = credits.filter((c) => c.type === type);
+    const filtered = credits.filter(c => c.type === type);
     if (filtered.length === 1 && filtered[0].total > 0) {
       // opening confirm dialog and storing credits to be used
       setConfirmUseCreditDialogOpen(true);
@@ -382,10 +385,10 @@ const AnalysisBrowser = (props) => {
                 index={index}
                 elementsInGroup={
                   props.analyses.filter(
-                    (analysis) => analysis.group.id === group.id,
+                    analysis => analysis.group.id === group.id,
                   ).length
                 }
-                clickHandler={(clickIndex) => {
+                clickHandler={clickIndex => {
                   // if index is not already set -> setting new index
                   // else resetting
                   if (clickIndex !== expandedIndex) {
@@ -394,14 +397,14 @@ const AnalysisBrowser = (props) => {
                     setExpandedIndex(-1);
                   }
                 }}
-                renameHandler={(renameIndex) => {
+                renameHandler={renameIndex => {
                   // setting group that is about to be renamed
                   setGroupToBeRenamed(props.groups[renameIndex]);
 
                   // showing dialog
                   setRenameGroupDialogOpen(true);
                 }}
-                deleteHandler={(deleteIndex) => {
+                deleteHandler={deleteIndex => {
                   // setting group that is about to be deleted
                   setGroupToBeDeleted(props.groups[deleteIndex]);
 
@@ -416,17 +419,17 @@ const AnalysisBrowser = (props) => {
             if (expandedIndex === index) {
               groupCellContent.push(
                 props.analyses
-                  .filter((analysis) => analysis.group.id === group.id)
-                  .map((analysis) => (
+                  .filter(analysis => analysis.group.id === group.id)
+                  .map(analysis => (
                     <AnalysisTableRow
                       key={analysis.id}
                       analysis={analysis}
-                      deleteHandler={(analysisId) => {
+                      deleteHandler={analysisId => {
                         // getting analysis to be deleted
                         setAnalysisToBeDeleted(
                           _.find(
                             props.analyses,
-                            (item) => item.id === analysisId,
+                            item => item.id === analysisId,
                           ),
                         );
 
@@ -434,14 +437,12 @@ const AnalysisBrowser = (props) => {
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
                       showHandler={() => {
-                        props.history.push(
-                          `/resultPersonal/${analysis.id}`,
-                        );
+                        props.history.push(`/resultPersonal/${analysis.id}`);
                       }}
-                      onUseCredit={(type) => {
+                      onUseCredit={type => {
                         handleOnUseCredit(analysis.id, type);
                       }}
-                      onPdfDownload={(longTexts) => {
+                      onPdfDownload={longTexts => {
                         createAnalysisPdf({ ...analysis, longTexts });
                       }}
                     />
@@ -522,7 +523,7 @@ const AnalysisBrowser = (props) => {
       <CreateGroupDialog
         isOpen={createGroupDialogOpen}
         onClose={() => setCreateGroupDialogOpen(false)}
-        onAction={(groupName) => {
+        onAction={groupName => {
           // calling handler
           createGroup(groupName);
 
@@ -530,7 +531,7 @@ const AnalysisBrowser = (props) => {
           setCreateGroupDialogOpen(false);
           setLoading(true);
         }}
-        groups={props.groups.map((item) => item.name)}
+        groups={props.groups.map(item => item.name)}
       />
       <RenameGroupDialog
         isOpen={renameGroupDialogOpen}

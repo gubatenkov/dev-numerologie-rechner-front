@@ -115,22 +115,22 @@ export const PERSONAL_RESULT_CONFIGURATIONS = {
       ],
     },
     {
-      name: 'Seele und Unbewusstes',
+      name: 'Die Seele und das Unbewusste',
       color: CI_COLOR_IDS.PURPLE,
       tables: [
         {
-          name: 'Seele und Unbewusstes',
+          name: 'Die Seele und das Unbewusste',
           headings: null,
           numberIds: ['sz', 'iniz', 'iz'],
         },
       ],
     },
     {
-      name: 'Potenzial und Berufung',
+      name: 'Potenzial, Beruf und Berufung',
       color: CI_COLOR_IDS.BLUE,
       tables: [
         {
-          name: 'Potenzial und Berufung',
+          name: 'Potenzial, Beruf und Berufung',
           headings: null,
           numberIds: ['tz', 'az', 'kz', 'bz', 'visz', 'bfz'],
         },

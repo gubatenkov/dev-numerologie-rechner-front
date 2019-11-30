@@ -1,5 +1,5 @@
 // key used to obtain intro text for whole analysis result
-export const OVERALL_INTRO_KEY = 'Vorwort';
+export const OVERALL_INTRO_KEY = (configurationId) => `Einführung_${configurationId.toLowerCase()}`;
 
 // ids of ci colors
 export const CI_COLOR_IDS = {
