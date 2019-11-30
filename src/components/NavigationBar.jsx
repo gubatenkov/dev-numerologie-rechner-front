@@ -370,7 +370,7 @@ const NavigationBar = (props) => {
       {loggedIn && (
         <CartIconButton
           imageIcon={iconCartPrimary}
-          onClick={() => window.open('https://www.bios-shop.eu/', '_blank')}
+          onClick={() => window.open('https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/', '_blank')}
         />
       )}
       {loggedIn && (

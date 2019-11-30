@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// importing threshold to switch to mobile optimized layout
-import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
-
 // container for links in the footer
 const FooterContainer = styled.div`
   /* One row wrapping*/
