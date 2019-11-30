@@ -58,7 +58,7 @@ const lightTheme = {
   matrixRed: 'rgba(255, 3, 3, .3)',
   highlightedRow: 'rgba(1, 178, 212, 0.15)',
   bookPromotionBackground: '#8FBD36',
-  fontFamily: 'Roboto , sans-serif',
+  fontFamily: 'Open Sans, sans-serif',
 };
 
 // configuring dotenv
