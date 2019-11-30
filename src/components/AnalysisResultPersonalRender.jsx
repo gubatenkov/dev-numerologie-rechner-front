@@ -89,7 +89,7 @@ const AnalysisResultPersonalRender = (props) => {
 
   // defining component state
   const [isTourOpen, setIsTourOpen] = useState(false);
-  const [isNameDialogOpen, setIsNameDialogOpen] = useState(true);
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
   const [tourSectionIndex, setTourSectionIndex] = useState(0);
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
@@ -455,8 +455,9 @@ const AnalysisResultPersonalRender = (props) => {
 
             // setting parameters based on results
             if (hasCompareName) {
-              firstNameParam = [firstNames, compareFirstNames];
-              lastNameParam = [lastName, compareLastName];
+              // setting first name param => default to same as primary name
+              firstNameParam = [firstNames, compareFirstNames || firstNames];
+              lastNameParam = [lastName, compareLastName || lastName];
             } else {
               firstNameParam = firstNames;
               lastNameParam = lastName;
@@ -466,6 +467,9 @@ const AnalysisResultPersonalRender = (props) => {
             props.history.push(
               `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`,
             );
+          } else {
+            // closing dialog
+            setIsNameDialogOpen(false);
           }
         }}
       />

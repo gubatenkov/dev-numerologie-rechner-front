@@ -11,6 +11,10 @@ import ModalFooter from 'react-bootstrap/ModalFooter';
 // own components
 import TextButton from '../Buttons/TextButton';
 
+// threshold for mobile layout
+import { MOBILE_RESOLUTION_THRESHOLD } from '../../utils/Constants';
+
+// text button block
 const ActionTextButton = styled(TextButton)`
   width: 100%;
 `;
@@ -83,17 +87,29 @@ const InputFieldContainer = styled.div`
   justify-content: space-between;
   margin-bottom: 32px;
 
+  /* strategy to deal with gaps between flex items: negative margins on container and margins on all children. 
+  This way, the container absorbs unintended margins at the edges if e.g. the flexbox wraps*/
+  margin-left: -25px;
+  margin-top: -10px;
+
+  /* only wrapping input fields if smaller than threshold*/
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    flex-wrap: wrap;
+  }
+
+  /* basic input field styling*/
   input {
     height: 48px;
     width: 240px;
     border-radius: 6px;
     border: solid ${(props) => props.theme.lightGrey} 1px;
-
     padding: 9px 16px 9px 16px;
   }
-
-  > input + input {
+  /* margin left and top between items*/
+  > input {
+    flex-grow: 1;
     margin-left: 25px;
+    margin-top: 10px;
   }
 `;
 
@@ -106,7 +122,7 @@ const NameInputDialog = (props) => {
     props.compareFirstNames || '',
   );
   const [compareLastName, setCompareLastName] = useState(
-    props.compareFirstNames || '',
+    props.compareLastName || '',
   );
 
   return (
