@@ -28,7 +28,7 @@ const AnalysisResultPersonal = (props) => {
     || (personalAnalysesByNames && personalAnalysesByNames.loading)
     || (currentUser && currentUser.loading)
   ) {
-    return <LoadingIndicator text="Berechne Auswertung für Namen..." />;
+    return <LoadingIndicator text="Berechne Resultate für Namen..." />;
   }
 
   // if gql state error => displaying error in loader to make it more visible for debugging

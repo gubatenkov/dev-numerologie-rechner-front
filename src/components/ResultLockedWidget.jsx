@@ -7,7 +7,7 @@ const GUEST_LOCKED_TEXT = (
   <div>
     <p>
       Sie nutzen den Psychologische Numerologie Online Rechner derzeit als
-      <b>Gast-Benutzer</b>. Sie können sich somit zwar alle 34 Zahlen einer
+      <b> Gast-Benutzer</b>. Sie können sich somit zwar alle 34 Zahlen einer
       vollständigen psychologisch-numerologischen Persönlichkeitsanalyse
       berechnen, erhalten dazu aber nur Beschreibungstexte zu einigen wenigen
       Zahlen als Vorschau und zum Kennenlernen dieses Rechners.
@@ -30,7 +30,7 @@ const USER_LOCKED_TEXT = (
   <div>
     <p>
       Sie nutzen den Psychologische Numerologie Online Rechner derzeit als
-      <b>registrierter und angemeldeter Benutzer</b>. Sie können sich somit alle
+      <b> registrierter und angemeldeter Benutzer</b>. Sie können sich somit alle
       34 Zahlen einer vollständigen psychologisch-numerologischen
       Persönlichkeitsanalyse berechnen, erhalten dazu aber nur
       Beschreibungstexte zu <b>ein paar ausgewählten Zahlen</b> wie die
