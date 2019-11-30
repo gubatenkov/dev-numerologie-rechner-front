@@ -27,6 +27,7 @@ import Footer from './Footer';
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
+  PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
   getConfigurationForId,
 } from '../utils/Configuration';
 
@@ -52,7 +53,7 @@ const ResultContent = styled.div`
 /**
  * result screen for personal analysis
  */
-const AnalysisResultPersonalRender = (props) => {
+const AnalysisResultPersonalRender = props => {
   // getting relevant parameters from props
   const { user } = props;
   const { resultConfigurationId } = props.match.params;
@@ -60,24 +61,27 @@ const AnalysisResultPersonalRender = (props) => {
   // determining configuration for result
   // 3) if no user and param set => using default
   let resultConfig = PERSONAL_RESULT_CONFIGURATION_DEFAULT;
+  let resultConfigId = PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID;
 
   // 1) if param is set => using this one
   if (resultConfigurationId && getConfigurationForId(resultConfigurationId)) {
     resultConfig = getConfigurationForId(resultConfigurationId);
+    resultConfigId = resultConfigurationId;
   }
 
   // 2) if no param set and user => using user default
   else if (
-    user
-    && user.resultConfiguration
-    && getConfigurationForId(user.resultConfiguration)
+    user &&
+    user.resultConfiguration &&
+    getConfigurationForId(user.resultConfiguration)
   ) {
     resultConfig = getConfigurationForId(user.resultConfiguration);
+    resultConfigId = user.resultConfiguration;
   }
 
   // filtering names of all intro texts
-  const sectionIds = resultConfig.map((section) => section.name);
-  sectionIds.push(OVERALL_INTRO_KEY);
+  const sectionIds = resultConfig.map(section => section.name);
+  sectionIds.push(OVERALL_INTRO_KEY(resultConfigId));
 
   // fetching intro texts for given configuration sections
   const { loading, error, data } = useQuery(introTextQuery, {
@@ -119,10 +123,10 @@ const AnalysisResultPersonalRender = (props) => {
     user,
   ) =>
     // constructing tourSection element for every table in configuration
-    configuration.map((resultSection) => {
+    configuration.map(resultSection => {
       // finding intro text for section
       const sectionIntroText = introTexts.filter(
-        (text) => text.sectionId === resultSection.name,
+        text => text.sectionId === resultSection.name,
       )[0];
 
       // defining resulting elements for section in tour
@@ -139,18 +143,18 @@ const AnalysisResultPersonalRender = (props) => {
       }
 
       // iterating over result tables of sectionp
-      resultSection.tables.forEach((resultTable) => {
+      resultSection.tables.forEach(resultTable => {
         // pushing resolved numbers
         resultSectionElements.push(
           ...resultTable.numberIds
-            .map((numberId) => ({
+            .map(numberId => ({
               ..._.get(resultData, numberId),
               type: 'resultText',
             }))
             // filtering out matrix elements => those don't have a tour item
-            .filter((item) => item.result.type !== TYPE_ID_MATRIX)
+            .filter(item => item.result.type !== TYPE_ID_MATRIX)
             // filtering out empty elements as they don't have a tour item
-            .filter((item) => item.result.value || item.result.list.length > 0),
+            .filter(item => item.result.value || item.result.list.length > 0),
         );
       });
 
@@ -168,32 +172,35 @@ const AnalysisResultPersonalRender = (props) => {
    */
   const buildContentDataStructure = (configuration, result) =>
     // returning an array of section names and number names
-    configuration.map((configSection) => {
+    configuration.map(configSection => {
       // getting an array of all items in a section (across tables)
       const numberTitles = [];
       // iterating over tables, resolving values for ids
-      configSection.tables.forEach((table) => numberTitles.push(
-        ...table.numberIds.map((numberId) => {
-          // getting result of number id
-          const numberResult = _.get(result, numberId);
+      configSection.tables.forEach(table =>
+        numberTitles.push(
+          ...table.numberIds.map(numberId => {
+            // getting result of number id
+            const numberResult = _.get(result, numberId);
 
-          // extracting name and value for different types of row
-          const { name } = numberResult;
-          const value = numberResult.result.type === 'number'
-            ? numberResult.result.value
-            : null;
+            // extracting name and value for different types of row
+            const { name } = numberResult;
+            const value =
+              numberResult.result.type === 'number'
+                ? numberResult.result.value
+                : null;
 
-          // constructing string of the form name = value to show in content
-          const title = `${name} ${value ? `= ${value}` : ''}`;
+            // constructing string of the form name = value to show in content
+            const title = `${name} ${value ? `= ${value}` : ''}`;
 
-          // returning element with title and anchor as number id
-          // this anchor is set on the title and can be used for dynamic scrolling later
-          return {
-            title,
-            anchor: numberResult.numberId,
-          };
-        }),
-      ));
+            // returning element with title and anchor as number id
+            // this anchor is set on the title and can be used for dynamic scrolling later
+            return {
+              title,
+              anchor: numberResult.numberId,
+            };
+          }),
+        ),
+      );
 
       // returning section item with name and numbers
       return {
@@ -218,7 +225,7 @@ const AnalysisResultPersonalRender = (props) => {
 
     // finding index with datakey in tour data structure
     let sectionIndex = tourDataStructure.findIndex(
-      (section) => section.sectionName === sectionId,
+      section => section.sectionName === sectionId,
     );
 
     // if data not found => starting at first index
@@ -230,7 +237,7 @@ const AnalysisResultPersonalRender = (props) => {
     // finding row index of item in section
     let elementIndex = tourDataStructure[
       sectionIndex
-    ].sectionElements.findIndex((element) => element.numberId === numberId);
+    ].sectionElements.findIndex(element => element.numberId === numberId);
 
     if (elementIndex < 0) {
       // starting at first element by default
@@ -247,7 +254,7 @@ const AnalysisResultPersonalRender = (props) => {
    * handles the navigation to a specific item
    * @param anchor the id of the element in the dom to navigate to
    */
-  const navigateToElementHandler = (anchor) => {
+  const navigateToElementHandler = anchor => {
     // scrolling to item if present in DOM
     const domElement = document.getElementById(anchor);
     if (domElement) {
@@ -300,8 +307,8 @@ const AnalysisResultPersonalRender = (props) => {
           primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
           primaryDate={personalAnalysisResult.dateOfBirth}
           secondaryName={
-            personalAnalysisCompareResult
-            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+            personalAnalysisCompareResult &&
+            `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
           }
           onRemoveSecondaryName={() => {
             props.history.push(
@@ -343,24 +350,29 @@ const AnalysisResultPersonalRender = (props) => {
 
           <ResultContent>
             {// mapping every configuration section to a result panel
-            resultConfig.map((resultSection) => (
+            resultConfig.map(resultSection => (
               // returning panel and result table with filtered data
               <ResultPanel
                 title={resultSection.name}
                 rightActionIcon={bookIconPrimary}
-                onRightActionClick={() => handleItemDetailClick(resultSection.name)
+                onRightActionClick={() =>
+                  handleItemDetailClick(resultSection.name)
                 }
                 id={resultSection.name}
                 key={resultSection.name}
               >
-                {resultSection.tables.map((tableData) => (
+                {resultSection.tables.map(tableData => (
                   // returning table with result data for each number id
                   <ResultTable
                     name={tableData.name}
-                    numbers={tableData.numberIds.map((numberId) => _.get(personalAnalysisResult, numberId))}
+                    numbers={tableData.numberIds.map(numberId =>
+                      _.get(personalAnalysisResult, numberId),
+                    )}
                     compareNumbers={
-                      personalAnalysisCompareResult
-                      && tableData.numberIds.map((numberId) => _.get(personalAnalysisCompareResult, numberId))
+                      personalAnalysisCompareResult &&
+                      tableData.numberIds.map(numberId =>
+                        _.get(personalAnalysisCompareResult, numberId),
+                      )
                     }
                     headings={tableData.headings}
                     showTitle={tableData.showTitle}
@@ -388,8 +400,8 @@ const AnalysisResultPersonalRender = (props) => {
           )}
           name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
           compareTourData={
-            personalAnalysisCompareResult
-            && buildTourDataStructure(
+            personalAnalysisCompareResult &&
+            buildTourDataStructure(
               personalAnalysisCompareResult,
               resultConfig,
               introTexts,
@@ -397,8 +409,8 @@ const AnalysisResultPersonalRender = (props) => {
             )
           }
           compareName={
-            personalAnalysisCompareResult
-            && `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+            personalAnalysisCompareResult &&
+            `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
           }
           sectionIndex={tourSectionIndex}
           elementIndex={tourElementIndex}
@@ -419,12 +431,12 @@ const AnalysisResultPersonalRender = (props) => {
         firstNames={personalAnalysisResult.firstNames}
         lastName={personalAnalysisResult.lastName}
         compareFirstNames={
-          personalAnalysisCompareResult
-          && personalAnalysisCompareResult.firstNames
+          personalAnalysisCompareResult &&
+          personalAnalysisCompareResult.firstNames
         }
         compareLastName={
-          personalAnalysisCompareResult
-          && personalAnalysisCompareResult.lastName
+          personalAnalysisCompareResult &&
+          personalAnalysisCompareResult.lastName
         }
         onChange={(
           firstNames,
@@ -433,17 +445,20 @@ const AnalysisResultPersonalRender = (props) => {
           compareLastName,
         ) => {
           // checking if any of the names has changed
-          const hasCompareName = !!(compareFirstNames.length > 0) || !!(compareLastName.length > 0);
+          const hasCompareName =
+            !!(compareFirstNames.length > 0) || !!(compareLastName.length > 0);
 
           // checking primary name
-          let hasNameChanged = firstNames !== personalAnalysisResult.firstNames
-            || lastName !== personalAnalysisResult.lastName;
+          let hasNameChanged =
+            firstNames !== personalAnalysisResult.firstNames ||
+            lastName !== personalAnalysisResult.lastName;
 
           // if compare result already => checking if names changed
           if (personalAnalysisCompareResult) {
-            hasNameChanged = hasNameChanged
-              || compareFirstNames !== personalAnalysisCompareResult.firstNames
-              || compareLastName !== personalAnalysisCompareResult.lastName;
+            hasNameChanged =
+              hasNameChanged ||
+              compareFirstNames !== personalAnalysisCompareResult.firstNames ||
+              compareLastName !== personalAnalysisCompareResult.lastName;
           } else {
             // if not compare => checking if compare name was added
             hasNameChanged = hasNameChanged || hasCompareName;
