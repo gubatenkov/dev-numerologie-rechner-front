@@ -1,4 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.css';
+
+// TODO: legacy - remove after UI refactoring (still needed for remaining components)
+import './styles/bootstrap-extend.css';
+// TODO: legacy - remove after UI refactoring (still needed for remaining components)
+import './styles/theme.css';
+
+// global style definitions
 import './styles/global.css';
 
 import React from 'react';
@@ -32,7 +39,6 @@ import PrivateRoute from './utils/routing/PrivateRoute';
 
 import registerServiceWorker from './utils/registerServiceWorker';
 import { isUserAuthenticated, getUserAuthData } from './utils/AuthUtils';
-
 
 import { GRAPHQL_ENDPOINT } from './utils/Configuration';
 
