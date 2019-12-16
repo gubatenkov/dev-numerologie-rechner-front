@@ -1,0 +1,81 @@
+@import 'typography';
+
+//TODO: Move static Colors to variables!
+
+.AnalysisBrowser--table td {
+  vertical-align: middle !important;
+}
+
+.AnalysisBrowser--table {
+  user-select: none;
+}
+
+.AnalysisBrowser--placeholder {
+  padding-bottom: 10px !important;
+}
+
+.analysis-browser {
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    .header {
+      @include font-headline-1;
+    }
+
+    .btn.btn-primary {
+      width: 40px;
+      height: 40px;
+      background-color: #f3f9fa;
+      border: none;
+      border-radius: 6px;
+      padding: 0;
+      margin: 8px 0 0 0;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 33px;
+      color: #01b2d4;
+      font-family: -webkit-pictograph;
+    }
+  }
+
+  .panel-content {
+    .accordion {
+      .card {
+        margin: 0;
+        .card-header {
+          height: 64px;
+          color: #323232;
+          padding: 0 17px 0 24px;
+          display: flex;
+          align-items: center;
+          border-radius: 6px;
+        }
+
+        &:nth-child(even) {
+          .card-header,
+          .card-body {
+            background-color: #ffffff;
+          }
+        }
+        &:nth-child(odd) {
+          .card-header,
+          .card-body {
+            background-color: #F3F9FA;;
+          }
+        }
+      }
+    }
+  }
+
+  .analysis-browser-toggle {
+    display: flex;
+
+    .text {
+      @include font-headline-3;
+      margin-right: 16px;
+    }
+  }
+}
