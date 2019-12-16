@@ -35,8 +35,9 @@ import {
 import '../styles/AnalysisBrowser.scss';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
-import Card from "react-bootstrap/Card";
-import AnalysisBrowserToggle from "./AnalysisBrowserToggle";
+import Card from 'react-bootstrap/Card';
+import AnalysisBrowserToggle from './AnalysisBrowserToggle';
+import AnalysisListEntry from './AnalysisListEntry';
 
 const AnalysisBrowser = props => {
   // declaring state variables
@@ -373,11 +374,10 @@ const AnalysisBrowser = props => {
   // render
   // determining content of panel based on if there is data or not
   let panelContent = null;
-  const [activeAccordionKey, setActiveAccordionKey] = useState(null);
 
   if (props.groups.length > 0) {
     panelContent = (
-      <Accordion>
+      <Accordion defaultActiveKey="641">
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
             analysis => analysis.group.id === group.id
@@ -386,13 +386,18 @@ const AnalysisBrowser = props => {
           return (
             <Card key={group.id}>
               <Card.Header>
-                <AnalysisBrowserToggle eventKey={group.id} canExpand={analysisOfGroup.length > 0}>
+                <AnalysisBrowserToggle
+                  eventKey={group.id}
+                  canExpand={analysisOfGroup.length > 0}
+                >
                   {group.name}
                 </AnalysisBrowserToggle>
               </Card.Header>
               <Accordion.Collapse eventKey={group.id}>
                 <Card.Body>
-                  {console.log(analysisOfGroup)}
+                  {analysisOfGroup.map(analyis => (
+                    <AnalysisListEntry key={analyis.id} analyis={analyis}/>
+                  ))}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

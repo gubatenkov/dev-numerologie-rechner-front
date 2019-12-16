@@ -63,8 +63,12 @@
         &:nth-child(odd) {
           .card-header,
           .card-body {
-            background-color: #F3F9FA;;
+            background-color: #f3f9fa;
           }
+        }
+
+        .card-body{
+          padding: 0;
         }
       }
     }
@@ -73,9 +77,23 @@
   .analysis-browser-toggle {
     display: flex;
 
+    &.akb-clickable{
+      cursor: pointer;
+    }
+
     .text {
       @include font-headline-3;
       margin-right: 16px;
     }
+  }
+
+  .akb-list-entry{
+    height: 64px;
+    padding-left: 64px;
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
   }
 }

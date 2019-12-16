@@ -5,9 +5,9 @@ module.exports = {
   singleQuote: true,
   overrides: [
     {
-      files: '*.css',
+      files: '*.scss, *.css',
       options: {
-        tabWidth: 4,
+        tabWidth: 2,
       },
     },
   ],
