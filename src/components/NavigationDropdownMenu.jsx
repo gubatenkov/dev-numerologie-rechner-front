@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
 
 import '../styles/NavigationDropdownMenu.css';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 /**
  * A Dropdown Menu in the navigation bar
@@ -46,31 +46,16 @@ class NavigationDropdownMenu extends Component {
    */
   render() {
     return (
-      <div
+      <DropdownButton
+        alignRight
         className="dropdownItem"
+        title=""
+        variant={'info'}
         onClick={this.handleDropdownItemClick}
         onBlur={this.handleBlur}
-        role="button"
       >
-        <li className={`nav-item dropdown${this.state.isOpen ? ' show' : ''}`}>
-          <Button
-            variant="link"
-            className={`NavigationDropdownMenu__button ${
-              this.props.navbar ? 'nav-link' : ''
-            }`}
-          >
-            {this.props.name}
-          </Button>
-          <div
-            className={`dropdown-menu dropdown-menu-bullet ${
-              this.props.direction === 'right' ? 'dropdown-menu-right' : ''
-            }`}
-            role="menu"
-          >
-            {this.props.children}
-          </div>
-        </li>
-      </div>
+        {this.props.children}
+      </DropdownButton>
     );
   }
 }

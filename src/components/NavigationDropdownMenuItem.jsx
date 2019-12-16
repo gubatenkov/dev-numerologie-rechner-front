@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types'; 
-import { Button } from 'react-bootstrap';
 
 import '../styles/NavigationDropdownMenuItem.css';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 /**
  * wrapper component for dropdown items
  */
 const NavigationDropdownMenuItem = props => (
-  <Button
+  <Dropdown.Item
     variant="link"
     onClick={props.onClick}
     className="NavigationDropdownMenuItem dropdown-item"
     role="link"
   >
     {props.children}
-  </Button>
+  </Dropdown.Item>
 );
 
 NavigationDropdownMenuItem.propTypes = {
