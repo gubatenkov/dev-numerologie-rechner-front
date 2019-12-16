@@ -1,6 +1,7 @@
 .UserHomeContentArea {
     display: flex;
     flex-direction: row;
+    padding: 0 60px;
 }
 
 .UserHomeContent {

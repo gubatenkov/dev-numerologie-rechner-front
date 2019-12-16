@@ -127,6 +127,6 @@ ReactDOM.render(
       </BrowserRouter>
     </ThemeProvider>
   </ApolloProvider>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
 registerServiceWorker();

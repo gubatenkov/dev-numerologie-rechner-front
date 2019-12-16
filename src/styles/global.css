@@ -1,3 +1,8 @@
 html * {
   font-family: 'Open Sans', sans-serif;
 }
+
+.main-container {
+  max-width: 1440px;
+  margin: auto;
+}
