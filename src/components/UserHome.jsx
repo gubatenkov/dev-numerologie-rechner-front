@@ -19,15 +19,11 @@ import AdAreaItem from './AdAreaItem';
 import AnalysisBrowser from './AnalysisBrowser';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
-import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
 import CreditsBuyModal from './CreditsBuyModal';
 import Footer from './Footer';
 
 import { currentUserQuery } from '../graphql/Queries';
-import { saveAnalysisMutation, deleteUserMutation } from '../graphql/Mutations';
-
-import { deleteUserAuthData } from '../utils/AuthUtils';
-
+import { saveAnalysisMutation } from '../graphql/Mutations';
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
 /**
@@ -44,47 +40,11 @@ class UserHome extends Component {
     this.state = {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
-      userDeletionDialogOpen: false,
       isBuyModalOpen: false,
       isBuyProcessing: false,
       loading: false,
     };
   }
-
-  /**
-   * handler for logout click
-   */
-  handleLogout = () => {
-    // removing token from local storage => logout
-    deleteUserAuthData();
-
-    // navigating to input for user
-    this.props.history.push('/analysisInput');
-
-    // reloading to clear cache
-    window.location.reload();
-  };
-
-  /**
-   * handler for deleting the current user
-   */
-  handleDeleteUser = async () => {
-    // setting loading state
-    this.setState({
-      loading: true,
-    });
-
-    // deleting user from server
-    await this.props.deleteUser();
-
-    // setting loading state
-    this.setState({
-      loading: false,
-    });
-
-    // logging user out
-    this.handleLogout();
-  };
 
   handleUsedCredit = () => {
     if (this.props.data && this.props.data.refetch) {
@@ -116,13 +76,13 @@ class UserHome extends Component {
   async saveAnalysis(name, groupId) {
     // decoding url param values
     const firstNames = decodeURIComponent(
-      this.props.computedMatch.params.firstNames,
+      this.props.computedMatch.params.firstNames
     );
     const lastNames = decodeURIComponent(
-      this.props.computedMatch.params.lastNames,
+      this.props.computedMatch.params.lastNames
     );
     const dateOfBirth = decodeURIComponent(
-      this.props.computedMatch.params.dateOfBirth,
+      this.props.computedMatch.params.dateOfBirth
     );
 
     // one or more names?
@@ -168,7 +128,7 @@ class UserHome extends Component {
       // sending notification to user
       ToastNotifications.success(
         `Die Analyse ${name} wurde erfolgreich erstellt.`,
-        { position: 'top-right' },
+        { position: 'top-right' }
       );
     } catch (error) {
       // informing user of error
@@ -193,10 +153,10 @@ class UserHome extends Component {
     }
 
     if (
-      this.props.data.loading
-      || !this.props.data
-      || !this.props.data.currentUser
-      || this.state.isBuyProcessing
+      this.props.data.loading ||
+      !this.props.data ||
+      !this.props.data.currentUser ||
+      this.state.isBuyProcessing
     ) {
       return <LoadingIndicator text="Lade..." />;
     }
@@ -207,7 +167,8 @@ class UserHome extends Component {
       <div>
         {this.state.loading && <LoadingIndicator />}
         <NavigationBar
-          handleDeleteUser={() => this.setState({ userDeletionDialogOpen: true })
+          handleDeleteUser={() =>
+            this.setState({ userDeletionDialogOpen: true })
           }
         />
         <div className="UserHomeContentArea">
@@ -245,16 +206,16 @@ class UserHome extends Component {
         <SaveAnalysisDialog
           isOpen={this.state.saveDialogOpen}
           onClose={() => this.setState({ saveDialogOpen: false })}
-          onSave={(group) => {
+          onSave={group => {
             // decoding url param values
             const firstNames = decodeURIComponent(
-              this.props.computedMatch.params.firstNames,
+              this.props.computedMatch.params.firstNames
             );
             const lastNames = decodeURIComponent(
-              this.props.computedMatch.params.lastNames,
+              this.props.computedMatch.params.lastNames
             );
             const dateOfBirth = decodeURIComponent(
-              this.props.computedMatch.params.dateOfBirth,
+              this.props.computedMatch.params.dateOfBirth
             );
 
             // constructing name for analysis
@@ -280,20 +241,6 @@ class UserHome extends Component {
             this.setState({ saveDialogOpen: false, loading: true });
           }}
           groups={this.props.data.currentUser.groups}
-        />
-        <ConfirmUserDeletionDialog
-          isOpen={this.state.userDeletionDialogOpen}
-          onClose={() => this.setState({
-            userDeletionDialogOpen: false,
-          })
-          }
-          onAction={() => {
-            // dismissing dialog
-            this.setState({ userDeletionDialogOpen: false });
-
-            // deleting user
-            this.handleDeleteUser();
-          }}
         />
 
         <CreditsBuyModal
@@ -324,11 +271,9 @@ UserHome.propTypes = {
     }),
   }).isRequired,
   saveAnalysis: PropTypes.func.isRequired,
-  deleteUser: PropTypes.func.isRequired,
 };
 
 export default compose(
   graphql(currentUserQuery),
-  graphql(saveAnalysisMutation, { name: 'saveAnalysis' }),
-  graphql(deleteUserMutation, { name: 'deleteUser' }),
+  graphql(saveAnalysisMutation, { name: 'saveAnalysis' })
 )(withRouter(UserHome));
