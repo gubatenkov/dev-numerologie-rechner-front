@@ -8,12 +8,12 @@ import GoogleAnalytics from 'react-ga';
 
 GoogleAnalytics.initialize('UA-109503933-2', { anonymizeIp: true });
 
-const withTracker = (WrappedComponent, options) => (props) => {
+let withTracker = (WrappedComponent, options) => props => {
   // getting needed parts of props
   const { location } = props;
 
   // function to track a pageview
-  const trackPage = (page) => {
+  const trackPage = page => {
     GoogleAnalytics.set({
       page,
       ...options,
@@ -34,12 +34,17 @@ const withTracker = (WrappedComponent, options) => (props) => {
   return <WrappedComponent {...props} />;
 };
 
-
 withTracker.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string,
   }),
 };
 
+// in development environment, we don't wont Tracking to be effective:
+if (process.env.NODE_ENV === 'development') {
+  withTracker = (WrappedComponent, options) => props => {
+    return <WrappedComponent {...props} />;
+  };
+}
 
 export default withTracker;
