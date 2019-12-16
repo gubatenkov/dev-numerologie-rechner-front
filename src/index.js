@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
-import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks'
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
 
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
@@ -122,7 +122,12 @@ ReactDOM.render(
               path="/analysisInput"
               component={withTracker(AnalysisInput)}
             />
-            <Route path="/userProfile" component={UserProfile} />
+            <PrivateRoute
+              path="/userProfile"
+              isAuthenticated={isUserAuthenticated}
+              loginPath="/login"
+              component={UserProfile}
+            />
             <PrivateRoute
               path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
               isAuthenticated={isUserAuthenticated}
