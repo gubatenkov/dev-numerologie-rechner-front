@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks'
 
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
@@ -96,38 +97,43 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <ThemeProvider theme={lightTheme}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/login" component={withTracker(Login)} />
-          <Route path="/register" component={withTracker(Register)} />
-          <Route path="/reset" component={withTracker(ResetPassword)} />
-          <Route
-            path="/input-set-password/:token?"
-            component={withTracker(SetPassword)}
-          />
-          <Route
-            exact
-            path="/resultPersonal/:analysisId/:resultConfigurationId?"
-            component={withTracker(AnalysisResultPersonal)}
-          />
-          <Route
-            exact
-            path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
-            component={withTracker(AnalysisResultPersonal)}
-          />
-          <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
-          <Route path="/userProfile" component={UserProfile} />
-          <PrivateRoute
-            path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
-            isAuthenticated={isUserAuthenticated}
-            loginPath="/login"
-            component={withTracker(UserHome)}
-          />
-          <Route path="/" component={withTracker(AnalysisInput)} />
-        </Switch>
-      </BrowserRouter>
-    </ThemeProvider>
+    <ApolloHooksProvider client={client}>
+      <ThemeProvider theme={lightTheme}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/login" component={withTracker(Login)} />
+            <Route path="/register" component={withTracker(Register)} />
+            <Route path="/reset" component={withTracker(ResetPassword)} />
+            <Route
+              path="/input-set-password/:token?"
+              component={withTracker(SetPassword)}
+            />
+            <Route
+              exact
+              path="/resultPersonal/:analysisId/:resultConfigurationId?"
+              component={withTracker(AnalysisResultPersonal)}
+            />
+            <Route
+              exact
+              path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
+              component={withTracker(AnalysisResultPersonal)}
+            />
+            <Route
+              path="/analysisInput"
+              component={withTracker(AnalysisInput)}
+            />
+            <Route path="/userProfile" component={UserProfile} />
+            <PrivateRoute
+              path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
+              isAuthenticated={isUserAuthenticated}
+              loginPath="/login"
+              component={withTracker(UserHome)}
+            />
+            <Route path="/" component={withTracker(AnalysisInput)} />
+          </Switch>
+        </BrowserRouter>
+      </ThemeProvider>
+    </ApolloHooksProvider>
   </ApolloProvider>,
   document.getElementById('root')
 );
