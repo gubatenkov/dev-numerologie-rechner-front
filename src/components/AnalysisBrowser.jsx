@@ -36,6 +36,9 @@ import '../styles/AnalysisBrowser.scss';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import AnalysisBrowserToggle from './AnalysisBrowserToggle';
+import AnalysisListEntry from './AnalysisListEntry';
+import Card from 'react-bootstrap/Card';
+import AnalysisBrowserToggle from './AnalysisBrowserToggle';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 
@@ -161,7 +164,9 @@ const AnalysisBrowser = props => {
 
       // informing the user
       ToastNotifications.success(
-        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
+        `Die Gruppe ${
+          deletedGroup.data.deleteAnalysisGroup.name
+        } wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -207,7 +212,9 @@ const AnalysisBrowser = props => {
 
       // shooting notification informting the user
       ToastNotifications.success(
-        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
+        `Die Analyse ${
+          deletedAnalysis.data.deleteAnalysis.name
+        } wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -280,7 +287,11 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
+          `Namensvergleich_${personalAnalysisResult.firstNames}_${
+            personalAnalysisResult.lastName
+          }_${personalAnalysisResultCompare.firstNames}_${
+            personalAnalysisResultCompare.lastName
+          }.pdf`,
           analysis.longTexts,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
@@ -295,7 +306,9 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
+            personalAnalysisResult.lastName
+          }.pdf`,
           analysis.longTexts
         );
       }
@@ -364,11 +377,10 @@ const AnalysisBrowser = props => {
   // render
   // determining content of panel based on if there is data or not
   let panelContent = null;
-  const [activeAccordionKey, setActiveAccordionKey] = useState(null);
 
   if (props.groups.length > 0) {
     panelContent = (
-      <Accordion>
+      <Accordion defaultActiveKey="641">
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
             analysis => analysis.group.id === group.id
@@ -385,7 +397,11 @@ const AnalysisBrowser = props => {
                 </AnalysisBrowserToggle>
               </Card.Header>
               <Accordion.Collapse eventKey={group.id}>
-                <Card.Body>{console.log(analysisOfGroup)}</Card.Body>
+                <Card.Body>
+                  {analysisOfGroup.map(analyis => (
+                    <AnalysisListEntry key={analyis.id} analyis={analyis}/>
+                  ))}
+                </Card.Body>
               </Accordion.Collapse>
             </Card>
           );
@@ -429,6 +445,23 @@ const AnalysisBrowser = props => {
       {/*<Panel*/}
       {/*title="Analysen"*/}
       {/*actions={[*/}
+      {/*<NavigationDropdownMenu*/}
+      {/*key="AddGroupAnalysis"*/}
+      {/*name="+"*/}
+      {/*direction="right"*/}
+      {/*navbar*/}
+      {/*>*/}
+      {/*<NavigationDropdownMenuItem*/}
+      {/*onClick={() => setCreateGroupDialogOpen(true)}*/}
+      {/*>*/}
+      {/*Gruppe*/}
+      {/*</NavigationDropdownMenuItem>*/}
+      {/*<NavigationDropdownMenuItem*/}
+      {/*onClick={() => props.history.push('/analysisInput')}*/}
+      {/*>*/}
+      {/*Analyse*/}
+      {/*</NavigationDropdownMenuItem>*/}
+      {/*</NavigationDropdownMenu>,*/}
       {/*]}*/}
       {/*>*/}
       {/*{panelContent}*/}

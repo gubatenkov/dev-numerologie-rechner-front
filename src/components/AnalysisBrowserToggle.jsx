@@ -16,7 +16,7 @@ const AnalysisBrowserToggle = ({ children, eventKey, canExpand }) => {
 
   return (
     // TODO: BUG: When Accordion is closed by another one this doesnt work anymore
-    <div onClick={handleOnClick} className="analysis-browser-toggle">
+    <div onClick={handleOnClick} className={`analysis-browser-toggle ${canExpand ? 'akb-clickable' : null}`}>
       <div className="text">{children}</div>
       {canExpand && !isCollapsed && <img src={iconArrowDown} alt="Down" />}
       {isCollapsed && <img src={iconArrowUp} alt="Up" />}
