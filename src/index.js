@@ -41,6 +41,7 @@ import registerServiceWorker from './utils/registerServiceWorker';
 import { isUserAuthenticated, getUserAuthData } from './utils/AuthUtils';
 
 import { GRAPHQL_ENDPOINT } from './utils/Configuration';
+import UserProfile from './components/UserProfile';
 
 // defining UI themes
 const lightTheme = {
@@ -116,6 +117,7 @@ ReactDOM.render(
             component={withTracker(AnalysisResultPersonal)}
           />
           <Route path="/analysisInput" component={withTracker(AnalysisInput)} />
+          <Route path="/userProfile" component={UserProfile} />
           <PrivateRoute
             path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
             isAuthenticated={isUserAuthenticated}
@@ -127,6 +129,6 @@ ReactDOM.render(
       </BrowserRouter>
     </ThemeProvider>
   </ApolloProvider>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
 registerServiceWorker();
