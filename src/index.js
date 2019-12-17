@@ -1,3 +1,5 @@
+import "typeface-roboto";
+
 import 'bootstrap/dist/css/bootstrap.css';
 
 // TODO: legacy - remove after UI refactoring (still needed for remaining components)
