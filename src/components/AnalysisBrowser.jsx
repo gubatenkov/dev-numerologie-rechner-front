@@ -41,6 +41,7 @@ import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import iconGroup from '../images/icon_group.svg';
 import iconAnalysis from '../images/icon_analysis.svg';
+import { AddToggleIcon } from './Dropdowns/DropdownMenuAddUtils';
 
 const AnalysisBrowser = props => {
   // declaring state variables
@@ -411,7 +412,10 @@ const AnalysisBrowser = props => {
       <div className="panel-header">
         <div className="header">Analysen</div>
         <div>
-          <NavigationDropdownMenu key="AddGroupAnalysis" name="+">
+          <NavigationDropdownMenu
+            key="AddGroupAnalysis"
+            customToggle={AddToggleIcon}
+          >
             <NavigationDropdownMenuItem
               onClick={() => setCreateGroupDialogOpen(true)}
             >
