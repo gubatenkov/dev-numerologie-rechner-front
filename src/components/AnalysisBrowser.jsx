@@ -41,7 +41,13 @@ import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import iconGroup from '../images/icon_group.svg';
 import iconAnalysis from '../images/icon_analysis.svg';
-import { AddToggleIcon } from './Dropdowns/DropdownMenuAddUtils';
+import {
+  ActionToggleIcon,
+  AddToggleIcon,
+  PdfToggleIcon,
+} from './Dropdowns/DropdownMenuAddUtils';
+import shortPdfIcon from '../images/icon_openBookPremium_primary.svg';
+import longPdfIcon from '../images/icon_textLong.svg';
 
 const AnalysisBrowser = props => {
   // declaring state variables
@@ -165,7 +171,9 @@ const AnalysisBrowser = props => {
 
       // informing the user
       ToastNotifications.success(
-        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
+        `Die Gruppe ${
+          deletedGroup.data.deleteAnalysisGroup.name
+        } wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -211,7 +219,9 @@ const AnalysisBrowser = props => {
 
       // shooting notification informting the user
       ToastNotifications.success(
-        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
+        `Die Analyse ${
+          deletedAnalysis.data.deleteAnalysis.name
+        } wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -284,7 +294,11 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
+          `Namensvergleich_${personalAnalysisResult.firstNames}_${
+            personalAnalysisResult.lastName
+          }_${personalAnalysisResultCompare.firstNames}_${
+            personalAnalysisResultCompare.lastName
+          }.pdf`,
           analysis.longTexts,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
@@ -299,7 +313,9 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
+            personalAnalysisResult.lastName
+          }.pdf`,
           analysis.longTexts
         );
       }
@@ -372,6 +388,7 @@ const AnalysisBrowser = props => {
   if (props.groups.length > 0) {
     panelContent = (
       <Accordion>
+        {/*<Accordion>  defaultActiveKey="641">*/}
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
             analysis => analysis.group.id === group.id
@@ -386,6 +403,31 @@ const AnalysisBrowser = props => {
                 >
                   {group.name}
                 </AnalysisBrowserToggle>
+                {!group.isDefault && (
+                  <NavigationDropdownMenu
+                    key="menu"
+                    customToggle={ActionToggleIcon}
+                  >
+                    <NavigationDropdownMenuItem
+                      onClick={() => {
+                        setGroupToBeRenamed(group);
+                        setRenameGroupDialogOpen(true);
+                      }}
+                    >
+                      Umbenennen
+                    </NavigationDropdownMenuItem>
+                    <NavigationDropdownMenuItem
+                      onClick={() => {
+                        // setting group that is about to be deleted
+                        setGroupToBeDeleted(group);
+                        // showing confirm dilog
+                        setConfirmGroupDeletionDialogOpen(true);
+                      }}
+                    >
+                      Löschen
+                    </NavigationDropdownMenuItem>
+                  </NavigationDropdownMenu>
+                )}
               </Card.Header>
               <Accordion.Collapse eventKey={group.id}>
                 <Card.Body>

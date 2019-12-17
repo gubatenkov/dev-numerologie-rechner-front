@@ -58,6 +58,7 @@
           padding: 0 17px 0 24px;
           display: flex;
           align-items: center;
+          justify-content: space-between;
           border-radius: 6px;
           @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
             padding-left: 16px;
@@ -119,7 +120,7 @@
       white-space: nowrap;
       overflow: hidden;
       @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
-        max-width: 60%;
+        max-width: calc(100vw * 0.5);
       }
 
       @include font-headline-3;
