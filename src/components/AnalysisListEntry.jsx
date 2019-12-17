@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import {Link} from "react-router-dom";
 import styled from 'styled-components';
 
@@ -21,7 +21,7 @@ const AnalysisListEntry = ({analyis}) => {
     <div className="akb-list-entry">
       <LeftDiv>
         <LifeNumberDisplay nr={lifeNumber} />
-        <Link to={`/resultPersonal/${analyis.id}`}>{analyis.name}</Link>
+        <Link className="akb-link" to={`/resultPersonal/${analyis.id}`}>{analyis.name}</Link>
       </LeftDiv>
       <RightDiv>MenuToggle</RightDiv>
     </div>

@@ -1,3 +1,4 @@
+@import 'variables';
 @import 'typography';
 
 //TODO: Move static Colors to variables!
@@ -20,6 +21,11 @@
     justify-content: space-between;
     .header {
       @include font-headline-1;
+    }
+
+    @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+      padding-left: 16px;
+      padding-right: 16px;
     }
 
     .btn.btn-primary {
@@ -52,6 +58,10 @@
           display: flex;
           align-items: center;
           border-radius: 6px;
+          @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+            padding-left: 16px;
+            padding-right: 16px;
+          }
         }
 
         &:nth-child(even) {
@@ -94,14 +104,22 @@
   .akb-list-entry {
     height: 64px;
     padding-left: 24px;
+    @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+      padding-left: 16px;
+    }
 
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
 
-    a {
+    a.akb-link {
       color: #01b2d4;
+      white-space: nowrap;
+      overflow: hidden;
+      @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+        max-width: 60%;
+      }
 
       @include font-headline-3;
 

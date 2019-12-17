@@ -5,6 +5,12 @@
   font-size: 48px;
   font-weight: 500;
   line-height: 58px;
+
+  @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+    // mobile:
+    font-size: 40px;
+    line-height: 50px;
+  }
 }
 
 @mixin font-headline-2() {

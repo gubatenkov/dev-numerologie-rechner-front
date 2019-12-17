@@ -1,3 +1,9 @@
-$colors = {
-  $darkGrey: '#323232';
-}
+//$colors = {
+//  $darkGrey: '#323232';
+//}
+
+$mobile-resolution-threshold: 767px; // TODO: find a way how to keep that in sync with Constants.js
+
+$akb-breakpoints: (
+        desktop: $mobile-resolution-threshold
+) !default;
