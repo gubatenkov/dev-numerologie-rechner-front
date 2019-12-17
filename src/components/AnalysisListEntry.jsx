@@ -16,7 +16,9 @@ const LeftDiv = styled.div`
     margin-right: 12px;
   }
 `;
-const RightDiv = styled.div``;
+const RightDiv = styled.div`
+  display: flex;
+`;
 
 const LifeNumberDisplay = ({ nr }, children) => (
   <div className="akb-life-number-display">{nr}</div>
