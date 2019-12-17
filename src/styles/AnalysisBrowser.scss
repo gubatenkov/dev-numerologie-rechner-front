@@ -45,6 +45,7 @@
     .accordion {
       .card {
         margin: 0;
+        overflow: unset;
         .card-header {
           height: 64px;
           color: #323232;
