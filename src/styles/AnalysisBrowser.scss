@@ -106,6 +106,7 @@
   .akb-list-entry {
     height: 64px;
     padding-left: 24px;
+    padding-right: 17px;
     @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
       padding-left: 16px;
     }

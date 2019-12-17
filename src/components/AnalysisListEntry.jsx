@@ -21,6 +21,7 @@ const LeftDiv = styled.div`
 `;
 const RightDiv = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const LifeNumberDisplay = ({ nr }, children) => (
