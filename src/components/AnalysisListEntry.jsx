@@ -10,8 +10,8 @@ import {
 import shortPdfIcon from '../images/icon_openBookPremium_primary.svg';
 import longPdfIcon from '../images/icon_textLong.svg';
 
-const SHORT_TYPE = 'persoenlichkeit_kurz';
-const LONG_TYPE = 'persoenlichkeit_lang';
+export const SHORT_TYPE = 'persoenlichkeit_kurz';
+export const LONG_TYPE = 'persoenlichkeit_lang';
 
 const LeftDiv = styled.div`
   display: flex;
@@ -27,7 +27,14 @@ const LifeNumberDisplay = ({ nr }, children) => (
   <div className="akb-life-number-display">{nr}</div>
 );
 
-const AnalysisListEntry = ({ analysis: analysis, onShortPdfClicked, onBuyShortPdfClicked, onAnalysisDelete }) => {
+const AnalysisListEntry = ({
+  analysis: analysis,
+  onShortPdfClicked,
+  onBuyShortPdfClicked,
+  onLongPdfClicked,
+  onBuyLongPdfClicked,
+  onAnalysisDelete,
+}) => {
   const lifeNumbers = analysis.personalAnalysisResults
     .filter(result => result.lz)
     .map(result => result.lz.result.value);
@@ -47,8 +54,9 @@ const AnalysisListEntry = ({ analysis: analysis, onShortPdfClicked, onBuyShortPd
           key="GeneratePdfMenu"
           customToggle={PdfToggleIcon}
         >
-          {/* Short credits */}
-          {(analysis.usedCreditTypes.includes({ SHORT_TYPE }) || analysis.usedCreditTypes.includes(LONG_TYPE)) ? (
+          {/* Short Pdfs */}
+          {analysis.usedCreditTypes.includes({ SHORT_TYPE }) ||
+          analysis.usedCreditTypes.includes(LONG_TYPE) ? (
             <NavigationDropdownMenuItem onClick={onShortPdfClicked}>
               <img src={shortPdfIcon} alt="" /> Kurzes PDF
             </NavigationDropdownMenuItem>
@@ -57,16 +65,17 @@ const AnalysisListEntry = ({ analysis: analysis, onShortPdfClicked, onBuyShortPd
               <img src={shortPdfIcon} alt="" /> Kurzes PDF kaufen
             </NavigationDropdownMenuItem>
           )}
-          {/* Long credits */}
-          {/*{analysis.usedCreditTypes.includes({ LONG_TYPE }) ? (*/}
-          {/*  <NavigationDropdownMenuItem onClick={onShortPdfClicked}>*/}
-          {/*    <img src={longPdfIcon} alt="" /> Langes PDF*/}
-          {/*  </NavigationDropdownMenuItem>*/}
-          {/*) : (*/}
-          {/*  <NavigationDropdownMenuItem onClick={onBuyShortPdfClicked(LONG_TYPE)}>*/}
-          {/*    <img src={longPdfIcon} alt="" /> Langes PDF*/}
-          {/*  </NavigationDropdownMenuItem>*/}
-          {/*)}*/}
+          {/* Long Pdfs */}
+          {analysis.usedCreditTypes.includes({ LONG_TYPE }) ||
+          analysis.usedCreditTypes.includes(LONG_TYPE) ? (
+            <NavigationDropdownMenuItem onClick={onLongPdfClicked}>
+              <img src={longPdfIcon} alt="" /> Langes PDF
+            </NavigationDropdownMenuItem>
+          ) : (
+            <NavigationDropdownMenuItem onClick={onBuyLongPdfClicked}>
+              <img src={longPdfIcon} alt="" /> Langes PDF kaufen
+            </NavigationDropdownMenuItem>
+          )}
         </NavigationDropdownMenu>
 
         <NavigationDropdownMenu

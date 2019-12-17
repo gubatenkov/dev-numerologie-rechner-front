@@ -36,7 +36,7 @@ import '../styles/AnalysisBrowser.scss';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import AnalysisBrowserToggle from './AnalysisBrowserToggle';
-import AnalysisListEntry from './AnalysisListEntry';
+import AnalysisListEntry, {LONG_TYPE, SHORT_TYPE} from './AnalysisListEntry';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import iconGroup from '../images/icon_group.svg';
@@ -439,11 +439,16 @@ const AnalysisBrowser = props => {
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
                       onShortPdfClicked={() => {
-                        createAnalysisPdf({ ...analysis });
+                        createAnalysisPdf({ ...analysis, longTexts: false});
                       }}
-                      onBuyShortPdfClicked={type => {
-                        console.log('###type ', type);
-                        //handleOnUseCredit(analysis.id, type);
+                      onBuyShortPdfClicked={ () => {
+                        handleOnUseCredit(analysis.id, SHORT_TYPE);
+                      }}
+                      onLongPdfClicked={() => {
+                        createAnalysisPdf({ ...analysis, longTexts: true});
+                      }}
+                      onBuyLongPdfClicked={ () => {
+                        handleOnUseCredit(analysis.id, LONG_TYPE);
                       }}
                     />
                   ))}
