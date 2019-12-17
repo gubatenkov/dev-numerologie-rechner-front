@@ -37,10 +37,10 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import AnalysisBrowserToggle from './AnalysisBrowserToggle';
 import AnalysisListEntry from './AnalysisListEntry';
-import Card from 'react-bootstrap/Card';
-import AnalysisBrowserToggle from './AnalysisBrowserToggle';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
+import iconGroup from '../images/icon_group.svg';
+import iconAnalysis from '../images/icon_analysis.svg';
 
 const AnalysisBrowser = props => {
   // declaring state variables
@@ -164,9 +164,7 @@ const AnalysisBrowser = props => {
 
       // informing the user
       ToastNotifications.success(
-        `Die Gruppe ${
-          deletedGroup.data.deleteAnalysisGroup.name
-        } wurde erfolgreich gelöscht.`,
+        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -212,9 +210,7 @@ const AnalysisBrowser = props => {
 
       // shooting notification informting the user
       ToastNotifications.success(
-        `Die Analyse ${
-          deletedAnalysis.data.deleteAnalysis.name
-        } wurde erfolgreich gelöscht.`,
+        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -287,11 +283,7 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${
-            personalAnalysisResult.lastName
-          }_${personalAnalysisResultCompare.firstNames}_${
-            personalAnalysisResultCompare.lastName
-          }.pdf`,
+          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
           analysis.longTexts,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
@@ -306,9 +298,7 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
-            personalAnalysisResult.lastName
-          }.pdf`,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
           analysis.longTexts
         );
       }
@@ -399,7 +389,7 @@ const AnalysisBrowser = props => {
               <Accordion.Collapse eventKey={group.id}>
                 <Card.Body>
                   {analysisOfGroup.map(analyis => (
-                    <AnalysisListEntry key={analyis.id} analyis={analyis}/>
+                    <AnalysisListEntry key={analyis.id} analyis={analyis} />
                   ))}
                 </Card.Body>
               </Accordion.Collapse>
@@ -421,51 +411,21 @@ const AnalysisBrowser = props => {
       <div className="panel-header">
         <div className="header">Analysen</div>
         <div>
-          {/*<Button>+</Button>*/}
-          <NavigationDropdownMenu
-            key="AddGroupAnalysis"
-            name="+"
-            direction="right"
-            navbar
-          >
+          <NavigationDropdownMenu key="AddGroupAnalysis" name="+">
             <NavigationDropdownMenuItem
               onClick={() => setCreateGroupDialogOpen(true)}
             >
-              Gruppe
+              <img src={iconGroup} alt="" /> Gruppe
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem
               onClick={() => props.history.push('/analysisInput')}
             >
-              Analyse
+              <img src={iconAnalysis} alt="" /> Analyse
             </NavigationDropdownMenuItem>
           </NavigationDropdownMenu>
         </div>
       </div>
       <div className="panel-content">{panelContent}</div>
-      {/*<Panel*/}
-      {/*title="Analysen"*/}
-      {/*actions={[*/}
-      {/*<NavigationDropdownMenu*/}
-      {/*key="AddGroupAnalysis"*/}
-      {/*name="+"*/}
-      {/*direction="right"*/}
-      {/*navbar*/}
-      {/*>*/}
-      {/*<NavigationDropdownMenuItem*/}
-      {/*onClick={() => setCreateGroupDialogOpen(true)}*/}
-      {/*>*/}
-      {/*Gruppe*/}
-      {/*</NavigationDropdownMenuItem>*/}
-      {/*<NavigationDropdownMenuItem*/}
-      {/*onClick={() => props.history.push('/analysisInput')}*/}
-      {/*>*/}
-      {/*Analyse*/}
-      {/*</NavigationDropdownMenuItem>*/}
-      {/*</NavigationDropdownMenu>,*/}
-      {/*]}*/}
-      {/*>*/}
-      {/*{panelContent}*/}
-      {/*</Panel>*/}
       <ConfirmGroupDeletionDialog
         group={groupToBeDeleted}
         isOpen={confirmGroupDeletionDialogOpen}
