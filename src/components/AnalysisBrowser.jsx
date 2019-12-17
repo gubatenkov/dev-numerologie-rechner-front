@@ -171,9 +171,7 @@ const AnalysisBrowser = props => {
 
       // informing the user
       ToastNotifications.success(
-        `Die Gruppe ${
-          deletedGroup.data.deleteAnalysisGroup.name
-        } wurde erfolgreich gelöscht.`,
+        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -219,9 +217,7 @@ const AnalysisBrowser = props => {
 
       // shooting notification informting the user
       ToastNotifications.success(
-        `Die Analyse ${
-          deletedAnalysis.data.deleteAnalysis.name
-        } wurde erfolgreich gelöscht.`,
+        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
         { position: 'top-right' }
       );
     } catch (error) {
@@ -294,11 +290,7 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${
-            personalAnalysisResult.lastName
-          }_${personalAnalysisResultCompare.firstNames}_${
-            personalAnalysisResultCompare.lastName
-          }.pdf`,
+          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
           analysis.longTexts,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
@@ -313,9 +305,7 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
-            personalAnalysisResult.lastName
-          }.pdf`,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
           analysis.longTexts
         );
       }
@@ -431,8 +421,18 @@ const AnalysisBrowser = props => {
               </Card.Header>
               <Accordion.Collapse eventKey={group.id}>
                 <Card.Body>
-                  {analysisOfGroup.map(analyis => (
-                    <AnalysisListEntry key={analyis.id} analyis={analyis} />
+                  {analysisOfGroup.map(analysis => (
+                    <AnalysisListEntry
+                      key={analysis.id}
+                      analysis={analysis}
+                      onShortPdfClicked={() => {
+                        createAnalysisPdf({ ...analysis });
+                      }}
+                      onBuyShortPdfClicked={type => {
+                        console.log('###type ', type);
+                        //handleOnUseCredit(analysis.id, type);
+                      }}
+                    />
                   ))}
                 </Card.Body>
               </Accordion.Collapse>

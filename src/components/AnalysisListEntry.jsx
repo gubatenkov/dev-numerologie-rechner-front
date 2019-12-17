@@ -10,6 +10,9 @@ import {
 import shortPdfIcon from '../images/icon_openBookPremium_primary.svg';
 import longPdfIcon from '../images/icon_textLong.svg';
 
+const SHORT_TYPE = 'persoenlichkeit_kurz';
+const LONG_TYPE = 'persoenlichkeit_lang';
+
 const LeftDiv = styled.div`
   display: flex;
   .akb-life-number-display {
@@ -24,8 +27,8 @@ const LifeNumberDisplay = ({ nr }, children) => (
   <div className="akb-life-number-display">{nr}</div>
 );
 
-const AnalysisListEntry = ({ analyis }) => {
-  const lifeNumbers = analyis.personalAnalysisResults
+const AnalysisListEntry = ({ analysis: analysis, onShortPdfClicked, onBuyShortPdfClicked }) => {
+  const lifeNumbers = analysis.personalAnalysisResults
     .filter(result => result.lz)
     .map(result => result.lz.result.value);
   // assuming that if i have multiple entries they are the same - only display the first:
@@ -35,8 +38,8 @@ const AnalysisListEntry = ({ analyis }) => {
     <div className="akb-list-entry">
       <LeftDiv>
         <LifeNumberDisplay nr={lifeNumber} />
-        <Link className="akb-link" to={`/resultPersonal/${analyis.id}`}>
-          {analyis.name}
+        <Link className="akb-link" to={`/resultPersonal/${analysis.id}`}>
+          {analysis.name}
         </Link>
       </LeftDiv>
       <RightDiv>
@@ -44,12 +47,26 @@ const AnalysisListEntry = ({ analyis }) => {
           key="GeneratePdfMenu"
           customToggle={PdfToggleIcon}
         >
-          <NavigationDropdownMenuItem>
-            <img src={shortPdfIcon} alt="" /> Kurzes PDF
-          </NavigationDropdownMenuItem>
-          <NavigationDropdownMenuItem>
-            <img src={longPdfIcon} alt="" /> Langes PDF
-          </NavigationDropdownMenuItem>
+          {/* Short credits */}
+          {(analysis.usedCreditTypes.includes({ SHORT_TYPE }) || analysis.usedCreditTypes.includes(LONG_TYPE)) ? (
+            <NavigationDropdownMenuItem onClick={onShortPdfClicked}>
+              <img src={shortPdfIcon} alt="" /> Kurzes PDF
+            </NavigationDropdownMenuItem>
+          ) : (
+            <NavigationDropdownMenuItem onClick={onBuyShortPdfClicked}>
+              <img src={shortPdfIcon} alt="" /> Kurzes PDF kaufen
+            </NavigationDropdownMenuItem>
+          )}
+          {/* Long credits */}
+          {/*{analysis.usedCreditTypes.includes({ LONG_TYPE }) ? (*/}
+          {/*  <NavigationDropdownMenuItem onClick={onShortPdfClicked}>*/}
+          {/*    <img src={longPdfIcon} alt="" /> Langes PDF*/}
+          {/*  </NavigationDropdownMenuItem>*/}
+          {/*) : (*/}
+          {/*  <NavigationDropdownMenuItem onClick={onBuyShortPdfClicked(LONG_TYPE)}>*/}
+          {/*    <img src={longPdfIcon} alt="" /> Langes PDF*/}
+          {/*  </NavigationDropdownMenuItem>*/}
+          {/*)}*/}
         </NavigationDropdownMenu>
 
         <NavigationDropdownMenu
