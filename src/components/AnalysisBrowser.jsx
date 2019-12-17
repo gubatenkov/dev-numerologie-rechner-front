@@ -37,8 +37,6 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import AnalysisBrowserToggle from './AnalysisBrowserToggle';
 import AnalysisListEntry from './AnalysisListEntry';
-import Card from 'react-bootstrap/Card';
-import AnalysisBrowserToggle from './AnalysisBrowserToggle';
 import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 
