@@ -2,7 +2,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import '../styles/NavigationDropdownMenu.css';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import { Dropdown } from 'react-bootstrap';
+import { ReactComponent as IconAdd } from '../images/icon_add.svg';
+
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+  <div
+    ref={ref}
+    onClick={e => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+    <IconAdd />
+  </div>
+));
 
 /**
  * A Dropdown Menu in the navigation bar
@@ -11,14 +25,10 @@ class NavigationDropdownMenu extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     children: PropTypes.node,
-    navbar: PropTypes.bool,
-    direction: PropTypes.oneOf(['default', 'right']),
   };
 
   static defaultProps = {
     children: null,
-    navbar: false,
-    direction: 'default',
   };
 
   /**
@@ -27,35 +37,17 @@ class NavigationDropdownMenu extends Component {
   constructor(props) {
     // calling super constructor
     super(props);
-
-    // setting initial state
-    this.state = {
-      isOpen: false,
-    };
   }
-
-  /**
-   * handles clicks on the dropdown itself and hides/shows menu
-   */
-  handleDropdownItemClick = () => {
-    this.setState({ isOpen: !this.state.isOpen });
-  };
 
   /**
    * renders nav dropdown item with title and children as menu items
    */
   render() {
     return (
-      <DropdownButton
-        alignRight
-        className="dropdownItem"
-        title=""
-        variant={'info'}
-        onClick={this.handleDropdownItemClick}
-        onBlur={this.handleBlur}
-      >
-        {this.props.children}
-      </DropdownButton>
+      <Dropdown alignRight onBlur={this.handleBlur}>
+        <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components" />
+        <Dropdown.Menu>{this.props.children}</Dropdown.Menu>
+      </Dropdown>
     );
   }
 }
