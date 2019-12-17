@@ -23,6 +23,7 @@
     "lodash": "^4.17.5",
     "lodash.flowright": "^3.5.0",
     "moment": "^2.24.0",
+    "node-sass": "^4.13.0",
     "pdfmake": "^0.1.36",
     "prettier": "^1.18.2",
     "prettier-eslint": "9.0.0",
@@ -37,6 +38,7 @@
     "react-scripts": "3.1.2",
     "react-switch": "^5.0.1",
     "styled-components": "^4.4.1",
+    "typeface-roboto": "^0.0.75",
     "yup": "0.27.0"
   },
   "scripts": {

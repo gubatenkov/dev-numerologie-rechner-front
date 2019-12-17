@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 59.1 (101010) - https://sketch.com -->
+    <title>B7962EF6-F54E-4C7D-846F-DEF7DA5DCC05</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <circle id="path-1" cx="18" cy="18" r="18"></circle>
+    </defs>
+    <g id="Asset-Artboard-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons-/-Edit-Circle-Icons-/-Edit">
+            <g id="Icons/Edit">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#F8F8F8" xlink:href="#path-1"></use>
+                <path d="M19.6405311,12.3607009 L23.6433399,16.3635097 L15.0042132,24.9985956 L9,27 L11.0014044,20.9957868 L19.6405311,12.3607009 Z M25.4247466,9.40087177 L26.5991282,10.5752534 C27.3801768,11.356302 27.3801768,12.622632 26.5991282,13.4036806 L24.4829227,15.5198861 L20.4801139,11.5170773 L22.5963194,9.40087177 C23.377368,8.61982318 24.643698,8.61982318 25.4247466,9.40087177 Z" id="Combined-Shape" fill="#323232" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>
