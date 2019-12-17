@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 59.1 (101010) - https://sketch.com -->
+    <title>E7669284-F807-46B2-9319-3CBBCEBC9052</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <circle id="path-1" cx="18" cy="18" r="18"></circle>
+    </defs>
+    <g id="Asset-Artboard-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons-/-Edit-Circle-Icons-/-Group">
+            <g id="Icons/Delete">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#F8F8F8" xlink:href="#path-1"></use>
+                <path d="M23,9 C24.6568542,9 26,10.3431458 26,12 C26,13.6568542 24.6568542,15 23,15 C21.6941178,15 20.5831148,14.1656226 20.1710242,13.0009007 L13,12.999 L13,21 L13,21 L20.1706743,21.0000889 C20.5824856,19.8348501 21.6937479,19 23,19 C24.6568542,19 26,20.3431458 26,22 C26,23.6568542 24.6568542,25 23,25 C21.6941178,25 20.5831148,24.1656226 20.1710242,23.0009007 L13,23 L13,28 C13,28.5522847 12.5522847,29 12,29 C11.4477153,29 11,28.5522847 11,28 L11,12 C11,11.4871642 11.3860402,11.0644928 11.8833789,11.0067277 L12,11 L12,11 L20.1706743,11.0000889 C20.5824856,9.8348501 21.6937479,9 23,9 Z" id="Rectangle-2" fill="#323232" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>
