@@ -24,7 +24,7 @@ const LifeNumberDisplay = ({ nr }, children) => (
   <div className="akb-life-number-display">{nr}</div>
 );
 
-const AnalysisListEntry = ({ analyis }) => {
+const AnalysisListEntry = ({ analyis, onAnalysisDelete }) => {
   const lifeNumbers = analyis.personalAnalysisResults
     .filter(result => result.lz)
     .map(result => result.lz.result.value);
@@ -56,11 +56,8 @@ const AnalysisListEntry = ({ analyis }) => {
           key="ActionMenu"
           customToggle={ActionToggleIcon}
         >
-          <NavigationDropdownMenuItem>
-            {/*<img src={shortPdfIcon} alt="" /> Umbenennen*/}
-          </NavigationDropdownMenuItem>
-          <NavigationDropdownMenuItem>
-            {/*<img src={longPdfIcon} alt="" /> Löschen*/}
+          <NavigationDropdownMenuItem onClick={onAnalysisDelete}>
+            Löschen
           </NavigationDropdownMenuItem>
         </NavigationDropdownMenu>
       </RightDiv>

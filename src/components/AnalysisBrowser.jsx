@@ -387,8 +387,7 @@ const AnalysisBrowser = props => {
 
   if (props.groups.length > 0) {
     panelContent = (
-      <Accordion>
-        {/*<Accordion>  defaultActiveKey="641">*/}
+        <Accordion>
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
             analysis => analysis.group.id === group.id
@@ -432,7 +431,10 @@ const AnalysisBrowser = props => {
               <Accordion.Collapse eventKey={group.id}>
                 <Card.Body>
                   {analysisOfGroup.map(analyis => (
-                    <AnalysisListEntry key={analyis.id} analyis={analyis} />
+                    <AnalysisListEntry key={analyis.id} analyis={analyis} onAnalysisDelete={(ev) => {
+                      setAnalysisToBeDeleted(analyis);
+                      setConfirmAnalysisDeletionDialogOpen(true);
+                    }}/>
                   ))}
                 </Card.Body>
               </Accordion.Collapse>
