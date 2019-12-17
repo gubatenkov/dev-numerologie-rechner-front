@@ -13,7 +13,11 @@ const pdfToggleStyle = {
 };
 export const AddToggleIcon = <IconAdd style={addToggleStyle} />;
 
-export const ActionToggleIcon = <IconMore />;
+const actionToggleStyle = {
+  cursor: 'pointer',
+};
+
+export const ActionToggleIcon = <div style={actionToggleStyle}><IconMore /></div>;
 
 export const PdfToggleIcon = (
   <Button variant="default" block>
