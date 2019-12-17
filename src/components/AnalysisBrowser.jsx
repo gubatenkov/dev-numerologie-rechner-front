@@ -406,7 +406,7 @@ const AnalysisBrowser = props => {
     );
   }
   return (
-    <div className="analysis-browser">
+    <div className="akb-analysis-browser">
       {loading && <LoadingIndicator text={loadingText} />}
       <div className="panel-header">
         <div className="header">Analysen</div>
@@ -425,6 +425,7 @@ const AnalysisBrowser = props => {
           </NavigationDropdownMenu>
         </div>
       </div>
+      <div className="akb-group-headline">Gruppen</div>
       <div className="panel-content">{panelContent}</div>
       <ConfirmGroupDeletionDialog
         group={groupToBeDeleted}

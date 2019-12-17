@@ -14,7 +14,7 @@
   padding-bottom: 10px !important;
 }
 
-.analysis-browser {
+.akb-analysis-browser {
   .panel-header {
     display: flex;
     justify-content: space-between;
@@ -63,11 +63,15 @@
         &:nth-child(odd) {
           .card-header,
           .card-body {
-            background-color: #f3f9fa;
+            background-color: #f8f8f8;
+
+            .akb-life-number-display{
+              background-color: #ffffff;
+            }
           }
         }
 
-        .card-body{
+        .card-body {
           padding: 0;
         }
       }
@@ -77,23 +81,45 @@
   .analysis-browser-toggle {
     display: flex;
 
-    &.akb-clickable{
+    &.akb-clickable {
       cursor: pointer;
     }
 
     .text {
-      @include font-headline-3;
+      @include font-headline-2;
       margin-right: 16px;
     }
   }
 
-  .akb-list-entry{
+  .akb-list-entry {
     height: 64px;
-    padding-left: 64px;
+    padding-left: 24px;
 
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
+
+    a {
+      color: #01b2d4;
+
+      @include font-headline-3;
+
+      &:hover{
+        text-decoration: none;
+      }
+    }
+  }
+
+  .akb-life-number-display{
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    background-color: #F8F8F8;
+
+    // text
+    color: #323232;
+    text-align: center;
+    @include font-headline-3;
   }
 }

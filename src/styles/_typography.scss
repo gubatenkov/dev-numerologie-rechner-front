@@ -7,24 +7,30 @@
   line-height: 58px;
 }
 
-
 @mixin font-headline-2() {
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
-  font-size: 48px;
-  font-weight: 500;
-  line-height: 58px;
-}
-
-@mixin font-headline-2() {
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
-  font-size: 48px;
-  font-weight: 500;
-  line-height: 58px;
-}
-
-@mixin font-headline-3() {
+  // e.g. text: "Meine Analyses
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
 }
+
+@mixin font-headline-3() {
+  // e.g. text: "Meine Analyses
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 30px;
+}
+
+
+@mixin font-headline-5() {
+  // e.g. text: "Gruppen"
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-size: 13px;
+	  font-weight: bold;
+	  letter-spacing: 0.5px;
+	  line-height: 24px;
+}
+
+

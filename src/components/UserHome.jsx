@@ -6,7 +6,7 @@ import { graphql } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 import ToastNotifications from 'cogo-toast';
 
-import '../styles/UserHome.css';
+import '../styles/UserHome.scss';
 
 // importing ad banners
 import BANNER_BOTTOM from '../images/banner_numerologie_ausbildung.gif';
@@ -221,12 +221,13 @@ class UserHome extends Component {
                 this.props.data.currentUser.resultConfiguration
               }
             />
-            <AdArea horizontal>
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"
-                image={BANNER_BOTTOM}
-              />
-            </AdArea>
+            {/* We will hide Ads at the beginning */}
+            {/*<AdArea horizontal>*/}
+              {/*<AdAreaItem*/}
+                {/*link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"*/}
+                {/*image={BANNER_BOTTOM}*/}
+              {/*/>*/}
+            {/*</AdArea>*/}
           </div>
         </div>
         <SaveAnalysisDialog
