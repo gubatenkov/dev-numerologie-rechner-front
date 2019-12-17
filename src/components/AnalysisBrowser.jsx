@@ -45,7 +45,7 @@ import { AddToggleIcon } from './Dropdowns/DropdownMenuAddUtils';
 
 const AnalysisBrowser = props => {
   // declaring state variables
-  const [expandedIndex, setExpandedIndex] = useState(-1);
+  //const [expandedIndex, setExpandedIndex] = useState(-1);
   const [
     confirmGroupDeletionDialogOpen,
     setConfirmGroupDeletionDialogOpen,
@@ -371,7 +371,7 @@ const AnalysisBrowser = props => {
 
   if (props.groups.length > 0) {
     panelContent = (
-      <Accordion defaultActiveKey="641">
+      <Accordion>
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
             analysis => analysis.group.id === group.id

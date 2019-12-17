@@ -8,12 +8,7 @@ import ToastNotifications from 'cogo-toast';
 
 import '../styles/UserHome.scss';
 
-// importing ad banners
-import BANNER_BOTTOM from '../images/banner_numerologie_ausbildung.gif';
-
 import NavigationBar from './NavigationBar';
-import AdArea from './AdArea';
-import AdAreaItem from './AdAreaItem';
 import AnalysisBrowser from './AnalysisBrowser';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
