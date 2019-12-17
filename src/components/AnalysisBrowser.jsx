@@ -7,11 +7,6 @@ import * as compose from 'lodash.flowright';
 import _ from 'lodash';
 import ToastNotifications from 'cogo-toast';
 
-import Panel from './Panel';
-import GroupTableRow from './GroupTableRow';
-import AnalysisTableRow from './AnalysisTableRow';
-import NavigationDropdownMenu from './NavigationDropdownMenu';
-import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import LoadingIndicator from './LoadingIndicator';
 
 import CreateGroupDialog from './dialogs/CreateGroupDialog';
@@ -37,11 +32,26 @@ import {
   useCreditMutation,
 } from '../graphql/Mutations';
 
-import '../styles/AnalysisBrowser.css';
+import '../styles/AnalysisBrowser.scss';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import AnalysisBrowserToggle from './AnalysisBrowserToggle';
+import AnalysisListEntry, {LONG_TYPE, SHORT_TYPE} from './AnalysisListEntry';
+import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
+import NavigationDropdownMenu from './NavigationDropdownMenu';
+import iconGroup from '../images/icon_group.svg';
+import iconAnalysis from '../images/icon_analysis.svg';
+import {
+  ActionToggleIcon,
+  AddToggleIcon,
+  PdfToggleIcon,
+} from './Dropdowns/DropdownMenuAddUtils';
+import shortPdfIcon from '../images/icon_openBookPremium_primary.svg';
+import longPdfIcon from '../images/icon_textLong.svg';
 
 const AnalysisBrowser = props => {
   // declaring state variables
-  const [expandedIndex, setExpandedIndex] = useState(-1);
+  //const [expandedIndex, setExpandedIndex] = useState(-1);
   const [
     confirmGroupDeletionDialogOpen,
     setConfirmGroupDeletionDialogOpen,
@@ -51,7 +61,7 @@ const AnalysisBrowser = props => {
     setConfirmAnalysisDeletionDialogOpen,
   ] = useState(false);
   const [confirmUseCreditDialogOpen, setConfirmUseCreditDialogOpen] = useState(
-    false,
+    false
   );
   const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [renameGroupDialogOpen, setRenameGroupDialogOpen] = useState(false);
@@ -84,7 +94,7 @@ const AnalysisBrowser = props => {
       // notifying user
       ToastNotifications.success(
         `Die Gruppe ${groupName} wurde erfolgreich erstellt.`,
-        { position: 'top-right' },
+        { position: 'top-right' }
       );
     } catch (error) {
       // error occured -> displaying notification
@@ -115,7 +125,7 @@ const AnalysisBrowser = props => {
       // notifying user
       ToastNotifications.success(
         `Die Gruppe ${newName} wurde erfolgreich umbenannt.`,
-        { position: 'top-right' },
+        { position: 'top-right' }
       );
     } catch (error) {
       // error occured -> displaying notification
@@ -146,7 +156,7 @@ const AnalysisBrowser = props => {
             data.currentUser.groups,
             item =>
               item.id === deleteAnalysisGroup.id &&
-              item.name === deleteAnalysisGroup.name,
+              item.name === deleteAnalysisGroup.name
           );
 
           // deleting item if present
@@ -161,8 +171,10 @@ const AnalysisBrowser = props => {
 
       // informing the user
       ToastNotifications.success(
-        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
-        { position: 'top-right' },
+        `Die Gruppe ${
+          deletedGroup.data.deleteAnalysisGroup.name
+        } wurde erfolgreich gelöscht.`,
+        { position: 'top-right' }
       );
     } catch (error) {
       console.log(error);
@@ -192,7 +204,7 @@ const AnalysisBrowser = props => {
           // getting index of item to delete
           const analysisIndex = _.findIndex(
             data.analyses,
-            item => item.id === deleteAnalysis.id,
+            item => item.id === deleteAnalysis.id
           );
 
           // deleting item if present
@@ -207,8 +219,10 @@ const AnalysisBrowser = props => {
 
       // shooting notification informting the user
       ToastNotifications.success(
-        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
-        { position: 'top-right' },
+        `Die Analyse ${
+          deletedAnalysis.data.deleteAnalysis.name
+        } wurde erfolgreich gelöscht.`,
+        { position: 'top-right' }
       );
     } catch (error) {
       ToastNotifications.error('Analyse konnte nicht gelöscht werden.', {
@@ -247,7 +261,7 @@ const AnalysisBrowser = props => {
 
       // getting user default result configuration
       const resultConfiguration = getConfigurationForId(
-        props.resultConfiguration,
+        props.resultConfiguration
       );
 
       // getting section ids to get intro texts for including overall intro text
@@ -280,11 +294,15 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
+          `Namensvergleich_${personalAnalysisResult.firstNames}_${
+            personalAnalysisResult.lastName
+          }_${personalAnalysisResultCompare.firstNames}_${
+            personalAnalysisResultCompare.lastName
+          }.pdf`,
           analysis.longTexts,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
-          personalAnalysisResultCompare.lastName,
+          personalAnalysisResultCompare.lastName
         );
       } else {
         const [personalAnalysisResult] = analysis.personalAnalysisResults;
@@ -295,8 +313,10 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
-          analysis.longTexts,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
+            personalAnalysisResult.lastName
+          }.pdf`,
+          analysis.longTexts
         );
       }
     } catch (error) {
@@ -346,14 +366,14 @@ const AnalysisBrowser = props => {
       props.onUsedCredit();
       ToastNotifications.success(
         'Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.',
-        { position: 'top-right' },
+        { position: 'top-right' }
       );
     } catch (error) {
       console.log('Using credit failed');
       console.log(error);
       ToastNotifications.error(
         'Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.',
-        { position: 'top-right' },
+        { position: 'top-right' }
       );
     } finally {
       setLoading(false);
@@ -364,96 +384,80 @@ const AnalysisBrowser = props => {
   // render
   // determining content of panel based on if there is data or not
   let panelContent = null;
+
   if (props.groups.length > 0) {
     panelContent = (
-      <table className="table table-striped table-hover AnalysisBrowser--table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Typ</th>
-            <th />
-            <th>Aktionen</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.groups.map((group, index) => {
-            // adding group row to result
-            const groupCellContent = [
-              <GroupTableRow
-                key={group.id}
-                group={group}
-                index={index}
-                elementsInGroup={
-                  props.analyses.filter(
-                    analysis => analysis.group.id === group.id,
-                  ).length
-                }
-                clickHandler={clickIndex => {
-                  // if index is not already set -> setting new index
-                  // else resetting
-                  if (clickIndex !== expandedIndex) {
-                    setExpandedIndex(clickIndex);
-                  } else {
-                    setExpandedIndex(-1);
-                  }
-                }}
-                renameHandler={renameIndex => {
-                  // setting group that is about to be renamed
-                  setGroupToBeRenamed(props.groups[renameIndex]);
+        <Accordion>
+        {props.groups.map((group, index) => {
+          const analysisOfGroup = props.analyses.filter(
+            analysis => analysis.group.id === group.id
+          );
 
-                  // showing dialog
-                  setRenameGroupDialogOpen(true);
-                }}
-                deleteHandler={deleteIndex => {
-                  // setting group that is about to be deleted
-                  setGroupToBeDeleted(props.groups[deleteIndex]);
-
-                  // showing confirm dilog
-                  setConfirmGroupDeletionDialogOpen(true);
-                }}
-              />,
-            ];
-
-            // if index of current group is expanded
-            // -> rendering analyses as well
-            if (expandedIndex === index) {
-              groupCellContent.push(
-                props.analyses
-                  .filter(analysis => analysis.group.id === group.id)
-                  .map(analysis => (
-                    <AnalysisTableRow
+          return (
+            <Card key={group.id}>
+              <Card.Header>
+                <AnalysisBrowserToggle
+                  eventKey={group.id}
+                  canExpand={analysisOfGroup.length > 0}
+                >
+                  {group.name}
+                </AnalysisBrowserToggle>
+                {!group.isDefault && (
+                  <NavigationDropdownMenu
+                    key="menu"
+                    customToggle={ActionToggleIcon}
+                  >
+                    <NavigationDropdownMenuItem
+                      onClick={() => {
+                        setGroupToBeRenamed(group);
+                        setRenameGroupDialogOpen(true);
+                      }}
+                    >
+                      Umbenennen
+                    </NavigationDropdownMenuItem>
+                    <NavigationDropdownMenuItem
+                      onClick={() => {
+                        // setting group that is about to be deleted
+                        setGroupToBeDeleted(group);
+                        // showing confirm dilog
+                        setConfirmGroupDeletionDialogOpen(true);
+                      }}
+                    >
+                      Löschen
+                    </NavigationDropdownMenuItem>
+                  </NavigationDropdownMenu>
+                )}
+              </Card.Header>
+              <Accordion.Collapse eventKey={group.id}>
+                <Card.Body>
+                  {analysisOfGroup.map(analysis => (
+                    <AnalysisListEntry
                       key={analysis.id}
                       analysis={analysis}
-                      deleteHandler={analysisId => {
-                        // getting analysis to be deleted
-                        setAnalysisToBeDeleted(
-                          _.find(
-                            props.analyses,
-                            item => item.id === analysisId,
-                          ),
-                        );
-
-                        // showing confirm dialog
+                      onAnalysisDelete={(ev) => {
+                        setAnalysisToBeDeleted(analysis);
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
-                      showHandler={() => {
-                        props.history.push(`/resultPersonal/${analysis.id}`);
+                      onShortPdfClicked={() => {
+                        createAnalysisPdf({ ...analysis, longTexts: false});
                       }}
-                      onUseCredit={type => {
-                        handleOnUseCredit(analysis.id, type);
+                      onBuyShortPdfClicked={ () => {
+                        handleOnUseCredit(analysis.id, SHORT_TYPE);
                       }}
-                      onPdfDownload={longTexts => {
-                        createAnalysisPdf({ ...analysis, longTexts });
+                      onLongPdfClicked={() => {
+                        createAnalysisPdf({ ...analysis, longTexts: true});
+                      }}
+                      onBuyLongPdfClicked={ () => {
+                        handleOnUseCredit(analysis.id, LONG_TYPE);
                       }}
                     />
-                  )),
-              );
-            }
-            // returning accumulated rows for group
-            return groupCellContent;
-          })}
-        </tbody>
-      </table>
+                  ))}
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          );
+        })}
+      </Accordion>
     );
   } else {
     panelContent = (
@@ -463,32 +467,30 @@ const AnalysisBrowser = props => {
     );
   }
   return (
-    <div>
+    <div className="akb-analysis-browser">
       {loading && <LoadingIndicator text={loadingText} />}
-      <Panel
-        title="Analysen"
-        actions={[
+      <div className="panel-header">
+        <div className="header">Analysen</div>
+        <div>
           <NavigationDropdownMenu
             key="AddGroupAnalysis"
-            name="+"
-            direction="right"
-            navbar
+            customToggle={AddToggleIcon}
           >
             <NavigationDropdownMenuItem
               onClick={() => setCreateGroupDialogOpen(true)}
             >
-              Gruppe
+              <img src={iconGroup} alt="" /> Gruppe
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem
               onClick={() => props.history.push('/analysisInput')}
             >
-              Analyse
+              <img src={iconAnalysis} alt="" /> Analyse
             </NavigationDropdownMenuItem>
-          </NavigationDropdownMenu>,
-        ]}
-      >
-        {panelContent}
-      </Panel>
+          </NavigationDropdownMenu>
+        </div>
+      </div>
+      <div className="akb-group-headline">Gruppen</div>
+      <div className="panel-content">{panelContent}</div>
       <ConfirmGroupDeletionDialog
         group={groupToBeDeleted}
         isOpen={confirmGroupDeletionDialogOpen}
@@ -577,15 +579,15 @@ AnalysisBrowser.propTypes = {
           firstNames: PropTypes.string.isRequired,
           lastName: PropTypes.string.isRequired,
           dateOfBirth: PropTypes.string.isRequired,
-        }),
+        })
       ).isRequired,
-    }),
+    })
   ).isRequired,
   groups: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-    }),
+    })
   ).isRequired,
   createGroup: PropTypes.func.isRequired,
   deleteGroup: PropTypes.func.isRequired,
@@ -600,5 +602,5 @@ export default compose(
   graphql(createGroupMutation, { name: 'createGroup' }),
   graphql(renameGroupMutation, { name: 'renameGroup' }),
   graphql(deleteAnalysisMutation, { name: 'deleteAnalysis' }),
-  graphql(useCreditMutation, { name: 'useCredit' }),
+  graphql(useCreditMutation, { name: 'useCredit' })
 )(withApollo(withRouter(AnalysisBrowser)));

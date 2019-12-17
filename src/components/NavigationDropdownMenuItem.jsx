@@ -1,21 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types'; 
-import { Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 import '../styles/NavigationDropdownMenuItem.css';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 /**
  * wrapper component for dropdown items
  */
 const NavigationDropdownMenuItem = props => (
-  <Button
-    variant="link"
-    onClick={props.onClick}
-    className="NavigationDropdownMenuItem dropdown-item"
-    role="link"
-  >
+  <Dropdown.Item variant="link" onClick={props.onClick} role="link">
     {props.children}
-  </Button>
+  </Dropdown.Item>
 );
 
 NavigationDropdownMenuItem.propTypes = {
@@ -25,6 +20,6 @@ NavigationDropdownMenuItem.propTypes = {
 
 NavigationDropdownMenuItem.defaultProps = {
   onClick: () => {},
-  children: null, 
+  children: null,
 };
 export default NavigationDropdownMenuItem;

@@ -6,16 +6,9 @@ import { graphql } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 import ToastNotifications from 'cogo-toast';
 
-import '../styles/UserHome.css';
-
-// importing ad banners
-import BANNER_BOTTOM from '../images/banner_numerologie_ausbildung.gif';
-import BANNER_BOOK_1 from '../images/banner_numerologie-buecher-1.png';
-import BANNER_BOOK_2 from '../images/banner_numerologie-buecher-2.png';
+import '../styles/UserHome.scss';
 
 import NavigationBar from './NavigationBar';
-import AdArea from './AdArea';
-import AdAreaItem from './AdAreaItem';
 import AnalysisBrowser from './AnalysisBrowser';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
@@ -116,13 +109,13 @@ class UserHome extends Component {
   async saveAnalysis(name, groupId) {
     // decoding url param values
     const firstNames = decodeURIComponent(
-      this.props.computedMatch.params.firstNames,
+      this.props.computedMatch.params.firstNames
     );
     const lastNames = decodeURIComponent(
-      this.props.computedMatch.params.lastNames,
+      this.props.computedMatch.params.lastNames
     );
     const dateOfBirth = decodeURIComponent(
-      this.props.computedMatch.params.dateOfBirth,
+      this.props.computedMatch.params.dateOfBirth
     );
 
     // one or more names?
@@ -168,7 +161,7 @@ class UserHome extends Component {
       // sending notification to user
       ToastNotifications.success(
         `Die Analyse ${name} wurde erfolgreich erstellt.`,
-        { position: 'top-right' },
+        { position: 'top-right' }
       );
     } catch (error) {
       // informing user of error
@@ -193,10 +186,10 @@ class UserHome extends Component {
     }
 
     if (
-      this.props.data.loading
-      || !this.props.data
-      || !this.props.data.currentUser
-      || this.state.isBuyProcessing
+      this.props.data.loading ||
+      !this.props.data ||
+      !this.props.data.currentUser ||
+      this.state.isBuyProcessing
     ) {
       return <LoadingIndicator text="Lade..." />;
     }
@@ -204,25 +197,14 @@ class UserHome extends Component {
     const { isBuyModalOpen } = this.state;
 
     return (
-      <div>
+      <div className="main-container">
         {this.state.loading && <LoadingIndicator />}
         <NavigationBar
-          handleDeleteUser={() => this.setState({ userDeletionDialogOpen: true })
+          handleDeleteUser={() =>
+            this.setState({ userDeletionDialogOpen: true })
           }
         />
         <div className="UserHomeContentArea">
-          <div className="UserHomeLeftAdArea">
-            <AdArea horizontal={false}>
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-1/"
-                image={BANNER_BOOK_1}
-              />
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-2/"
-                image={BANNER_BOOK_2}
-              />
-            </AdArea>
-          </div>
           <div className="UserHomeContent">
             <AnalysisBrowser
               groups={this.props.data.currentUser.groups}
@@ -234,27 +216,28 @@ class UserHome extends Component {
                 this.props.data.currentUser.resultConfiguration
               }
             />
-            <AdArea horizontal>
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"
-                image={BANNER_BOTTOM}
-              />
-            </AdArea>
+            {/* We will hide Ads at the beginning */}
+            {/*<AdArea horizontal>*/}
+              {/*<AdAreaItem*/}
+                {/*link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"*/}
+                {/*image={BANNER_BOTTOM}*/}
+              {/*/>*/}
+            {/*</AdArea>*/}
           </div>
         </div>
         <SaveAnalysisDialog
           isOpen={this.state.saveDialogOpen}
           onClose={() => this.setState({ saveDialogOpen: false })}
-          onSave={(group) => {
+          onSave={group => {
             // decoding url param values
             const firstNames = decodeURIComponent(
-              this.props.computedMatch.params.firstNames,
+              this.props.computedMatch.params.firstNames
             );
             const lastNames = decodeURIComponent(
-              this.props.computedMatch.params.lastNames,
+              this.props.computedMatch.params.lastNames
             );
             const dateOfBirth = decodeURIComponent(
-              this.props.computedMatch.params.dateOfBirth,
+              this.props.computedMatch.params.dateOfBirth
             );
 
             // constructing name for analysis
@@ -283,9 +266,10 @@ class UserHome extends Component {
         />
         <ConfirmUserDeletionDialog
           isOpen={this.state.userDeletionDialogOpen}
-          onClose={() => this.setState({
-            userDeletionDialogOpen: false,
-          })
+          onClose={() =>
+            this.setState({
+              userDeletionDialogOpen: false,
+            })
           }
           onAction={() => {
             // dismissing dialog
@@ -330,5 +314,5 @@ UserHome.propTypes = {
 export default compose(
   graphql(currentUserQuery),
   graphql(saveAnalysisMutation, { name: 'saveAnalysis' }),
-  graphql(deleteUserMutation, { name: 'deleteUser' }),
+  graphql(deleteUserMutation, { name: 'deleteUser' })
 )(withRouter(UserHome));
