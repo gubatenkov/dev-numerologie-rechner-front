@@ -62,17 +62,17 @@ function UserProfile() {
             <div className="akb-user-info">
               <div className="akb-personal-info">
                 <h2>Personal Information</h2>
-                <h4>Aktueller Name</h4>
-                <Form>
-                  <Row>
-                    <Col>
-                      <Form.Control placeholder="Vorname" />
-                    </Col>
-                    <Col>
-                      <Form.Control placeholder="Nachname" />
-                    </Col>
-                  </Row>
-                </Form>
+                {/*<h4>Aktueller Name</h4>*/}
+                {/*<Form>*/}
+                {/*  <Row>*/}
+                {/*    <Col>*/}
+                {/*      <Form.Control placeholder="Vorname" />*/}
+                {/*    </Col>*/}
+                {/*    <Col>*/}
+                {/*      <Form.Control placeholder="Nachname" />*/}
+                {/*    </Col>*/}
+                {/*  </Row>*/}
+                {/*</Form>*/}
                 <h5>Email</h5>
                 <Form.Control type="email" value={data.currentUser.email} disabled={true}/>
               </div>
@@ -91,7 +91,7 @@ function UserProfile() {
               </div>
             </div>
             <div className="akb-save-container">
-              <Button className="akb-save-button" variant="primary" size="lg">Save</Button>
+              {/*<Button className="akb-save-button" variant="primary" size="lg">Save</Button>*/}
             </div>
           </div>
         </div>
