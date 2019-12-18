@@ -40,6 +40,18 @@ export const currentUserQuery = gql`
       group {
         id
       }
+      personalAnalysisResults(isPdf: false, longTexts: false) {
+        lz {
+          numberId
+          result {
+            ... on AnalysisResultValueNumber {
+              type
+              value
+              __typename
+            }
+          }
+        }
+      }
       inputs {
         firstNames
         lastName

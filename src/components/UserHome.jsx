@@ -6,16 +6,9 @@ import { graphql } from 'react-apollo';
 import * as compose from 'lodash.flowright';
 import ToastNotifications from 'cogo-toast';
 
-import '../styles/UserHome.css';
-
-// importing ad banners
-import BANNER_BOTTOM from '../images/banner_numerologie_ausbildung.gif';
-import BANNER_BOOK_1 from '../images/banner_numerologie-buecher-1.png';
-import BANNER_BOOK_2 from '../images/banner_numerologie-buecher-2.png';
+import '../styles/UserHome.scss';
 
 import NavigationBar from './NavigationBar';
-import AdArea from './AdArea';
-import AdAreaItem from './AdAreaItem';
 import AnalysisBrowser from './AnalysisBrowser';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
@@ -164,7 +157,7 @@ class UserHome extends Component {
     const { isBuyModalOpen } = this.state;
 
     return (
-      <div>
+      <div className="main-container">
         {this.state.loading && <LoadingIndicator />}
         <NavigationBar
           handleDeleteUser={() =>
@@ -172,18 +165,6 @@ class UserHome extends Component {
           }
         />
         <div className="UserHomeContentArea">
-          <div className="UserHomeLeftAdArea">
-            <AdArea horizontal={false}>
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-1/"
-                image={BANNER_BOOK_1}
-              />
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/buecher/psychologische-numerologie-band-2/"
-                image={BANNER_BOOK_2}
-              />
-            </AdArea>
-          </div>
           <div className="UserHomeContent">
             <AnalysisBrowser
               groups={this.props.data.currentUser.groups}
@@ -195,12 +176,13 @@ class UserHome extends Component {
                 this.props.data.currentUser.resultConfiguration
               }
             />
-            <AdArea horizontal>
-              <AdAreaItem
-                link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"
-                image={BANNER_BOTTOM}
-              />
-            </AdArea>
+            {/* We will hide Ads at the beginning */}
+            {/*<AdArea horizontal>*/}
+              {/*<AdAreaItem*/}
+                {/*link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"*/}
+                {/*image={BANNER_BOTTOM}*/}
+              {/*/>*/}
+            {/*</AdArea>*/}
           </div>
         </div>
         <SaveAnalysisDialog

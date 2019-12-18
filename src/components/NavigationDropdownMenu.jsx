@@ -1,24 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
 
 import '../styles/NavigationDropdownMenu.css';
+import { Dropdown } from 'react-bootstrap';
+import { ReactComponent as IconAdd } from '../images/icon_add.svg';
+
+const CustomToggleFactory = child =>
+  React.forwardRef(({ children, onClick }, ref) => (
+    <div
+      ref={ref}
+      onClick={e => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      {children}
+      {child}
+    </div>
+  ));
 
 /**
  * A Dropdown Menu in the navigation bar
  */
 class NavigationDropdownMenu extends Component {
   static propTypes = {
-    name: PropTypes.string.isRequired,
     children: PropTypes.node,
-    navbar: PropTypes.bool,
-    direction: PropTypes.oneOf(['default', 'right']),
+    customToggle: PropTypes.node,
   };
 
   static defaultProps = {
     children: null,
-    navbar: false,
-    direction: 'default',
+    customToggle: <IconAdd />,
   };
 
   /**
@@ -27,50 +39,21 @@ class NavigationDropdownMenu extends Component {
   constructor(props) {
     // calling super constructor
     super(props);
-
-    // setting initial state
-    this.state = {
-      isOpen: false,
-    };
+    this.customToggle = CustomToggleFactory(props.customToggle);
   }
-
-  /**
-   * handles clicks on the dropdown itself and hides/shows menu
-   */
-  handleDropdownItemClick = () => {
-    this.setState({ isOpen: !this.state.isOpen });
-  };
 
   /**
    * renders nav dropdown item with title and children as menu items
    */
   render() {
     return (
-      <div
-        className="dropdownItem"
-        onClick={this.handleDropdownItemClick}
-        onBlur={this.handleBlur}
-        role="button"
-      >
-        <li className={`nav-item dropdown${this.state.isOpen ? ' show' : ''}`}>
-          <Button
-            variant="link"
-            className={`NavigationDropdownMenu__button ${
-              this.props.navbar ? 'nav-link' : ''
-            }`}
-          >
-            {this.props.name}
-          </Button>
-          <div
-            className={`dropdown-menu dropdown-menu-bullet ${
-              this.props.direction === 'right' ? 'dropdown-menu-right' : ''
-            }`}
-            role="menu"
-          >
-            {this.props.children}
-          </div>
-        </li>
-      </div>
+      <Dropdown alignRight onBlur={this.handleBlur}>
+        <Dropdown.Toggle
+          as={this.customToggle}
+          id="dropdown-custom-components"
+        />
+        <Dropdown.Menu>{this.props.children}</Dropdown.Menu>
+      </Dropdown>
     );
   }
 }

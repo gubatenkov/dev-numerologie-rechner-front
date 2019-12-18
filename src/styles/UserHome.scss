@@ -1,0 +1,50 @@
+@import 'variables';
+@import 'typography';
+
+.UserHomeContentArea {
+  display: flex;
+  flex-direction: row;
+  @media screen and (min-width: map-get($akb-breakpoints, desktop)) {
+    padding: 0 60px;
+  }
+}
+
+.UserHomeContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  @media screen and (min-width: map-get($akb-breakpoints, desktop)) {
+    margin-left: 30px;
+    margin-right: 50px;
+  }
+  width: 100%;
+
+  .akb-analysis-browser {
+    margin-bottom: 78px;
+    .akb-group-headline {
+      margin: 40px 0 12px 24px;
+      color: #323232;
+      @include font-headline-5;
+      text-transform: uppercase;
+
+      @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+        margin-left: 16px;
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+.UserHomeLeftAdArea {
+  margin-left: 30px;
+  min-width: 10%;
+}
+
+.fa-icon {
+  margin-right: 8px;
+}
+
+.popover-header.h3 {
+  margin-top: 0;
+}
