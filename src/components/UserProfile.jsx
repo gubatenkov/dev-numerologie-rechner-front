@@ -7,6 +7,9 @@ import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
 import { deleteUserMutation } from '../graphql/Mutations';
 import { deleteUserAuthData } from '../utils/AuthUtils';
 import LoadingIndicator from './LoadingIndicator';
+import MainContainer from './MainContainer';
+import '../styles/UserProfile.scss'
+import {Button} from 'react-bootstrap';
 
 function UserProfile() {
   let history = useHistory();
@@ -46,31 +49,47 @@ function UserProfile() {
     return <LoadingIndicator text="Lade..." />;
   } else {
     return (
-      <div>
+      <MainContainer>
         <div>
-          <NavigationBar />
+          <div>
+            <NavigationBar />
+          </div>
+          <div className="akb-user-profile-display">
+            <div className="akb-my-profile-navigation"></div>
+            <div className="akb-user-info">
+              <div className="akb-personal-info">
+                <h2>Personal Information</h2>
+                <h4>Aktueller Name</h4>
+                <input type="text" name="firstName" />
+                <input type="text" name="lastName" />
+                <h5>Email</h5>
+                <input
+                  type="text"
+                  name="email"
+                  disabled={true}
+                  value={data.currentUser.email}
+                />
+              </div>
+              <div className="akb-delete-div">
+                <Button
+                  className="akb-delete-button"
+                  variant="danger"
+                  size="lg"
+                  onClick={handleOnOpenDeletionDialog}
+                >Konto löschen</Button>
+                <ConfirmUserDeletionDialog
+                  isOpen={userDeletionDialogOpen}
+                  onClose={handleOnCloseDeletionDialog}
+                  onAction={handleOnConfirmDeletionDialog}
+                />
+              </div>
+            </div>
+            <div className="akb-save-container">
+              <Button className="akb-save-button" variant="primary" size="lg">Save</Button>
+            </div>
+          </div>
         </div>
-        <div>
-          <h2>Personal Information</h2>
-          <h5>Aktueller Name</h5>
-          <input type="text" name="firstName" />
-          <input type="text" name="lastName" />
-          <h5>Email</h5>
-          <input
-            type="text"
-            name="email"
-            disabled={true}
-            value={data.currentUser.email}
-          />
-          <button type="submit">Save</button>
-        </div>
-        <button onClick={handleOnOpenDeletionDialog}>Konto löschen</button>
-        <ConfirmUserDeletionDialog
-          isOpen={userDeletionDialogOpen}
-          onClose={handleOnCloseDeletionDialog}
-          onAction={handleOnConfirmDeletionDialog}
-        />
-      </div>
+      </MainContainer>
     );
   }
 }
