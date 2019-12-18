@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
+import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
 // styling container fro steps elements. Most of the styling ist handled by the container for the elements
 const StepsContainer = styled.div`
@@ -21,7 +22,7 @@ const StepsContainer = styled.div`
     display: block;
     margin: 0 auto 10px auto;
     border-radius: 50%;
-    background: ${(props) => props.theme.primaryLight};
+    background: ${props => props.theme.primaryLight};
     text-align: center;
   }
 
@@ -32,7 +33,7 @@ const StepsContainer = styled.div`
     /* full width of the elemen + padding*/
     width: calc(100% + 40px);
     height: 2px;
-    background: ${(props) => props.theme.primaryLight};
+    background: ${props => props.theme.primaryLight};
     top: 5px;
     left: 0;
     z-index: -1;
@@ -51,7 +52,7 @@ const StepsContainer = styled.div`
 
   /* active element => black circle*/
   div.active:before {
-    background: ${(props) => props.theme.darkGrey};
+    background: ${props => props.theme.darkGrey};
   }
 `;
 
@@ -59,7 +60,7 @@ const StepsContainer = styled.div`
  * a container component for steps that draws a connection
  * line between steps and handles alignment of steps
  */
-export const Steps = (props) => (
+export const Steps = props => (
   <StepsContainer className={props.className}>{props.children}</StepsContainer>
 );
 
@@ -69,23 +70,35 @@ const StyledStep = styled.div`
   position: relative;
 
   /* font color dependent on active state*/
-  color: ${(props) => (props.active ? props.theme.darkGrey : props.theme.lighterGrey)};
+  color: ${props =>
+    props.active ? props.theme.darkGrey : props.theme.lighterGrey};
+
+  /* show on mobile devices if active */
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    display: ${props =>
+      props.stepIndex === props.currentIndex ? 'show' : 'none'};
+  }
 
   /* basic font styling */
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 16px;
   line-height: 26px;
 `;
 
 // A step in the progess steps component
-export const Step = (props) => (
-  <StyledStep
-    className={
-      props.active ? `${props.className || ''} ${'active'}` : props.className
-    }
-    active={props.active}
-    onClick={() => props.onStepClick(props.name)}
-  >
-    {_.truncate(props.name, { length: 15 })}
-  </StyledStep>
-);
+export const Step = props => {
+  let isActive = props.stepIndex <= props.currentIndex;
+  return (
+    <StyledStep
+      className={
+        isActive ? `${props.className || ''} ${'active'}` : props.className
+      }
+      active={props.active}
+      stepIndex={props.stepIndex}
+      currentIndex={props.currentIndex}
+      onClick={() => props.onStepClick(props.name)}
+    >
+      {_.truncate(props.name, { length: 15 })}
+    </StyledStep>
+  );
+};

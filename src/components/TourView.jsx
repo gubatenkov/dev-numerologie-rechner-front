@@ -71,8 +71,8 @@ const ContentArea = styled.div`
   padding-bottom: 80px;
 
   /* styling standard text within container*/
-  font-family: ${(props) => props.theme.fontFamily};
-  color: ${(props) => props.theme.black};
+  font-family: ${props => props.theme.fontFamily};
+  color: ${props => props.theme.black};
   font-size: 18px;
   line-height: 30px;
 
@@ -87,7 +87,7 @@ const ContentArea = styled.div`
 
   /* content specific styling (dynamically parsed from server)*/
   .${CONTENT_STYLING_CLASS_SUBHEADING} {
-    color: ${(props) => props.theme.lighterGrey};
+    color: ${props => props.theme.lighterGrey};
   }
 
   .${CONTENT_STYLING_CLASS_DESCRIPTION} {
@@ -95,7 +95,7 @@ const ContentArea = styled.div`
   }
 
   .${CONTENT_STYLING_CLASS_NAME_HEADER} {
-    color: ${(props) => props.theme.lighterGrey};
+    color: ${props => props.theme.lighterGrey};
   }
 
   .${CONTENT_STYLING_CLASS_HEADER} {
@@ -163,10 +163,12 @@ const TourOverView = styled.div`
   /* basic box styling */
   height: 80px;
   width: 100%;
+
   padding-left: 30px;
   padding-right: 30px;
-  background-color: ${(props) => props.theme.white};
-  border-top: solid ${(props) => props.theme.primaryLight} 1px;
+
+  background-color: ${props => props.theme.white};
+  border-top: solid ${props => props.theme.primaryLight} 1px;
 
   /* element stays fixed at the bottom of view */
   position: fixed;
@@ -175,11 +177,6 @@ const TourOverView = styled.div`
   /* element ist structured as grid with three columns*/
   display: grid;
   grid-template-columns: 36px auto 36px;
-
-  /* hiding on mobile phones*/
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    display: none;
-  }
 `;
 
 // button used in the tour overview
@@ -208,8 +205,12 @@ const TourOverViewForwardButton = styled(TourOverViewButton)`
 // customizing steps component to fit into layout
 const TourOverviewSteps = styled(Steps)`
   /* fixed size */
-  width: 804px;
+  width: 100%;
   height: 44px;
+
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    justify-content: center;
+  }
 
   /* aligning center */
   justify-self: center;
@@ -221,7 +222,7 @@ const TourOverviewSteps = styled(Steps)`
 `;
 
 // tour view component allowing users to explore their analysis results
-const TourView = (props) => {
+const TourView = props => {
   // getting used values out of props
   const {
     sectionIndex,
@@ -234,10 +235,10 @@ const TourView = (props) => {
   } = props;
 
   // handler for clicks on the steps directly in the overview
-  const handleStepClick = (sectionTitleClicked) => {
+  const handleStepClick = sectionTitleClicked => {
     // getting index of section title clicked and setting it's index as current section index
     const index = tourData.findIndex(
-      (item) => item.sectionName === sectionTitleClicked,
+      item => item.sectionName === sectionTitleClicked
     );
 
     if (index > -1) {
@@ -252,7 +253,7 @@ const TourView = (props) => {
     } else if (sectionIndex > 0) {
       onIndexChange(
         sectionIndex - 1,
-        tourData[sectionIndex - 1].sectionElements.length - 1,
+        tourData[sectionIndex - 1].sectionElements.length - 1
       );
     }
   };
@@ -269,7 +270,7 @@ const TourView = (props) => {
   };
 
   // handler for key press
-  const handleKeyDown = (event) => {
+  const handleKeyDown = event => {
     switch (event.key) {
       // determining which key was pressed
       case 'ArrowRight':
@@ -305,7 +306,7 @@ const TourView = (props) => {
    * builds a tour element for an introduction text into a section
    * @param sectionIntro the section intro object
    */
-  const buildIntroTextTourStep = (sectionIntro) => {
+  const buildIntroTextTourStep = sectionIntro => {
     // building title and content for introduction text to section
     const elementTitle = `Einführung ${sectionIntro.title}`;
     const elementContent = sectionIntro.text;
@@ -318,12 +319,12 @@ const TourView = (props) => {
    * build title and content for a number result item and returns it as an array
    * @param numberResult the result element to build title and content from
    */
-  const buildNumberTourStep = (numberResult) => {
+  const buildNumberTourStep = numberResult => {
     // if element is default result => using standard result
     // title is name and value
-    const elementTitle = `${numberResult.name} ${numberResult.result.value
-      || numberResult.result.list
-      || ''}`;
+    const elementTitle = `${numberResult.name} ${numberResult.result.value ||
+      numberResult.result.list ||
+      ''}`;
 
     // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
@@ -379,24 +380,24 @@ const TourView = (props) => {
 
     // adding result for first name
     elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberResult
-      .result.value
-      || numberResult.result.list
-      || ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
+      .result.value ||
+      numberResult.result.list ||
+      ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
 
     // adding description text for first name
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     // adding result for second name
     elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberCompareResult
-      .result.value
-      || numberCompareResult.result.list
-      || ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
+      .result.value ||
+      numberCompareResult.result.list ||
+      ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
 
     // if results for both names are equal => only showing info text.
     // otheriwse including description text for second name
     if (_.isEqual(numberResult.result, numberCompareResult.result)) {
-      elementContent
-        += '</br> Die Beschreibung dieser Zahl entspricht der vorherigen Zahlbeschreibung oben.';
+      elementContent +=
+        '</br> Die Beschreibung dieser Zahl entspricht der vorherigen Zahlbeschreibung oben.';
     } else {
       // adding description text for second name
       elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
@@ -428,19 +429,20 @@ const TourView = (props) => {
       [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
     } else {
       // getting compare item
-      const compareResultItem = compareTourData[sectionIndex].sectionElements[elementIndex];
+      const compareResultItem =
+        compareTourData[sectionIndex].sectionElements[elementIndex];
 
       // building compare content
       [tourStepTitle, tourStepContent] = buildNumberTourCompareStep(
         resultItem,
-        compareResultItem,
+        compareResultItem
       );
     }
   }
 
   return [
     <TourContentContainer
-      onKeyDown={(event) => handleKeyDown(event)}
+      onKeyDown={event => handleKeyDown(event)}
       ref={componentContainer}
       tabIndex="0"
       key="tourContainer"
@@ -482,8 +484,10 @@ const TourView = (props) => {
           <Step
             key={tourSection.sectionName}
             name={tourSection.sectionName}
-            active={tourSectionIndex <= sectionIndex}
-            onStepClick={(name) => handleStepClick(name)}
+            currentIndex={sectionIndex}
+            stepIndex={tourSectionIndex}
+            // active={tourSectionIndex <= sectionIndex}
+            onStepClick={name => handleStepClick(name)}
           />
         ))}
       </TourOverviewSteps>
