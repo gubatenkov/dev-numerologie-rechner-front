@@ -17,6 +17,7 @@ import Footer from './Footer';
 
 import { currentUserQuery } from '../graphql/Queries';
 import { saveAnalysisMutation } from '../graphql/Mutations';
+import MainContainer from './MainContainer';
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
 /**
@@ -157,7 +158,7 @@ class UserHome extends Component {
     const { isBuyModalOpen } = this.state;
 
     return (
-      <div className="main-container">
+      <MainContainer>
         {this.state.loading && <LoadingIndicator />}
         <NavigationBar
           handleDeleteUser={() =>
@@ -234,7 +235,7 @@ class UserHome extends Component {
           onSuccessfulPurchase={this.handleSuccessfulPurchase}
         />
         <Footer />
-      </div>
+      </MainContainer>
     );
   }
 }
