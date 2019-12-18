@@ -3,7 +3,12 @@
 
 .akb-user-profile-display {
   display: flex;
-  flex-direction: row;
+  @media screen and (min-width: map-get($akb-breakpoints, desktop)) {
+    flex-direction: row;
+  }
+  @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+    flex-direction: column;
+  }
   justify-content: space-around;
   align-items: stretch;
   h2 {
@@ -37,6 +42,10 @@
   }
   .akb-save-container {
     flex: 0 0 20%;
+    @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+      text-align: center;
+      margin-top: 20px;
+    }
     .akb-save-button {
       color: $white;
       background-color: $light-blue;
