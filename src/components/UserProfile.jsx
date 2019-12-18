@@ -10,6 +10,9 @@ import LoadingIndicator from './LoadingIndicator';
 import MainContainer from './MainContainer';
 import '../styles/UserProfile.scss'
 import {Button} from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function UserProfile() {
   let history = useHistory();
@@ -60,15 +63,18 @@ function UserProfile() {
               <div className="akb-personal-info">
                 <h2>Personal Information</h2>
                 <h4>Aktueller Name</h4>
-                <input type="text" name="firstName" />
-                <input type="text" name="lastName" />
+                <Form>
+                  <Row>
+                    <Col>
+                      <Form.Control placeholder="Vorname" />
+                    </Col>
+                    <Col>
+                      <Form.Control placeholder="Nachname" />
+                    </Col>
+                  </Row>
+                </Form>
                 <h5>Email</h5>
-                <input
-                  type="text"
-                  name="email"
-                  disabled={true}
-                  value={data.currentUser.email}
-                />
+                <Form.Control type="email" value={data.currentUser.email} disabled={true}/>
               </div>
               <div className="akb-delete-div">
                 <Button
