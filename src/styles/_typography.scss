@@ -13,6 +13,14 @@
   }
 }
 
+@mixin font-headline-1-2() {
+  // e.g. text: "Personal Information"
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 50px;
+}
+
 @mixin font-headline-2() {
   // e.g. text: "Meine Analyses
   font-family: "Roboto", Arial, Helvetica, sans-serif;
