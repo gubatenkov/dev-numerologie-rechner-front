@@ -1,0 +1,58 @@
+@import 'variables';
+@import 'typography';
+
+.akb-user-profile-display {
+  display: flex;
+  @media screen and (min-width: map-get($akb-breakpoints, desktop)) {
+    flex-direction: row;
+  }
+  @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+    flex-direction: column;
+  }
+  justify-content: space-around;
+  align-items: stretch;
+  h2 {
+    @include font-headline-1-2();
+  }
+
+  h4 {
+    @include font-headline-3();
+  }
+  .akb-my-profile-navigation {
+    flex: 0 0 20%;
+  }
+  .akb-user-info {
+    flex: 0 0 45%;
+    .akb-personal-info {
+      background-color: $dark-yellow;
+      border-radius: 6px;
+      padding: 20px;
+    }
+    .akb-delete-div {
+      margin-top: 20px;
+      text-align: center;
+      .akb-delete-button {
+        color: $red;
+        text-align: center;
+        background-color: transparent;
+        border-radius: 6px;
+        @include font-headline-3();
+      }
+    }
+  }
+  .akb-save-container {
+    flex: 0 0 20%;
+    @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .akb-save-button {
+      color: $white;
+      background-color: $light-blue;
+      @include font-headline-3();
+      border-radius: 6px;
+      height: 48px;
+      width: 120px;
+    }
+  }
+}

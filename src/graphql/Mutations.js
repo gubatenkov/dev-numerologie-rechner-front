@@ -57,6 +57,18 @@ export const saveAnalysisMutation = gql`
         id
         name
       }
+      personalAnalysisResults(isPdf: false, longTexts: false) {
+        lz {
+          numberId
+          result {
+            ... on AnalysisResultValueNumber {
+              type
+              value
+              __typename
+            }
+          }
+        }
+      }
     }
   }
 `;

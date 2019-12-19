@@ -156,7 +156,7 @@ const NavbarSpinner = styled(Spinner)`
 /**
  * the navigation bar for the application on top
  */
-const NavigationBar = (props) => {
+const NavigationBar = props => {
   // defining state as user settings
   const [userSettings, setUserSettings] = useState({
     resultConfiguration: null,
@@ -177,7 +177,7 @@ const NavigationBar = (props) => {
   // setting fetch policy to prevent caching issues
   const { loading, data, error } = useQuery(userSettingsQuery, {
     fetchPolicy: 'network-only',
-    onCompleted: (data) => {
+    onCompleted: data => {
       if (error) {
         return;
       }
@@ -212,7 +212,7 @@ const NavigationBar = (props) => {
 
       // checking if any of the values changed
       const settingsChanged = !Object.entries(userSettings).every(
-        ([settingKey, settingValue]) => currentUser[settingKey] === settingValue,
+        ([settingKey, settingValue]) => currentUser[settingKey] === settingValue
       );
 
       // if settings changed => calling server to apply change
@@ -236,10 +236,11 @@ const NavigationBar = (props) => {
   // checking if user is logged in in two ways
   // a) query returned user information b) we have a token stored locally.
   // if a) but not b), we have inconsistent state
-  const loggedIn = data
-    && data.currentUser
-    && data.currentUser.email
-    && getUserAuthData().token;
+  const loggedIn =
+    data &&
+    data.currentUser &&
+    data.currentUser.email &&
+    getUserAuthData().token;
 
   // handles a logout of the user
   const handleLogout = () => {
@@ -259,64 +260,71 @@ const NavigationBar = (props) => {
             <SegmentButton
               primary={userSettings.resultConfiguration === 'starter'}
               title={'Standard'}
-              onClick={() => setUserSettings({
-                ...userSettings,
-                resultConfiguration: 'starter',
-              })
+              onClick={() =>
+                setUserSettings({
+                  ...userSettings,
+                  resultConfiguration: 'starter',
+                })
               }
             />
             <SegmentButton
               primary={userSettings.resultConfiguration === 'levels'}
               title={'Fortgeschritten'}
-              onClick={() => setUserSettings({
-                ...userSettings,
-                resultConfiguration: 'levels',
-              })
+              onClick={() =>
+                setUserSettings({
+                  ...userSettings,
+                  resultConfiguration: 'levels',
+                })
               }
             />
           </SegmentContainer>
           <SwitchSettingItem
             title="Seitenzahl zum Nachschlagen – Übersicht"
-            onChange={(newValue) => setUserSettings({ ...userSettings, showBookReferences: newValue })
+            onChange={newValue =>
+              setUserSettings({ ...userSettings, showBookReferences: newValue })
             }
             checked={/* userSettings.showBookReferences */ false}
             disabled={true}
           />
           <SwitchSettingItem
             title="Buchreferenz mit Seitenzahl – Tour"
-            onChange={(newValue) => setUserSettings({
-              ...userSettings,
-              showBookRecommendations: newValue,
-            })
+            onChange={newValue =>
+              setUserSettings({
+                ...userSettings,
+                showBookRecommendations: newValue,
+              })
             }
             checked={userSettings.showBookRecommendations}
           />
 
           <SwitchSettingItem
             title="Erklärungen zu Ebenen / Abschnitten"
-            onChange={(newValue) => setUserSettings({
-              ...userSettings,
-              showCategoryExplanations: newValue,
-            })
+            onChange={newValue =>
+              setUserSettings({
+                ...userSettings,
+                showCategoryExplanations: newValue,
+              })
             }
             checked={userSettings.showCategoryExplanations}
           />
           <SwitchSettingItem
             title="Erklärungen zu Bedeutung der Zahlen"
-            onChange={(newValue) => setUserSettings({
-              ...userSettings,
-              showNumberMeaningExplanations: newValue,
-            })
+            onChange={newValue =>
+              setUserSettings({
+                ...userSettings,
+                showNumberMeaningExplanations: newValue,
+              })
             }
             checked={userSettings.showNumberMeaningExplanations}
           />
 
           <SwitchSettingItem
             title="Erklärungen zur Zahlenberechnung"
-            onChange={(newValue) => setUserSettings({
-              ...userSettings,
-              showNumberCalculationExplanations: newValue,
-            })
+            onChange={newValue =>
+              setUserSettings({
+                ...userSettings,
+                showNumberCalculationExplanations: newValue,
+              })
             }
             checked={userSettings.showNumberCalculationExplanations}
           />
@@ -332,7 +340,7 @@ const NavigationBar = (props) => {
         <PopoverTextItem onClick={() => props.history.push('/userHome')}>
           Meine Analysen
         </PopoverTextItem>
-        <PopoverTextItem onClick={() => props.history.push('/userHome')}>
+        <PopoverTextItem onClick={() => props.history.push('/userProfile')}>
           Mein Profil
         </PopoverTextItem>
         <PopoverTextItem onClick={handleLogout}>Abmelden</PopoverTextItem>
@@ -370,7 +378,12 @@ const NavigationBar = (props) => {
       {loggedIn && (
         <CartIconButton
           imageIcon={iconCartPrimary}
-          onClick={() => window.open('https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/', '_blank')}
+          onClick={() =>
+            window.open(
+              'https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/',
+              '_blank'
+            )
+          }
         />
       )}
       {loggedIn && (
