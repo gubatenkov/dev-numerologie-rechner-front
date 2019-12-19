@@ -208,9 +208,7 @@ const TourOverviewSteps = styled(Steps)`
   width: 100%;
   height: 44px;
 
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    justify-content: center;
-  }
+  justify-content: center;
 
   /* aligning center */
   justify-self: center;

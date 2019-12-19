@@ -8,6 +8,9 @@ const StepsContainer = styled.div`
   /* row flex container with items*/
   display: flex;
   flex-direction: row;
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    display: none;
+  }
 
   /* space between elements*/
   > div + div {
