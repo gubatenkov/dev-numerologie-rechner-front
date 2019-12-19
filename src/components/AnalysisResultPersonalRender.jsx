@@ -37,6 +37,7 @@ import { OVERALL_INTRO_KEY, TYPE_ID_MATRIX } from '../utils/Constants';
 
 import ActionBar from './ActionBar';
 import LoadingIndicator from './LoadingIndicator';
+import MainContainer from "./MainContainer";
 
 const ContentArea = styled.div`
   display: flex;
@@ -294,7 +295,7 @@ const AnalysisResultPersonalRender = props => {
 
   // render table, table shows spinner
   return (
-    <div>
+    <MainContainer>
       <NavigationBar
         leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
         leftButtonOnClick={
@@ -490,7 +491,7 @@ const AnalysisResultPersonalRender = props => {
         }}
       />
       {!isTourOpen && <Footer />}
-    </div>
+    </MainContainer>
   );
 };
 

@@ -39,3 +39,4 @@ export const TYPE_ID_MATRIX = 'matrix';
 // threshold for switching to the mobile optimized styling
 // this refers to horizontal pixels of the resulotion of the users device
 export const MOBILE_RESOLUTION_THRESHOLD = 767;
+export const MAIN_CONTAINER_MAX_WIDTH = 1440;

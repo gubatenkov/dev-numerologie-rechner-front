@@ -3,6 +3,7 @@
 //}
 
 $mobile-resolution-threshold: 767px; // TODO: find a way how to keep that in sync with Constants.js
+$main-container-max-width: 1440px;
 
 $akb-breakpoints: (
         desktop: $mobile-resolution-threshold

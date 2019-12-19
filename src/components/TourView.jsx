@@ -15,7 +15,10 @@ import iconBackPrimary from '../images/icon_back_primary.svg';
 import iconForwardPrimary from '../images/icon_forward_primary.svg';
 
 // treshhold for mobile view
-import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+import {
+  MAIN_CONTAINER_MAX_WIDTH,
+  MOBILE_RESOLUTION_THRESHOLD,
+} from '../utils/Constants';
 
 // constants used for content styling
 const CONTENT_STYLING_CLASS_SUBHEADING = 'subheading';
@@ -158,10 +161,25 @@ const PromotionArea = styled.div`
   }
 `;
 
+const TourOverViewOuterWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TourOverViewInnerWrapper = styled.div`
+  width: ${MAIN_CONTAINER_MAX_WIDTH}px;
+`;
+
 // container for the fixed overview component at the bottom
 const TourOverView = styled.div`
   /* basic box styling */
-  height: 80px;
+  height: 100%;
   width: 100%;
 
   padding-left: 30px;
@@ -169,10 +187,6 @@ const TourOverView = styled.div`
 
   background-color: ${props => props.theme.white};
   border-top: solid ${props => props.theme.primaryLight} 1px;
-
-  /* element stays fixed at the bottom of view */
-  position: fixed;
-  bottom: 0;
 
   /* element ist structured as grid with three columns*/
   display: grid;
@@ -335,16 +349,22 @@ const TourView = props => {
 
     // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
+        numberResult.numberDescription.description
+      }</p>`;
     }
 
     // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
+        numberResult.numberDescription.calculationDescription
+      } </p>`;
     }
 
     // adding description text of result
-    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${
+      numberResult.descriptionText
+    }</p>`;
 
     return [elementTitle, elementContent];
   };
@@ -368,12 +388,16 @@ const TourView = props => {
 
     // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
+        numberResult.numberDescription.description
+      }</p>`;
     }
 
     // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
+        numberResult.numberDescription.calculationDescription
+      } </p>`;
     }
 
     // adding result for first name
@@ -383,7 +407,9 @@ const TourView = props => {
       ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
 
     // adding description text for first name
-    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${
+      numberResult.descriptionText
+    }</p>`;
 
     // adding result for second name
     elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberCompareResult
@@ -398,7 +424,9 @@ const TourView = props => {
         '</br> Die Beschreibung dieser Zahl entspricht der vorherigen Zahlbeschreibung oben.';
     } else {
       // adding description text for second name
-      elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
+      elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${
+        numberCompareResult.descriptionText
+      }</p>`;
     }
 
     return [elementTitle, elementContent];
@@ -445,7 +473,7 @@ const TourView = props => {
       tabIndex="0"
       key="tourContainer"
     >
-      <Spacer></Spacer>
+      <Spacer />
       <ContentArea>
         <h1>{tourStepTitle}</h1>
         {tourStepContent ? (
@@ -472,28 +500,32 @@ const TourView = props => {
         )}
       </PromotionArea>
     </TourContentContainer>,
-    <TourOverView key="tourOverview">
-      <TourOverViewBackButton
-        imageIcon={iconBackPrimary}
-        onClick={() => handleBackClick()}
-      />
-      <TourOverviewSteps horizontal>
-        {tourData.map((tourSection, tourSectionIndex) => (
-          <Step
-            key={tourSection.sectionName}
-            name={tourSection.sectionName}
-            currentIndex={sectionIndex}
-            stepIndex={tourSectionIndex}
-            // active={tourSectionIndex <= sectionIndex}
-            onStepClick={name => handleStepClick(name)}
+    <TourOverViewOuterWrapper key="tourOverviewWrapper">
+      <TourOverViewInnerWrapper>
+        <TourOverView>
+          <TourOverViewBackButton
+            imageIcon={iconBackPrimary}
+            onClick={() => handleBackClick()}
           />
-        ))}
-      </TourOverviewSteps>
-      <TourOverViewForwardButton
-        imageIcon={iconForwardPrimary}
-        onClick={() => handleNextClick()}
-      />
-    </TourOverView>,
+          <TourOverviewSteps horizontal>
+            {tourData.map((tourSection, tourSectionIndex) => (
+              <Step
+                key={tourSection.sectionName}
+                name={tourSection.sectionName}
+                currentIndex={sectionIndex}
+                stepIndex={tourSectionIndex}
+                // active={tourSectionIndex <= sectionIndex}
+                onStepClick={name => handleStepClick(name)}
+              />
+            ))}
+          </TourOverviewSteps>
+          <TourOverViewForwardButton
+            imageIcon={iconForwardPrimary}
+            onClick={() => handleNextClick()}
+          />
+        </TourOverView>
+      </TourOverViewInnerWrapper>
+    </TourOverViewOuterWrapper>,
   ];
 };
 

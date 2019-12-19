@@ -1,10 +1,11 @@
 @import 'typography';
+@import 'variables';
 
 html * {
   font-family: 'Open Sans', sans-serif;
 }
 
 .main-container {
-  max-width: 1440px;
+  max-width: $main-container-max-width;
   margin: auto;
 }
