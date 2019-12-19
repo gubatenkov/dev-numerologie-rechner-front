@@ -12,15 +12,12 @@ import NavigationBar from './NavigationBar';
 import AnalysisBrowser from './AnalysisBrowser';
 import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
 import LoadingIndicator from './LoadingIndicator';
-import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
 import CreditsBuyModal from './CreditsBuyModal';
 import Footer from './Footer';
 
 import { currentUserQuery } from '../graphql/Queries';
-import { saveAnalysisMutation, deleteUserMutation } from '../graphql/Mutations';
-
-import { deleteUserAuthData } from '../utils/AuthUtils';
-
+import { saveAnalysisMutation } from '../graphql/Mutations';
+import MainContainer from './MainContainer';
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
 /**
@@ -37,47 +34,11 @@ class UserHome extends Component {
     this.state = {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
-      userDeletionDialogOpen: false,
       isBuyModalOpen: false,
       isBuyProcessing: false,
       loading: false,
     };
   }
-
-  /**
-   * handler for logout click
-   */
-  handleLogout = () => {
-    // removing token from local storage => logout
-    deleteUserAuthData();
-
-    // navigating to input for user
-    this.props.history.push('/analysisInput');
-
-    // reloading to clear cache
-    window.location.reload();
-  };
-
-  /**
-   * handler for deleting the current user
-   */
-  handleDeleteUser = async () => {
-    // setting loading state
-    this.setState({
-      loading: true,
-    });
-
-    // deleting user from server
-    await this.props.deleteUser();
-
-    // setting loading state
-    this.setState({
-      loading: false,
-    });
-
-    // logging user out
-    this.handleLogout();
-  };
 
   handleUsedCredit = () => {
     if (this.props.data && this.props.data.refetch) {
@@ -197,7 +158,7 @@ class UserHome extends Component {
     const { isBuyModalOpen } = this.state;
 
     return (
-      <div className="main-container">
+      <MainContainer>
         {this.state.loading && <LoadingIndicator />}
         <NavigationBar
           handleDeleteUser={() =>
@@ -264,21 +225,6 @@ class UserHome extends Component {
           }}
           groups={this.props.data.currentUser.groups}
         />
-        <ConfirmUserDeletionDialog
-          isOpen={this.state.userDeletionDialogOpen}
-          onClose={() =>
-            this.setState({
-              userDeletionDialogOpen: false,
-            })
-          }
-          onAction={() => {
-            // dismissing dialog
-            this.setState({ userDeletionDialogOpen: false });
-
-            // deleting user
-            this.handleDeleteUser();
-          }}
-        />
 
         <CreditsBuyModal
           credits={this.props.data.currentUser.credits}
@@ -289,7 +235,7 @@ class UserHome extends Component {
           onSuccessfulPurchase={this.handleSuccessfulPurchase}
         />
         <Footer />
-      </div>
+      </MainContainer>
     );
   }
 }
@@ -308,11 +254,9 @@ UserHome.propTypes = {
     }),
   }).isRequired,
   saveAnalysis: PropTypes.func.isRequired,
-  deleteUser: PropTypes.func.isRequired,
 };
 
 export default compose(
   graphql(currentUserQuery),
-  graphql(saveAnalysisMutation, { name: 'saveAnalysis' }),
-  graphql(deleteUserMutation, { name: 'deleteUser' })
+  graphql(saveAnalysisMutation, { name: 'saveAnalysis' })
 )(withRouter(UserHome));

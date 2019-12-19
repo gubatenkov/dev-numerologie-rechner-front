@@ -8,9 +8,6 @@ import iconPdf from '../../images/icon_pdf.svg';
 const addToggleStyle = {
   cursor: 'pointer',
 };
-const pdfToggleStyle = {
-  cursor: 'pointer',
-};
 export const AddToggleIcon = <IconAdd style={addToggleStyle} />;
 
 const actionToggleStyle = {
@@ -25,6 +22,7 @@ const PdfToggleParent = styled.div`
     height: 40px;
     background-color: #F3F9FA;
     border-radius: 6px;
+    cursor: pointer;
     
     img{
       margin-right: 6px;
