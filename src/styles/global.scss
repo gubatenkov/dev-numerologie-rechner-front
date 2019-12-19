@@ -2,10 +2,30 @@
 @import 'variables';
 
 html * {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
 }
 
 .main-container {
   max-width: $main-container-max-width;
   margin: auto;
+}
+
+h1 {
+  @include font-headline-1();
+}
+
+h2 {
+  @include font-headline-1-2();
+}
+
+h3 {
+  @include font-headline-2();
+}
+
+h4 {
+  @include font-headline-3();
+}
+
+h5 {
+  @include font-headline-5();
 }

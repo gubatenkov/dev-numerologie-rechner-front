@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import IconButton from './Buttons/IconButton';
+import '../styles/_typography.scss'
 
 import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
 
@@ -56,7 +57,7 @@ const PanelTitle = styled.div`
 
   /* styling text*/
   color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.gontFamily};
+  font-family: ${(props) => props.theme.fontFamily};
   font-size: 40px;
   font-weight: 500;
   line-height: 50px;
