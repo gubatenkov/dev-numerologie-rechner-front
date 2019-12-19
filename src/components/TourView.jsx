@@ -108,38 +108,42 @@ const ContentArea = styled.div`
     }
   }
 
-  /* rules provided by Clemens (client) for styling of content coming from backend*/
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  ul,
-  li {
-    font-family: Open sans;
-  }
-
+  // /* rules provided by Clemens (client) for styling of content coming from backend*/
+  // h1,
+  // h2,
+  // h3,
+  // h4,
+  // h5,
+  // h6,
+  // p,
+  // ul,
+  // li {
+  //   font-family: Open sans;
+  // }
+  //
   h1 {
-    font-size: 44px;
-    font-weight: 600;
+    @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+      font-size: 30px;
+    }
     margin-bottom: 2rem;
   }
 
   h2 {
-    font-size: 27px;
     line-height: 1.3em;
     margin-top: 50px;
     margin-bottom: 30px;
+    @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+      font-size: 24px;
+      margin-top: 30px;
+    }
   }
 
-  h3 {
-    font-size: 21px;
-    color: #aaa;
-    line-height: 30px;
-    margin-top: 30px !important;
-  }
+  // h3 {
+  //   font-size: 21px;
+  //   color: #aaa;
+  //   line-height: 30px;
+  //   margin-top: 30px !important;
+  // }
 `;
 
 // promotion are to the right
