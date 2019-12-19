@@ -11,8 +11,6 @@ import MainContainer from './MainContainer';
 import '../styles/UserProfile.scss'
 import {Button} from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 function UserProfile() {
   let history = useHistory();

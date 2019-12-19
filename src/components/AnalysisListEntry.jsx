@@ -29,7 +29,7 @@ const LifeNumberDisplay = ({ nr }, children) => (
 );
 
 const AnalysisListEntry = ({
-  analysis: analysis,
+  analysis,
   onShortPdfClicked,
   onBuyShortPdfClicked,
   onLongPdfClicked,

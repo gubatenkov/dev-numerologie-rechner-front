@@ -44,10 +44,7 @@ import iconAnalysis from '../images/icon_analysis.svg';
 import {
   ActionToggleIcon,
   AddToggleIcon,
-  PdfToggleIcon,
 } from './Dropdowns/DropdownMenuAddUtils';
-import shortPdfIcon from '../images/icon_openBookPremium_primary.svg';
-import longPdfIcon from '../images/icon_textLong.svg';
 
 const AnalysisBrowser = props => {
   // declaring state variables
