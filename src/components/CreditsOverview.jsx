@@ -10,7 +10,6 @@ const CreditsOverview = props => {
   let longCredits = props.credits
     .filter(credit => credit.type === LONG_TYPE)
     .map(result => result.total)[0];
-  console.log(props.credits);
   return (
     <div className="akb-credits-overview-div">
       <h1>Guthaben</h1>
