@@ -15,7 +15,7 @@ const CreditsOverview = props => {
       <h1>Guthaben</h1>
       <div className="akb-credits-div">
         <div className="akb-credits-box">
-          <h3>Pesrönlichkeit PDF Kurzversion</h3>
+          <h3>Persönlichkeit PDF Kurzversion</h3>
           <div className="akb-credits-wrapper">
             <div>{shortCredits}</div>
           </div>
