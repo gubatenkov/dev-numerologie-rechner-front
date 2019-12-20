@@ -1,0 +1,24 @@
+@import 'variables';
+@import 'typography';
+
+.akb-credits-div {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  .akb-credits-box {
+    text-align: center;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    div {
+      border-radius: 8px;
+      border: 1px solid $light-gray;
+      padding: 10px;
+      font-size: 60px;
+      font-weight: 500;
+      line-height: 70px;
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;;
+    }
+  }
+}
