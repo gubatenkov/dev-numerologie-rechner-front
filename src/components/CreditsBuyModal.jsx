@@ -17,7 +17,7 @@ import '../styles/CreditsBuyModal.css';
 const CREDIT_PERSONAL_SHORT_WPID = 364;
 const CREDIT_PERSONAL_LONG_WPID  = 365;
 const PRICE_PERSONAL_SHORT = 29;
-const PRICE_PERSONAL_LONG = 49;
+const PRICE_PERSONAL_LONG = 59;
 
 // baseURL of the shop
 const baseUrl = 'https://www.bios-shop.eu';
@@ -105,7 +105,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
     setWaitingCallback(false);
     setSuccess(true);
     onSuccessfulPurchase();
-  }
+  };
 
   return (
     <Fragment>
@@ -188,7 +188,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
       </Modal>
     </Fragment>
   );
-}
+};
 
 export default compose(
   graphql(createWindowTokenMutation, { name: 'createWindowToken' })
