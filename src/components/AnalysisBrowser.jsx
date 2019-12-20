@@ -561,7 +561,7 @@ const AnalysisBrowser = props => {
           setConfirmUseCreditDialogOpen(false);
           spendCredit();
         }}
-      />^
+      />
     </div>
   );
 };
