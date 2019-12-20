@@ -17,13 +17,13 @@ const CreditsOverview = props => {
         <div className="akb-credits-box">
           <h3>Persönlichkeit PDF Kurzversion</h3>
           <div className="akb-credits-wrapper">
-            <div>{shortCredits}</div>
+            <div>{shortCredits ? shortCredits : 0}</div>
           </div>
         </div>
         <div className="akb-credits-box">
           <h3>Persönlichkeit PDF Langversion</h3>
           <div className="akb-credits-wrapper">
-            <div>{longCredits}</div>
+            <div>{longCredits ? longCredits : 0}</div>
           </div>
         </div>
       </div>
