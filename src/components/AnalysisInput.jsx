@@ -10,7 +10,7 @@ import ToastNotifications from 'cogo-toast';
 import Panel from './Panel';
 import InputField from './InputField';
 
-import logo from '../images/logo.png';
+import logoTransparentWhite from '../images/logo_weiss_trans.png';
 import '../styles/AnalysisInput.css';
 import '../styles/InputForm.css';
 
@@ -190,7 +190,7 @@ class AnalysisInput extends Component {
                 <img
                   className="brand-img logo"
                   height="250"
-                  src={logo}
+                  src={logoTransparentWhite}
                   alt="logo"
                 />
               </a>

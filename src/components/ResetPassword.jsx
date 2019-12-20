@@ -8,7 +8,7 @@ import { postJsonData } from '../utils/AuthUtils';
 import Panel from './Panel';
 import InputField from './InputField';
 
-import logo from '../images/logo.png';
+import logo from '../images/logo_weiss_trans.png';
 import '../styles/InputForm.css';
 
 // delay after which the user is redirected upon successful reset
