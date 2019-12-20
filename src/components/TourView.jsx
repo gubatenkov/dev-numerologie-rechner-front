@@ -360,9 +360,9 @@ const TourView = props => {
 
     // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
-        numberResult.numberDescription.calculationDescription
-      } </p>`;
+        elementContent += (!!numberResult.numberDescription.calculationDescription) ? `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
+          numberResult.numberDescription.calculationDescription
+        } </p>` : '';
     }
 
     // adding description text of result
