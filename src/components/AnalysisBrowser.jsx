@@ -41,6 +41,8 @@ import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
 import NavigationDropdownMenu from './NavigationDropdownMenu';
 import iconGroup from '../images/icon_group.svg';
 import iconAnalysis from '../images/icon_analysis.svg';
+import iconDelete from '../images/icon_delete.svg';
+import iconEdit from '../images/icon_edit.svg';
 import {
   ActionToggleIcon,
   AddToggleIcon,
@@ -410,7 +412,7 @@ const AnalysisBrowser = props => {
                         setRenameGroupDialogOpen(true);
                       }}
                     >
-                      Umbenennen
+                      <img src={iconEdit} alt="" /> Umbenennen
                     </NavigationDropdownMenuItem>
                     <NavigationDropdownMenuItem
                       onClick={() => {
@@ -420,7 +422,7 @@ const AnalysisBrowser = props => {
                         setConfirmGroupDeletionDialogOpen(true);
                       }}
                     >
-                      Löschen
+                      <img src={iconDelete} alt="" /> Löschen
                     </NavigationDropdownMenuItem>
                   </NavigationDropdownMenu>
                 )}

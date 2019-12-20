@@ -9,6 +9,7 @@ import {
 } from './Dropdowns/DropdownMenuAddUtils';
 import shortPdfIcon from '../images/icon_openBookPremium_primary.svg';
 import longPdfIcon from '../images/icon_textLong.svg';
+import iconDelete from '../images/icon_delete.svg';
 
 export const SHORT_TYPE = 'persoenlichkeit_kurz';
 export const LONG_TYPE = 'persoenlichkeit_lang';
@@ -84,7 +85,7 @@ const AnalysisListEntry = ({
           customToggle={ActionToggleIcon}
         >
           <NavigationDropdownMenuItem onClick={onAnalysisDelete}>
-            Löschen
+            <img src={iconDelete} alt="" /> Löschen
           </NavigationDropdownMenuItem>
         </NavigationDropdownMenu>
       </RightDiv>

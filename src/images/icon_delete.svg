@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 59.1 (101010) - https://sketch.com -->
+    <title>90B8F47F-C2D0-411A-98C9-9824E16A5E28</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <circle id="path-1" cx="18" cy="18" r="18"></circle>
+    </defs>
+    <g id="Asset-Artboard-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons-/-Delete-Circle-Icons-/-Delete">
+            <g id="Icons/Delete">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#FF0303" opacity="0.1" xlink:href="#path-1"></use>
+                <path d="M24.5625,14.25 L23.6913395,26.446247 C23.6539605,26.9695525 23.2185195,27.375 22.6938808,27.375 L13.3061192,27.375 C12.7814805,27.375 12.3460395,26.9695525 12.3086605,26.446247 L11.4375,14.25 L24.5625,14.25 Z M10.5,12.375 C9.98223305,12.375 9.5625,11.955267 9.5625,11.4375 C9.5625,10.919733 9.98223305,10.5 10.5,10.5 L14.2495,10.5 L14.25,9.625 C14.25,9.07271525 14.6977153,8.625 15.25,8.625 L20.75,8.625 C21.3022847,8.625 21.75,9.07271525 21.75,9.625 L21.7495,10.5 L25.5,10.5 C26.017767,10.5 26.4375,10.919733 26.4375,11.4375 C26.4375,11.955267 26.017767,12.375 25.5,12.375 L10.5,12.375 Z" id="Combined-Shape" fill="#FF0303" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

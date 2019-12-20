@@ -18,6 +18,7 @@ import Footer from './Footer';
 import { currentUserQuery } from '../graphql/Queries';
 import { saveAnalysisMutation } from '../graphql/Mutations';
 import MainContainer from './MainContainer';
+import CreditsOverview from './CreditsOverview';
 const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
 
 /**
@@ -167,6 +168,7 @@ class UserHome extends Component {
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeContent">
+            <CreditsOverview credits={this.props.data.currentUser.credits}/>
             <AnalysisBrowser
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.analyses}
