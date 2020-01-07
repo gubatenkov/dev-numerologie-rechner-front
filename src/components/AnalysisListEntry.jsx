@@ -57,8 +57,7 @@ const AnalysisListEntry = ({
           customToggle={PdfToggleIcon}
         >
           {/* Short Pdfs */}
-          {analysis.usedCreditTypes.includes({ SHORT_TYPE }) ||
-          analysis.usedCreditTypes.includes(LONG_TYPE) ? (
+          {analysis.usedCreditTypes.includes(SHORT_TYPE) ? (
             <NavigationDropdownMenuItem onClick={onShortPdfClicked}>
               <img src={shortPdfIcon} alt="" /> Kurzes PDF
             </NavigationDropdownMenuItem>
@@ -68,8 +67,7 @@ const AnalysisListEntry = ({
             </NavigationDropdownMenuItem>
           )}
           {/* Long Pdfs */}
-          {analysis.usedCreditTypes.includes({ LONG_TYPE }) ||
-          analysis.usedCreditTypes.includes(LONG_TYPE) ? (
+          {analysis.usedCreditTypes.includes(LONG_TYPE) ? (
             <NavigationDropdownMenuItem onClick={onLongPdfClicked}>
               <img src={longPdfIcon} alt="" /> Langes PDF
             </NavigationDropdownMenuItem>
