@@ -587,7 +587,9 @@ export async function createPDFFromAnalysisResult(
       // getting compare result
       let resultCompareSection = null;
       if (resultsCompareSections) {
-        resultCompareSection = resultsCompareSections[index];
+        // find out the index
+        const compareIndex = resultSections.findIndex(item => item === resultSection);
+        resultCompareSection = resultsCompareSections[compareIndex];
       }
 
       // saving information about first element of level -> the index saved will be the first index
