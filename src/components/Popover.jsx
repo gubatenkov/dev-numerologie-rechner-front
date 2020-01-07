@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import BoostrapPopover from 'react-bootstrap/Popover';
 import Switch from './Switches/Switch';
+import {MOBILE_RESOLUTION_THRESHOLD} from "../utils/Constants";
 
 // applying custom style to boostrap popover
 const Popover = styled(BoostrapPopover)`
@@ -20,6 +21,7 @@ const Popover = styled(BoostrapPopover)`
   this and setting with to auto so content (child element) can define width.*/
   max-width: 600px !important;
   width: auto !important;
+  transform: translate3d(5px, 68px, 0px)
 `;
 
 /* Defining and exporting different container components based on type of popover. So far there are two
@@ -78,7 +80,10 @@ export const PopoverSettingsContent = styled(Popover.Content)`
   align-items: flex-start;
 
   /* setting fixed with of settings content */
-  width: 400px !important;
+  
+  @media (min-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    width: 400px !important;
+  }
 
   /* same margin on every edge */
   margin: 24px;

@@ -25,6 +25,8 @@ const CONTENT_STYLING_CLASS_SUBHEADING = 'subheading';
 const CONTENT_STYLING_CLASS_DESCRIPTION = 'descriptionText';
 const CONTENT_STYLING_CLASS_NAME_HEADER = 'nameHeading';
 const CONTENT_STYLING_CLASS_HEADER = 'resultHeading';
+const DESKTOP_TOUR_OVERVIEW_HEIGHT_PX = 80;
+const MOBILE_TOUR_OVERVIEW_HEIGHT_PX = 80; // TODO: Make less
 
 // main container for view layout
 const TourContentContainer = styled.div`
@@ -160,7 +162,7 @@ const PromotionArea = styled.div`
 
   /* adapting margins on mobile and letting container grow on own row */
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    margin: 0 16px 30px 16px;
+    margin: 0 16px ${MOBILE_TOUR_OVERVIEW_HEIGHT_PX}px 16px;
     flex-grow: 1;
   }
 `;
@@ -170,7 +172,7 @@ const TourOverViewOuterWrapper = styled.div`
   bottom: 0;
   left: 0;
   width: 100vw;
-  height: 80px;
+  height: ${DESKTOP_TOUR_OVERVIEW_HEIGHT_PX}px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -330,7 +330,7 @@ const AnalysisResultPersonalRender = props => {
           <TextButton
             primary
             icon={bookIconWhite}
-            title="Alle lesen"
+            title="Alles lesen"
             onClick={() => {
               // opening tour view at start
               setIsTourOpen(true);

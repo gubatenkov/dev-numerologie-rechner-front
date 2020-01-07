@@ -105,7 +105,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
     setWaitingCallback(false);
     setSuccess(true);
     onSuccessfulPurchase();
-  }
+  };
 
   return (
     <Fragment>
@@ -188,7 +188,7 @@ const CreditsBuyModal = ({ credits, wpAccessToken, show, onHide, onSuccessfulPur
       </Modal>
     </Fragment>
   );
-}
+};
 
 export default compose(
   graphql(createWindowTokenMutation, { name: 'createWindowToken' })
