@@ -62,12 +62,23 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "husky": "^4.2.1",
+    "lint-staged": "^10.0.7",
     "prettier": "^1.19.1"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint && npm run format"
     }
+  },
+  "lint-staged": {
+    "*.+(js|jsx)": [
+      "./node_modules/.bin/eslint",
+      "git add"
+    ],
+    "*.+(js|jsx|json|css|md)": [
+      "./node_modules/.bin/prettier --write",
+      "git add"
+    ]
   },
   "browserslist": {
     "production": [
