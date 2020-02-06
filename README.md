@@ -11,8 +11,8 @@ The frontend project to the numberology calculator project. The main purpose of 
 ## Getting started
 
 - Checkout
-- run `yarn install` to install packages
-- run `yarn start` to start dev environment
+- run `npm install` to install packages
+- run `npm start` to start dev environment
 
 ## Routes
 
@@ -26,7 +26,7 @@ The frontend project to the numberology calculator project. The main purpose of 
 
 ## Testing
 
-- run `yarn test` to run test cases in `./tests`
+- run `npm test` to run test cases in `./tests`
 
 ## Attribution:
 
