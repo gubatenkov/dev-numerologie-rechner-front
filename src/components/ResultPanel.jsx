@@ -1,11 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import React from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
 
-import IconButton from './Buttons/IconButton';
-import '../styles/_typography.scss'
+import IconButton from "./Buttons/IconButton";
+import "../styles/_typography.scss";
 
-import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 // the container => body of the panel
 const PanelContainer = styled.div`
@@ -14,7 +14,7 @@ const PanelContainer = styled.div`
 
   /* basic box styling*/
   border-radius: 8px;
-  background-color: ${(props) => props.theme.lightestGrey};
+  background-color: ${props => props.theme.lightestGrey};
   margin-bottom: 60px;
 `;
 
@@ -56,8 +56,8 @@ const PanelTitle = styled.div`
   justify-self: center;
 
   /* styling text*/
-  color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.fontFamily};
+  color: ${props => props.theme.darkGrey};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 40px;
   font-weight: 500;
   line-height: 50px;
@@ -91,7 +91,7 @@ const PanelBody = styled.div`
   }
 `;
 
-const ResultPanel = (props) => (
+const ResultPanel = props => (
   <PanelContainer id={props.id}>
     <PanelHeader>
       <LeftPanelAction>
@@ -123,7 +123,7 @@ ResultPanel.propTypes = {
   leftActionIcon: PropTypes.string,
   onLeftActionClick: PropTypes.func,
   rightActionIcon: PropTypes.string,
-  onRightActionClick: PropTypes.func,
+  onRightActionClick: PropTypes.func
 };
 
 export default ResultPanel;

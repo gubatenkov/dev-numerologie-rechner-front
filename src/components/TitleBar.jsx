@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import _ from 'lodash';
+import _ from "lodash";
 
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 // container for all title elements
 const TitleBarContainer = styled.div`
@@ -45,11 +45,13 @@ const TitleBarItemContainer = styled.div`
 
   /* removeable items have a X icon on top => therefore adjusting padding here. We need 
   this as text needs to be vertically on the same hight*/
-  padding: ${(props) => (props.removeable ? '18px 18px 38px 18px' : '42px 18px 38px 18px')};
+  padding: ${props =>
+    props.removeable ? "18px 18px 38px 18px" : "42px 18px 38px 18px"};
 
   /* adding hover effect to removable items */
   :hover {
-    background-color: ${(props) => (props.removeable ? '#f8f8f8' : 'transparent')};
+    background-color: ${props =>
+      props.removeable ? "#f8f8f8" : "transparent"};
   }
 `;
 
@@ -79,14 +81,14 @@ const CloseIcon = styled(FontAwesomeIcon)`
 
   /* if container is in hovered state => adapting x to dark color to be shown */
   ${TitleBarItemContainer}:hover & {
-    color: ${(props) => props.theme.darkGrey};
+    color: ${props => props.theme.darkGrey};
   }
 `;
 
 // name in a title item
 const TitleBarName = styled.div`
-  color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.fontFamily};
+  color: ${props => props.theme.darkGrey};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 48px;
   font-weight: 500;
   line-height: 58px;
@@ -100,14 +102,14 @@ const TitleBarName = styled.div`
 
   /* mobile phones: reducing fotn sizes*/
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    font-size: ${(props) => (props.compare ? '24px' : '40px')};
-    line-height: ${(props) => (props.compare ? '32px' : '50px')};
+    font-size: ${props => (props.compare ? "24px" : "40px")};
+    line-height: ${props => (props.compare ? "32px" : "50px")};
   }
 `;
 
 const TitleBarDate = styled.div`
-  color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.fontFamily};
+  color: ${props => props.theme.darkGrey};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 20px;
   line-height: 24px;
   text-align: center;
@@ -123,7 +125,7 @@ const TitleBarDate = styled.div`
 `;
 
 // item of the tite bar containing of name and date of birth
-const TitleBarItem = (props) => (
+const TitleBarItem = props => (
   <TitleBarItemContainer
     className={props.className}
     removeable={props.removeable}
@@ -143,7 +145,7 @@ const TitleBarItem = (props) => (
  * title bar on top of screen featuring a page title showing the user
  * names and dob of the currently displayed analysis
  */
-const TitleBar = (props) => (
+const TitleBar = props => (
   <TitleBarContainer>
     <TitleBarItem
       name={props.primaryName}
@@ -167,7 +169,7 @@ TitleBar.propTypes = {
   primaryDate: PropTypes.string.isRequired,
   secondaryName: PropTypes.string,
   secondarySubHeading: PropTypes.string,
-  onRemoveSecondaryName: PropTypes.func,
+  onRemoveSecondaryName: PropTypes.func
 };
 
 export default TitleBar;

@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 
 // styling related
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import Avatar from 'react-avatar';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Spinner from 'react-bootstrap/Spinner';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import iconCartPrimary from '../images/icon_cart_primary.svg';
-import iconSettingsPrimary from '../images/icon_settings_primary.svg';
-import { saveUserSettingsMutation } from '../graphql/Mutations';
-import { userSettingsQuery } from '../graphql/Queries';
+import Avatar from "react-avatar";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Spinner from "react-bootstrap/Spinner";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import iconCartPrimary from "../images/icon_cart_primary.svg";
+import iconSettingsPrimary from "../images/icon_settings_primary.svg";
+import { saveUserSettingsMutation } from "../graphql/Mutations";
+import { userSettingsQuery } from "../graphql/Queries";
 import Popover, {
   PopoverTextContent,
   PopoverTextItem,
   PopoverSettingsContent,
   PopoverSettingsSection,
-  SwitchSettingItem,
-} from './Popover';
-import IconButton from './Buttons/IconButton';
-import TextButton from './Buttons/TextButton';
+  SwitchSettingItem
+} from "./Popover";
+import IconButton from "./Buttons/IconButton";
+import TextButton from "./Buttons/TextButton";
 
 // images
-import logo from '../images/logo.png';
+import logo from "../images/logo.png";
 
 // importing threshold to switch to mobile optimized layout
-import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 // auth utils
-import { deleteUserAuthData, getUserAuthData } from '../utils/AuthUtils';
+import { deleteUserAuthData, getUserAuthData } from "../utils/AuthUtils";
 
 // container component of navbar
 const NavbarContainer = styled.nav`
@@ -164,7 +164,7 @@ const NavigationBar = props => {
     showBookReferences: false,
     showCategoryExplanations: false,
     showNumberMeaningExplanations: false,
-    showNumberCalculationExplanations: false,
+    showNumberCalculationExplanations: false
   });
 
   // state flag indicating if the state of this component has already been properly initialized by server call
@@ -176,7 +176,7 @@ const NavigationBar = props => {
   // defining query loading user data and setting state upon completion
   // setting fetch policy to prevent caching issues
   const { loading, data, error } = useQuery(userSettingsQuery, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: "network-only",
     onCompleted: data => {
       if (error) {
         return;
@@ -195,12 +195,12 @@ const NavigationBar = props => {
         showNumberMeaningExplanations:
           currentUser.showNumberMeaningExplanations,
         showNumberCalculationExplanations:
-          currentUser.showNumberCalculationExplanations,
+          currentUser.showNumberCalculationExplanations
       });
 
       // setting initialized flag to indicate properly initialized state
       setComponentInitialized(true);
-    },
+    }
   });
 
   // defining effect that calls server whenever settings change
@@ -218,7 +218,7 @@ const NavigationBar = props => {
       // if settings changed => calling server to apply change
       if (settingsChanged) {
         saveUserSettings({
-          variables: userSettings,
+          variables: userSettings
         });
       }
     }
@@ -248,7 +248,7 @@ const NavigationBar = props => {
     deleteUserAuthData();
 
     // redirecting user to login page
-    props.history.push('/login');
+    props.history.push("/login");
   };
 
   // defining popover for settings button
@@ -258,22 +258,22 @@ const NavigationBar = props => {
         <PopoverSettingsSection title="Reihenfolge der Zahlen – Übersicht und Tour">
           <SegmentContainer>
             <SegmentButton
-              primary={userSettings.resultConfiguration === 'starter'}
-              title={'Standard'}
+              primary={userSettings.resultConfiguration === "starter"}
+              title={"Standard"}
               onClick={() =>
                 setUserSettings({
                   ...userSettings,
-                  resultConfiguration: 'starter',
+                  resultConfiguration: "starter"
                 })
               }
             />
             <SegmentButton
-              primary={userSettings.resultConfiguration === 'levels'}
-              title={'Fortgeschritten'}
+              primary={userSettings.resultConfiguration === "levels"}
+              title={"Fortgeschritten"}
               onClick={() =>
                 setUserSettings({
                   ...userSettings,
-                  resultConfiguration: 'levels',
+                  resultConfiguration: "levels"
                 })
               }
             />
@@ -291,7 +291,7 @@ const NavigationBar = props => {
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
-                showBookRecommendations: newValue,
+                showBookRecommendations: newValue
               })
             }
             checked={userSettings.showBookRecommendations}
@@ -302,7 +302,7 @@ const NavigationBar = props => {
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
-                showCategoryExplanations: newValue,
+                showCategoryExplanations: newValue
               })
             }
             checked={userSettings.showCategoryExplanations}
@@ -312,7 +312,7 @@ const NavigationBar = props => {
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
-                showNumberMeaningExplanations: newValue,
+                showNumberMeaningExplanations: newValue
               })
             }
             checked={userSettings.showNumberMeaningExplanations}
@@ -323,7 +323,7 @@ const NavigationBar = props => {
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
-                showNumberCalculationExplanations: newValue,
+                showNumberCalculationExplanations: newValue
               })
             }
             checked={userSettings.showNumberCalculationExplanations}
@@ -337,10 +337,10 @@ const NavigationBar = props => {
   const avatarPopup = (
     <Popover>
       <PopoverTextContent>
-        <PopoverTextItem onClick={() => props.history.push('/userHome')}>
+        <PopoverTextItem onClick={() => props.history.push("/userHome")}>
           Meine Analysen
         </PopoverTextItem>
-        <PopoverTextItem onClick={() => props.history.push('/userProfile')}>
+        <PopoverTextItem onClick={() => props.history.push("/userProfile")}>
           Mein Profil
         </PopoverTextItem>
         <PopoverTextItem onClick={handleLogout}>Abmelden</PopoverTextItem>
@@ -380,8 +380,8 @@ const NavigationBar = props => {
           imageIcon={iconCartPrimary}
           onClick={() =>
             window.open(
-              'https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/',
-              '_blank'
+              "https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/",
+              "_blank"
             )
           }
         />
@@ -404,11 +404,11 @@ const NavigationBar = props => {
 
       {!loggedIn && (
         <RightActionButton
-          title={props.register ? 'Registrieren' : 'Anmelden'}
+          title={props.register ? "Registrieren" : "Anmelden"}
           onClick={
             props.register
-              ? () => props.history.push('/register')
-              : () => props.history.push('/login')
+              ? () => props.history.push("/register")
+              : () => props.history.push("/login")
           }
         />
       )}
@@ -421,8 +421,8 @@ NavigationBar.propTypes = {
   leftButtonIcon: PropTypes.string,
   leftButtonOnClick: PropTypes.func,
   history: PropTypes.shape({
-    push: PropTypes.func,
-  }),
+    push: PropTypes.func
+  })
 };
 
 export default withRouter(NavigationBar);

@@ -1,7 +1,7 @@
 // elements that need to be included top level in the result
-const TOP_LEVEL_ELEMENTS = ['UL', 'TABLE', 'H1', 'H2', 'H3'];
+const TOP_LEVEL_ELEMENTS = ["UL", "TABLE", "H1", "H2", "H3"];
 // heading elements
-const HEADING_ELEMENTS = ['H0', 'H1', 'H2', 'H3', 'H4'];
+const HEADING_ELEMENTS = ["H0", "H1", "H2", "H3", "H4"];
 
 /**
  * converts a html element into a pdfmake syntax string
@@ -21,7 +21,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
     if (customStyles.text) {
       return {
         text: `${trimmedContent} `,
-        style: customStyles.text,
+        style: customStyles.text
       };
     }
     // returning plain text
@@ -29,8 +29,8 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
   }
 
   // breaks are nodes not in syntax. implicit with new paragraph
-  if (htmlElement.nodeName === 'BR') {
-    return { text: '\n' };
+  if (htmlElement.nodeName === "BR") {
+    return { text: "\n" };
   }
 
   // adding newline to titles if inline
@@ -40,15 +40,15 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
       text: `${htmlElement.textContent.trim()} \n`,
       style: customStyles[htmlElement.nodeName.toLowerCase()]
         ? [
-          htmlElement.nodeName,
-          customStyles[htmlElement.nodeName.toLowerCase()],
-        ]
+            htmlElement.nodeName,
+            customStyles[htmlElement.nodeName.toLowerCase()]
+          ]
         : htmlElement.nodeName,
-      headlineLevel: htmlElement.nodeName,
+      headlineLevel: htmlElement.nodeName
     };
 
     // h1 custom styles
-    if (htmlElement.nodeName === 'H1') {
+    if (htmlElement.nodeName === "H1") {
       resultDict.tocItem = false;
     }
 
@@ -57,24 +57,25 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
   }
 
   // handling list items
-  if (htmlElement.nodeName === 'UL') {
+  if (htmlElement.nodeName === "UL") {
     return {
-      ul: Array.from(htmlElement.getElementsByTagName('LI')).map(child =>
-        child.textContent.trim()),
-      style: customStyles.ul ? ['LIST', customStyles.ul] : 'LIST',
+      ul: Array.from(htmlElement.getElementsByTagName("LI")).map(child =>
+        child.textContent.trim()
+      ),
+      style: customStyles.ul ? ["LIST", customStyles.ul] : "LIST"
     };
   }
 
   // handling table items
-  if (htmlElement.nodeName === 'TABLE') {
+  if (htmlElement.nodeName === "TABLE") {
     // getting rows
-    const tableRows = Array.from(htmlElement.getElementsByTagName('TR'));
+    const tableRows = Array.from(htmlElement.getElementsByTagName("TR"));
     return {
-      style: customStyles.table ? ['TABLE', customStyles.table] : 'TABLE',
+      style: customStyles.table ? ["TABLE", customStyles.table] : "TABLE",
       table: {
         headerRows: 1,
         body: tableRows.map((row, rowIndex) =>
-          Array.from(row.getElementsByTagName('TD')).map((col, colIndex) => {
+          Array.from(row.getElementsByTagName("TD")).map((col, colIndex) => {
             const stack = [];
             col.childNodes.forEach(node => {
               stack.push(convertHTMLElementToPDFSyntax(node));
@@ -83,18 +84,19 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
               stack,
               style: {
                 bold: colIndex === 0 || rowIndex === 0,
-                alignment: rowIndex === 0 ? 'center' : 'left',
-              },
+                alignment: rowIndex === 0 ? "center" : "left"
+              }
             };
-          })),
-      },
+          })
+        )
+      }
     };
   }
 
   // otherwise returning node with styling set to its tag name => can be styled externally any ways
   return {
     text: `${htmlElement.textContent.trim()} `,
-    style: htmlElement.nodeName,
+    style: htmlElement.nodeName
   };
 }
 
@@ -106,11 +108,11 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
  */
 export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
   // removing line breaks from string
-  const sanitizedText = htmlText.replace(/(\r\n|\n|\r)/gm, '');
+  const sanitizedText = htmlText.replace(/(\r\n|\n|\r)/gm, "");
 
   // creating parser and parsing html
   const parser = new DOMParser();
-  const htmlDoc = parser.parseFromString(sanitizedText, 'text/html');
+  const htmlDoc = parser.parseFromString(sanitizedText, "text/html");
 
   // getting array of all child elements of parsed body
   const childElements = Array.from(htmlDoc.body.childNodes);
@@ -129,7 +131,7 @@ export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
       // if we have subresult => pushing
       if (currentSubResult.length > 0) {
         groupedElements.push({
-          text: currentSubResult,
+          text: currentSubResult
         });
       }
 
@@ -137,12 +139,14 @@ export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
       currentSubResult = [];
 
       // pushing list or table itself
-      groupedElements.push(convertHTMLElementToPDFSyntax(currentElement, customStyles));
+      groupedElements.push(
+        convertHTMLElementToPDFSyntax(currentElement, customStyles)
+      );
     } else {
       // pushing current element to sub result if not null
       const newElement = convertHTMLElementToPDFSyntax(
         currentElement,
-        customStyles,
+        customStyles
       );
       if (newElement) {
         currentSubResult.push(newElement);
@@ -151,7 +155,7 @@ export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
       // if last item => pushing converted subresults to rendresult
       if (index === childElements.length - 1 && currentSubResult.length > 0) {
         groupedElements.push({
-          text: currentSubResult,
+          text: currentSubResult
         });
       }
     }

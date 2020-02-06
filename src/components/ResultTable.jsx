@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import ResultTableRow from './ResultTableRow';
+import ResultTableRow from "./ResultTableRow";
 
 // result table root element
 const ResultTableStyled = styled.div`
@@ -42,19 +42,19 @@ const TableCaption = styled.div`
   margin-bottom: 4px;
   font-size: 20px;
   font-weight: 600;
-  color: ${(props) => props.theme.black};
+  color: ${props => props.theme.black};
 `;
 
 /**
  * table capable of rendering calculation and number results
  * returned from the server
  */
-const ResultTable = (props) => {
+const ResultTable = props => {
   /**
    * handles clicks on action button in rows and forwards to parent
    * @param {String} numberId the id of the number/row that the action was performed in
    */
-  const handleTextDetailClick = (numberId) => {
+  const handleTextDetailClick = numberId => {
     props.handleTextDetailClick(props.sectionId, numberId);
   };
 
@@ -73,7 +73,7 @@ const ResultTable = (props) => {
     </ResultTableStyled>,
     <ResultWatermark key="watermark">
       Bitte kaufen Sie ein PDF Paket um ein PDF der Analyse zu generieren.
-    </ResultWatermark>,
+    </ResultWatermark>
   ];
 };
 
@@ -85,7 +85,7 @@ ResultTable.propTypes = {
   showTitle: PropTypes.bool,
   sectionId: PropTypes.string.isRequired,
   handleTextDetailClick: PropTypes.func.isRequired,
-  accessLevel: PropTypes.string.isRequired,
+  accessLevel: PropTypes.string.isRequired
 };
 
 export default ResultTable;

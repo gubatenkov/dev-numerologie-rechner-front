@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import '../styles/Panel.css';
+import "../styles/Panel.css";
 
 /**
  * Represents a panel in the UI code
@@ -13,7 +13,7 @@ class Panel extends Component {
     children: PropTypes.node,
     footer: PropTypes.element,
     actions: PropTypes.arrayOf(PropTypes.element),
-    className: PropTypes.string,
+    className: PropTypes.string
   };
 
   static defaultProps = {
@@ -21,7 +21,7 @@ class Panel extends Component {
     children: null,
     footer: null,
     actions: null,
-    className: '',
+    className: ""
   };
 
   /**
@@ -29,9 +29,7 @@ class Panel extends Component {
    */
   render() {
     // defining panel base class
-    const panelBaseClass = `panel panel-bordered panel-default ${
-      this.props.className
-    }`;
+    const panelBaseClass = `panel panel-bordered panel-default ${this.props.className}`;
 
     return (
       <div className={panelBaseClass} id={this.props.id}>

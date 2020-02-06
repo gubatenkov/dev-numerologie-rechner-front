@@ -6,11 +6,11 @@ $mobile-resolution-threshold: 767px; // TODO: find a way how to keep that in syn
 $main-container-max-width: 1440px;
 
 $akb-breakpoints: (
-        desktop: $mobile-resolution-threshold
+  desktop: $mobile-resolution-threshold
 ) !default;
 
-$dark-yellow: #F8F8F8;
-$red: #FF0000;
-$light-blue: #01B2D4;
-$white: #FFFFFF;
-$light-gray: #EAEAEA;
+$dark-yellow: #f8f8f8;
+$red: #ff0000;
+$light-blue: #01b2d4;
+$white: #ffffff;
+$light-gray: #eaeaea;

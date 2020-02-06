@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Dialog from './Dialog';
+import Dialog from "./Dialog";
 
 /**
  * dialog that prompts the user to confirm the deletion of a group
@@ -20,7 +20,9 @@ class ConfirmUserDeletionDialog extends Component {
         actionTitle="Löschen"
       >
         <p>
-          {'Sind Sie sicher, dass Sie Ihren Benutzer und alle Daten sowie alle Analysen löschen wollen?'}
+          {
+            "Sind Sie sicher, dass Sie Ihren Benutzer und alle Daten sowie alle Analysen löschen wollen?"
+          }
         </p>
       </Dialog>
     );

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import '../../styles/Dialog.css';
+import "../../styles/Dialog.css";
 
 class Dialog extends Component {
   static propTypes = {
@@ -10,7 +10,7 @@ class Dialog extends Component {
     onClose: PropTypes.func,
     title: PropTypes.string.isRequired,
     cancelTitle: PropTypes.string,
-    actionTitle: PropTypes.string,
+    actionTitle: PropTypes.string
   };
 
   static defaultProps = {
@@ -18,7 +18,7 @@ class Dialog extends Component {
     onAction: () => {},
     onClose: () => {},
     cancelTitle: null,
-    actionTitle: null,
+    actionTitle: null
   };
 
   /**
@@ -26,7 +26,7 @@ class Dialog extends Component {
    */
   componentDidMount() {
     // updating body class of the site to prevent scrolling
-    document.body.classList.toggle('noScroll', this.props.isOpen);
+    document.body.classList.toggle("noScroll", this.props.isOpen);
   }
 
   /**
@@ -35,7 +35,7 @@ class Dialog extends Component {
    */
   componentDidUpdate() {
     // updating body class of the site to prevent scrolling
-    document.body.classList.toggle('noScroll', this.props.isOpen);
+    document.body.classList.toggle("noScroll", this.props.isOpen);
   }
 
   /**
@@ -53,7 +53,7 @@ class Dialog extends Component {
         className="modal fade show"
         role="dialog"
         tabIndex="-1"
-        style={{ display: 'block' }}
+        style={{ display: "block" }}
       >
         <div className="modal-dialog modal-center">
           <div className="modal-content">

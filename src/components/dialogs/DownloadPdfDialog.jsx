@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTyes from 'prop-types';
+import React, { Component } from "react";
+import PropTyes from "prop-types";
 
-import Dialog from './Dialog';
+import Dialog from "./Dialog";
 
 /**
  * dialog that prompts the user to confirm the deletion of an analysis
@@ -9,12 +9,12 @@ import Dialog from './Dialog';
 class DownloadPdfDialog extends Component {
   static propTypes = {
     analysis: PropTyes.shape({
-      name: PropTyes.string.isRequired,
-    }),
+      name: PropTyes.string.isRequired
+    })
   };
 
   static defaultProps = {
-    analysis: null,
+    analysis: null
   };
 
   /**
@@ -28,9 +28,7 @@ class DownloadPdfDialog extends Component {
         cancelTitle="Cancel"
         actionTitle="Download"
       >
-        <p>
-          {`How do you want to get your PDF file?`}
-        </p>
+        <p>{`How do you want to get your PDF file?`}</p>
       </Dialog>
     );
   }

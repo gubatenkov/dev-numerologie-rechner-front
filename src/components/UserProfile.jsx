@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
-import NavigationBar from './NavigationBar';
-import { currentUserQuery } from '../graphql/Queries';
-import { useMutation, useQuery } from '@apollo/react-hooks';
-import ConfirmUserDeletionDialog from './dialogs/ConfirmUserDeletionDialog';
-import { deleteUserMutation } from '../graphql/Mutations';
-import { deleteUserAuthData } from '../utils/AuthUtils';
-import LoadingIndicator from './LoadingIndicator';
-import MainContainer from './MainContainer';
-import '../styles/UserProfile.scss'
-import {Button} from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
+import React, { useState } from "react";
+import { withRouter, useHistory } from "react-router-dom";
+import NavigationBar from "./NavigationBar";
+import { currentUserQuery } from "../graphql/Queries";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import ConfirmUserDeletionDialog from "./dialogs/ConfirmUserDeletionDialog";
+import { deleteUserMutation } from "../graphql/Mutations";
+import { deleteUserAuthData } from "../utils/AuthUtils";
+import LoadingIndicator from "./LoadingIndicator";
+import MainContainer from "./MainContainer";
+import "../styles/UserProfile.scss";
+import { Button } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
 
 function UserProfile() {
   let history = useHistory();
@@ -38,7 +38,7 @@ function UserProfile() {
       deleteUserAuthData();
 
       // navigating to input for user
-      history.push('/analysisInput');
+      history.push("/analysisInput");
 
       setLoading(false);
       // reloading to clear cache
@@ -72,7 +72,11 @@ function UserProfile() {
                 {/*  </Row>*/}
                 {/*</Form>*/}
                 <h5>Email</h5>
-                <Form.Control type="email" value={data.currentUser.email} disabled={true}/>
+                <Form.Control
+                  type="email"
+                  value={data.currentUser.email}
+                  disabled={true}
+                />
               </div>
               <div className="akb-delete-div">
                 <Button
@@ -80,7 +84,9 @@ function UserProfile() {
                   variant="danger"
                   size="lg"
                   onClick={handleOnOpenDeletionDialog}
-                >Konto löschen</Button>
+                >
+                  Konto löschen
+                </Button>
                 <ConfirmUserDeletionDialog
                   isOpen={userDeletionDialogOpen}
                   onClose={handleOnCloseDeletionDialog}

@@ -1,6 +1,6 @@
-import React from 'react';
-import { LONG_TYPE, SHORT_TYPE } from './AnalysisListEntry';
-import '../styles/CreditsOverview.scss';
+import React from "react";
+import { LONG_TYPE, SHORT_TYPE } from "./AnalysisListEntry";
+import "../styles/CreditsOverview.scss";
 
 const CreditsOverview = props => {
   // const smallVersionCredits = props.credits.

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 /**
  * Represents a panel in the UI code
@@ -9,13 +9,13 @@ class InputField extends Component {
     icon: PropTypes.string,
     fieldName: PropTypes.string.isRequired,
     onChange: PropTypes.func,
-    type: PropTypes.string,
+    type: PropTypes.string
   };
 
   static defaultProps = {
     icon: null,
     onChange: () => {},
-    type: 'text',
+    type: "text"
   };
 
   render() {

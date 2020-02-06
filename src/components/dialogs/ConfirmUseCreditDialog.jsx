@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTyes from 'prop-types';
+import React, { Component } from "react";
+import PropTyes from "prop-types";
 
-import Dialog from './Dialog';
+import Dialog from "./Dialog";
 
 /**
  * dialog that prompts the user to confirm the deletion of an analysis
@@ -9,12 +9,12 @@ import Dialog from './Dialog';
 class ConfirmUseCreditDialog extends Component {
   static propTypes = {
     analysis: PropTyes.shape({
-      name: PropTyes.string.isRequired,
-    }),
+      name: PropTyes.string.isRequired
+    })
   };
 
   static defaultProps = {
-    analysis: null,
+    analysis: null
   };
 
   /**

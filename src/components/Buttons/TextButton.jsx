@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 // styling plain button object according to theme
 const StyledButton = styled.button`
@@ -13,10 +13,11 @@ const StyledButton = styled.button`
   padding: 10px 20px 10px 20px;
 
   /* styling background color and text color baesd on props and therefore type of button*/
-  background-color: ${(props) => (props.primary ? props.theme.primary : props.theme.primaryLight)};
-  color: ${(props) => (props.primary ? props.theme.white : props.theme.primary)};
+  background-color: ${props =>
+    props.primary ? props.theme.primary : props.theme.primaryLight};
+  color: ${props => (props.primary ? props.theme.white : props.theme.primary)};
 
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 18px;
   font-weight: 500;
   line-height: 30px;
@@ -34,7 +35,7 @@ const StyledIcon = styled.img`
 `;
 
 // text button in the theme style
-const TextButton = (props) => (
+const TextButton = props => (
   <StyledButton
     className={props.className}
     primary={props.primary}

@@ -1,7 +1,7 @@
-import { AUTH_ENDPOINT } from '../utils/Configuration';
+import { AUTH_ENDPOINT } from "../utils/Configuration";
 
-const AUTH_TOKEN = 'auth-token';
-const AUTH_EMAIL = 'auth-email';
+const AUTH_TOKEN = "auth-token";
+const AUTH_EMAIL = "auth-email";
 
 /**
  * checks if user is authenticated
@@ -16,7 +16,7 @@ export function isUserAuthenticated() {
 export function getUserAuthData() {
   return {
     email: localStorage.getItem(AUTH_EMAIL),
-    token: localStorage.getItem(AUTH_TOKEN),
+    token: localStorage.getItem(AUTH_TOKEN)
   };
 }
 
@@ -44,21 +44,20 @@ export function deleteUserAuthData() {
  */
 export async function postJsonData(url, data) {
   const response = await fetch(AUTH_ENDPOINT + url, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(data),
     headers: {
-      'Content-Type': 'application/json',
-    },
+      "Content-Type": "application/json"
+    }
   });
 
   if (!response.ok) {
     const jsonResponse = await response.json();
-    const error = (
-      typeof jsonResponse.error === 'string'
+    const error =
+      typeof jsonResponse.error === "string"
         ? jsonResponse.error
-        : jsonResponse.error.join('; ')
-    );
-    throw new Error(error || 'Unknown error');
+        : jsonResponse.error.join("; ");
+    throw new Error(error || "Unknown error");
   }
 
   return response.json();

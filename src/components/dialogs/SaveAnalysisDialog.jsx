@@ -1,24 +1,26 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import Dialog from './Dialog';
+import Dialog from "./Dialog";
 
 /**
  * Dialog to save an analysis
  */
 class SaveAnalysisDialog extends Component {
   static propTypes = {
-    groups: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-    })).isRequired,
+    groups: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired
+      })
+    ).isRequired,
     isOpen: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    isOpen: false,
+    isOpen: false
   };
 
   /**
@@ -42,9 +44,7 @@ class SaveAnalysisDialog extends Component {
       <Dialog
         isOpen={this.props.isOpen}
         onClose={this.props.onClose}
-        onAction={() =>
-          this.props.onSave(this.selectedGroup)
-        }
+        onAction={() => this.props.onSave(this.selectedGroup)}
         title="Analyse Speichern"
         cancelTitle="Abbrechen"
         actionTitle="Speichern"
@@ -53,9 +53,11 @@ class SaveAnalysisDialog extends Component {
         <div className="dropdown">
           <select
             className="form-control"
-            onChange={(newSelect) => {
+            onChange={newSelect => {
               // setting group
-              this.selectedGroup = this.props.groups.find(item => item.name === newSelect.target.value);
+              this.selectedGroup = this.props.groups.find(
+                item => item.name === newSelect.target.value
+              );
             }}
           >
             {this.props.groups.map(item => (

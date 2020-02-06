@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import '../styles/NavigationDropdownMenu.css';
-import { Dropdown } from 'react-bootstrap';
-import { ReactComponent as IconAdd } from '../images/icon_add.svg';
+import "../styles/NavigationDropdownMenu.css";
+import { Dropdown } from "react-bootstrap";
+import { ReactComponent as IconAdd } from "../images/icon_add.svg";
 
 const CustomToggleFactory = child =>
   React.forwardRef(({ children, onClick }, ref) => (
@@ -25,12 +25,12 @@ const CustomToggleFactory = child =>
 class NavigationDropdownMenu extends Component {
   static propTypes = {
     children: PropTypes.node,
-    customToggle: PropTypes.node,
+    customToggle: PropTypes.node
   };
 
   static defaultProps = {
     children: null,
-    customToggle: <IconAdd />,
+    customToggle: <IconAdd />
   };
 
   /**

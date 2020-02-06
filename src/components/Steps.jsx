@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import _ from 'lodash';
-import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+import React from "react";
+import styled from "styled-components";
+import _ from "lodash";
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 // styling container fro steps elements. Most of the styling ist handled by the container for the elements
 const StepsContainer = styled.div`
@@ -19,7 +19,7 @@ const StepsContainer = styled.div`
 
   /* drawing the circle for each item */
   div::before {
-    content: '';
+    content: "";
     width: 12px;
     height: 12px;
     display: block;
@@ -31,7 +31,7 @@ const StepsContainer = styled.div`
 
   /* drawing line after the element*/
   div::after {
-    content: '';
+    content: "";
     position: absolute;
     /* full width of the elemen + padding*/
     width: calc(100% + 40px);
@@ -79,7 +79,7 @@ const StyledStep = styled.div`
   /* show on mobile devices if active */
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
     display: ${props =>
-      props.stepIndex === props.currentIndex ? 'show' : 'none'};
+      props.stepIndex === props.currentIndex ? "show" : "none"};
   }
 
   /* basic font styling */
@@ -94,7 +94,7 @@ export const Step = props => {
   return (
     <StyledStep
       className={
-        isActive ? `${props.className || ''} ${'active'}` : props.className
+        isActive ? `${props.className || ""} ${"active"}` : props.className
       }
       active={props.active}
       stepIndex={props.stepIndex}

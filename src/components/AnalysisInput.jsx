@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
-import * as yup from 'yup';
-import moment from 'moment';
-import queryString from 'querystring';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Link, withRouter } from "react-router-dom";
+import * as yup from "yup";
+import moment from "moment";
+import queryString from "querystring";
 
-import ToastNotifications from 'cogo-toast';
+import ToastNotifications from "cogo-toast";
 
-import Panel from './Panel';
-import InputField from './InputField';
+import Panel from "./Panel";
+import InputField from "./InputField";
 
-import logoTransparentWhite from '../images/logo_weiss_trans.png';
-import '../styles/AnalysisInput.css';
-import '../styles/InputForm.css';
+import logoTransparentWhite from "../images/logo_weiss_trans.png";
+import "../styles/AnalysisInput.css";
+import "../styles/InputForm.css";
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({
@@ -23,7 +23,7 @@ const inputSchemaPersonal = yup.object({
   lastName: yup
     .string()
     .trim()
-    .required(),
+    .required()
 });
 const inputSchemaPersonalCompare = yup.object({
   firstNames: yup
@@ -41,15 +41,14 @@ const inputSchemaPersonalCompare = yup.object({
   lastNameCompare: yup
     .string()
     .trim()
-    .required(),
+    .required()
 });
 
-/* eslint-disable react/prefer-stateless-function */
 class AnalysisInput extends Component {
   static propTypes = {
     history: PropTypes.shape({
-      push: PropTypes.func.isRequired,
-    }).isRequired,
+      push: PropTypes.func.isRequired
+    }).isRequired
   };
 
   /**
@@ -67,23 +66,23 @@ class AnalysisInput extends Component {
     this.lastNameComfort = null;
 
     this.state = {
-      comfortNameFieldsShown: false,
+      comfortNameFieldsShown: false
     };
   }
 
   componentDidMount() {
     // setting background dynamically
-    document.body.style.backgroundColor = '#00b3d4';
-    const querString = this.props.location.search.replace('?', '');
+    document.body.style.backgroundColor = "#00b3d4";
+    const querString = this.props.location.search.replace("?", "");
     const values = queryString.parse(querString);
     const firstNameParam = values.firstNames;
     const lastNameParam = values.lastNames;
     const dateOfBirthParam = values.dateOfBirth;
 
     if (
-      firstNameParam != null
-      && lastNameParam != null
-      && dateOfBirthParam != null
+      firstNameParam != null &&
+      lastNameParam != null &&
+      dateOfBirthParam != null
     ) {
       this.firstNames = firstNameParam;
       this.lastNames = lastNameParam;
@@ -109,31 +108,31 @@ class AnalysisInput extends Component {
         firstNames: this.firstNames,
         lastName: this.lastNames,
         firstNamesCompare: this.firstNamesComfort,
-        lastNameCompare: this.lastNameComfort,
+        lastNameCompare: this.lastNameComfort
       });
     } else {
       // validating input
       valid = await inputSchemaPersonal.isValid({
         firstNames: this.firstNames,
-        lastName: this.lastNames,
+        lastName: this.lastNames
       });
     }
 
     // setting error message
     if (!valid) {
       ToastNotifications.error(
-        'Vor- und Nachname müssen (für alle Namen) angegeben werden.',
-        { position: 'top-right' },
+        "Vor- und Nachname müssen (für alle Namen) angegeben werden.",
+        { position: "top-right" }
       );
       return false;
     }
 
     // validating dateOfBirth
-    const date = moment(this.dateOfBirth, 'DD.MM.YYYY', true);
+    const date = moment(this.dateOfBirth, "DD.MM.YYYY", true);
     if (!date.isValid()) {
       ToastNotifications.error(
-        'Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.',
-        { position: 'top-right' },
+        "Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.",
+        { position: "top-right" }
       );
       return false;
     }
@@ -155,17 +154,17 @@ class AnalysisInput extends Component {
       // encoding params
       const firstNamesEncoded = encodeURIComponent([
         this.firstNames,
-        this.firstNamesComfort,
+        this.firstNamesComfort
       ]);
       const lastNamesEncoded = encodeURIComponent([
         this.lastNames,
-        this.lastNameComfort,
+        this.lastNameComfort
       ]);
       const dateOfBirthEncoded = encodeURIComponent(this.dateOfBirth);
 
       // navigating to results
       this.props.history.push(
-        `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`,
+        `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`
       );
     } else {
       // encoding parameters
@@ -175,7 +174,7 @@ class AnalysisInput extends Component {
 
       // navigating to results
       this.props.history.push(
-        `/resultPersonal/${firstNamesEncoded}/${lastNameEncoded}/${dateOfBirthEncoded}`,
+        `/resultPersonal/${firstNamesEncoded}/${lastNameEncoded}/${dateOfBirthEncoded}`
       );
     }
   };
@@ -202,21 +201,21 @@ class AnalysisInput extends Component {
                   <InputField
                     icon="wb-user"
                     fieldName="Vorname(n)"
-                    onChange={(event) => {
+                    onChange={event => {
                       this.firstNames = event.target.value;
                     }}
                   />
                   <InputField
                     icon="wb-user"
                     fieldName="Nachname"
-                    onChange={(event) => {
+                    onChange={event => {
                       this.lastNames = event.target.value;
                     }}
                   />
                   <InputField
                     icon="wb-calendar"
                     fieldName="Geburtsdatum"
-                    onChange={(event) => {
+                    onChange={event => {
                       this.dateOfBirth = event.target.value;
                     }}
                   />
@@ -226,14 +225,14 @@ class AnalysisInput extends Component {
                       <InputField
                         icon="wb-user"
                         fieldName="Vorname(n)"
-                        onChange={(event) => {
+                        onChange={event => {
                           this.firstNamesComfort = event.target.value;
                         }}
                       />
                       <InputField
                         icon="wb-user"
                         fieldName="Nachname"
-                        onChange={(event) => {
+                        onChange={event => {
                           this.lastNameComfort = event.target.value;
                         }}
                       />
@@ -241,17 +240,18 @@ class AnalysisInput extends Component {
                   )}
                   <div
                     role="link"
-                    onClick={() => this.setState({
-                      comfortNameFieldsShown: !this.state
-                        .comfortNameFieldsShown,
-                    })
+                    onClick={() =>
+                      this.setState({
+                        comfortNameFieldsShown: !this.state
+                          .comfortNameFieldsShown
+                      })
                     }
                   >
                     <h6 className="linkText">
                       {`Vergleichsnamen ${
                         this.state.comfortNameFieldsShown
-                          ? 'ausblenden'
-                          : 'einblenden'
+                          ? "ausblenden"
+                          : "einblenden"
                       }`}
                     </h6>
                   </div>

@@ -1,8 +1,8 @@
-import React from 'react';
-import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
-import Table from 'react-bootstrap/Table';
+import React from "react";
+import Button from "react-bootstrap/Button";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
+import Table from "react-bootstrap/Table";
 
 function normalizeCreitsData(raw) {
   const data = {
@@ -10,21 +10,21 @@ function normalizeCreitsData(raw) {
     personalLongs: 0,
     partnerShorts: 0,
     partnerLongs: 0,
-    total: 0,
+    total: 0
   };
   raw.forEach(c => {
     data.total += c.total;
     switch (c.type) {
-      case 'persoenlichkeit_kurz':
+      case "persoenlichkeit_kurz":
         data.personalShorts = c.total;
         break;
-      case 'persoenlichkeit_lang':
+      case "persoenlichkeit_lang":
         data.personalLongs = c.total;
         break;
-      case 'partnerschaft_kurz':
+      case "partnerschaft_kurz":
         data.partnerShorts = c.total;
         break;
-      case 'partnerschaftsnumeroskop_lang':
+      case "partnerschaftsnumeroskop_lang":
         data.partnerLongs = c.total;
         break;
       default:
@@ -42,10 +42,7 @@ export default ({ credits: rawCredits }) => {
       key="credits-popover"
       placement="bottom"
       overlay={
-        <Popover
-          id="credits-popover"
-          title="Guthaben"
-        >
+        <Popover id="credits-popover" title="Guthaben">
           <Table>
             <thead>
               <tr>
@@ -70,11 +67,7 @@ export default ({ credits: rawCredits }) => {
         </Popover>
       }
     >
-      <Button
-        variant="default"
-      >
-        Guthaben: {credits.total}
-      </Button>
+      <Button variant="default">Guthaben: {credits.total}</Button>
     </OverlayTrigger>
   );
-}
+};

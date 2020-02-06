@@ -1,17 +1,17 @@
 .GroupTableRow--groupNameCell {
-    font-weight: bold;
-    width: 30%;
+  font-weight: bold;
+  width: 30%;
 }
 
 .GroupTableRow--groupTypeCell {
-    width: 15%;
+  width: 15%;
 }
 
 .GroupTableRow--groupActionCell button {
-    margin-right: 1em;
+  margin-right: 1em;
 }
 
 .GroupTableRow--groupActionCell {
-    white-space: nowrap !important;
-    text-align: right;
+  white-space: nowrap !important;
+  text-align: right;
 }

@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import '../styles/NavigationDropdownMenuItem.css';
-import Dropdown from 'react-bootstrap/Dropdown';
+import "../styles/NavigationDropdownMenuItem.css";
+import Dropdown from "react-bootstrap/Dropdown";
 
 /**
  * wrapper component for dropdown items
@@ -15,11 +15,11 @@ const NavigationDropdownMenuItem = props => (
 
 NavigationDropdownMenuItem.propTypes = {
   onClick: PropTypes.func,
-  children: PropTypes.node,
+  children: PropTypes.node
 };
 
 NavigationDropdownMenuItem.defaultProps = {
   onClick: () => {},
-  children: null,
+  children: null
 };
 export default NavigationDropdownMenuItem;

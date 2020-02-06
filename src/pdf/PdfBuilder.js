@@ -1,12 +1,12 @@
-import pdfMake from 'pdfmake/build/pdfmake';
-import * as _ from 'lodash';
-import pdfFonts from './fonts/vfs_fonts';
+import pdfMake from "pdfmake/build/pdfmake";
+import * as _ from "lodash";
+import pdfFonts from "./fonts/vfs_fonts";
 
-import { OVERALL_INTRO_KEY, CI_COLORS } from '../utils/Constants';
+import { OVERALL_INTRO_KEY, CI_COLORS } from "../utils/Constants";
 
-import { convertHTMLTextToPDFSyntax } from './PdfHelper';
-import { COVER_IMAGE_BY_LZ, BACKGROUND_IMAGES } from './images/Images';
-import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from './PdfTexts';
+import { convertHTMLTextToPDFSyntax } from "./PdfHelper";
+import { COVER_IMAGE_BY_LZ, BACKGROUND_IMAGES } from "./images/Images";
+import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from "./PdfTexts";
 
 // constant for how many centimeters an inch is
 const INCH_IN_CM = 2.54;
@@ -26,20 +26,20 @@ const PDF_STYLES = {
     fontSize: 30,
     bold: true,
     lineHeight: 1,
-    pageBreak: 'before',
+    pageBreak: "before"
   },
   H1: {
     fontSize: 20,
     bold: true,
     marginTop: 40,
     marginBottom: 20,
-    lineHeight: 1,
+    lineHeight: 1
   },
   H2: {
     fontSize: 16,
     marginTop: 24,
     marginBottom: 10,
-    lineHeight: 1,
+    lineHeight: 1
   },
   H3: {
     fontSize: 12,
@@ -47,71 +47,71 @@ const PDF_STYLES = {
     marginTop: 12,
     marginBottom: 5,
     lineHeight: 1,
-    color: CI_COLORS.BLACK,
+    color: CI_COLORS.BLACK
   },
   H4: {
     fontSize: 16,
     marginTop: 16,
     color: CI_COLORS.GREY,
-    lineHeight: 1,
+    lineHeight: 1
   },
   B: {
-    bold: true,
+    bold: true
   },
   SUBTITLE: {
     marginBottom: 10,
-    lineHeight: 1,
+    lineHeight: 1
   },
   NUMBERDESCRIPTION: {
     color: CI_COLORS.GREY,
     fontSize: 12,
-    bold: true,
+    bold: true
   },
   TABLE: {
     margin: [0, 10, 0, 10],
     fontSize: 10,
-    alignment: 'left',
+    alignment: "left"
   },
   TBALE_HEADING: {
     bold: true,
-    alignment: 'center',
+    alignment: "center"
   },
   TITLEPAGE_TITLE: {
-    alignment: 'center',
+    alignment: "center",
     color: CI_COLORS.WHITE,
     fontSize: 31,
-    bold: true,
+    bold: true
   },
   TITLEPAGE_TITLE_SHADOW: {
-    alignment: 'center',
-    color: '#555555',
+    alignment: "center",
+    color: "#555555",
     fontSize: 31,
-    bold: true,
+    bold: true
   },
   TITLEPAGE_NAME: {
-    alignment: 'center',
+    alignment: "center",
     color: CI_COLORS.WHITE,
     fontSize: 25,
     bold: true,
-    marginTop: -5,
-  },
+    marginTop: -5
+  }
 };
 
 // setting fonts for pdfmake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = {
   MavenPro: {
-    normal: 'MavenPro-Regular.ttf',
-    bold: 'MavenPro-Bold.ttf',
-    italics: 'MavenPro-Regular.ttf',
-    bolditalics: 'MavenPro-Regular.ttf',
+    normal: "MavenPro-Regular.ttf",
+    bold: "MavenPro-Bold.ttf",
+    italics: "MavenPro-Regular.ttf",
+    bolditalics: "MavenPro-Regular.ttf"
   },
   Roboto: {
-    normal: 'Roboto-Regular.ttf',
-    bold: 'Roboto-Medium.ttf',
-    italics: 'Roboto-Italic.ttf',
-    bolditalics: 'Roboto-MediumItalic.ttf',
-  },
+    normal: "Roboto-Regular.ttf",
+    bold: "Roboto-Medium.ttf",
+    italics: "Roboto-Italic.ttf",
+    bolditalics: "Roboto-MediumItalic.ttf"
+  }
 };
 
 /**
@@ -129,7 +129,7 @@ function buildSectionPositionInformation(configuration) {
       startIndex: null,
       endIndex: null,
       startPage: null,
-      endPage: null,
+      endPage: null
     };
   });
 
@@ -168,16 +168,16 @@ function createOverviewTableItem(numberItem) {
   // case a) number => display simple number
   // case b) list => show whole list
   // case c) matrix => showing table
-  if (numberItem.result.type === 'number') {
-    overviewTableElement = { text: numberItem.result.value, alignment: 'left' };
-  } else if (numberItem.result.type === 'list') {
+  if (numberItem.result.type === "number") {
+    overviewTableElement = { text: numberItem.result.value, alignment: "left" };
+  } else if (numberItem.result.type === "list") {
     overviewTableElement = {
-      text: numberItem.result.list.join(','),
-      alignment: 'left',
+      text: numberItem.result.list.join(","),
+      alignment: "left"
     };
   } else {
     const matrix = numberItem.result.values.map(item =>
-      item && item.length > 0 ? item : '     ',
+      item && item.length > 0 ? item : "     "
     );
     overviewTableElement = {
       table: {
@@ -186,23 +186,23 @@ function createOverviewTableItem(numberItem) {
         widths: [40, 40, 40],
         body: [
           [
-            { text: matrix[0], alignment: 'center' },
-            { text: matrix[1], alignment: 'center' },
-            { text: matrix[2], alignment: 'center' },
+            { text: matrix[0], alignment: "center" },
+            { text: matrix[1], alignment: "center" },
+            { text: matrix[2], alignment: "center" }
           ],
           [
-            { text: matrix[3], alignment: 'center' },
-            { text: matrix[4], alignment: 'center' },
-            { text: matrix[5], alignment: 'center' },
+            { text: matrix[3], alignment: "center" },
+            { text: matrix[4], alignment: "center" },
+            { text: matrix[5], alignment: "center" }
           ],
           [
-            { text: matrix[6], alignment: 'center' },
-            { text: matrix[7], alignment: 'center' },
-            { text: matrix[8], alignment: 'center' },
-          ],
+            { text: matrix[6], alignment: "center" },
+            { text: matrix[7], alignment: "center" },
+            { text: matrix[8], alignment: "center" }
+          ]
         ],
-        alignment: 'left',
-      },
+        alignment: "left"
+      }
     };
   }
 
@@ -223,7 +223,7 @@ function calculateResultOverviewTable(
   lastName,
   compareResults = null,
   compareFirstNames = null,
-  compareLastName = null,
+  compareLastName = null
 ) {
   // creating overview table data
   const overviewTableBody = [];
@@ -234,21 +234,21 @@ function calculateResultOverviewTable(
       {
         text: `${firstNames} ${lastName}`,
         colSpan: 2,
-        alignment: 'center',
+        alignment: "center"
       },
-      {},
+      {}
     ]);
   } else {
     overviewTableBody.push([
       {},
       {
         text: `${firstNames} ${lastName}`,
-        alignment: 'center',
+        alignment: "center"
       },
       {
         text: `${compareFirstNames} ${compareLastName}`,
-        alignment: 'center',
-      },
+        alignment: "center"
+      }
     ]);
   }
 
@@ -272,18 +272,18 @@ function calculateResultOverviewTable(
       // pushing value onto table body object
       if (compareValue) {
         overviewTableBody.push([
-          { text: name, alignment: 'left' },
+          { text: name, alignment: "left" },
           value,
-          compareValue,
+          compareValue
         ]);
       } else {
         overviewTableBody.push([
           {
             text: name,
             bold: numberItem.highlighted,
-            alignment: 'left',
+            alignment: "left"
           },
-          value,
+          value
         ]);
       }
     });
@@ -302,7 +302,7 @@ function calculateResultOverviewTable(
 export function buildResultDataStructure(
   resultData,
   configuration,
-  introTexts,
+  introTexts
 ) {
   // if any of the parameters is null => return null
   if (!resultData || !configuration) {
@@ -316,13 +316,13 @@ export function buildResultDataStructure(
     configSection.tables.forEach(table => {
       // adding numbers (resolved  for result objects) to numbers
       numbers.push(
-        ...table.numberIds.map(numberId => _.get(resultData, numberId)),
+        ...table.numberIds.map(numberId => _.get(resultData, numberId))
       );
     });
 
     // finding intro text in input param
     const sectionIntroText = introTexts.filter(
-      text => text.sectionId === configSection.name,
+      text => text.sectionId === configSection.name
     )[0];
 
     // returning full section with resolved and aggregated numbers
@@ -330,7 +330,7 @@ export function buildResultDataStructure(
       name: configSection.name,
       color: configSection.color,
       introText: sectionIntroText,
-      numbers,
+      numbers
     };
   });
 }
@@ -358,32 +358,32 @@ export async function createPDFFromAnalysisResult(
   includePromotion = false,
   compareAnalysisResult = null,
   compareFirstNames = null,
-  compareLastName = null,
+  compareLastName = null
 ) {
   // preparing data structure to generate pdf from for result
   const resultSections = buildResultDataStructure(
     analysisResult,
     configuration,
-    introTexts,
+    introTexts
   );
 
   // preparing data structure to generate pdf from for result (might be null)
   const resultsCompareSections = buildResultDataStructure(
     compareAnalysisResult,
     configuration,
-    introTexts,
+    introTexts
   );
 
   // getting pdf Intro text
   const pdfIntroText = introTexts.filter(
-    text => text.sectionId === OVERALL_INTRO_KEY(configurationId),
+    text => text.sectionId === OVERALL_INTRO_KEY(configurationId)
   )[0];
 
   // building section location info object. This is used to keep track
   // of the position of different sections throughout the document and is
   // build up as the pdf is generated
   const sectionPositionInformation = buildSectionPositionInformation(
-    configuration,
+    configuration
   );
 
   // getting lz to determine title image
@@ -392,15 +392,15 @@ export async function createPDFFromAnalysisResult(
 
   // defining pdf and default styling
   const docDefinition = {
-    pageSize: 'A4',
+    pageSize: "A4",
     background(page) {
       // first pages => title page with background image
       if (page === 1) {
         return [
           {
             image: titleImage,
-            width: 600,
-          },
+            width: 600
+          }
         ];
       }
 
@@ -415,7 +415,7 @@ export async function createPDFFromAnalysisResult(
 
       // getting section color
       let currentResultSection = resultSections.filter(
-        section => section.name === currentSectionName,
+        section => section.name === currentSectionName
       )[0];
 
       // if current page is in level rage => setting corresponding background image
@@ -428,58 +428,58 @@ export async function createPDFFromAnalysisResult(
           {
             image: BACKGROUND_IMAGES[currentResultSection.color],
             absolutePosition: { x: 550, y: 350 },
-            width: 50,
-          },
+            width: 50
+          }
         ];
       }
       return null;
     },
-    pageOrientation: 'portrait',
+    pageOrientation: "portrait",
     pageMargins: [
       cmToPoints(PAGE_MARGIN_LEFT_CM),
       cmToPoints(PAGE_MARGIN_TOP_CM),
       cmToPoints(PAGE_MARGIN_RIGHT_CM),
-      cmToPoints(PAGE_MARGIN_BOTTOM_CM),
+      cmToPoints(PAGE_MARGIN_BOTTOM_CM)
     ],
     content: [
       {
-        text: 'Persönlichkeitsnumeroskop',
+        text: "Persönlichkeitsnumeroskop",
         absolutePosition: { x: 103, y: 501 },
-        style: 'TITLEPAGE_TITLE_SHADOW',
+        style: "TITLEPAGE_TITLE_SHADOW"
       },
       {
-        text: 'Persönlichkeitsnumeroskop',
+        text: "Persönlichkeitsnumeroskop",
         absolutePosition: { x: 102, y: 500 },
-        style: 'TITLEPAGE_TITLE',
-        pageBreak: 'after',
+        style: "TITLEPAGE_TITLE",
+        pageBreak: "after"
       },
       {
         toc: {
-          title: { text: 'Inhalt', style: 'H1' },
+          title: { text: "Inhalt", style: "H1" },
           textStyle: { lineHeight: 1.0 },
-          numberStyle: { bold: true },
-        },
+          numberStyle: { bold: true }
+        }
       },
       {
         text: pdfIntroText.title,
-        style: ['H1'],
+        style: ["H1"],
         tocItem: true,
         tocMargin: [0, 15, 0, 0],
-        pageBreak: 'before',
+        pageBreak: "before"
       },
       [...convertHTMLTextToPDFSyntax(pdfIntroText.text)],
       {
-        text: 'Übersichtsblatt der Zahlen',
-        style: ['H1', { alignment: 'center' }],
+        text: "Übersichtsblatt der Zahlen",
+        style: ["H1", { alignment: "center" }],
         marginBottom: 20,
         tocItem: true,
-        pageBreak: 'before',
+        pageBreak: "before"
       },
       {
         columns: [
-          { width: '*', text: '' },
+          { width: "*", text: "" },
           {
-            width: 'auto',
+            width: "auto",
             table: {
               dontBreakRows: true,
               body: calculateResultOverviewTable(
@@ -488,13 +488,13 @@ export async function createPDFFromAnalysisResult(
                 lastName,
                 resultsCompareSections,
                 compareFirstNames,
-                compareLastName,
-              ),
-            },
+                compareLastName
+              )
+            }
           },
-          { width: '*', text: '' },
-        ],
-      },
+          { width: "*", text: "" }
+        ]
+      }
     ],
     pageBreakBefore(currentNode, followingNodesOnPage) {
       // heading is last element before footer
@@ -537,8 +537,8 @@ export async function createPDFFromAnalysisResult(
       if (currentPage === 1) {
         return {
           text: `${firstNames} ${lastName}`,
-          style: ['TITLEPAGE_NAME'],
-          pageBreak: 'after',
+          style: ["TITLEPAGE_NAME"],
+          pageBreak: "after"
         };
       }
 
@@ -547,25 +547,25 @@ export async function createPDFFromAnalysisResult(
         columns: [
           {
             text: `Persönlichkeitsnumeroskop für ${firstNames} ${lastName} - www.psychologischenumerologie.eu`,
-            width: 'auto',
+            width: "auto"
           },
-          { text: currentPage, alignment: 'right' },
+          { text: currentPage, alignment: "right" }
         ],
         margin: [
           cmToPoints(PAGE_MARGIN_LEFT_CM / 2),
           10,
           cmToPoints(PAGE_MARGIN_RIGHT_CM / 2),
-          0,
+          0
         ],
-        fontSize: 10,
+        fontSize: 10
       };
     },
     defaultStyle: {
-      font: 'MavenPro',
+      font: "MavenPro",
       fontSize: 12,
-      lineHeight: 1.5,
+      lineHeight: 1.5
     },
-    styles: PDF_STYLES,
+    styles: PDF_STYLES
   };
 
   // pushing content to pdf => each level
@@ -575,20 +575,22 @@ export async function createPDFFromAnalysisResult(
       resultSection.numbers.some(number => {
         const itemDescriptionText = number.descriptionText;
         return itemDescriptionText && itemDescriptionText.length > 0;
-      }),
+      })
     )
     .forEach((resultSection, index) => {
       // getting color for current level
       const resultColor =
         resultSection.color && CI_COLORS[resultSection.color]
           ? CI_COLORS[resultSection.color]
-          : '';
+          : "";
 
       // getting compare result
       let resultCompareSection = null;
       if (resultsCompareSections) {
         // find out the index
-        const compareIndex = resultSections.findIndex(item => item === resultSection);
+        const compareIndex = resultSections.findIndex(
+          item => item === resultSection
+        );
         resultCompareSection = resultsCompareSections[compareIndex];
       }
 
@@ -601,15 +603,15 @@ export async function createPDFFromAnalysisResult(
       if (resultSection.introText) {
         docDefinition.content.push({
           text: resultSection.introText.title,
-          style: ['H0', { color: resultColor, alignment: 'center' }],
-          pageBreak: 'before',
+          style: ["H0", { color: resultColor, alignment: "center" }],
+          pageBreak: "before",
           tocItem: true,
-          tocStyle: { color: resultColor },
+          tocStyle: { color: resultColor }
         });
         docDefinition.content.push(
           ...convertHTMLTextToPDFSyntax(resultSection.introText.text, {
-            h1: { color: resultColor },
-          }),
+            h1: { color: resultColor }
+          })
         );
       }
 
@@ -624,7 +626,7 @@ export async function createPDFFromAnalysisResult(
           // getting name and value of
           const itemName = number.name;
           const itemValue =
-            number.result.type !== 'matrix' &&
+            number.result.type !== "matrix" &&
             (number.result.value || number.result.list);
 
           // getting if there is a compare item
@@ -638,7 +640,7 @@ export async function createPDFFromAnalysisResult(
             // getting name and value of compare item
             compareItemName = compareItem.name;
             compareItemValue =
-              compareItem.result.type !== 'matrix' &&
+              compareItem.result.type !== "matrix" &&
               (compareItem.result.value || compareItem.result.list);
           }
 
@@ -651,16 +653,16 @@ export async function createPDFFromAnalysisResult(
             // adding heading for number
             docDefinition.content.push({
               text: `${itemName} ${itemValue}`,
-              style: ['H1', { color: resultColor }],
+              style: ["H1", { color: resultColor }],
               marginBottom:
                 compareItem &&
                 !areResultValuesEqual(compareItemValue, itemValue)
                   ? 0
                   : 20,
-              headlineLevel: 'H1',
+              headlineLevel: "H1",
               tocItem: true,
               tocStyle: { color: resultColor },
-              tocMargin: [15, 0, 0, 0],
+              tocMargin: [15, 0, 0, 0]
             });
 
             // adding subheading with name if compare is present
@@ -670,8 +672,8 @@ export async function createPDFFromAnalysisResult(
             ) {
               docDefinition.content.push({
                 text: `mit Name ${firstNames} ${lastName}`,
-                style: ['SUBTITLE', { color: resultColor }],
-                headlineLevel: 'SUBTITLE',
+                style: ["SUBTITLE", { color: resultColor }],
+                headlineLevel: "SUBTITLE"
               });
             }
 
@@ -685,11 +687,11 @@ export async function createPDFFromAnalysisResult(
                   ...convertHTMLTextToPDFSyntax(
                     number.numberDescription.description,
                     {
-                      text: 'NUMBERDESCRIPTION',
-                    },
-                  ),
+                      text: "NUMBERDESCRIPTION"
+                    }
+                  )
                 ],
-                marginBottom: 10,
+                marginBottom: 10
               });
             }
 
@@ -702,10 +704,10 @@ export async function createPDFFromAnalysisResult(
                 stack: [
                   ...convertHTMLTextToPDFSyntax(
                     number.numberDescription.calculationDescription,
-                    { text: 'NUMBERDESCRIPTION' },
-                  ),
+                    { text: "NUMBERDESCRIPTION" }
+                  )
                 ],
-                marginBottom: 10,
+                marginBottom: 10
               });
             }
 
@@ -717,8 +719,8 @@ export async function createPDFFromAnalysisResult(
               docDefinition.content.push(
                 ...convertHTMLTextToPDFSyntax(descriptionText, {
                   h1: { color: resultColor },
-                  ul: { markerColor: resultColor },
-                }),
+                  ul: { markerColor: resultColor }
+                })
               );
             }
 
@@ -730,19 +732,19 @@ export async function createPDFFromAnalysisResult(
               // adding heading for number
               docDefinition.content.push({
                 text: `${compareItemName} ${compareItemValue}`,
-                style: ['H1', { color: resultColor }],
-                headlineLevel: 'H1',
+                style: ["H1", { color: resultColor }],
+                headlineLevel: "H1",
                 tocItem: true,
                 tocStyle: { color: resultColor },
-                tocMargin: [15, 0, 0, 0],
+                tocMargin: [15, 0, 0, 0]
               });
 
               // adding subheading with name if compare is present
               docDefinition.content.push({
                 text: `mit Name ${compareFirstNames} ${compareLastName}`,
-                style: ['SUBTITLE', { color: resultColor }],
-                headlineLevel: 'SUBTITLE',
-                marginBottom: 20,
+                style: ["SUBTITLE", { color: resultColor }],
+                headlineLevel: "SUBTITLE",
+                marginBottom: 20
               });
 
               // pushing description text
@@ -753,8 +755,8 @@ export async function createPDFFromAnalysisResult(
                 docDefinition.content.push(
                   ...convertHTMLTextToPDFSyntax(compareDescriptionText, {
                     h1: { color: resultColor },
-                    ul: { markerColor: resultColor },
-                  }),
+                    ul: { markerColor: resultColor }
+                  })
                 );
               }
             }
@@ -771,11 +773,11 @@ export async function createPDFFromAnalysisResult(
   if (!includePromotion) {
     // pushing title
     docDefinition.content.push({
-      text: 'Vergleich zur Langtext-Version',
-      style: ['H1'],
+      text: "Vergleich zur Langtext-Version",
+      style: ["H1"],
       tocItem: true,
-      pageBreak: 'before',
-      marginBottom: 10,
+      pageBreak: "before",
+      marginBottom: 10
     });
     // pushing text
     docDefinition.content.push(...convertHTMLTextToPDFSyntax(PROMOTION_TEXT));
@@ -783,27 +785,27 @@ export async function createPDFFromAnalysisResult(
 
   // adding legal text at end of pdf
   docDefinition.content.push({
-    text: 'Urheberrechtshinweis',
-    style: ['H1'],
+    text: "Urheberrechtshinweis",
+    style: ["H1"],
     tocItem: true,
-    pageBreak: 'before',
-    marginBottom: 10,
+    pageBreak: "before",
+    marginBottom: 10
   });
 
   docDefinition.content.push({
-    text: COPYRIGHT_NOTICE,
+    text: COPYRIGHT_NOTICE
   });
 
   // adding legal text at end of pdf
   docDefinition.content.push({
-    text: 'Haftungsausschluss',
-    style: ['H1'],
+    text: "Haftungsausschluss",
+    style: ["H1"],
     tocItem: true,
-    marginBottom: 10,
+    marginBottom: 10
   });
 
   docDefinition.content.push({
-    text: LEGAL_NOTICE,
+    text: LEGAL_NOTICE
   });
 
   // creating pdf and opening in new tab

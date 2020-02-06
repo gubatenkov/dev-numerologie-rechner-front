@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import Dialog from './Dialog';
+import Dialog from "./Dialog";
 
 /**
  * Dialog to rename a group
@@ -10,13 +10,13 @@ class RenameGroupDialog extends Component {
   static propTypes = {
     group: PropTypes.shape({
       name: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired
     }),
-    onAction: PropTypes.func.isRequired,
+    onAction: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    group: null,
+    group: null
   };
 
   /**
@@ -49,7 +49,7 @@ class RenameGroupDialog extends Component {
    * handler for the user changing the name of the new group
    * @param newGroupName: the new input text to the group name field
    */
-  handleInputchange = (newGroupName) => {
+  handleInputchange = newGroupName => {
     this.groupName = newGroupName.target.value;
   };
 
@@ -74,7 +74,7 @@ class RenameGroupDialog extends Component {
           className="form-control"
           placeholder={this.props.group && this.props.group.name}
           onChange={this.handleInputchange}
-          ref={(ref) => {
+          ref={ref => {
             this.groupNameInput = ref;
           }}
         />

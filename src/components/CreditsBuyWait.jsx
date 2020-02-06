@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from 'react';
-import { Query } from 'react-apollo';
-import { currentWindowToken } from '../graphql/Queries';
-import LoadingIndicator from './LoadingIndicator';
+import React, { useEffect, useRef } from "react";
+import { Query } from "react-apollo";
+import { currentWindowToken } from "../graphql/Queries";
+import LoadingIndicator from "./LoadingIndicator";
 
 // default refresh interval in seconds
 const DEFAULT_REFRESH_INTERVAL = 10;
-
 
 /**
  * Hook that periodically checks for updates in currentWindowToken
@@ -62,7 +61,9 @@ const Wait = ({ onSuccess, data, loading, refetch }) => {
 
   // returning loading indicator if waiting
   return (
-    <LoadingIndicator text={`Wir warten bis die Zahlung in unserem Webshop (in einem separaten Fenster) erfolgreich durchgeführt wurde.`} />
+    <LoadingIndicator
+      text={`Wir warten bis die Zahlung in unserem Webshop (in einem separaten Fenster) erfolgreich durchgeführt wurde.`}
+    />
   );
 };
 
@@ -74,11 +75,16 @@ export default ({ windowToken, onSuccess }) => {
     <Query query={currentWindowToken} variables={{ windowToken }}>
       {({ loading, data, refetch }) => {
         return (
-          <Wait {...{
-            onSuccess, data, loading, refetch,
-          }}
-          />);
+          <Wait
+            {...{
+              onSuccess,
+              data,
+              loading,
+              refetch
+            }}
+          />
+        );
       }}
     </Query>
   );
-}
+};

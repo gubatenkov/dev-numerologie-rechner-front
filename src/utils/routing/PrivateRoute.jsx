@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { Route, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
 
 /**
  * Private route version of react-router Route component checking
@@ -14,11 +14,11 @@ class PrivateRoute extends Component {
   static propTypes = {
     isAuthenticated: PropTypes.func.isRequired,
     loginPath: PropTypes.string.isRequired,
-    location: PropTypes.object,
+    location: PropTypes.object
   };
 
   static defaultProps = {
-    location: null,
+    location: null
   };
   /**
    * default render method that checks login status and renders either passed login
@@ -38,7 +38,7 @@ class PrivateRoute extends Component {
             <Redirect
               to={{
                 pathname: this.props.loginPath,
-                state: { from: this.props.location },
+                state: { from: this.props.location }
               }}
             />
           );

@@ -1,0 +1,28 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "jest": true,
+    "browser": true
+  },
+  "extends": [
+    "react-app",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["jsx-a11y", "react", "react-hooks", "import", "prettier"],
+  "rules": {
+    "no-alert": "warn",
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/interactive-supports-focus": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "jsx-a11y/no-onchange": 0
+  },
+  "ignorePatterns": ["node_modules/"]
+}

@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import Interweave from 'interweave';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import Interweave from "interweave";
 
 // images for promotions
-import book1Cover from '../images/book_1.png';
-import book2Cover from '../images/book_2.png';
+import book1Cover from "../images/book_1.png";
+import book2Cover from "../images/book_2.png";
 
 // widget container for the book
 const BookPromotion = styled.div`
   border-radius: 6px;
 
   /* basic background color*/
-  background-color: ${(props) => props.theme.lightestGrey};
+  background-color: ${props => props.theme.lightestGrey};
 
   /* partial color as background image*/
   background-image: linear-gradient(
@@ -28,8 +28,8 @@ const BookPromotion = styled.div`
   margin-top: 30px;
 
   /* basic text styling*/
-  color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.fontFamily};
+  color: ${props => props.theme.darkGrey};
+  font-family: ${props => props.theme.fontFamily};
 
   font-size: 15px;
   line-height: 24px;
@@ -62,10 +62,10 @@ const BookPromotionImageContainer = styled.div`
 `;
 
 // widget holding promotion content for a book based on a book reference string
-const BookPromotionWidget = (props) => {
+const BookPromotionWidget = props => {
   // finding out which book cover to include based on book reference string
   // TODO determine this based on passed book number from backend
-  const bookCoverIcon = props.bookReference.includes('Band 1')
+  const bookCoverIcon = props.bookReference.includes("Band 1")
     ? book1Cover
     : book2Cover;
 
@@ -87,7 +87,7 @@ const BookPromotionWidget = (props) => {
 // setting proptype
 BookPromotionWidget.propTypes = {
   resultTitle: PropTypes.string.isRequired,
-  bookReference: PropTypes.string.isRequired,
+  bookReference: PropTypes.string.isRequired
 };
 
 export default BookPromotionWidget;
