@@ -26,8 +26,6 @@
     "moment": "^2.24.0",
     "node-sass": "^4.13.0",
     "pdfmake": "^0.1.36",
-    "prettier": "^1.18.2",
-    "prettier-eslint": "9.0.0",
     "prop-types": "^15.6.0",
     "react": "16.9.0",
     "react-apollo": "^3.1.1",
@@ -48,17 +46,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "eslint": "^6.4.0",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-config-prettier": "^6.4.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jest": "^22.17.0",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-react": "^7.16.0",
-    "eslint-plugin-react-hooks": "^1.7.0"
-  },
+  "devDependencies": {},
   "browserslist": {
     "production": [
       ">0.2%",
