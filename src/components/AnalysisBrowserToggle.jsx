@@ -7,7 +7,6 @@ import iconArrowDown from "../images/icon_arrow_down-24px.svg";
 const AnalysisBrowserToggle = ({ children, eventKey, canExpand }) => {
   const [isCollapsed, setCollapsed] = useState(false);
   const decoratedOnClick = useAccordionToggle(eventKey, () => {
-    console.log("test");
     setCollapsed(!isCollapsed);
   });
 
