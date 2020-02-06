@@ -72,12 +72,10 @@
   },
   "lint-staged": {
     "*.+(js|jsx)": [
-      "./node_modules/.bin/eslint",
-      "git add"
+      "./node_modules/.bin/eslint"
     ],
     "*.+(js|jsx|json|css|md)": [
-      "./node_modules/.bin/prettier --write",
-      "git add"
+      "./node_modules/.bin/prettier --write"
     ]
   },
   "browserslist": {
