@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import '../styles/AdArea.css';
+import "../styles/AdArea.css";
 
 /**
  * advertisment in the product
@@ -8,7 +8,7 @@ import '../styles/AdArea.css';
 class AdArea extends Component {
   render() {
     return (
-      <div className={this.props.horizontal ? 'AdArea--horizontal' : 'AdArea'}>
+      <div className={this.props.horizontal ? "AdArea--horizontal" : "AdArea"}>
         {this.props.children}
       </div>
     );

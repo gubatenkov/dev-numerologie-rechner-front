@@ -1,42 +1,42 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { useQuery } from "@apollo/react-hooks";
 
-import { withRouter } from 'react-router-dom';
-import _ from 'lodash';
-import styled from 'styled-components';
+import { withRouter } from "react-router-dom";
+import _ from "lodash";
+import styled from "styled-components";
 
 // icons
-import bookIconWhite from '../images/icon_openBook_white.svg';
-import bookIconPrimary from '../images/icon_openBook_primary.svg';
-import saveIconPrimary from '../images/icon_save_primary.svg';
-import iconBackPrimary from '../images/icon_back_primary.svg';
-import iconClosePrimary from '../images/icon_close_primary.svg';
+import bookIconWhite from "../images/icon_openBook_white.svg";
+import bookIconPrimary from "../images/icon_openBook_primary.svg";
+import saveIconPrimary from "../images/icon_save_primary.svg";
+import iconBackPrimary from "../images/icon_back_primary.svg";
+import iconClosePrimary from "../images/icon_close_primary.svg";
 
 // components
-import TitleBar from './TitleBar';
-import NavigationBar from './NavigationBar';
-import ContentNavigation from './ContentNavigation';
-import ResultPanel from './ResultPanel';
-import ResultTable from './ResultTable';
-import TourView from './TourView';
-import TextButton from './Buttons/TextButton';
-import IconButton from './Buttons/IconButton';
-import NameInputDialog from './dialogs/NameInputDialog';
-import Footer from './Footer';
+import TitleBar from "./TitleBar";
+import NavigationBar from "./NavigationBar";
+import ContentNavigation from "./ContentNavigation";
+import ResultPanel from "./ResultPanel";
+import ResultTable from "./ResultTable";
+import TourView from "./TourView";
+import TextButton from "./Buttons/TextButton";
+import IconButton from "./Buttons/IconButton";
+import NameInputDialog from "./dialogs/NameInputDialog";
+import Footer from "./Footer";
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
   PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
-  getConfigurationForId,
-} from '../utils/Configuration';
+  getConfigurationForId
+} from "../utils/Configuration";
 
-import { introTextQuery } from '../graphql/Queries';
+import { introTextQuery } from "../graphql/Queries";
 
-import { OVERALL_INTRO_KEY, TYPE_ID_MATRIX } from '../utils/Constants';
+import { OVERALL_INTRO_KEY, TYPE_ID_MATRIX } from "../utils/Constants";
 
-import ActionBar from './ActionBar';
-import LoadingIndicator from './LoadingIndicator';
+import ActionBar from "./ActionBar";
+import LoadingIndicator from "./LoadingIndicator";
 import MainContainer from "./MainContainer";
 
 const ContentArea = styled.div`
@@ -89,8 +89,8 @@ const AnalysisResultPersonalRender = props => {
     variables: {
       sectionIds,
       isPdf: false,
-      longText: false,
-    },
+      longText: false
+    }
   });
 
   // defining component state
@@ -100,11 +100,11 @@ const AnalysisResultPersonalRender = props => {
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
   if (loading) {
-    return <LoadingIndicator text={'Erstelle Auswertung...'} />;
+    return <LoadingIndicator text={"Erstelle Auswertung..."} />;
   }
 
   if (error) {
-    return <LoadingIndicator text={'Error while fetching intro texts'} />;
+    return <LoadingIndicator text={"Error while fetching intro texts"} />;
   }
 
   // extracting intro texts from result
@@ -121,13 +121,13 @@ const AnalysisResultPersonalRender = props => {
     resultData,
     configuration,
     introTexts,
-    user,
+    user
   ) =>
     // constructing tourSection element for every table in configuration
     configuration.map(resultSection => {
       // finding intro text for section
       const sectionIntroText = introTexts.filter(
-        text => text.sectionId === resultSection.name,
+        text => text.sectionId === resultSection.name
       )[0];
 
       // defining resulting elements for section in tour
@@ -137,9 +137,9 @@ const AnalysisResultPersonalRender = props => {
       // also default if user not registered
       if (!user || user.showCategoryExplanations) {
         resultSectionElements.push({
-          type: 'sectionIntroText',
+          type: "sectionIntroText",
           title: sectionIntroText.title,
-          text: sectionIntroText.text,
+          text: sectionIntroText.text
         });
       }
 
@@ -150,19 +150,19 @@ const AnalysisResultPersonalRender = props => {
           ...resultTable.numberIds
             .map(numberId => ({
               ..._.get(resultData, numberId),
-              type: 'resultText',
+              type: "resultText"
             }))
             // filtering out matrix elements => those don't have a tour item
             .filter(item => item.result.type !== TYPE_ID_MATRIX)
             // filtering out empty elements as they don't have a tour item
-            .filter(item => item.result.value || item.result.list.length > 0),
+            .filter(item => item.result.value || item.result.list.length > 0)
         );
       });
 
       // pushing resulting section  to result
       return {
         sectionName: resultSection.name,
-        sectionElements: resultSectionElements,
+        sectionElements: resultSectionElements
       };
     });
 
@@ -186,27 +186,27 @@ const AnalysisResultPersonalRender = props => {
             // extracting name and value for different types of row
             const { name } = numberResult;
             const value =
-              numberResult.result.type === 'number'
+              numberResult.result.type === "number"
                 ? numberResult.result.value
                 : null;
 
             // constructing string of the form name = value to show in content
-            const title = `${name} ${value ? `= ${value}` : ''}`;
+            const title = `${name} ${value ? `= ${value}` : ""}`;
 
             // returning element with title and anchor as number id
             // this anchor is set on the title and can be used for dynamic scrolling later
             return {
               title,
-              anchor: numberResult.numberId,
+              anchor: numberResult.numberId
             };
-          }),
-        ),
+          })
+        )
       );
 
       // returning section item with name and numbers
       return {
         name: configSection.name,
-        titles: numberTitles,
+        titles: numberTitles
       };
     });
 
@@ -221,12 +221,12 @@ const AnalysisResultPersonalRender = props => {
       props.personalAnalysisResult,
       resultConfig,
       introTexts,
-      user,
+      user
     );
 
     // finding index with datakey in tour data structure
     let sectionIndex = tourDataStructure.findIndex(
-      section => section.sectionName === sectionId,
+      section => section.sectionName === sectionId
     );
 
     // if data not found => starting at first index
@@ -280,10 +280,10 @@ const AnalysisResultPersonalRender = props => {
     // navigating to component to handle save
     props.history.push(
       `/userHome/saveAnalysis/${encodeURIComponent(
-        firstNames,
+        firstNames
       )}/${encodeURIComponent(lastNames)}/${encodeURIComponent(
-        personalAnalysisResult.dateOfBirth,
-      )}`,
+        personalAnalysisResult.dateOfBirth
+      )}`
     );
   };
 
@@ -313,7 +313,7 @@ const AnalysisResultPersonalRender = props => {
           }
           onRemoveSecondaryName={() => {
             props.history.push(
-              `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`,
+              `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`
             );
           }}
           key="titlebar"
@@ -343,7 +343,7 @@ const AnalysisResultPersonalRender = props => {
           <ContentNavigation
             contentItems={buildContentDataStructure(
               resultConfig,
-              personalAnalysisResult,
+              personalAnalysisResult
             )}
             onItemClick={navigateToElementHandler}
             autoAdapt
@@ -367,12 +367,12 @@ const AnalysisResultPersonalRender = props => {
                   <ResultTable
                     name={tableData.name}
                     numbers={tableData.numberIds.map(numberId =>
-                      _.get(personalAnalysisResult, numberId),
+                      _.get(personalAnalysisResult, numberId)
                     )}
                     compareNumbers={
                       personalAnalysisCompareResult &&
                       tableData.numberIds.map(numberId =>
-                        _.get(personalAnalysisCompareResult, numberId),
+                        _.get(personalAnalysisCompareResult, numberId)
                       )
                     }
                     headings={tableData.headings}
@@ -386,7 +386,7 @@ const AnalysisResultPersonalRender = props => {
               </ResultPanel>
             ))}
           </ResultContent>
-        </ContentArea>,
+        </ContentArea>
       ]}
 
       {/* displaying tour if open */}
@@ -397,7 +397,7 @@ const AnalysisResultPersonalRender = props => {
             personalAnalysisResult,
             resultConfig,
             introTexts,
-            user,
+            user
           )}
           name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
           compareTourData={
@@ -406,7 +406,7 @@ const AnalysisResultPersonalRender = props => {
               personalAnalysisCompareResult,
               resultConfig,
               introTexts,
-              user,
+              user
             )
           }
           compareName={
@@ -443,7 +443,7 @@ const AnalysisResultPersonalRender = props => {
           firstNames,
           lastName,
           compareFirstNames,
-          compareLastName,
+          compareLastName
         ) => {
           // checking if any of the names has changed
           const hasCompareName =
@@ -482,7 +482,7 @@ const AnalysisResultPersonalRender = props => {
 
             // navigating to new result
             props.history.push(
-              `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`,
+              `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`
             );
           } else {
             // closing dialog
@@ -498,8 +498,8 @@ const AnalysisResultPersonalRender = props => {
 // setting proptypes
 AnalysisResultPersonalRender.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+    push: PropTypes.func.isRequired
+  }).isRequired
 };
 
 export default withRouter(AnalysisResultPersonalRender);

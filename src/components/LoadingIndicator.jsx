@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import Spinner from 'react-bootstrap/Spinner';
+import React from "react";
+import styled from "styled-components";
+import Spinner from "react-bootstrap/Spinner";
 
 // styling loading indicator
 const LoadingIndicatorContainer = styled.div`
@@ -21,7 +21,7 @@ const LoadingIndicatorContainer = styled.div`
 
 // styling text
 const LoadingIndicatorText = styled.h4`
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 18px;
   margin-top: 20px;
   font-weight: 500;
@@ -30,7 +30,7 @@ const LoadingIndicatorText = styled.h4`
 /**
  * spinner inidcating loading
  */
-const LoadingIndicator = (props) => (
+const LoadingIndicator = props => (
   <LoadingIndicatorContainer>
     <Spinner animation="border" role="status" variant="dark" />
     <LoadingIndicatorText className="LoadingIndicator__text">

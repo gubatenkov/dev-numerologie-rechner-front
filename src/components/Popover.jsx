@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import BoostrapPopover from 'react-bootstrap/Popover';
-import Switch from './Switches/Switch';
-import {MOBILE_RESOLUTION_THRESHOLD} from "../utils/Constants";
+import BoostrapPopover from "react-bootstrap/Popover";
+import Switch from "./Switches/Switch";
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 // applying custom style to boostrap popover
 const Popover = styled(BoostrapPopover)`
@@ -21,7 +21,7 @@ const Popover = styled(BoostrapPopover)`
   this and setting with to auto so content (child element) can define width.*/
   max-width: 600px !important;
   width: auto !important;
-  transform: translate3d(5px, 68px, 0px)
+  transform: translate3d(5px, 68px, 0px);
 `;
 
 /* Defining and exporting different container components based on type of popover. So far there are two
@@ -54,8 +54,8 @@ export const PopoverTextContent = styled(Popover.Content)`
 // item for text based popovers
 export const PopoverTextItem = styled.a`
   /* setting basic styling of text item based on theme */
-  color: ${(props) => props.theme.darkGrey} !important;
-  font-family: ${(props) => props.theme.fontFamily} !important;
+  color: ${props => props.theme.darkGrey} !important;
+  font-family: ${props => props.theme.fontFamily} !important;
   font-size: 18px !important;
   line-height: 30px !important;
 
@@ -80,7 +80,7 @@ export const PopoverSettingsContent = styled(Popover.Content)`
   align-items: flex-start;
 
   /* setting fixed with of settings content */
-  
+
   @media (min-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
     width: 400px !important;
   }
@@ -118,8 +118,8 @@ const PopoverSettingsSectionContainer = styled.div`
 // header for settings section
 const PopoverSettingsHeader = styled.h2`
   /* text styling */
-  color: ${(props) => props.theme.darkGrey} !important;
-  font-family: ${(props) => props.theme.fontFamily} !important;
+  color: ${props => props.theme.darkGrey} !important;
+  font-family: ${props => props.theme.fontFamily} !important;
   font-size: 16px;
   font-weight: 500;
   line-height: 30px;
@@ -129,7 +129,7 @@ const PopoverSettingsHeader = styled.h2`
 `;
 
 // section containing of a container, title (title prop) and all children passed into it
-export const PopoverSettingsSection = (props) => (
+export const PopoverSettingsSection = props => (
   <PopoverSettingsSectionContainer className={props.className}>
     {props.title && (
       <PopoverSettingsHeader>{props.title}</PopoverSettingsHeader>
@@ -152,15 +152,16 @@ const SwitchSettingItemContainer = styled.div`
 // title of the swtich item
 const SwitchSettingTitle = styled.div`
   /* basic text styling */
-  color: ${(props) => (props.disabled ? props.theme.lightGrey : props.theme.darkGrey)};
-  font-family: ${(props) => props.theme.fontFamily};
+  color: ${props =>
+    props.disabled ? props.theme.lightGrey : props.theme.darkGrey};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 16px;
   font-weight: 500;
   line-height: 30px;
 `;
 
 // item containing of a title and switch for settings
-export const SwitchSettingItem = (props) => (
+export const SwitchSettingItem = props => (
   <SwitchSettingItemContainer className={props.className}>
     {props.title && (
       <SwitchSettingTitle disabled={props.disabled}>

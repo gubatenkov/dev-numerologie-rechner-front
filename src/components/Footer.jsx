@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 // container for links in the footer
 const FooterContainer = styled.div`
@@ -23,9 +23,9 @@ const FooterContainer = styled.div`
 // link in the footer
 const FooterLink = styled.a`
   /* text styling*/
-  font-family: ${(props) => props.theme.fontFamily};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 16px;
-  color: ${(props) => props.theme.lighterGrey};
+  color: ${props => props.theme.lighterGrey};
   text-align: center;
 
   /* spacing between items in container*/
@@ -34,12 +34,12 @@ const FooterLink = styled.a`
   /* removing default link hover optics*/
   :hover {
     text-decoration: none;
-    color: ${(props) => props.theme.lighterGrey};
+    color: ${props => props.theme.lighterGrey};
   }
 `;
 
 // footer component showing copyright notice and basic links such as about us and data protection.
-const Footer = (props) => (
+const Footer = props => (
   <FooterContainer>
     <FooterLink href="https://www.akademiebios.eu " target="_blank">
       &copy;{` ${new Date().getFullYear()} akademie bios`}&reg;

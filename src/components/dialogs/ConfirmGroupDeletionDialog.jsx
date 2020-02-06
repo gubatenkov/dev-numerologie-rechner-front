@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTyes from 'prop-types';
+import React, { Component } from "react";
+import PropTyes from "prop-types";
 
-import Dialog from './Dialog';
+import Dialog from "./Dialog";
 
 /**
  * dialog that prompts the user to confirm the deletion of a group
@@ -9,12 +9,12 @@ import Dialog from './Dialog';
 class ConfirmGroupDeletionDialog extends Component {
   static propTypes = {
     group: PropTyes.shape({
-      name: PropTyes.string.isRequired,
-    }),
+      name: PropTyes.string.isRequired
+    })
   };
 
   static defaultProps = {
-    group: null,
+    group: null
   };
 
   /**

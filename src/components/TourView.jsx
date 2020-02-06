@@ -1,30 +1,30 @@
-import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import Interweave from 'interweave';
-import styled from 'styled-components';
-import _ from 'lodash';
+import React, { useEffect, useRef } from "react";
+import PropTypes from "prop-types";
+import Interweave from "interweave";
+import styled from "styled-components";
+import _ from "lodash";
 
-import IconButton from './Buttons/IconButton';
-import { Steps, Step } from './Steps';
-import UserLevelPromotionWidget from './UserLevelPromotionWidget';
-import BookPromotionWidget from './BookPromotionWidget';
-import ResultLockedWidget from './ResultLockedWidget';
+import IconButton from "./Buttons/IconButton";
+import { Steps, Step } from "./Steps";
+import UserLevelPromotionWidget from "./UserLevelPromotionWidget";
+import BookPromotionWidget from "./BookPromotionWidget";
+import ResultLockedWidget from "./ResultLockedWidget";
 
 // icons
-import iconBackPrimary from '../images/icon_back_primary.svg';
-import iconForwardPrimary from '../images/icon_forward_primary.svg';
+import iconBackPrimary from "../images/icon_back_primary.svg";
+import iconForwardPrimary from "../images/icon_forward_primary.svg";
 
 // treshhold for mobile view
 import {
   MAIN_CONTAINER_MAX_WIDTH,
-  MOBILE_RESOLUTION_THRESHOLD,
-} from '../utils/Constants';
+  MOBILE_RESOLUTION_THRESHOLD
+} from "../utils/Constants";
 
 // constants used for content styling
-const CONTENT_STYLING_CLASS_SUBHEADING = 'subheading';
-const CONTENT_STYLING_CLASS_DESCRIPTION = 'descriptionText';
-const CONTENT_STYLING_CLASS_NAME_HEADER = 'nameHeading';
-const CONTENT_STYLING_CLASS_HEADER = 'resultHeading';
+const CONTENT_STYLING_CLASS_SUBHEADING = "subheading";
+const CONTENT_STYLING_CLASS_DESCRIPTION = "descriptionText";
+const CONTENT_STYLING_CLASS_NAME_HEADER = "nameHeading";
+const CONTENT_STYLING_CLASS_HEADER = "resultHeading";
 const DESKTOP_TOUR_OVERVIEW_HEIGHT_PX = 80;
 const MOBILE_TOUR_OVERVIEW_HEIGHT_PX = 80; // TODO: Make less
 
@@ -249,7 +249,7 @@ const TourView = props => {
     compareTourData,
     onIndexChange,
     name,
-    compareName,
+    compareName
   } = props;
 
   // handler for clicks on the steps directly in the overview
@@ -291,13 +291,13 @@ const TourView = props => {
   const handleKeyDown = event => {
     switch (event.key) {
       // determining which key was pressed
-      case 'ArrowRight':
+      case "ArrowRight":
         handleNextClick();
         return;
-      case 'ArrowLeft':
+      case "ArrowLeft":
         handleBackClick();
         break;
-      case 'Escape':
+      case "Escape":
         props.onClose();
         break;
       default:
@@ -342,7 +342,7 @@ const TourView = props => {
     // title is name and value
     const elementTitle = `${numberResult.name} ${numberResult.result.value ||
       numberResult.result.list ||
-      ''}`;
+      ""}`;
 
     // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
@@ -351,26 +351,22 @@ const TourView = props => {
     }
 
     // building content based on user preferences
-    let elementContent = '';
+    let elementContent = "";
 
     // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
-        numberResult.numberDescription.description
-      }</p>`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
     }
 
     // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
-        elementContent += (!!numberResult.numberDescription.calculationDescription) ? `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
-          numberResult.numberDescription.calculationDescription
-        } </p>` : '';
+      elementContent += !!numberResult.numberDescription.calculationDescription
+        ? `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`
+        : "";
     }
 
     // adding description text of result
-    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${
-      numberResult.descriptionText
-    }</p>`;
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     return [elementTitle, elementContent];
   };
@@ -390,49 +386,41 @@ const TourView = props => {
     }
 
     // building content based on user preferences
-    let elementContent = '';
+    let elementContent = "";
 
     // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
-        numberResult.numberDescription.description
-      }</p>`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
     }
 
     // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${
-        numberResult.numberDescription.calculationDescription
-      } </p>`;
+      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
     }
 
     // adding result for first name
     elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberResult
       .result.value ||
       numberResult.result.list ||
-      ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
+      ""} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
 
     // adding description text for first name
-    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${
-      numberResult.descriptionText
-    }</p>`;
+    elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     // adding result for second name
     elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberCompareResult
       .result.value ||
       numberCompareResult.result.list ||
-      ''} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
+      ""} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
 
     // if results for both names are equal => only showing info text.
     // otheriwse including description text for second name
     if (_.isEqual(numberResult.result, numberCompareResult.result)) {
       elementContent +=
-        '</br> Die Beschreibung dieser Zahl entspricht der vorherigen Zahlbeschreibung oben.';
+        "</br> Die Beschreibung dieser Zahl entspricht der vorherigen Zahlbeschreibung oben.";
     } else {
       // adding description text for second name
-      elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${
-        numberCompareResult.descriptionText
-      }</p>`;
+      elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
     }
 
     return [elementTitle, elementContent];
@@ -448,7 +436,7 @@ const TourView = props => {
   const resultItem = tourData[sectionIndex].sectionElements[elementIndex];
 
   // if first element => building intro text element
-  if (resultItem.type === 'sectionIntroText') {
+  if (resultItem.type === "sectionIntroText") {
     // building step from section intro
     [tourStepTitle, tourStepContent] = buildIntroTextTourStep(resultItem);
 
@@ -488,8 +476,8 @@ const TourView = props => {
             filters={[
               {
                 // filtering out tables in intro texts as not responsive
-                node: (name, node) => (name === 'table' ? null : node),
-              },
+                node: (name, node) => (name === "table" ? null : node)
+              }
             ]}
           />
         ) : (
@@ -531,7 +519,7 @@ const TourView = props => {
           />
         </TourOverView>
       </TourOverViewInnerWrapper>
-    </TourOverViewOuterWrapper>,
+    </TourOverViewOuterWrapper>
   ];
 };
 
@@ -543,14 +531,14 @@ TourView.propTypes = {
   sectionIndex: PropTypes.number.isRequired,
   elementIndex: PropTypes.number.isRequired,
   user: PropTypes.object,
-  accessLevel: PropTypes.string.isRequired,
+  accessLevel: PropTypes.string.isRequired
 };
 
 // defining default props
 TourView.defaultProps = {
   sectionIndex: 0,
   elementIndex: 0,
-  compareTourData: null,
+  compareTourData: null
 };
 
 export default TourView;

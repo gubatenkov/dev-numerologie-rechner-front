@@ -1,19 +1,19 @@
-import React from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import PromotionAccordion from './PromotionAccordion';
-import TextButton from './Buttons/TextButton';
-import IconButton from './Buttons/IconButton';
+import React from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import PromotionAccordion from "./PromotionAccordion";
+import TextButton from "./Buttons/TextButton";
+import IconButton from "./Buttons/IconButton";
 
 // icons
-import lockIcon from '../images/icon_lock.svg';
-import bookIconPremium from '../images/icon_openBookPremium_primary.svg';
+import lockIcon from "../images/icon_lock.svg";
+import bookIconPremium from "../images/icon_openBookPremium_primary.svg";
 
 // promotion content based on user level
 const UserLevelPromotionTexts = {
   ACCESS_LEVEL_GUEST: {
     icon: lockIcon,
-    title: 'Registrieren Sie sich kostenlos und erhalten Sie Zugriff auf:',
+    title: "Registrieren Sie sich kostenlos und erhalten Sie Zugriff auf:",
     text: (
       <ul>
         <li>Ihre Lebenszahl in Beziehungen und Partnerschaft</li>
@@ -29,15 +29,15 @@ const UserLevelPromotionTexts = {
         </li>
       </ul>
     ),
-    action: 'Registrieren',
-    link: '/register',
+    action: "Registrieren",
+    link: "/register"
   },
   ACCESS_LEVEL_USER: {
     icon: bookIconPremium,
-    title: 'Lesen Sie alle Texte einer kurzen numerologischen Analyse!',
+    title: "Lesen Sie alle Texte einer kurzen numerologischen Analyse!",
     text: [
       <p key="userLevelPromotionText">
-        Schalten Sie sich alle Texte eines{' '}
+        Schalten Sie sich alle Texte eines{" "}
         <b>kurzen Numeroskops mit ca. 45 Seiten A4</b> für Ihre aktuelle
         Berechnung zum online Lesen frei und erhalten Sie dazu noch ein schön
         gestaltetes <b>PDF zum Ausdrucken. Preis: € 29,-</b>
@@ -80,22 +80,22 @@ const UserLevelPromotionTexts = {
             <li>
               Fortgeschrittene Ordnung der Zahlen nach dem „Eisberg-Modell“
             </li>
-          </ul>,
+          </ul>
         ]}
-      </PromotionAccordion>,
+      </PromotionAccordion>
     ],
-    action: 'Kurversion kaufen',
-    link: 'https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/',
+    action: "Kurversion kaufen",
+    link: "https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/"
   },
   ACCESS_LEVEL_PAID_SHORT: {
     icon: bookIconPremium,
-    title: 'Lesen Sie die vollständige numerologische Persönlichkeitsanalyse!',
+    title: "Lesen Sie die vollständige numerologische Persönlichkeitsanalyse!",
     text: [
       <p key="userLevelPromotionText">
         Schalten Sie sich alle Texte eines <b>vollständigen Numeroskops</b> mit
-        ausführlichen, langen Beschreibungen mit <b>ca. 100-120 Seiten A4</b>{' '}
-        und{' '}
-        <b>zahlreichen Übungen und Selbstreflexionen zum persönlich Wachsen</b>{' '}
+        ausführlichen, langen Beschreibungen mit <b>ca. 100-120 Seiten A4</b>{" "}
+        und{" "}
+        <b>zahlreichen Übungen und Selbstreflexionen zum persönlich Wachsen</b>{" "}
         für Ihre aktuelle Berechnung frei und erhalten Sie dazu noch ein schön
         gestaltetes <b>PDF zum Ausdrucken! Preis: € 59,-</b>
       </p>,
@@ -138,7 +138,7 @@ const UserLevelPromotionTexts = {
               Fragen zur Selbstreflexion
             </li>
             <li>
-              Seelische Matrix - vorhandene Zahlen: <b>Emotionale Verletzung</b>{' '}
+              Seelische Matrix - vorhandene Zahlen: <b>Emotionale Verletzung</b>{" "}
               und Häufigkeit
             </li>
             <li>
@@ -148,13 +148,13 @@ const UserLevelPromotionTexts = {
               <b>Empfehlungen</b> für das Persönliches Jahr und das nächste Jahr
               des Persönlichen Jahres
             </li>
-          </ul>,
+          </ul>
         ]}
-      </PromotionAccordion>,
+      </PromotionAccordion>
     ],
-    action: 'Langversion kaufen',
-    link: 'https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/',
-  },
+    action: "Langversion kaufen",
+    link: "https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/"
+  }
 };
 
 // promotion container for the next user level
@@ -162,11 +162,11 @@ const UserlevelPromotionContainer = styled.div`
   /* basic box styling*/
   padding: 16px;
   border-radius: 6px;
-  background-color: ${(props) => props.theme.lightestGrey};
+  background-color: ${props => props.theme.lightestGrey};
 
   /* basic font styling*/
-  color: ${(props) => props.theme.darkGrey};
-  font-family: ${(props) => props.theme.fontFamily};
+  color: ${props => props.theme.darkGrey};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 15px;
   line-height: 24px;
 
@@ -215,8 +215,8 @@ const UserlevelPromotionContainer = styled.div`
 
   /* drawing bullet with custom color*/
   li::before {
-    content: '•';
-    color: ${(props) => props.theme.primary};
+    content: "•";
+    color: ${props => props.theme.primary};
     padding-right: 0.7em;
   }
 `;
@@ -248,7 +248,7 @@ const PromotionIconButton = styled(IconButton)`
 `;
 
 // widget displaying promotion content based on the user access level
-const UserLevelPromotionWidget = (props) => {
+const UserLevelPromotionWidget = props => {
   // getting promotion text for current user level
   const userLevelPromotionText = UserLevelPromotionTexts[props.accessLevel];
 
@@ -275,7 +275,7 @@ const UserLevelPromotionWidget = (props) => {
 
 // setting proptypes
 UserLevelPromotionWidget.propTypes = {
-  accessLevel: PropTypes.string.isRequired,
+  accessLevel: PropTypes.string.isRequired
 };
 
 export default UserLevelPromotionWidget;

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 /**
  * advertisment item in the product
@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 class AdAreaItem extends Component {
   static propTypes = {
     link: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired
   };
 
   render() {

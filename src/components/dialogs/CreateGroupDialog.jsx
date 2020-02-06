@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import Dialog from './Dialog';
+import Dialog from "./Dialog";
 
 /**
  * Dialog to save an analysis
@@ -9,11 +9,11 @@ import Dialog from './Dialog';
 class CreateGroupDialog extends Component {
   static propTypes = {
     groups: PropTypes.arrayOf(PropTypes.string).isRequired,
-    onAction: PropTypes.func,
+    onAction: PropTypes.func
   };
 
   static defaultProps = {
-    onAction: () => {},
+    onAction: () => {}
   };
 
   /**
@@ -46,7 +46,7 @@ class CreateGroupDialog extends Component {
    * handler for the user changing the name of the new group
    * @param newGroupName: the new input text to the group name field
    */
-  handleInputchange = (newGroupName) => {
+  handleInputchange = newGroupName => {
     this.groupName = newGroupName.target.value;
   };
 
@@ -68,7 +68,7 @@ class CreateGroupDialog extends Component {
           className="form-control"
           placeholder="Neue Gruppe"
           onChange={this.handleInputchange}
-          ref={(ref) => {
+          ref={ref => {
             this.groupNameInput = ref;
           }}
         />

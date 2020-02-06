@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter } from "react-router-dom";
 
-import ToastNotifications from 'cogo-toast';
-import Panel from './Panel';
-import InputField from './InputField';
+import ToastNotifications from "cogo-toast";
+import Panel from "./Panel";
+import InputField from "./InputField";
 
-import logo from '../images/logo_weiss_trans.png';
+import logo from "../images/logo_weiss_trans.png";
 
-import LoadingIndicator from './LoadingIndicator';
-import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
+import LoadingIndicator from "./LoadingIndicator";
+import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 
-import '../styles/InputForm.css';
-import '../styles/Register.css';
+import "../styles/InputForm.css";
+import "../styles/Register.css";
 
-const Register = (props) => {
+const Register = props => {
   // getting props
   const { history } = props;
 
   // getting state
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [readyToSubmit, setReadyToSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
     // setting background dynamically
-    document.body.style.backgroundColor = '#00b3d4';
+    document.body.style.backgroundColor = "#00b3d4";
 
     return () => {
       // resetting background dynamically
@@ -43,25 +43,25 @@ const Register = (props) => {
       setLoading(true);
 
       // making request to server
-      const response = await postJsonData('/register', {
+      const response = await postJsonData("/register", {
         email,
-        password,
+        password
       });
 
       // saving received token
       setUserAuthData({ email, token: response.token });
 
       // redirecting to user home
-      history.push('/userHome');
+      history.push("/userHome");
     } catch (error) {
       // hiding loading indicator
       setLoading(false);
 
       // showing error message
       ToastNotifications.error(
-        error.message
-          || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.',
-        { position: 'top-right' },
+        error.message ||
+          "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        { position: "top-right" }
       );
     }
   };
@@ -91,50 +91,44 @@ const Register = (props) => {
                 <InputField
                   icon="wb-user"
                   fieldName="Email-Adresse"
-                  onChange={(event) => setEmail(event.target.value)}
+                  onChange={event => setEmail(event.target.value)}
                 />
                 <InputField
                   type="password"
                   icon="wb-lock"
                   fieldName="Passwort"
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={event => setPassword(event.target.value)}
                 />
                 <div className="Register__checkbox">
                   <input
                     type="checkbox"
-                    onChange={(event) => setReadyToSubmit(event.target.checked)}
+                    onChange={event => setReadyToSubmit(event.target.checked)}
                   />
                   <h6>
-                    Ja, ich habe die
-                    {' '}
+                    Ja, ich habe die{" "}
                     <a
                       href="https://www.psychologischenumerologie.eu/datenschutz/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       Datenschutzerklärung
-                    </a>
-                    {' '}
-                    inkl. den Datenschutz-Hinweisen anbei unten, die
-                    {' '}
+                    </a>{" "}
+                    inkl. den Datenschutz-Hinweisen anbei unten, die{" "}
                     <a
                       href="https://www.psychologischenumerologie.eu/nutzungsbedingungen/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       Nutzungsbedingungen
-                    </a>
-                    {' '}
-                    und die
-                    {' '}
+                    </a>{" "}
+                    und die{" "}
                     <a
                       href="https://www.psychologischenumerologie.eu/agb/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       AGBs
-                    </a>
-                    {' '}
+                    </a>{" "}
                     gelesen und erkläre mich damit ausdrücklich einverstanden.
                   </h6>
                 </div>
@@ -155,9 +149,7 @@ const Register = (props) => {
                   </Link>
                   <h6>
                     <br />
-                    <b>Datenschutz-Hinweis:</b>
-                    {' '}
-                    <br />
+                    <b>Datenschutz-Hinweis:</b> <br />
                     Für den Service des Psychologische Numerologie Rechners
                     nutzen wir den Hosting Server Heroku. Heroku ist eine
                     Tochtergesellschaft der salesforce.com (USA). Heroku
@@ -179,15 +171,13 @@ const Register = (props) => {
                     erfolgt gemäß Art. 6 Abs. 1 lit. b DSGVO zur
                     Vertragserfüllung unseres Services.
                     <br />
-                    <br />
-                    {' '}
+                    <br />{" "}
                     <b>
                       Sie dürfen die obigen personenbezogenen Daten von anderen
                       Menschen in den Psychologische Numerologie Rechner nur
                       dann eingeben, wenn Sie deren ausdrückliche Zustimmung
                       vorher eingeholt haben.
-                    </b>
-                    {' '}
+                    </b>{" "}
                     <br />
                     <br />
                     Die von Heroku bereitgestellten Server und Datenbanken
@@ -195,9 +185,7 @@ const Register = (props) => {
                     europäischen Datenschutzbestimmungen. Für den Fall, dass
                     personenbezogene Daten in die USA übertragen werden, haben
                     sich Heroku und Salesforce dem EU-US Privacy Shield
-                    unterworfen.
-                    {' '}
-                    <br />
+                    unterworfen. <br />
                     <br />
                     Die Webseiten des Psychologische Numerologie Rechners nutzen
                     die Funktionen des Webanalysedienstes Google Analytics der
@@ -208,12 +196,10 @@ const Register = (props) => {
                     wird die volle IP-Adresse an einen Server von Google in den
                     USA übertragen und dort gekürzt, wobei sich Google dem EU-US
                     Privacy Shield unterworfen hat. In diesen Ausnahmefällen
-                    erfolgt diese Verarbeitung gemäß Art. 6 Abs. 1 lit. f DSGVO.
-                    {' '}
+                    erfolgt diese Verarbeitung gemäß Art. 6 Abs. 1 lit. f DSGVO.{" "}
                     <br />
                     <br />
-                    Nähere Informationen findest Du in unserer
-                    {' '}
+                    Nähere Informationen findest Du in unserer{" "}
                     <a
                       href="https://www.psychologischenumerologie.eu/datenschutz/"
                       target="_blank"

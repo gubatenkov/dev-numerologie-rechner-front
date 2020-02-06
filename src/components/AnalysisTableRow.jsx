@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import BuyButton from './AnalysisBuyButton';
+import BuyButton from "./AnalysisBuyButton";
 
-import '../styles/AnalysisTableRow.css';
+import "../styles/AnalysisTableRow.css";
 
-const SHORT_TYPE = 'persoenlichkeit_kurz';
-const LONG_TYPE  = 'persoenlichkeit_lang';
+const SHORT_TYPE = "persoenlichkeit_kurz";
+const LONG_TYPE = "persoenlichkeit_lang";
 
 /**
  * table view rendering a group passed as props
@@ -15,15 +15,15 @@ class AnalysisTableRow extends Component {
   static propTypes = {
     analysis: PropTypes.shape({
       id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired
     }).isRequired,
     showHandler: PropTypes.func,
-    deleteHandler: PropTypes.func,
+    deleteHandler: PropTypes.func
   };
 
   static defaultProps = {
     showHandler: () => {},
-    deleteHandler: () => {},
+    deleteHandler: () => {}
   };
 
   /**
@@ -33,12 +33,14 @@ class AnalysisTableRow extends Component {
     const { analysis } = this.props;
     return (
       <tr key={analysis.id}>
-        <td className="AnalysisTableRow--analysisNameCell">
-          {analysis.name}
-        </td>
+        <td className="AnalysisTableRow--analysisNameCell">{analysis.name}</td>
         <td className="AnalysisTableRow--analysisTypeCell">Analyse</td>
-        <td colSpan={2} align="right" className="AnalysisTableRow--analysisActionCell">
-          {' '}
+        <td
+          colSpan={2}
+          align="right"
+          className="AnalysisTableRow--analysisActionCell"
+        >
+          {" "}
           <button
             className="btn btn-primary btn-outline btn-sm"
             onClick={() => {
@@ -51,11 +53,10 @@ class AnalysisTableRow extends Component {
             type={SHORT_TYPE}
             usedTypes={analysis.usedCreditTypes}
             typeMessage="Kurzes PDF"
-            onBuy={(type) => {
+            onBuy={type => {
               if (analysis.usedCreditTypes.includes(type)) {
                 this.props.onPdfDownload();
-              }
-              else {
+              } else {
                 this.props.onUseCredit(type);
               }
             }}
@@ -64,11 +65,10 @@ class AnalysisTableRow extends Component {
             type={LONG_TYPE}
             usedTypes={analysis.usedCreditTypes}
             typeMessage="Langes PDF"
-            onBuy={(type) => {
+            onBuy={type => {
               if (analysis.usedCreditTypes.includes(type)) {
                 this.props.onPdfDownload(true);
-              }
-              else {
+              } else {
                 this.props.onUseCredit(type);
               }
             }}

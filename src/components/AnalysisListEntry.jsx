@@ -1,18 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import NavigationDropdownMenu from './NavigationDropdownMenu';
-import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import NavigationDropdownMenu from "./NavigationDropdownMenu";
+import NavigationDropdownMenuItem from "./NavigationDropdownMenuItem";
 import {
   ActionToggleIcon,
-  PdfToggleIcon,
-} from './Dropdowns/DropdownMenuAddUtils';
-import shortPdfIcon from '../images/icon_openBookPremium_primary.svg';
-import longPdfIcon from '../images/icon_textLong.svg';
-import iconDelete from '../images/icon_delete.svg';
+  PdfToggleIcon
+} from "./Dropdowns/DropdownMenuAddUtils";
+import shortPdfIcon from "../images/icon_openBookPremium_primary.svg";
+import longPdfIcon from "../images/icon_textLong.svg";
+import iconDelete from "../images/icon_delete.svg";
 
-export const SHORT_TYPE = 'persoenlichkeit_kurz';
-export const LONG_TYPE = 'persoenlichkeit_lang';
+export const SHORT_TYPE = "persoenlichkeit_kurz";
+export const LONG_TYPE = "persoenlichkeit_lang";
 
 const LeftDiv = styled.div`
   display: flex;
@@ -35,7 +35,7 @@ const AnalysisListEntry = ({
   onBuyShortPdfClicked,
   onLongPdfClicked,
   onBuyLongPdfClicked,
-  onAnalysisDelete,
+  onAnalysisDelete
 }) => {
   const lifeNumbers = analysis.personalAnalysisResults
     .filter(result => result.lz)

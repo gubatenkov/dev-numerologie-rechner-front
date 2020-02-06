@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
-import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
 
 // custom styling for card used for accordion
 const PromotionCard = styled(Card)`
@@ -32,12 +32,12 @@ const PromotionCardBody = styled(Card.Body)`
 
 // the icon used to indicate if the accordion is open or not
 const PromotionIcon = styled(FontAwesomeIcon)`
-  color: ${(props) => props.theme.primary};
+  color: ${props => props.theme.primary};
   margin-left: 2px;
 `;
 
 // accordion component rendering one element (children) that can be collapsed.
-const PromotionAccordion = (props) => {
+const PromotionAccordion = props => {
   // state indicating if the accordion is open
   const [open, setOpen] = useState(false);
 
@@ -48,7 +48,7 @@ const PromotionAccordion = (props) => {
           as={PromotionCardHeader}
           onClick={() => setOpen(!open)}
         >
-          {props.title}{' '}
+          {props.title}{" "}
           <PromotionIcon icon={open ? faChevronUp : faChevronDown} />
         </Accordion.Toggle>
         <Accordion.Collapse>
@@ -61,7 +61,7 @@ const PromotionAccordion = (props) => {
 
 // setting prop types
 PromotionAccordion.propTyes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default PromotionAccordion;

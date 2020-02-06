@@ -1,31 +1,31 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
 // importing all icons used as actions in the row
-import bookIcon from '../images/icon_openBook_primary.svg';
-import bookShortIcon from '../images/icon_textShort.svg';
-import bookLongLongIcon from '../images/icon_textLong.svg';
-import lockIcon from '../images/icon_lock.svg';
+import bookIcon from "../images/icon_openBook_primary.svg";
+import bookShortIcon from "../images/icon_textShort.svg";
+import bookLongLongIcon from "../images/icon_textLong.svg";
+import lockIcon from "../images/icon_lock.svg";
 
-import IconButton from './Buttons/IconButton';
+import IconButton from "./Buttons/IconButton";
 
 // constants around responsiveness
-import { MOBILE_RESOLUTION_THRESHOLD } from '../utils/Constants';
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 // identifiers for results
 import {
   TYPE_ID_NUMBER,
   TYPE_ID_LIST,
-  TYPE_ID_MATRIX,
-} from '../utils/Constants';
+  TYPE_ID_MATRIX
+} from "../utils/Constants";
 
 // mapping from access level to used icon in row
 const ACCESS_LEVEL_ICON_MAPPING = {
   ACCESS_LEVEL_GUEST: bookIcon,
   ACCESS_LEVEL_USER: bookIcon,
   ACCESS_LEVEL_PAID_SHORT: bookShortIcon,
-  ACCESS_LEVEL_PAID_LONG: bookLongLongIcon,
+  ACCESS_LEVEL_PAID_LONG: bookLongLongIcon
 };
 
 // the row in the results table
@@ -40,19 +40,22 @@ const ResultTableRowStyled = styled.div`
 
   /* basic row box styling*/
   min-height: 60px;
-  background-color: ${(props) => (props.highlighted ? props.theme.highlightedRow : props.theme.white)};
+  background-color: ${props =>
+    props.highlighted ? props.theme.highlightedRow : props.theme.white};
   box-shadow: 0 0 8px 0 rgba(50, 50, 50, 0.08);
   border-radius: 8px;
   /* defining padding: if the cell is highlighted, we have a border around (4px). Therefore we need to adapt
   left and right padding for row to be aligned with others*/
-  padding: ${(props) => `15px ${props.highlighted ? '8px' : '12px'} 15px ${
-    props.highlighted ? '20px' : '24px'
-  }`};
-  border: ${(props) => (props.highlighted ? `solid ${props.theme.white} 4px` : 'none')};
+  padding: ${props =>
+    `15px ${props.highlighted ? "8px" : "12px"} 15px ${
+      props.highlighted ? "20px" : "24px"
+    }`};
+  border: ${props =>
+    props.highlighted ? `solid ${props.theme.white} 4px` : "none"};
 
   /* text styling */
-  font-family: ${(props) => props.theme.fontFamily};
-  color: ${(props) => props.theme.darkGrey};
+  font-family: ${props => props.theme.fontFamily};
+  color: ${props => props.theme.darkGrey};
   font-size: 20px;
   font-weight: 500;
   line-height: 30px;
@@ -146,14 +149,15 @@ const MatrixTable = styled.table`
 // cell of the matrix table
 const MatrixCell = styled.td`
   /* if in highlighted state => adapting background color */
-  background-color: ${(props) => (props.highlighted ? props.theme.matrixRed : '')};
+  background-color: ${props =>
+    props.highlighted ? props.theme.matrixRed : ""};
 
   /* setting fixed width of cell */
   width: 75px;
   height: 75px;
 
   /* setting border on every cell */
-  border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
+  border: solid ${props => props.theme.matrixBorderGrey} 1px;
 
   /* on mobile => making cells smaller*/
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
@@ -165,7 +169,7 @@ const MatrixCell = styled.td`
 // container around matrix used to draw rounded border
 const MatrixContainer = styled.div`
   /* defining border around matrix*/
-  border: solid ${(props) => props.theme.matrixBorderGrey} 1px;
+  border: solid ${props => props.theme.matrixBorderGrey} 1px;
   border-radius: 8px;
 
   /* setting width of container = size of matrix + 1px for border on every side*/
@@ -187,18 +191,18 @@ const RowIconButton = styled(IconButton)`
   height: 40px;
   width: 40px;
 
-  ${(props) => (props.yellow ? `background-color: ${props.theme.yellow}` : '')};
+  ${props => (props.yellow ? `background-color: ${props.theme.yellow}` : "")};
 
   /* as we use non-square icons with a badge, we need to adjust this here...not nice! */
   img {
-    padding-bottom: ${(props) => (props.badge ? '4px' : '0px')};
+    padding-bottom: ${props => (props.badge ? "4px" : "0px")};
   }
 `;
 
 /**
  * row rendering a single row item of an analysis result
  */
-const ResultTableRow = (props) => {
+const ResultTableRow = props => {
   // getting item and compare item from passed props
   const { item, compareItem } = props;
 
@@ -206,7 +210,7 @@ const ResultTableRow = (props) => {
    * renders a result matrix as content of the table
    * @param item the item of type 'matrix'
    */
-  const renderResultMatrix = (resultItem) => {
+  const renderResultMatrix = resultItem => {
     // extracting dimensions
     const matrixDimensions = resultItem.result.dimensions;
 
@@ -221,19 +225,21 @@ const ResultTableRow = (props) => {
             {[...Array(matrixDimensions.rows)].map((rowItem, rowIndex) => (
               <tr
                 key={
-                  resultItem.name
-                  + resultItem.numberId
-                  + rowIndex
-                  + resultItem.result.values[rowIndex]
+                  resultItem.name +
+                  resultItem.numberId +
+                  rowIndex +
+                  resultItem.result.values[rowIndex]
                 }
               >
                 {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
                   // determining current index composed of cols and rows
-                  const currentIndex = rowIndex * matrixDimensions.cols + colIndex;
+                  const currentIndex =
+                    rowIndex * matrixDimensions.cols + colIndex;
                   const highlighted = highlightedIndices[currentIndex];
 
                   // extracting result value or placeholder
-                  const resultValue = resultItem.result.values[currentIndex] || '';
+                  const resultValue =
+                    resultItem.result.values[currentIndex] || "";
 
                   // returning cell for element
                   return (
@@ -259,7 +265,8 @@ const ResultTableRow = (props) => {
    * renders a readable represetnation of the list result item type
    * @param resultItem the received result item of type list
    */
-  const renderResultList = (resultItem) => resultItem.result.list.map((item) => ` ${item}`);
+  const renderResultList = resultItem =>
+    resultItem.result.list.map(item => ` ${item}`);
 
   // rendering content for result and compare column based on number type
   let contentColumn;
@@ -312,10 +319,10 @@ const ResultTableRow = (props) => {
             imageIcon={rowIsLocked ? lockIcon : rowIcon}
             inactive={rowIsLocked}
             inverted={item.highlighted}
-            primary={props.accessLevel === 'ACCESS_LEVEL_PAID_SHORT'}
+            primary={props.accessLevel === "ACCESS_LEVEL_PAID_SHORT"}
             badge={
-              props.accessLevel === 'ACCESS_LEVEL_PAID_SHORT'
-              || props.accessLevel === 'ACCESS_LEVEL_PAID_LONG'
+              props.accessLevel === "ACCESS_LEVEL_PAID_SHORT" ||
+              props.accessLevel === "ACCESS_LEVEL_PAID_LONG"
             }
             onClick={() => props.onTextDetailClick(item.numberId)}
           />
@@ -329,7 +336,7 @@ const ResultTableRow = (props) => {
 ResultTableRow.propTypes = {
   item: PropTypes.object.isRequired,
   onTextDetailClick: PropTypes.func.isRequired,
-  accessLevel: PropTypes.string.isRequired,
+  accessLevel: PropTypes.string.isRequired
 };
 
 export default ResultTableRow;

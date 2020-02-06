@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import { withRouter, Redirect } from 'react-router-dom';
-import { graphql } from 'react-apollo';
-import * as compose from 'lodash.flowright';
-import ToastNotifications from 'cogo-toast';
+import { withRouter, Redirect } from "react-router-dom";
+import { graphql } from "react-apollo";
+import * as compose from "lodash.flowright";
+import ToastNotifications from "cogo-toast";
 
-import '../styles/UserHome.scss';
+import "../styles/UserHome.scss";
 
-import NavigationBar from './NavigationBar';
-import AnalysisBrowser from './AnalysisBrowser';
-import SaveAnalysisDialog from './dialogs/SaveAnalysisDialog';
-import LoadingIndicator from './LoadingIndicator';
-import CreditsBuyModal from './CreditsBuyModal';
-import Footer from './Footer';
+import NavigationBar from "./NavigationBar";
+import AnalysisBrowser from "./AnalysisBrowser";
+import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
+import LoadingIndicator from "./LoadingIndicator";
+import CreditsBuyModal from "./CreditsBuyModal";
+import Footer from "./Footer";
 
-import { currentUserQuery } from '../graphql/Queries';
-import { saveAnalysisMutation } from '../graphql/Mutations';
-import MainContainer from './MainContainer';
-import CreditsOverview from './CreditsOverview';
-const SAVE_ANALYSIS_COMMAND = 'saveAnalysis';
+import { currentUserQuery } from "../graphql/Queries";
+import { saveAnalysisMutation } from "../graphql/Mutations";
+import MainContainer from "./MainContainer";
+import CreditsOverview from "./CreditsOverview";
+const SAVE_ANALYSIS_COMMAND = "saveAnalysis";
 
 /**
  * Home screen of the user displaying analyses, groups and credits
@@ -37,7 +37,7 @@ class UserHome extends Component {
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
       isBuyModalOpen: false,
       isBuyProcessing: false,
-      loading: false,
+      loading: false
     };
   }
 
@@ -49,13 +49,13 @@ class UserHome extends Component {
 
   toggleBuyModal = () => {
     this.setState({
-      isBuyModalOpen: !this.state.isBuyModalOpen,
+      isBuyModalOpen: !this.state.isBuyModalOpen
     });
   };
 
   handleBuy = () => {
     this.setState({
-      isBuyProcessing: true,
+      isBuyProcessing: true
     });
   };
 
@@ -82,21 +82,21 @@ class UserHome extends Component {
 
     // one or more names?
     let nameInputs = [];
-    if (lastNames.split(',').length > 1) {
-      const firstNamesArray = firstNames.split(',');
-      const lastNamesArray = lastNames.split(',');
+    if (lastNames.split(",").length > 1) {
+      const firstNamesArray = firstNames.split(",");
+      const lastNamesArray = lastNames.split(",");
       nameInputs = firstNamesArray.map((item, index) => ({
         firstNames: item,
         lastName: lastNamesArray[index],
-        dateOfBirth,
+        dateOfBirth
       }));
     } else {
       nameInputs = [
         {
           firstNames,
           lastName: lastNames,
-          dateOfBirth,
-        },
+          dateOfBirth
+        }
       ];
     }
 
@@ -106,29 +106,29 @@ class UserHome extends Component {
         variables: {
           name,
           group: groupId,
-          inputs: nameInputs,
+          inputs: nameInputs
         },
         update: (store, { data: { saveAnalysis } }) => {
           // gettint the query from the local cache and adding group
           const data = store.readQuery({ query: currentUserQuery });
           data.analyses.push(saveAnalysis);
           store.writeQuery({ query: currentUserQuery, data });
-        },
+        }
       });
       this.setState({ loading: false });
 
       // redirecting to user home
-      this.props.history.push('/userHome');
+      this.props.history.push("/userHome");
 
       // sending notification to user
       ToastNotifications.success(
         `Die Analyse ${name} wurde erfolgreich erstellt.`,
-        { position: 'top-right' }
+        { position: "top-right" }
       );
     } catch (error) {
       // informing user of error
-      ToastNotifications.error('Analyse konnte nicht gespreichert werden.', {
-        position: 'top-right',
+      ToastNotifications.error("Analyse konnte nicht gespreichert werden.", {
+        position: "top-right"
       });
     }
   }
@@ -138,7 +138,7 @@ class UserHome extends Component {
    */
   render() {
     if (!this.props.data.loading && this.props.data.error) {
-      console.log('GQL error');
+      console.log("GQL error");
       console.log(this.props.data.error);
       return <Redirect to="/login" />;
     }
@@ -168,7 +168,7 @@ class UserHome extends Component {
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeContent">
-            <CreditsOverview credits={this.props.data.currentUser.credits}/>
+            <CreditsOverview credits={this.props.data.currentUser.credits} />
             <AnalysisBrowser
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.analyses}
@@ -181,10 +181,10 @@ class UserHome extends Component {
             />
             {/* We will hide Ads at the beginning */}
             {/*<AdArea horizontal>*/}
-              {/*<AdAreaItem*/}
-                {/*link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"*/}
-                {/*image={BANNER_BOTTOM}*/}
-              {/*/>*/}
+            {/*<AdAreaItem*/}
+            {/*link="https://www.psychologischenumerologie.eu/event/psychologische-numerologie-2018/2018-10-05/"*/}
+            {/*image={BANNER_BOTTOM}*/}
+            {/*/>*/}
             {/*</AdArea>*/}
           </div>
         </div>
@@ -205,12 +205,12 @@ class UserHome extends Component {
 
             // constructing name for analysis
             let analysisName;
-            if (lastNames.split(',').length > 1) {
+            if (lastNames.split(",").length > 1) {
               // gettin names
-              const firstName = firstNames.split(',')[0];
-              const firstNameComfort = firstNames.split(',')[1];
-              const lastName = lastNames.split(',')[0];
-              const lastNameComfort = lastNames.split(',')[1];
+              const firstName = firstNames.split(",")[0];
+              const firstNameComfort = firstNames.split(",")[1];
+              const lastName = lastNames.split(",")[0];
+              const lastNameComfort = lastNames.split(",")[1];
 
               // constructing name
               analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
@@ -245,20 +245,20 @@ class UserHome extends Component {
 // props validation
 UserHome.propTypes = {
   history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired
   }).isRequired,
   computedMatch: PropTypes.shape({
     params: PropTypes.shape({
       userAction: PropTypes.string,
       firstNames: PropTypes.string,
       lastName: PropTypes.string,
-      dateOfBirth: PropTypes.string,
-    }),
+      dateOfBirth: PropTypes.string
+    })
   }).isRequired,
-  saveAnalysis: PropTypes.func.isRequired,
+  saveAnalysis: PropTypes.func.isRequired
 };
 
 export default compose(
   graphql(currentUserQuery),
-  graphql(saveAnalysisMutation, { name: 'saveAnalysis' })
+  graphql(saveAnalysisMutation, { name: "saveAnalysis" })
 )(withRouter(UserHome));

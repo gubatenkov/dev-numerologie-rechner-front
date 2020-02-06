@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import ToastNotifications from 'cogo-toast';
-import LoadingIndicator from './LoadingIndicator';
+import React, { useState, useEffect } from "react";
+import { withRouter, Link } from "react-router-dom";
+import ToastNotifications from "cogo-toast";
+import LoadingIndicator from "./LoadingIndicator";
 
-import { postJsonData } from '../utils/AuthUtils';
+import { postJsonData } from "../utils/AuthUtils";
 
-import Panel from './Panel';
-import InputField from './InputField';
+import Panel from "./Panel";
+import InputField from "./InputField";
 
-import logo from '../images/logo_weiss_trans.png';
-import '../styles/InputForm.css';
+import logo from "../images/logo_weiss_trans.png";
+import "../styles/InputForm.css";
 
 // delay after which the user is redirected upon successful reset
 const DELAY_REDIRECT_AFTER_RESET = 3000;
 
-const ResetPassword = (props) => {
+const ResetPassword = props => {
   // getting prop elements
   const { history } = props;
 
   // email address and loading state
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
     // setting background dynamically
-    document.body.style.backgroundColor = '#00b3d4';
+    document.body.style.backgroundColor = "#00b3d4";
 
     return () => {
       // resetting background dynamically
@@ -41,21 +41,21 @@ const ResetPassword = (props) => {
       setLoading(true);
 
       // making request to server
-      await postJsonData('/reset-password', {
-        email,
+      await postJsonData("/reset-password", {
+        email
       });
 
       ToastNotifications.success(
-        'Ein Email mit einer Anleitung zum Zurücksetzten des Passworts wurde versendet.',
-        { position: 'top-right' },
+        "Ein Email mit einer Anleitung zum Zurücksetzten des Passworts wurde versendet.",
+        { position: "top-right" }
       );
 
       // redirecting to user home after delay
-      setTimeout(() => history.push('/login'), DELAY_REDIRECT_AFTER_RESET);
+      setTimeout(() => history.push("/login"), DELAY_REDIRECT_AFTER_RESET);
     } catch (error) {
       ToastNotifications.error(
-        'Rücksetzen fehlgeschlagen. Bitte versuchen Sie es erneut.',
-        { position: 'top-right' },
+        "Rücksetzen fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        { position: "top-right" }
       );
     } finally {
       setLoading(false);
@@ -87,7 +87,7 @@ const ResetPassword = (props) => {
                 <InputField
                   icon="wb-user"
                   fieldName="Email-Adresse"
-                  onChange={(event) => setEmail(event.target.value)}
+                  onChange={event => setEmail(event.target.value)}
                 />
                 <button
                   type="submit"

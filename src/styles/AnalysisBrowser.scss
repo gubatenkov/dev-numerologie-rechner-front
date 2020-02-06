@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'typography';
+@import "variables";
+@import "typography";
 
 //TODO: Move static Colors to variables!
 
@@ -77,7 +77,7 @@
           .card-body {
             background-color: #f8f8f8;
 
-            .akb-life-number-display{
+            .akb-life-number-display {
               background-color: #ffffff;
             }
           }
@@ -126,17 +126,17 @@
 
       @include font-headline-3;
 
-      &:hover{
+      &:hover {
         text-decoration: none;
       }
     }
   }
 
-  .akb-life-number-display{
+  .akb-life-number-display {
     width: 32px;
     height: 32px;
     border-radius: 32px;
-    background-color: #F8F8F8;
+    background-color: #f8f8f8;
 
     // text
     color: #323232;

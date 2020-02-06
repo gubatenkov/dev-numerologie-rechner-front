@@ -1,13 +1,13 @@
-.Register__error h5{
-    color: red;
+.Register__error h5 {
+  color: red;
 }
 
-.Register__checkbox input{
-    margin-left: 15px;
-    margin-right: 25px;
-    margin-bottom: 20px;
+.Register__checkbox input {
+  margin-left: 15px;
+  margin-right: 25px;
+  margin-bottom: 20px;
 }
 
 .Register__checkbox {
-display: flex;
+  display: flex;
 }

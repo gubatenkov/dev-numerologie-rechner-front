@@ -1,8 +1,9 @@
-import { CI_COLOR_IDS } from './Constants';
+import { CI_COLOR_IDS } from "./Constants";
 
 // graphql endpoint url configuration
-export const GRAPHQL_HOST = process.env.REACT_APP_BACKEND_HOST
-  || 'https://prd-numerologie-rechner.herokuapp.com';
+export const GRAPHQL_HOST =
+  process.env.REACT_APP_BACKEND_HOST ||
+  "https://prd-numerologie-rechner.herokuapp.com";
 export const GRAPHQL_ENDPOINT = `${GRAPHQL_HOST}/graphql`;
 export const AUTH_ENDPOINT = `${GRAPHQL_HOST}/auth`;
 
@@ -16,177 +17,180 @@ export const AUTH_ENDPOINT = `${GRAPHQL_HOST}/auth`;
 //   - headings: table headings to be displayed
 //   - numberIds: list of number ids to display in the table
 export const PERSONAL_RESULT_CONFIGURATION_IDS = {
-  LEVELS: 'LEVELS',
-  STARTER: 'STARTER',
+  LEVELS: "LEVELS",
+  STARTER: "STARTER"
 };
 
 export const PERSONAL_RESULT_CONFIGURATIONS = {
   LEVELS: [
     {
-      name: 'Ausdrucksebene',
+      name: "Ausdrucksebene",
       color: CI_COLOR_IDS.RED_ORANGE_YELLOW,
       tables: [
         {
-          name: 'Ausdrucksebene',
+          name: "Ausdrucksebene",
           headings: null,
-          numberIds: ['az', 'bz', 'nnz'],
-        },
-      ],
+          numberIds: ["az", "bz", "nnz"]
+        }
+      ]
     },
     {
-      name: 'Persönlichkeitsebene',
+      name: "Persönlichkeitsebene",
       color: CI_COLOR_IDS.GREEN,
       tables: [
         {
-          name: 'Persönlichkeitsebene',
+          name: "Persönlichkeitsebene",
           numberIds: [
-            'wz',
-            'lz',
-            'iz',
-            'gz',
-            'gdr.gdr',
-            'gdr.gdrv',
-            'gdr.gdrf',
-            'gdr.gdri',
+            "wz",
+            "lz",
+            "iz",
+            "gz",
+            "gdr.gdr",
+            "gdr.gdrv",
+            "gdr.gdrf",
+            "gdr.gdri"
           ],
-          headings: null,
-        },
-      ],
+          headings: null
+        }
+      ]
     },
     {
-      name: 'Entfaltungspotenzial',
+      name: "Entfaltungspotenzial",
       color: CI_COLOR_IDS.BLUE,
       tables: [
         {
-          name: 'Entfaltungspotenzial',
-          numberIds: ['tz', 'kz', 'bfz', 'visz'],
-          headings: null,
-        },
-      ],
+          name: "Entfaltungspotenzial",
+          numberIds: ["tz", "kz", "bfz", "visz"],
+          headings: null
+        }
+      ]
     },
     {
-      name: 'Seelische Ebene',
+      name: "Seelische Ebene",
       color: CI_COLOR_IDS.PURPLE,
       tables: [
         {
-          name: 'Seelische Ebene',
-          numberIds: ['sz', 'iniz', 'sm', 'smv', 'kl', 'zsa'],
-          headings: null,
-        },
-      ],
+          name: "Seelische Ebene",
+          numberIds: ["sz", "iniz", "sm", "smv", "kl", "zsa"],
+          headings: null
+        }
+      ]
     },
     {
-      name: 'Zeitliche Ebene',
+      name: "Zeitliche Ebene",
       color: CI_COLOR_IDS.SILVER,
       tables: [
         {
-          name: 'Vibratorische Zyklen',
-          numberIds: ['vz.vzb', 'vz.vzp', 'vz.vze'],
-          showTitle: true,
+          name: "Vibratorische Zyklen",
+          numberIds: ["vz.vzb", "vz.vzp", "vz.vze"],
+          showTitle: true
         },
         {
-          name: 'Herausforderungen',
-          numberIds: ['hfhp.hf1', 'hfhp.hf2', 'hfhp.hf3', 'hfhp.hf4'],
-          showTitle: true,
+          name: "Herausforderungen",
+          numberIds: ["hfhp.hf1", "hfhp.hf2", "hfhp.hf3", "hfhp.hf4"],
+          showTitle: true
         },
         {
-          name: 'Höhepunkte',
-          numberIds: ['hfhp.hp1', 'hfhp.hp2', 'hfhp.hp3', 'hfhp.hp4'],
-          showTitle: true,
+          name: "Höhepunkte",
+          numberIds: ["hfhp.hp1", "hfhp.hp2", "hfhp.hp3", "hfhp.hp4"],
+          showTitle: true
         },
         {
-          name: 'Persönliches Jahr',
-          numberIds: ['pj.pj', 'pj.pjnj'],
-          showTitle: true,
-        },
-      ],
-    },
+          name: "Persönliches Jahr",
+          numberIds: ["pj.pj", "pj.pjnj"],
+          showTitle: true
+        }
+      ]
+    }
   ],
   STARTER: [
     {
-      name: 'Persönlichkeit',
+      name: "Persönlichkeit",
       color: CI_COLOR_IDS.GREEN,
       tables: [
         {
-          name: 'Persönlichkeit',
+          name: "Persönlichkeit",
           headings: null,
-          numberIds: ['lz', 'wz', 'nnz', 'gz'],
-        },
-      ],
+          numberIds: ["lz", "wz", "nnz", "gz"]
+        }
+      ]
     },
     {
-      name: 'Die Seele und das Unbewusste',
+      name: "Die Seele und das Unbewusste",
       color: CI_COLOR_IDS.PURPLE,
       tables: [
         {
-          name: 'Die Seele und das Unbewusste',
+          name: "Die Seele und das Unbewusste",
           headings: null,
-          numberIds: ['sz', 'iniz', 'iz'],
-        },
-      ],
+          numberIds: ["sz", "iniz", "iz"]
+        }
+      ]
     },
     {
-      name: 'Potenzial, Beruf und Berufung',
+      name: "Potenzial, Beruf und Berufung",
       color: CI_COLOR_IDS.BLUE,
       tables: [
         {
-          name: 'Potenzial, Beruf und Berufung',
+          name: "Potenzial, Beruf und Berufung",
           headings: null,
-          numberIds: ['tz', 'az', 'kz', 'bz', 'visz', 'bfz'],
-        },
-      ],
+          numberIds: ["tz", "az", "kz", "bz", "visz", "bfz"]
+        }
+      ]
     },
     {
-      name: 'Facetten der Persönlichkeit und Erfahrungsbereiche',
+      name: "Facetten der Persönlichkeit und Erfahrungsbereiche",
       color: CI_COLOR_IDS.RED_ORANGE_YELLOW,
       tables: [
         {
-          name: 'Facetten der Persönlichkeit und Erfahrungsbereiche',
+          name: "Facetten der Persönlichkeit und Erfahrungsbereiche",
           headings: null,
           numberIds: [
-            'gdr.gdr',
-            'gdr.gdrv',
-            'gdr.gdrf',
-            'gdr.gdri',
-            'sm',
-            'smv',
-            'kl',
-            'zsa',
-          ],
-        },
-      ],
+            "gdr.gdr",
+            "gdr.gdrv",
+            "gdr.gdrf",
+            "gdr.gdri",
+            "sm",
+            "smv",
+            "kl",
+            "zsa"
+          ]
+        }
+      ]
     },
     {
-      name: 'Lebensabschnitte und Prüfungen im Leben',
+      name: "Lebensabschnitte und Prüfungen im Leben",
       color: CI_COLOR_IDS.SILVER,
       tables: [
         {
-          name: 'Vibratorische Zyklen',
-          numberIds: ['vz.vzb', 'vz.vzp', 'vz.vze'],
-          showTitle: true,
+          name: "Vibratorische Zyklen",
+          numberIds: ["vz.vzb", "vz.vzp", "vz.vze"],
+          showTitle: true
         },
         {
-          name: 'Herausforderungen',
-          numberIds: ['hfhp.hf1', 'hfhp.hf2', 'hfhp.hf3', 'hfhp.hf4'],
-          showTitle: true,
+          name: "Herausforderungen",
+          numberIds: ["hfhp.hf1", "hfhp.hf2", "hfhp.hf3", "hfhp.hf4"],
+          showTitle: true
         },
         {
-          name: 'Höhepunkte',
-          numberIds: ['hfhp.hp1', 'hfhp.hp2', 'hfhp.hp3', 'hfhp.hp4'],
-          showTitle: true,
+          name: "Höhepunkte",
+          numberIds: ["hfhp.hp1", "hfhp.hp2", "hfhp.hp3", "hfhp.hp4"],
+          showTitle: true
         },
         {
-          name: 'Persönliches Jahr',
-          numberIds: ['pj.pj', 'pj.pjnj'],
-          showTitle: true,
-        },
-      ],
-    },
-  ],
+          name: "Persönliches Jahr",
+          numberIds: ["pj.pj", "pj.pjnj"],
+          showTitle: true
+        }
+      ]
+    }
+  ]
 };
 
-export const getConfigurationForId = (configurationId) => PERSONAL_RESULT_CONFIGURATIONS[configurationId.toUpperCase()];
+export const getConfigurationForId = configurationId =>
+  PERSONAL_RESULT_CONFIGURATIONS[configurationId.toUpperCase()];
 
-export const PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID = PERSONAL_RESULT_CONFIGURATION_IDS.STARTER;
+export const PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID =
+  PERSONAL_RESULT_CONFIGURATION_IDS.STARTER;
 
-export const PERSONAL_RESULT_CONFIGURATION_DEFAULT = PERSONAL_RESULT_CONFIGURATIONS[PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID];
+export const PERSONAL_RESULT_CONFIGURATION_DEFAULT =
+  PERSONAL_RESULT_CONFIGURATIONS[PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID];

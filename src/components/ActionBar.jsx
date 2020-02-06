@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 // the action bar displaying buttons to interact with the analyis
 const ActionBar = styled.div`

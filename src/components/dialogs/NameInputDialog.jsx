@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import PropType from 'prop-types';
+import React, { useState } from "react";
+import styled from "styled-components";
+import PropType from "prop-types";
 
 // lib components
-import Modal from 'react-bootstrap/Modal';
-import ModalHeader from 'react-bootstrap/ModalHeader';
-import ModalBody from 'react-bootstrap/ModalBody';
-import ModalFooter from 'react-bootstrap/ModalFooter';
+import Modal from "react-bootstrap/Modal";
+import ModalHeader from "react-bootstrap/ModalHeader";
+import ModalBody from "react-bootstrap/ModalBody";
+import ModalFooter from "react-bootstrap/ModalFooter";
 
 // own components
-import TextButton from '../Buttons/TextButton';
+import TextButton from "../Buttons/TextButton";
 
 // threshold for mobile layout
-import { MOBILE_RESOLUTION_THRESHOLD } from '../../utils/Constants';
+import { MOBILE_RESOLUTION_THRESHOLD } from "../../utils/Constants";
 
 // text button block
 const ActionTextButton = styled(TextButton)`
@@ -25,7 +25,7 @@ const NameInputModal = styled(Modal)`
   background-color: rgba(50, 50, 50, 0.3) !important;
 
   /* global text color */
-  color: ${(props) => props.theme.darkGrey};
+  color: ${props => props.theme.darkGrey};
 
   /* padding of all elements within dialog*/
   .modal-content {
@@ -102,7 +102,7 @@ const InputFieldContainer = styled.div`
     height: 48px;
     width: 240px;
     border-radius: 6px;
-    border: solid ${(props) => props.theme.lightGrey} 1px;
+    border: solid ${props => props.theme.lightGrey} 1px;
     padding: 9px 16px 9px 16px;
   }
   /* margin left and top between items*/
@@ -114,15 +114,15 @@ const InputFieldContainer = styled.div`
 `;
 
 // dialog to change or add names
-const NameInputDialog = (props) => {
+const NameInputDialog = props => {
   // defining state of the dialog
   const [firstNames, setFirstNames] = useState(props.firstNames);
   const [lastName, setLastName] = useState(props.lastName);
   const [compareFirstNames, setCompareFirstNames] = useState(
-    props.compareFirstNames || '',
+    props.compareFirstNames || ""
   );
   const [compareLastName, setCompareLastName] = useState(
-    props.compareLastName || '',
+    props.compareLastName || ""
   );
 
   return (
@@ -136,30 +136,30 @@ const NameInputDialog = (props) => {
         <InputFieldContainer>
           <input
             type="text"
-            placeholder={'Vorname(n)'}
+            placeholder={"Vorname(n)"}
             value={firstNames}
-            onChange={(event) => setFirstNames(event.target.value)}
+            onChange={event => setFirstNames(event.target.value)}
           />
           <input
             type="text"
-            placeholder={'Nachname'}
+            placeholder={"Nachname"}
             value={lastName}
-            onChange={(event) => setLastName(event.target.value)}
+            onChange={event => setLastName(event.target.value)}
           />
         </InputFieldContainer>
         <h4>Vergleichsname</h4>
         <InputFieldContainer>
           <input
             type="text"
-            placeholder={'Vorname(n)'}
+            placeholder={"Vorname(n)"}
             value={compareFirstNames}
-            onChange={(event) => setCompareFirstNames(event.target.value)}
+            onChange={event => setCompareFirstNames(event.target.value)}
           />
           <input
             type="text"
-            placeholder={'Nachname'}
+            placeholder={"Nachname"}
             value={compareLastName}
-            onChange={(event) => setCompareLastName(event.target.value)}
+            onChange={event => setCompareLastName(event.target.value)}
           />
         </InputFieldContainer>
       </NameInputModalBody>
@@ -167,12 +167,13 @@ const NameInputDialog = (props) => {
         <ActionTextButton
           title="Namen vergleichen"
           primary
-          onClick={() => props.onChange(
-            firstNames,
-            lastName,
-            compareFirstNames,
-            compareLastName,
-          )
+          onClick={() =>
+            props.onChange(
+              firstNames,
+              lastName,
+              compareFirstNames,
+              compareLastName
+            )
           }
         />
       </NameInputModalFooter>
@@ -186,7 +187,7 @@ NameInputDialog.propTypes = {
   lastName: PropType.string.isRequired,
   compareFirstNames: PropType.string,
   compareLastName: PropType.string,
-  onChange: PropType.func.isRequired,
+  onChange: PropType.func.isRequired
 };
 
 export default NameInputDialog;

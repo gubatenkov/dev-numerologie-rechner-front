@@ -1,63 +1,63 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 
-import { withRouter } from 'react-router-dom';
-import { graphql, withApollo } from 'react-apollo';
-import * as compose from 'lodash.flowright';
-import _ from 'lodash';
-import ToastNotifications from 'cogo-toast';
+import { withRouter } from "react-router-dom";
+import { graphql, withApollo } from "react-apollo";
+import * as compose from "lodash.flowright";
+import _ from "lodash";
+import ToastNotifications from "cogo-toast";
 
-import LoadingIndicator from './LoadingIndicator';
+import LoadingIndicator from "./LoadingIndicator";
 
-import CreateGroupDialog from './dialogs/CreateGroupDialog';
-import ConfirmGroupDeletionDialog from './dialogs/ConfirmGroupDeletionDialog';
-import ConfirmAnalysisDeletionDialog from './dialogs/ConfirmAnalysisDeletionDialog';
-import RenameGroupDialog from './dialogs/RenameGroupDialog';
-import ConfirmUseCreditDialog from './dialogs/ConfirmUseCreditDialog';
+import CreateGroupDialog from "./dialogs/CreateGroupDialog";
+import ConfirmGroupDeletionDialog from "./dialogs/ConfirmGroupDeletionDialog";
+import ConfirmAnalysisDeletionDialog from "./dialogs/ConfirmAnalysisDeletionDialog";
+import RenameGroupDialog from "./dialogs/RenameGroupDialog";
+import ConfirmUseCreditDialog from "./dialogs/ConfirmUseCreditDialog";
 
-import { getConfigurationForId } from '../utils/Configuration';
-import { OVERALL_INTRO_KEY } from '../utils/Constants';
-import { getUserAuthData } from '../utils/AuthUtils';
-import { createPDFFromAnalysisResult } from '../pdf/PdfBuilder';
+import { getConfigurationForId } from "../utils/Configuration";
+import { OVERALL_INTRO_KEY } from "../utils/Constants";
+import { getUserAuthData } from "../utils/AuthUtils";
+import { createPDFFromAnalysisResult } from "../pdf/PdfBuilder";
 import {
   currentUserQuery,
   buildPersonalAnalysisByIdQuery,
-  introTextQuery,
-} from '../graphql/Queries';
+  introTextQuery
+} from "../graphql/Queries";
 import {
   deleteGroupMutation,
   createGroupMutation,
   renameGroupMutation,
   deleteAnalysisMutation,
-  useCreditMutation,
-} from '../graphql/Mutations';
+  useCreditMutation
+} from "../graphql/Mutations";
 
-import '../styles/AnalysisBrowser.scss';
-import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
-import AnalysisBrowserToggle from './AnalysisBrowserToggle';
-import AnalysisListEntry, {LONG_TYPE, SHORT_TYPE} from './AnalysisListEntry';
-import NavigationDropdownMenuItem from './NavigationDropdownMenuItem';
-import NavigationDropdownMenu from './NavigationDropdownMenu';
-import iconGroup from '../images/icon_group.svg';
-import iconAnalysis from '../images/icon_analysis.svg';
-import iconDelete from '../images/icon_delete.svg';
-import iconEdit from '../images/icon_edit.svg';
+import "../styles/AnalysisBrowser.scss";
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
+import AnalysisBrowserToggle from "./AnalysisBrowserToggle";
+import AnalysisListEntry, { LONG_TYPE, SHORT_TYPE } from "./AnalysisListEntry";
+import NavigationDropdownMenuItem from "./NavigationDropdownMenuItem";
+import NavigationDropdownMenu from "./NavigationDropdownMenu";
+import iconGroup from "../images/icon_group.svg";
+import iconAnalysis from "../images/icon_analysis.svg";
+import iconDelete from "../images/icon_delete.svg";
+import iconEdit from "../images/icon_edit.svg";
 import {
   ActionToggleIcon,
-  AddToggleIcon,
-} from './Dropdowns/DropdownMenuAddUtils';
+  AddToggleIcon
+} from "./Dropdowns/DropdownMenuAddUtils";
 
 const AnalysisBrowser = props => {
   // declaring state variables
   //const [expandedIndex, setExpandedIndex] = useState(-1);
   const [
     confirmGroupDeletionDialogOpen,
-    setConfirmGroupDeletionDialogOpen,
+    setConfirmGroupDeletionDialogOpen
   ] = useState(false);
   const [
     confirmAnalysisDeletionDialogOpen,
-    setConfirmAnalysisDeletionDialogOpen,
+    setConfirmAnalysisDeletionDialogOpen
   ] = useState(false);
   const [confirmUseCreditDialogOpen, setConfirmUseCreditDialogOpen] = useState(
     false
@@ -81,24 +81,24 @@ const AnalysisBrowser = props => {
       // performing mutation call to create group
       await props.createGroup({
         variables: {
-          groupName,
+          groupName
         },
         update: (store, { data: { createAnalysisGroup } }) => {
           // getting the query from the local cache and adding group
           const data = store.readQuery({ query: currentUserQuery });
           data.currentUser.groups.push(createAnalysisGroup);
           store.writeQuery({ query: currentUserQuery, data });
-        },
+        }
       });
       // notifying user
       ToastNotifications.success(
         `Die Gruppe ${groupName} wurde erfolgreich erstellt.`,
-        { position: 'top-right' }
+        { position: "top-right" }
       );
     } catch (error) {
       // error occured -> displaying notification
       ToastNotifications.error(error.graphQLErrors[0].message, {
-        position: 'top-right',
+        position: "top-right"
       });
     }
     // resetting loading
@@ -118,18 +118,18 @@ const AnalysisBrowser = props => {
       await renameGroup({
         variables: {
           id,
-          newName,
-        },
+          newName
+        }
       });
       // notifying user
       ToastNotifications.success(
         `Die Gruppe ${newName} wurde erfolgreich umbenannt.`,
-        { position: 'top-right' }
+        { position: "top-right" }
       );
     } catch (error) {
       // error occured -> displaying notification
-      ToastNotifications.error('Die Gruppe konnte nicht umbenannt werden', {
-        position: 'top-right',
+      ToastNotifications.error("Die Gruppe konnte nicht umbenannt werden", {
+        position: "top-right"
       });
     }
     // resetting loading state
@@ -145,7 +145,7 @@ const AnalysisBrowser = props => {
     try {
       const deletedGroup = await props.deleteGroup({
         variables: {
-          id,
+          id
         },
         update: (store, { data: { deleteAnalysisGroup } }) => {
           // gettint the query from the local cache and deleting group
@@ -165,20 +165,18 @@ const AnalysisBrowser = props => {
 
           // writing object back to cache
           store.writeQuery({ query: currentUserQuery, data });
-        },
+        }
       });
 
       // informing the user
       ToastNotifications.success(
-        `Die Gruppe ${
-          deletedGroup.data.deleteAnalysisGroup.name
-        } wurde erfolgreich gelöscht.`,
-        { position: 'top-right' }
+        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
+        { position: "top-right" }
       );
     } catch (error) {
       console.log(error);
-      ToastNotifications.error('Gruppe konnte nicht gelöscht werden.', {
-        position: 'top-right',
+      ToastNotifications.error("Gruppe konnte nicht gelöscht werden.", {
+        position: "top-right"
       });
     }
     // resetting loading state
@@ -194,7 +192,7 @@ const AnalysisBrowser = props => {
     try {
       const deletedAnalysis = await props.deleteAnalysis({
         variables: {
-          id,
+          id
         },
         update: (store, { data: { deleteAnalysis } }) => {
           // getting the query from the local cache and deleting analysis
@@ -213,19 +211,17 @@ const AnalysisBrowser = props => {
 
           // writing object back to cache
           store.writeQuery({ query: currentUserQuery, data });
-        },
+        }
       });
 
       // shooting notification informting the user
       ToastNotifications.success(
-        `Die Analyse ${
-          deletedAnalysis.data.deleteAnalysis.name
-        } wurde erfolgreich gelöscht.`,
-        { position: 'top-right' }
+        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
+        { position: "top-right" }
       );
     } catch (error) {
-      ToastNotifications.error('Analyse konnte nicht gelöscht werden.', {
-        position: 'top-right',
+      ToastNotifications.error("Analyse konnte nicht gelöscht werden.", {
+        position: "top-right"
       });
     }
     // resetting loading state
@@ -239,13 +235,13 @@ const AnalysisBrowser = props => {
     // checking if logged in => otherwise redirecting to login
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
-      props.history.push('/login');
+      props.history.push("/login");
       return;
     }
 
     // setting activity indicator
     setLoading(true);
-    setLoadingText('Berechne detaillierte Auswertung und erstelle PDF...');
+    setLoadingText("Berechne detaillierte Auswertung und erstelle PDF...");
 
     try {
       // getting long texts used for pdf (if allowed)
@@ -254,8 +250,8 @@ const AnalysisBrowser = props => {
         variables: {
           id: targetAnalysis.id,
           isPdf: true,
-          longTexts: targetAnalysis.longTexts || false,
-        },
+          longTexts: targetAnalysis.longTexts || false
+        }
       });
 
       // getting user default result configuration
@@ -268,14 +264,16 @@ const AnalysisBrowser = props => {
       sectionIds.push(OVERALL_INTRO_KEY(props.resultConfiguration));
 
       // getting intro texts for all sections in configuration
-      const { introTexts } = (await props.client.query({
-        query: introTextQuery,
-        variables: {
-          sectionIds,
-          isPdf: true,
-          longText: targetAnalysis.longTexts || false,
-        },
-      })).data;
+      const { introTexts } = (
+        await props.client.query({
+          query: introTextQuery,
+          variables: {
+            sectionIds,
+            isPdf: true,
+            longText: targetAnalysis.longTexts || false
+          }
+        })
+      ).data;
 
       // getting analysis from result
       const { analysis } = result.data;
@@ -284,7 +282,7 @@ const AnalysisBrowser = props => {
       if (analysis.personalAnalysisResults.length > 1) {
         const [
           personalAnalysisResult,
-          personalAnalysisResultCompare,
+          personalAnalysisResultCompare
         ] = analysis.personalAnalysisResults;
         await createPDFFromAnalysisResult(
           personalAnalysisResult,
@@ -293,11 +291,7 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${
-            personalAnalysisResult.lastName
-          }_${personalAnalysisResultCompare.firstNames}_${
-            personalAnalysisResultCompare.lastName
-          }.pdf`,
+          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
           analysis.longTexts,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
@@ -312,14 +306,12 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${
-            personalAnalysisResult.lastName
-          }.pdf`,
+          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
           analysis.longTexts
         );
       }
     } catch (error) {
-      console.log('Creating PDF failed');
+      console.log("Creating PDF failed");
       console.log(error);
     } finally {
       // removing loading indicator
@@ -352,27 +344,27 @@ const AnalysisBrowser = props => {
   const spendCredit = async () => {
     // showing loading indicator
     setLoading(true);
-    setLoadingText('Ihr Guthaben wird eingelöst...');
+    setLoadingText("Ihr Guthaben wird eingelöst...");
     try {
       // preparing arguments to use credit
       const { analysisId, type } = creditToBeUsed;
       await props.useCredit({
         variables: {
           analysisId,
-          type,
-        },
+          type
+        }
       });
       props.onUsedCredit();
       ToastNotifications.success(
-        'Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.',
-        { position: 'top-right' }
+        "Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.",
+        { position: "top-right" }
       );
     } catch (error) {
-      console.log('Using credit failed');
+      console.log("Using credit failed");
       console.log(error);
       ToastNotifications.error(
-        'Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.',
-        { position: 'top-right' }
+        "Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.",
+        { position: "top-right" }
       );
     } finally {
       setLoading(false);
@@ -386,7 +378,7 @@ const AnalysisBrowser = props => {
 
   if (props.groups.length > 0) {
     panelContent = (
-        <Accordion>
+      <Accordion>
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
             analysis => analysis.group.id === group.id
@@ -433,20 +425,20 @@ const AnalysisBrowser = props => {
                     <AnalysisListEntry
                       key={analysis.id}
                       analysis={analysis}
-                      onAnalysisDelete={(ev) => {
+                      onAnalysisDelete={ev => {
                         setAnalysisToBeDeleted(analysis);
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
                       onShortPdfClicked={() => {
-                        createAnalysisPdf({ ...analysis, longTexts: false});
+                        createAnalysisPdf({ ...analysis, longTexts: false });
                       }}
-                      onBuyShortPdfClicked={ () => {
+                      onBuyShortPdfClicked={() => {
                         handleOnUseCredit(analysis.id, SHORT_TYPE);
                       }}
                       onLongPdfClicked={() => {
-                        createAnalysisPdf({ ...analysis, longTexts: true});
+                        createAnalysisPdf({ ...analysis, longTexts: true });
                       }}
-                      onBuyLongPdfClicked={ () => {
+                      onBuyLongPdfClicked={() => {
                         handleOnUseCredit(analysis.id, LONG_TYPE);
                       }}
                     />
@@ -481,7 +473,7 @@ const AnalysisBrowser = props => {
               <img src={iconGroup} alt="" /> Gruppe
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem
-              onClick={() => props.history.push('/analysisInput')}
+              onClick={() => props.history.push("/analysisInput")}
             >
               <img src={iconAnalysis} alt="" /> Analyse
             </NavigationDropdownMenuItem>
@@ -577,29 +569,29 @@ AnalysisBrowser.propTypes = {
         PropTypes.shape({
           firstNames: PropTypes.string.isRequired,
           lastName: PropTypes.string.isRequired,
-          dateOfBirth: PropTypes.string.isRequired,
+          dateOfBirth: PropTypes.string.isRequired
         })
-      ).isRequired,
+      ).isRequired
     })
   ).isRequired,
   groups: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired
     })
   ).isRequired,
   createGroup: PropTypes.func.isRequired,
   deleteGroup: PropTypes.func.isRequired,
   renameGroup: PropTypes.func.isRequired,
-  deleteAnalysis: PropTypes.func.isRequired,
+  deleteAnalysis: PropTypes.func.isRequired
 };
 
 AnalysisBrowser.defaultProps = {};
 
 export default compose(
-  graphql(deleteGroupMutation, { name: 'deleteGroup' }),
-  graphql(createGroupMutation, { name: 'createGroup' }),
-  graphql(renameGroupMutation, { name: 'renameGroup' }),
-  graphql(deleteAnalysisMutation, { name: 'deleteAnalysis' }),
-  graphql(useCreditMutation, { name: 'useCredit' })
+  graphql(deleteGroupMutation, { name: "deleteGroup" }),
+  graphql(createGroupMutation, { name: "createGroup" }),
+  graphql(renameGroupMutation, { name: "renameGroup" }),
+  graphql(deleteAnalysisMutation, { name: "deleteAnalysis" }),
+  graphql(useCreditMutation, { name: "useCredit" })
 )(withApollo(withRouter(AnalysisBrowser)));

@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'typography';
+@import "variables";
+@import "typography";
 
 .akb-credits-overview-div {
   @media screen and (max-width: map-get($akb-breakpoints, desktop)) {
@@ -29,7 +29,7 @@
           border: 1px solid $light-gray;
           font-size: 60px;
           font-weight: 500;
-          font-family: 'Roboto', Arial, Helvetica, sans-serif;
+          font-family: "Roboto", Arial, Helvetica, sans-serif;
         }
       }
     }

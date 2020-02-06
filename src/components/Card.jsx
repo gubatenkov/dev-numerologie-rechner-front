@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import '../styles/Card.css';
+import "../styles/Card.css";
 
 /**
  * card component to display data in tile formats
@@ -10,7 +10,7 @@ class Card extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     body: PropTypes.number.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired
   };
 
   /**

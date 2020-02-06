@@ -1,9 +1,9 @@
-import React from 'react';
-import TogglSwitch from 'react-switch';
-import { withTheme } from 'styled-components';
+import React from "react";
+import TogglSwitch from "react-switch";
+import { withTheme } from "styled-components";
 
 // on/off toggl switch customized according to theme
-const Switch = (props) => (
+const Switch = props => (
   <TogglSwitch
     onChange={props.onChange}
     checked={props.checked}

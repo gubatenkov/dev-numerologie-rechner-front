@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import ToastNotifications from 'cogo-toast';
+import React, { useEffect, useState } from "react";
+import { Link, withRouter } from "react-router-dom";
+import ToastNotifications from "cogo-toast";
 
-import Panel from './Panel';
-import InputField from './InputField';
-import LoadingIndicator from './LoadingIndicator';
+import Panel from "./Panel";
+import InputField from "./InputField";
+import LoadingIndicator from "./LoadingIndicator";
 
-import { setUserAuthData, postJsonData } from '../utils/AuthUtils';
-import '../styles/InputForm.css';
-import '../styles/Login.css';
+import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
+import "../styles/InputForm.css";
+import "../styles/Login.css";
 
 // Login form component
-const Login = (props) => {
+const Login = props => {
   // email and password state variable
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const loginUser = async () => {
@@ -27,25 +27,25 @@ const Login = (props) => {
       setLoading(true);
 
       // making actual request
-      const response = await postJsonData('/login', {
+      const response = await postJsonData("/login", {
         email,
-        password,
+        password
       });
 
       // saving received token
       setUserAuthData({
         email,
-        token: response.token,
+        token: response.token
       });
 
       // redirecting to user home
-      history.push('/userHome');
+      history.push("/userHome");
     } catch (error) {
       // resetting loading indication
       setLoading(false);
       ToastNotifications.error(
-        'Login fehlgeschlagen. Bitte versuchen Sie es erneut.',
-        { position: 'top-right' },
+        "Login fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        { position: "top-right" }
       );
     }
   };
@@ -53,7 +53,7 @@ const Login = (props) => {
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
     // setting background dynamically
-    document.body.style.backgroundColor = '#00b3d4';
+    document.body.style.backgroundColor = "#00b3d4";
 
     return () => {
       // resetting background dynamically
@@ -73,7 +73,7 @@ const Login = (props) => {
         <div className="page-content">
           <div
             className="text-center"
-            style={{ padding: `${50}px`, color: 'white' }}
+            style={{ padding: `${50}px`, color: "white" }}
           >
             <h1 className="Login__title">Psychologische Numerologie Rechner</h1>
           </div>
@@ -84,14 +84,14 @@ const Login = (props) => {
                   <InputField
                     icon="wb-user"
                     fieldName="Email-Adresse"
-                    onChange={(event) => setEmail(event.target.value)}
+                    onChange={event => setEmail(event.target.value)}
                     autoComplete="username"
                   />
                   <InputField
                     type="password"
                     icon="wb-lock"
                     fieldName="Passwort"
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={event => setPassword(event.target.value)}
                     autoComplete="current-password"
                   />
                 </form>
