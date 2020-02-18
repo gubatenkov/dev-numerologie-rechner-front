@@ -84,7 +84,7 @@ const UserLevelPromotionTexts = {
         ]}
       </PromotionAccordion>
     ],
-    action: "Kurversion kaufen",
+    action: "Kurzversion kaufen",
     link: "https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/"
   },
   ACCESS_LEVEL_PAID_SHORT: {
