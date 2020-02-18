@@ -379,6 +379,7 @@ export async function createPDFFromAnalysisResult(
   const pdfIntroText = introTexts.filter(
     text => text.sectionId === OVERALL_INTRO_KEY(configurationId)
   )[0];
+  pdfIntroText.title = "Einführung";
 
   // building section location info object. This is used to keep track
   // of the position of different sections throughout the document and is
