@@ -59,9 +59,9 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
   // handling list items
   if (htmlElement.nodeName === "UL") {
     return {
-      ul: Array.from(htmlElement.getElementsByTagName("LI")).map(child =>
-        child.textContent.trim()
-      ),
+      ul: Array.from(htmlElement.getElementsByTagName("LI")).map(child => {
+        return convertHTMLTextToPDFSyntax(child.innerHTML);
+      }),
       style: customStyles.ul ? ["LIST", customStyles.ul] : "LIST"
     };
   }

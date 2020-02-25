@@ -26,6 +26,7 @@ const PDF_STYLES = {
     fontSize: 30,
     bold: true,
     lineHeight: 1,
+    marginBottom: 20,
     pageBreak: "before"
   },
   H1: {
@@ -378,6 +379,7 @@ export async function createPDFFromAnalysisResult(
   const pdfIntroText = introTexts.filter(
     text => text.sectionId === OVERALL_INTRO_KEY(configurationId)
   )[0];
+  pdfIntroText.title = "Einführung";
 
   // building section location info object. This is used to keep track
   // of the position of different sections throughout the document and is
@@ -395,14 +397,14 @@ export async function createPDFFromAnalysisResult(
     pageSize: "A4",
     background(page) {
       // first pages => title page with background image
-      if (page === 1) {
-        return [
-          {
-            image: titleImage,
-            width: 600
-          }
-        ];
-      }
+      // if (page === 1) {
+      //   return [
+      //     {
+      //       image: titleImage,
+      //       width: 600
+      //     }
+      //   ];
+      // }
 
       // checking if the page is in a range of level pages => background image
       let currentSectionName = null;

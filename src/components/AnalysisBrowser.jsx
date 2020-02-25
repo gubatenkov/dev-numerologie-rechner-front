@@ -292,7 +292,7 @@ const AnalysisBrowser = props => {
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
           `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
-          analysis.longTexts,
+          targetAnalysis.longTexts || false,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
           personalAnalysisResultCompare.lastName
@@ -307,7 +307,7 @@ const AnalysisBrowser = props => {
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
           `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
-          analysis.longTexts
+          targetAnalysis.longTexts || false
         );
       }
     } catch (error) {
