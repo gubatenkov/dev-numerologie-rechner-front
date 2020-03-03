@@ -618,13 +618,8 @@ export async function createPDFFromAnalysisResult(
       }
 
       // adding number results for all numbers with descriptionText
-      resultSection.numbers
-        .filter(number => {
-          // filter out numbers without description text. Rule: No numbers without description text (only result)
-          const itemDescriptionText = number.descriptionText;
-          return itemDescriptionText && itemDescriptionText.length > 0;
-        })
-        .forEach((number, resultIndex) => {
+      resultSection.numbers.forEach((number, resultIndex) => {
+        if (number.descriptionText && number.descriptionText.length > 0) {
           // getting name and value of
           const itemName = number.name;
           const itemValue =
@@ -763,7 +758,8 @@ export async function createPDFFromAnalysisResult(
               }
             }
           }
-        });
+        }
+      });
 
       // saving information about last element of level -> the index saved will be the last index
       // of this level
