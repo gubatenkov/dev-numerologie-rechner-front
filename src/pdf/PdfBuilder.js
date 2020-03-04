@@ -59,6 +59,9 @@ const PDF_STYLES = {
   B: {
     bold: true
   },
+  LIST: {
+    markerColor: CI_COLORS.GREEN
+  },
   SUBTITLE: {
     marginBottom: 10,
     lineHeight: 1
@@ -275,7 +278,9 @@ function calculateResultOverviewTable(
         overviewTableBody.push([
           { text: name, alignment: "left" },
           value,
-          compareValue
+          shouldShowDuplicatedComparisonResult(numberItem.numberId)
+            ? compareValue
+            : ""
         ]);
       } else {
         overviewTableBody.push([
@@ -290,6 +295,35 @@ function calculateResultOverviewTable(
     });
   });
   return overviewTableBody;
+}
+
+function shouldShowDuplicatedComparisonResult(numberId) {
+  const notToShow = [
+    "LZ",
+    "WZ",
+    "GZ",
+    "TZ",
+    "BfZ",
+    "GDR",
+    "GDR-V",
+    "GDR-F",
+    "GDR-I",
+    "VZ-B",
+    "VZ-P",
+    "VZ-E",
+    "HF1",
+    "HF2",
+    "HF3",
+    "HF4",
+    "HP1",
+    "HP2",
+    "HP3",
+    "HP4",
+    "PJ",
+    "PJNJ"
+  ];
+
+  return notToShow.findIndex(id => id === numberId) === -1;
 }
 
 /**
@@ -606,6 +640,7 @@ export async function createPDFFromAnalysisResult(
         docDefinition.content.push({
           text: resultSection.introText.title,
           style: ["H0", { color: resultColor, alignment: "center" }],
+          marginBottom: 45,
           pageBreak: "before",
           tocItem: true,
           tocStyle: { color: resultColor }

@@ -33,6 +33,6 @@ Die Untersuchung der <b>Qualität und Herausforderungen Ihrer Lebensabschnitte</
 
 <b>Lassen Sie sich überraschen!</b><br><br>
 Sie werden sich in den vielen Beschreibungen des erweiterten psychologisch-numerologischen Persönlichkeitsprofils gewiss wiederfinden – und noch mehr Lust auf die Entdeckung Ihres facettenreichen Selbst bekommen.<br><br>
-Diese <b>lange Version</b> des psychologisch-numerologischen Persönlichkeitsprofils finden Sie in unserem Online Shop auf:
-<A href=“https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/“ target=“_blank“>www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/</A>
+Diese <b>lange Version</b> des psychologisch-numerologischen Persönlichkeitsprofils finden Sie in unserem Online Shop auf:<br>
+<A href=“https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/“ target=“_blank“>https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/</A>
 `;

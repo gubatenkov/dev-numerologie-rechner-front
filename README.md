@@ -32,6 +32,14 @@ The frontend project to the numberology calculator project. The main purpose of 
 
 - TBA
 
+## Heroku Deployment
+
+- run `heroku login` to authenticate the heroku cli
+- run `heroku git:remote -a dev-numerologie-rechner-front` and `git remote add origin https://git.heroku.com/dev-numerologie-rechner-front.git` for dev deployment
+- run `heroku git:remote -a prd-numerologie-rechner-front` and `git remote add origin https://git.heroku.com/prd-numerologie-rechner-front.git` for live deployment
+- run `git push heroku development:master` to build and deploy the staging application to heroku
+- or run `git push heroku master:master` to build and deploy the master application to heroku
+
 ## ENV Variables:
 
 - `IMAGE_INLINE_SIZE_LIMIT`: sets the file size limit until which images are loaded as data url by `ìmport`. Make sure this is bigh enough for all images loaded (cover images etc.).
