@@ -13,19 +13,19 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
   // 3 = TEXT_NODE, 1 = VALID_ELEMENT_NODES
   if (htmlElement.nodeType === 3) {
     // making sure we get no empty text elements due to spaces
-    const trimmedContent = htmlElement.textContent.trim();
+    const trimmedContent = htmlElement.textContent;
     if (trimmedContent.length === 0) {
       return null;
     }
     // if custom style is set => returning text with custom style
     if (customStyles.text) {
       return {
-        text: `${trimmedContent} `,
+        text: `${trimmedContent}`,
         style: customStyles.text
       };
     }
     // returning plain text
-    return `${trimmedContent} `;
+    return `${trimmedContent}`;
   }
 
   // breaks are nodes not in syntax. implicit with new paragraph
@@ -95,7 +95,7 @@ export function convertHTMLElementToPDFSyntax(htmlElement, customStyles = {}) {
 
   // otherwise returning node with styling set to its tag name => can be styled externally any ways
   return {
-    text: `${htmlElement.textContent.trim()} `,
+    text: `${htmlElement.textContent}`,
     style: htmlElement.nodeName
   };
 }
@@ -161,4 +161,20 @@ export function convertHTMLTextToPDFSyntax(htmlText, customStyles = {}) {
     }
   }
   return groupedElements;
+}
+
+export function imagePathToDataURL(url) {
+  return new Promise(resolve => {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  });
 }
