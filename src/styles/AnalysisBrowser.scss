@@ -133,8 +133,10 @@
   }
 
   .akb-life-number-display {
-    width: 32px;
+    white-space: nowrap;
     height: 32px;
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 32px;
     background-color: #f8f8f8;
 
