@@ -4,7 +4,7 @@ import pdfFonts from "./fonts/vfs_fonts";
 
 import { OVERALL_INTRO_KEY, CI_COLORS } from "../utils/Constants";
 
-import { convertHTMLTextToPDFSyntax } from "./PdfHelper";
+import { convertHTMLTextToPDFSyntax, imagePathToDataURL } from "./PdfHelper";
 import { COVER_IMAGE_BY_LZ, BACKGROUND_IMAGES } from "./images/Images";
 import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from "./PdfTexts";
 
@@ -426,19 +426,21 @@ export async function createPDFFromAnalysisResult(
   const lzValue = analysisResult.lz.result.value;
   const titleImage = COVER_IMAGE_BY_LZ[lzValue] || COVER_IMAGE_BY_LZ[0];
 
+  const titleImageData = await imagePathToDataURL(titleImage);
+
   // defining pdf and default styling
   const docDefinition = {
     pageSize: "A4",
     background(page) {
       // first pages => title page with background image
-      // if (page === 1) {
-      //   return [
-      //     {
-      //       image: titleImage,
-      //       width: 600
-      //     }
-      //   ];
-      // }
+      if (page === 1) {
+        return [
+          {
+            image: titleImageData,
+            width: 600
+          }
+        ];
+      }
 
       // checking if the page is in a range of level pages => background image
       let currentSectionName = null;
@@ -810,7 +812,7 @@ export async function createPDFFromAnalysisResult(
   if (!includePromotion) {
     // pushing title
     docDefinition.content.push({
-      text: "Vergleich zur Langtext-Version",
+      text: "Entdecken Sie noch mehr über sich in der Langtext-Version",
       style: ["H1"],
       tocItem: true,
       pageBreak: "before",
