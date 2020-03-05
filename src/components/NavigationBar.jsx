@@ -220,9 +220,8 @@ const NavigationBar = props => {
         saveUserSettings({
           variables: userSettings
         });
-        setTimeout(() => {
-          window.location.reload();
-        });
+
+        window.location.reload();
       }
     }
   }, [userSettings, loading, data, saveUserSettings, componentInitialized]);

@@ -361,7 +361,7 @@ const AnalysisBrowser = props => {
       );
       setTimeout(() => {
         window.location.reload();
-      });
+      }, 1000);
     } catch (error) {
       console.log("Using credit failed");
       console.log(error);
