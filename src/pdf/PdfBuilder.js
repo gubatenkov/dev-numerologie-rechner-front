@@ -642,7 +642,7 @@ export async function createPDFFromAnalysisResult(
         docDefinition.content.push({
           text: resultSection.introText.title,
           style: ["H0", { color: resultColor, alignment: "center" }],
-          marginBottom: 45,
+          marginBottom: 50,
           pageBreak: "before",
           tocItem: true,
           tocStyle: { color: resultColor }
