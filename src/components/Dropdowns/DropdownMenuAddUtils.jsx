@@ -4,6 +4,7 @@ import { ReactComponent as IconArrowDownBlue } from "../../images/icon_arrow_dow
 import { ReactComponent as IconMore } from "../../images/icon_more.svg";
 import styled from "styled-components";
 import iconPdf from "../../images/icon_pdf.svg";
+import longPdfIcon from "../../images/icon_textLong.svg";
 
 const addToggleStyle = {
   cursor: "pointer"
@@ -35,9 +36,16 @@ export const ActionToggleIcon = (
   </div>
 );
 
-export const PdfToggleIcon = (
-  <PdfToggleParent>
-    <img src={iconPdf} alt="PDF" width="21px" height="24px" />
-    <IconArrowDownBlue />
-  </PdfToggleParent>
-);
+export const PdfToggleIcon = props => {
+  return (
+    <PdfToggleParent>
+      <img
+        src={props.hasLong ? longPdfIcon : iconPdf}
+        alt="PDF"
+        width="21px"
+        height="24px"
+      />
+      <IconArrowDownBlue />
+    </PdfToggleParent>
+  );
+};
