@@ -378,7 +378,13 @@ const AnalysisBrowser = props => {
 
   if (props.groups.length > 0) {
     panelContent = (
-      <Accordion>
+      <Accordion
+        defaultActiveKey={
+          props.groups && props.groups.length > 0
+            ? props.groups[0].id
+            : undefined
+        }
+      >
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
             analysis => analysis.group.id === group.id
