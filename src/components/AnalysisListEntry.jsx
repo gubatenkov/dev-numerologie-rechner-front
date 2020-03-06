@@ -57,6 +57,7 @@ const AnalysisListEntry = ({
           customToggle={
             <PdfToggleIcon
               hasLong={analysis.usedCreditTypes.includes(LONG_TYPE)}
+              hasShort={analysis.usedCreditTypes.includes(SHORT_TYPE)}
             />
           }
         >
