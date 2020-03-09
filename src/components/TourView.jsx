@@ -378,7 +378,6 @@ const TourView = props => {
     // adding description text of result
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
-    // TODO: talk about this with thomas
     elementContent = elementContent
       .split("<H1>")
       .join('<H1 class="marginTop90">');
@@ -438,6 +437,10 @@ const TourView = props => {
       elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
     }
 
+    elementContent = elementContent
+      .split("<H1>")
+      .join('<H1 class="marginTop90">');
+
     return [elementTitle, elementContent];
   };
 
@@ -474,7 +477,7 @@ const TourView = props => {
       );
     }
   }
-  console.log("toursteop content", tourStepContent);
+
   return [
     <TourContentContainer
       onKeyDown={event => handleKeyDown(event)}
