@@ -67,9 +67,9 @@ const ResultTable = props => {
           key={`ResultTableRow ${item.numberId}`}
           item={item}
           compareItem={props.compareNumbers && props.compareNumbers[index]}
-          notShowCompareItem={shouldShowDuplicatedComparisonResult(
-            item.numberId
-          )}
+          notShowCompareItem={
+            !shouldShowDuplicatedComparisonResult(item.numberId)
+          }
           onTextDetailClick={handleTextDetailClick}
           accessLevel={props.accessLevel}
         />
