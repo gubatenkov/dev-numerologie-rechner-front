@@ -54,7 +54,12 @@ const AnalysisListEntry = ({
       <RightDiv>
         <NavigationDropdownMenu
           key="GeneratePdfMenu"
-          customToggle={PdfToggleIcon}
+          customToggle={
+            <PdfToggleIcon
+              hasLong={analysis.usedCreditTypes.includes(LONG_TYPE)}
+              hasShort={analysis.usedCreditTypes.includes(SHORT_TYPE)}
+            />
+          }
         >
           {/* Short Pdfs */}
           {analysis.usedCreditTypes.includes(SHORT_TYPE) ? (
