@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import ResultTableRow from "./ResultTableRow";
+import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
 
 // result table root element
 const ResultTableStyled = styled.div`
@@ -66,6 +67,9 @@ const ResultTable = props => {
           key={`ResultTableRow ${item.numberId}`}
           item={item}
           compareItem={props.compareNumbers && props.compareNumbers[index]}
+          notShowCompareItem={shouldShowDuplicatedComparisonResult(
+            item.numberId
+          )}
           onTextDetailClick={handleTextDetailClick}
           accessLevel={props.accessLevel}
         />
