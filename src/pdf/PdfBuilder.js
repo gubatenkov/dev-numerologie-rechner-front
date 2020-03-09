@@ -297,7 +297,7 @@ function calculateResultOverviewTable(
   return overviewTableBody;
 }
 
-function shouldShowDuplicatedComparisonResult(numberId) {
+export function shouldShowDuplicatedComparisonResult(numberId) {
   const notToShow = [
     "LZ",
     "WZ",
@@ -311,6 +311,7 @@ function shouldShowDuplicatedComparisonResult(numberId) {
     "VZ-B",
     "VZ-P",
     "VZ-E",
+    "HF",
     "HF1",
     "HF2",
     "HF3",

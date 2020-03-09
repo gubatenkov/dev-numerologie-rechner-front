@@ -19,6 +19,7 @@ import {
   MAIN_CONTAINER_MAX_WIDTH,
   MOBILE_RESOLUTION_THRESHOLD
 } from "../utils/Constants";
+import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
 
 // constants used for content styling
 const CONTENT_STYLING_CLASS_SUBHEADING = "subheading";
@@ -461,8 +462,12 @@ const TourView = props => {
     // not showing book promotion for intro text
     showBookPromotion = false;
   } else {
+    console.log("resultItem:", resultItem);
     // no compare result
-    if (!compareTourData) {
+    if (
+      !compareTourData ||
+      !shouldShowDuplicatedComparisonResult(resultItem.numberId)
+    ) {
       // building tour step for result item
       [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
     } else {
