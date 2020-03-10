@@ -295,7 +295,7 @@ const ResultTableRow = props => {
     emptyResult = item.result.values.length === 0;
   }
 
-  if (props.notShowCompareItem) {
+  if (compareItem && props.notShowCompareItem) {
     compareContentColumn = "-";
   }
 
