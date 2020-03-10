@@ -1,4 +1,4 @@
-export const COPYRIGHT_NOTICE = `Dieses Numeroskop wurde mit dem Psychologische Numerologie nach Dr. Mazza ® Online-Rechner auf\nhttps://www.psychologischenumerologie.eu/numerologie-rechner/ kostenpflichtig erstellt und darf ausschließlich zum privaten Gebrauch entweder von derjenigen Person genutzt werden, die das Numeroskop erstellt hat, ODER für die das Numeroskop erstellt wurde, wenn es sich um ein Geschenk an einen Freund/eine Freundin handelt.
+export const COPYRIGHT_NOTICE = `Dieses Numeroskop wurde mit dem Psychologische Numerologie nach Dr. Mazza ® Online-Rechner auf\nhttps://rechner.psychologischenumerologie.eu kostenpflichtig erstellt und darf ausschließlich zum privaten Gebrauch entweder von derjenigen Person genutzt werden, die das Numeroskop erstellt hat, ODER für die das Numeroskop erstellt wurde, wenn es sich um ein Geschenk an einen Freund/eine Freundin handelt.
 
   Alle Rechte, insbesondere das Recht der Vervielfältigung und Verbreitung, der Übersetzung sowie der kommerziellen Nutzung, vorbehalten. Kein Teil des Werkes darf in irgendeiner Form, weder durch fotomechanische Verfahren einschließlich Fotokopie, Mikrofilm oder durch ein anderes Verfahren ohne schriftliche Genehmigung der akademie bios – Dr. Ernestina Mazza OG reproduziert oder unter Verwendung elektronischer Systeme, insbesondere in Datenbanken, gespeichert, verarbeitet, vervielfältigt oder verbreitet werden.`;
 export const LEGAL_NOTICE = `Diese numerologische Persönlichkeitsanalyse wurde anhand empirischer Beobachtungen und psychologischem Grundwissen zusammengestellt. Das Persönlichkeitsprofil stellt kein psychologisches Gutachten über die individuelle Persönlichkeit eines Menschen dar, sondern beschreibt Wesenszüge einer Person aus unterschiedlichen Perspektiven und deren Entfaltungsmöglichkeiten anhand numerologischer, empirischer Beobachtungen aus der numerologischen Beratungspraxis.
@@ -12,8 +12,8 @@ Die Autorin bzw. die akademie bios – Dr. Ernestina Mazza OG können für etwai
 export const PROMOTION_TEXT = `Sie sind nun ans Ende der spannenden Reise durch Ihre Persönlichkeit gelangt. Auf dieser Reise haben Sie viele unbewusste Seiten von sich entdeckt. Und Sie haben die vielseitigen Facetten Ihrer Persönlichkeit klar und deutlich erkannt, sodass Sie Ihren Lebensweg endlich authentischer gestalten können.
 <H2>Es gibt noch soviel mehr zu entdecken im Persönlichkeitsprofil der Psychologischen Numerologie nach Dr. Mazza ®</H2>
 Dieses für Sie erstellte, <b>kurze</b> psychologisch-numerologische Persönlichkeitsprofil hat nur einige wichtige Aspekte Ihrer Persönlichkeit berührt und dient vor allem als ersten Überblick und Beginn Ihrer Selbstentdeckungsreise:<br><br>
-<b>Es gibt ein noch wesentlich ausführlicheres Persönlichkeitsprofil von Ihren Zahlen im Umfang von circa 100-150 Seiten A4, das eine tiefgehende Analyse Ihres Charakters, Ihres Unbewussten und Ihrer Seele umfasst – und dazu zahlreiche Übungen bietet.</b><br><br>
-Die <b>lange Version</b> Ihres psychologisch-numerologischen Persönlichkeitsprofils hält die folgenden Erweiterungen für Sie bereit: 
+<b>Es gibt ein noch wesentlich ausführlicheres Persönlichkeitsprofil von Ihren Zahlen im Umfang von circa 90-120 Seiten A4 (maximal 150 Seiten), das eine tiefgehende Analyse Ihres Charakters, Ihres Unbewussten und Ihrer Seele umfasst – und dazu zahlreiche Übungen bietet.</b><br><br>
+Die <b>lange Version</b> Ihres psychologisch-numerologischen Persönlichkeitsprofils hält die folgenden <b>Erweiterungen</b> für Sie bereit: 
 <UL>
 <LI><b>Alle 6 Zahlen der Ebene des Potenzials und der Berufung</b><br>
 Das <b>Highlight</b> des langen psychologisch-numerologischen Persönlichkeitsprofils ist die <b>Ebene des Potenzials und der Berufung:</b> In diesem Abschnitt werden <b>Ihre Talente, Ihr kreatives Potenzial und Ihre Ausdrucksfähigkeit</b> analysiert. Sie entdecken, welche Berufsfelder zu Ihnen passen, wie Sie Ihre <b>Berufung</b> verwirklichen können und auf welchem Weg Sie zu <b>beruflichem Erfolg</b> gelangen. </LI>
@@ -33,6 +33,27 @@ Die Untersuchung der <b>Qualität und Herausforderungen Ihrer Lebensabschnitte</
 
 <b>Lassen Sie sich überraschen!</b><br><br>
 Sie werden sich in den vielen Beschreibungen des erweiterten psychologisch-numerologischen Persönlichkeitsprofils gewiss wiederfinden – und noch mehr Lust auf die Entdeckung Ihres facettenreichen Selbst bekommen.<br><br>
-Diese <b>lange Version</b> des psychologisch-numerologischen Persönlichkeitsprofils finden Sie in unserem Online Shop auf:
-<A href=“https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/“ target=“_blank“>www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/</A>
+Diese <b>lange Version</b> des psychologisch-numerologischen Persönlichkeitsprofils finden Sie in unserem Online Shop auf:<br>
+<A href=“https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/“ target=“_blank“>https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/</A>
 `;
+
+export const BOOK_PROMOTION_TEXT = {
+  intro: `<b>Möchten Sie noch mehr über Ihre Persönlichkeit erfahren?</b><br>
+  Lesen Sie alle Zahlen im Detail mit noch ausführlicheren Texten und vielen Erklärungen in den 2 begleitenden Büchern zum Psychologische Numerologie Rechner durch:<br><br>`,
+  cover1: `<b>Psychologische Numerologie nach Dr. Mazza ® Band 1</b><br>
+  Zahlen als Spiegel der Persönlichkeit und Lebensaufgabe<br><br>
+  
+  Die Psychologische Numerologie nach Dr. Mazza ® beschäftigt sich nicht nur mit der Bedeutung der Zahlen für den Beruf, die Familie und das eigene Lebensumfeld. Sie öffnet vor allem den Blick auf die psychologischen Teilbereiche unserer Persönlichkeit und die Lebensaufgaben, mit denen wir in den verschiedenen Phasen unseres Lebens konfrontiert werden und gibt praktische Hinweise, die uns zeigen, wie diese Anforderungen zu lösen sind.<br><br>
+  
+  2. (inhaltl. unver.) Auflage Juni 2017, 512 Seiten mit Illustrationen in Farbe, Format A5, Taschenbuch<br><br>
+  
+  € 25,- <br><br><br>`,
+  cover2: `<b>Psychologische Numerologie nach Dr. Mazza ® - Band 2</b><br>
+  Lebensphasen und ihre Schwingung<br><br>
+  
+  Dieses Buch ist ein breitgefächertes Nachschlagewerk für Numerologie-Begeisterte. Es bietet eine erweiterte Perspektive und eine detaillierte Interpretation unserer persönlichen Lebensabschnitte, der persönlichen Jahre und Monate, und unserer verborgenen Entwicklungspotenziale. Das Leben hat immer Überraschungen für uns auf Lager. Wenn Sie im Leben eine Hilfestellung suchen und erkennen möchten was Ihr Lebenspfad für Sie an Herausforderungen bereit hält, sollten Sie sich dieses Buch zulegen. Auf eindringliche Art und Weise beschreibt es die Herausforderungen unseres Lebensweges und bietet dazu eine wesentliche Hilfestellung, um diese erfolgreich zu bewältigen.<br><br>
+  
+  1. Aufl. September 2013, 410 Seiten, Format A5, Taschenbuch<br><br>
+  
+  € 19,-`
+};
