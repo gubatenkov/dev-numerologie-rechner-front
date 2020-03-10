@@ -19,12 +19,14 @@ import {
   MAIN_CONTAINER_MAX_WIDTH,
   MOBILE_RESOLUTION_THRESHOLD
 } from "../utils/Constants";
+import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
 
 // constants used for content styling
 const CONTENT_STYLING_CLASS_SUBHEADING = "subheading";
 const CONTENT_STYLING_CLASS_DESCRIPTION = "descriptionText";
 const CONTENT_STYLING_CLASS_NAME_HEADER = "nameHeading";
 const CONTENT_STYLING_CLASS_HEADER = "resultHeading";
+const CONTENT_STYLING_CLASS_HEADER_RESULTNUMBER = "resultNumber";
 const DESKTOP_TOUR_OVERVIEW_HEIGHT_PX = 80;
 const MOBILE_TOUR_OVERVIEW_HEIGHT_PX = 80; // TODO: Make less
 
@@ -104,13 +106,22 @@ const ContentArea = styled.div`
   }
 
   .${CONTENT_STYLING_CLASS_HEADER} {
-    margin-top: 40px;
+    margin-top: 120px;
     font-size: 32px;
     font-weight: 400;
 
     div {
       display: inline;
     }
+  }
+
+  .${CONTENT_STYLING_CLASS_HEADER_RESULTNUMBER} {
+    font-size: 48px;
+    font-weight: 500;
+  }
+
+  .marginTop90 {
+    margin-top: 90px;
   }
 
   // /* rules provided by Clemens (client) for styling of content coming from backend*/
@@ -368,6 +379,10 @@ const TourView = props => {
     // adding description text of result
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
+    elementContent = elementContent
+      .split("<H1>")
+      .join('<H1 class="marginTop90">');
+
     return [elementTitle, elementContent];
   };
 
@@ -399,7 +414,7 @@ const TourView = props => {
     }
 
     // adding result for first name
-    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberResult
+    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div class=${CONTENT_STYLING_CLASS_HEADER_RESULTNUMBER}>${numberResult
       .result.value ||
       numberResult.result.list ||
       ""} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
@@ -423,6 +438,10 @@ const TourView = props => {
       elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberCompareResult.descriptionText}</p>`;
     }
 
+    elementContent = elementContent
+      .split("<H1>")
+      .join('<H1 class="marginTop90">');
+
     return [elementTitle, elementContent];
   };
 
@@ -443,8 +462,12 @@ const TourView = props => {
     // not showing book promotion for intro text
     showBookPromotion = false;
   } else {
+    console.log("resultItem:", resultItem);
     // no compare result
-    if (!compareTourData) {
+    if (
+      !compareTourData ||
+      !shouldShowDuplicatedComparisonResult(resultItem.numberId)
+    ) {
       // building tour step for result item
       [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
     } else {
