@@ -339,7 +339,7 @@ const TourView = props => {
     // building title and content for introduction text to section
     const elementTitle = `Einführung ${sectionIntro.title}`;
     const elementContent = sectionIntro.text;
-
+    console.log("sec intro:", sectionIntro.text);
     // returning result
     return [elementTitle, elementContent];
   };
@@ -354,7 +354,6 @@ const TourView = props => {
     const elementTitle = `${numberResult.name} ${numberResult.result.value ||
       numberResult.result.list ||
       ""}`;
-
     // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
       // returning title and locked widget element
@@ -366,14 +365,19 @@ const TourView = props => {
 
     // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+      if (numberResult.numberDescription.description) {
+        elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+      }
     }
 
     // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
-      elementContent += !!numberResult.numberDescription.calculationDescription
-        ? `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`
-        : "";
+      if (numberResult.numberDescription.calculationDescription) {
+        elementContent += !!numberResult.numberDescription
+          .calculationDescription
+          ? `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`
+          : "";
+      }
     }
 
     // adding description text of result
@@ -405,12 +409,16 @@ const TourView = props => {
 
     // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+      if (numberResult.numberDescription.description) {
+        elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
+      }
     }
 
     // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
-      elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
+      if (numberResult.numberDescription.calculationDescription) {
+        elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
+      }
     }
 
     // adding result for first name
@@ -462,7 +470,6 @@ const TourView = props => {
     // not showing book promotion for intro text
     showBookPromotion = false;
   } else {
-    console.log("resultItem:", resultItem);
     // no compare result
     if (
       !compareTourData ||
