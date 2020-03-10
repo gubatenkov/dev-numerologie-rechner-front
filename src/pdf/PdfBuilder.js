@@ -5,8 +5,17 @@ import pdfFonts from "./fonts/vfs_fonts";
 import { OVERALL_INTRO_KEY, CI_COLORS } from "../utils/Constants";
 
 import { convertHTMLTextToPDFSyntax, imagePathToDataURL } from "./PdfHelper";
-import { COVER_IMAGE_BY_LZ, BACKGROUND_IMAGES } from "./images/Images";
-import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from "./PdfTexts";
+import {
+  COVER_IMAGE_BY_LZ,
+  BACKGROUND_IMAGES,
+  BOOK_COVER
+} from "./images/Images";
+import {
+  COPYRIGHT_NOTICE,
+  LEGAL_NOTICE,
+  PROMOTION_TEXT,
+  BOOK_PROMOTION_TEXT
+} from "./PdfTexts";
 
 // constant for how many centimeters an inch is
 const INCH_IN_CM = 2.54;
@@ -841,6 +850,42 @@ export async function createPDFFromAnalysisResult(
 
   docDefinition.content.push({
     text: LEGAL_NOTICE
+  });
+
+  docDefinition.content.push({
+    text: "Weiterführende Inhalte",
+    style: ["H1"],
+    tocItem: true,
+    pageBreak: "before",
+    marginBottom: 10
+  });
+
+  docDefinition.content.push(
+    ...convertHTMLTextToPDFSyntax(BOOK_PROMOTION_TEXT.intro)
+  );
+
+  const cover1ImageData = await imagePathToDataURL(BOOK_COVER[1]);
+  const cover2ImageData = await imagePathToDataURL(BOOK_COVER[2]);
+
+  docDefinition.content.push({
+    columns: [
+      ...convertHTMLTextToPDFSyntax(BOOK_PROMOTION_TEXT.cover1),
+      {
+        image: cover1ImageData,
+        width: 150,
+        marginLeft: 50
+      }
+    ]
+  });
+  docDefinition.content.push({
+    columns: [
+      ...convertHTMLTextToPDFSyntax(BOOK_PROMOTION_TEXT.cover2),
+      {
+        image: cover2ImageData,
+        width: 150,
+        marginLeft: 50
+      }
+    ]
   });
 
   // creating pdf and opening in new tab

@@ -36,3 +36,24 @@ Sie werden sich in den vielen Beschreibungen des erweiterten psychologisch-numer
 Diese <b>lange Version</b> des psychologisch-numerologischen Persönlichkeitsprofils finden Sie in unserem Online Shop auf:<br>
 <A href=“https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/“ target=“_blank“>https://www.bios-shop.eu/produkt/persoenlichkeitsnumeroskop-lang/</A>
 `;
+
+export const BOOK_PROMOTION_TEXT = {
+  intro: `<b>Möchten Sie noch mehr über Ihre Persönlichkeit erfahren?</b><br>
+  Lesen Sie alle Zahlen im Detail mit noch ausführlicheren Texten und vielen Erklärungen in den 2 begleitenden Büchern zum Psychologische Numerologie Rechner durch:<br><br>`,
+  cover1: `<b>Psychologische Numerologie nach Dr. Mazza ® Band 1</b><br>
+  Zahlen als Spiegel der Persönlichkeit und Lebensaufgabe<br><br>
+  
+  Die Psychologische Numerologie nach Dr. Mazza ® beschäftigt sich nicht nur mit der Bedeutung der Zahlen für den Beruf, die Familie und das eigene Lebensumfeld. Sie öffnet vor allem den Blick auf die psychologischen Teilbereiche unserer Persönlichkeit und die Lebensaufgaben, mit denen wir in den verschiedenen Phasen unseres Lebens konfrontiert werden und gibt praktische Hinweise, die uns zeigen, wie diese Anforderungen zu lösen sind.<br><br>
+  
+  2. (inhaltl. unver.) Auflage Juni 2017, 512 Seiten mit Illustrationen in Farbe, Format A5, Taschenbuch<br><br>
+  
+  € 25,- <br><br><br>`,
+  cover2: `<b>Psychologische Numerologie nach Dr. Mazza ® - Band 2</b><br>
+  Lebensphasen und ihre Schwingung<br><br>
+  
+  Dieses Buch ist ein breitgefächertes Nachschlagewerk für Numerologie-Begeisterte. Es bietet eine erweiterte Perspektive und eine detaillierte Interpretation unserer persönlichen Lebensabschnitte, der persönlichen Jahre und Monate, und unserer verborgenen Entwicklungspotenziale. Das Leben hat immer Überraschungen für uns auf Lager. Wenn Sie im Leben eine Hilfestellung suchen und erkennen möchten was Ihr Lebenspfad für Sie an Herausforderungen bereit hält, sollten Sie sich dieses Buch zulegen. Auf eindringliche Art und Weise beschreibt es die Herausforderungen unseres Lebensweges und bietet dazu eine wesentliche Hilfestellung, um diese erfolgreich zu bewältigen.<br><br>
+  
+  1. Aufl. September 2013, 410 Seiten, Format A5, Taschenbuch<br><br>
+  
+  € 19,-`
+};

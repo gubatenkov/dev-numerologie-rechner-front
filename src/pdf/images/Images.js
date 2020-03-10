@@ -27,6 +27,15 @@ import image_cover_lz_11_2 from "./cover_lz_11_2.png";
 import image_cover_lz_22_4 from "./cover_lz_22_4.png";
 import image_cover_lz_33_6 from "./cover_lz_33_6.png";
 
+// loading book covers
+import book_cover_1 from "./Numerologie-Band-1_Cover.png";
+import book_cover_2 from "./Numerologie-Band-2_Cover.png";
+
+export const BOOK_COVER = {
+  1: book_cover_1,
+  2: book_cover_2
+};
+
 // mapping colors to images
 export const BACKGROUND_IMAGES = {};
 BACKGROUND_IMAGES[CI_COLOR_IDS.BLACK] = image_bg_black;
