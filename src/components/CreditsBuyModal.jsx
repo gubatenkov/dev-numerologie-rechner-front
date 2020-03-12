@@ -48,13 +48,9 @@ function addProductsToShopCart(productIds, windowToken, wpAccessToken) {
   const productIDsURI = encodeURIComponent(productIds.join(","));
 
   // generating add to cart URL for products
-  const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}`;
-  console.log(`${baseUrl}/?remote_login=true&access_token=${wpAccessToken}`);
+  const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}?remote_login=true&access_token=${wpAccessToken}`;
   // opening and focusing link
-  const shopWindow = window.open(
-    `${baseUrl}/?remote_login=true&access_token=${wpAccessToken}`,
-    "_blank"
-  );
+  const shopWindow = window.open(addToCartURI, "_blank");
   if (shopWindow) {
     shopWindow.focus();
   }
