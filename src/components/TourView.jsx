@@ -431,7 +431,7 @@ const TourView = props => {
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     // adding result for second name
-    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div>${numberCompareResult
+    elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div class=${CONTENT_STYLING_CLASS_HEADER_RESULTNUMBER}>${numberCompareResult
       .result.value ||
       numberCompareResult.result.list ||
       ""} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${compareName}</div></div> `;
