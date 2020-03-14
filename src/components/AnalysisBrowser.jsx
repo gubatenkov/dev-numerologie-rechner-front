@@ -8,13 +8,11 @@ import _ from "lodash";
 import ToastNotifications from "cogo-toast";
 
 import LoadingIndicator from "./LoadingIndicator";
-
 import CreateGroupDialog from "./dialogs/CreateGroupDialog";
 import ConfirmGroupDeletionDialog from "./dialogs/ConfirmGroupDeletionDialog";
 import ConfirmAnalysisDeletionDialog from "./dialogs/ConfirmAnalysisDeletionDialog";
 import RenameGroupDialog from "./dialogs/RenameGroupDialog";
 import ConfirmUseCreditDialog from "./dialogs/ConfirmUseCreditDialog";
-
 import { getConfigurationForId } from "../utils/Configuration";
 import { OVERALL_INTRO_KEY } from "../utils/Constants";
 import { getUserAuthData } from "../utils/AuthUtils";
@@ -31,7 +29,6 @@ import {
   deleteAnalysisMutation,
   useCreditMutation
 } from "../graphql/Mutations";
-
 import "../styles/AnalysisBrowser.scss";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
@@ -67,10 +64,12 @@ const AnalysisBrowser = props => {
   const [creditToBeUsed, setCreditToBeUsed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState(false);
-
   const [groupToBeRenamed, setGroupToBeRenamed] = useState(null);
   const [groupToBeDeleted, setGroupToBeDeleted] = useState(null);
   const [analysisToBeDeleted, setAnalysisToBeDeleted] = useState(null);
+  const [activeKey, setActiveKey] = useState(
+    props.groups && props.groups.length > 0 ? props.groups[0].id : undefined
+  );
 
   /**
    * handler for the creation of a group
@@ -384,6 +383,7 @@ const AnalysisBrowser = props => {
             ? props.groups[0].id
             : undefined
         }
+        activeKey={activeKey}
       >
         {props.groups.map((group, index) => {
           const analysisOfGroup = props.analyses.filter(
@@ -396,6 +396,14 @@ const AnalysisBrowser = props => {
                 <AnalysisBrowserToggle
                   eventKey={group.id}
                   canExpand={analysisOfGroup.length > 0}
+                  isCollapsed={activeKey === group.id}
+                  onClick={() => {
+                    if (activeKey === group.id) {
+                      setActiveKey("");
+                    } else {
+                      setActiveKey(group.id);
+                    }
+                  }}
                 >
                   {group.name}
                 </AnalysisBrowserToggle>

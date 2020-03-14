@@ -34,22 +34,13 @@ class NavigationDropdownMenu extends Component {
   };
 
   /**
-   * default constructor
-   */
-  constructor(props) {
-    // calling super constructor
-    super(props);
-    this.customToggle = CustomToggleFactory(props.customToggle);
-  }
-
-  /**
    * renders nav dropdown item with title and children as menu items
    */
   render() {
     return (
       <Dropdown alignRight onBlur={this.handleBlur}>
         <Dropdown.Toggle
-          as={this.customToggle}
+          as={CustomToggleFactory(this.props.customToggle)}
           id="dropdown-custom-components"
         />
         <Dropdown.Menu>{this.props.children}</Dropdown.Menu>

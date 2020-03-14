@@ -37,20 +37,20 @@ export const ActionToggleIcon = (
   </div>
 );
 
-const getImage = props => {
-  if (props.hasLong) {
+const getImage = (hasLong, hasShort) => {
+  if (hasLong) {
     return longPdfIcon;
   }
 
-  if (props.hasShort) {
+  if (hasShort) {
     return shortPdfIcon;
   }
 
   return iconPdf;
 };
 
-export const PdfToggleIcon = props => {
-  const image = getImage(props);
+export const PdfToggleIcon = ({ hasLong, hasShort }) => {
+  const image = getImage(hasLong, hasShort);
 
   return (
     <PdfToggleParent>
