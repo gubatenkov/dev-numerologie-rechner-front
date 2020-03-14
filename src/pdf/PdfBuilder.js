@@ -1,8 +1,7 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import * as _ from "lodash";
 import pdfFonts from "./fonts/vfs_fonts";
-
-import { OVERALL_INTRO_KEY, CI_COLORS } from "../utils/Constants";
+import { OVERALL_INTRO_KEY, CI_COLORS, CI_COLOR_IDS } from "../utils/Constants";
 
 import { convertHTMLTextToPDFSyntax, imagePathToDataURL } from "./PdfHelper";
 import {
@@ -475,13 +474,27 @@ export async function createPDFFromAnalysisResult(
       ) {
         return [
           {
-            image: BACKGROUND_IMAGES[currentResultSection.color],
+            image: currentResultSection.color,
             absolutePosition: { x: 550, y: 350 },
             width: 50
           }
         ];
       }
       return null;
+    },
+    images: {
+      [CI_COLOR_IDS.RED_ORANGE_YELLOW]:
+        BACKGROUND_IMAGES[CI_COLOR_IDS.RED_ORANGE_YELLOW],
+      [CI_COLOR_IDS.RED]: BACKGROUND_IMAGES[CI_COLOR_IDS.RED],
+      [CI_COLOR_IDS.ORANGE]: BACKGROUND_IMAGES[CI_COLOR_IDS.ORANGE],
+      [CI_COLOR_IDS.YELLOW]: BACKGROUND_IMAGES[CI_COLOR_IDS.YELLOW],
+      [CI_COLOR_IDS.GREEN]: BACKGROUND_IMAGES[CI_COLOR_IDS.GREEN],
+      [CI_COLOR_IDS.BLUE]: BACKGROUND_IMAGES[CI_COLOR_IDS.BLUE],
+      [CI_COLOR_IDS.PURPLE]: BACKGROUND_IMAGES[CI_COLOR_IDS.PURPLE],
+      [CI_COLOR_IDS.SILVER]: BACKGROUND_IMAGES[CI_COLOR_IDS.SILVER],
+      [CI_COLOR_IDS.GREY]: BACKGROUND_IMAGES[CI_COLOR_IDS.GREY],
+      [CI_COLOR_IDS.BLACK]: BACKGROUND_IMAGES[CI_COLOR_IDS.BLACK],
+      [CI_COLOR_IDS.WHITE]: BACKGROUND_IMAGES[CI_COLOR_IDS.WHITE]
     },
     pageOrientation: "portrait",
     pageMargins: [
