@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { Overlay, Tooltip } from "react-bootstrap";
+import { isMobile } from "react-device-detect";
 
 // importing all icons used as actions in the row
 import bookIcon from "../images/icon_openBook_primary.svg";
@@ -199,12 +201,18 @@ const RowIconButton = styled(IconButton)`
   }
 `;
 
+const ResultColumStyled = styled(ResultColumn)`
+  display: "block";
+`;
+
 /**
  * row rendering a single row item of an analysis result
  */
 const ResultTableRow = props => {
   // getting item and compare item from passed props
   const { item, compareItem } = props;
+  const [showTooltip, setShowTooltip] = useState(false);
+  const target = useRef(null);
 
   /**
    * renders a result matrix as content of the table
@@ -272,6 +280,7 @@ const ResultTableRow = props => {
   let contentColumn;
   let compareContentColumn;
   let emptyResult = false;
+
   if (item.result.type === TYPE_ID_NUMBER) {
     contentColumn = item.result.value;
     compareContentColumn = compareItem && compareItem.result.value;
@@ -284,6 +293,10 @@ const ResultTableRow = props => {
     contentColumn = renderResultMatrix(item);
     compareContentColumn = compareItem && renderResultMatrix(compareItem);
     emptyResult = item.result.values.length === 0;
+  }
+
+  if (compareItem && props.notShowCompareItem) {
+    compareContentColumn = "-";
   }
 
   // determining if the current row is unlocked
@@ -306,9 +319,37 @@ const ResultTableRow = props => {
             {contentColumn}
           </ResultColumn>
           {compareContentColumn && (
-            <ResultColumn compare={compareContentColumn}>
-              {compareContentColumn}
-            </ResultColumn>
+            <ResultColumStyled
+              tabIndex={
+                compareContentColumn === "-" && isMobile ? "0" : undefined
+              }
+              compare={compareContentColumn}
+              onClick={
+                isMobile ? () => setShowTooltip(!showTooltip) : undefined
+              }
+              onBlur={isMobile ? () => setShowTooltip(false) : undefined}
+              onMouseEnter={!isMobile ? () => setShowTooltip(true) : undefined}
+              onMouseLeave={!isMobile ? () => setShowTooltip(false) : undefined}
+            >
+              <div ref={target}>{compareContentColumn}</div>
+              {compareContentColumn === "-" && (
+                <Overlay
+                  target={target.current}
+                  show={showTooltip}
+                  placement="top"
+                >
+                  {props => (
+                    <Tooltip
+                      id="overlay-example"
+                      {...props}
+                      show={props.show.toString()}
+                    >
+                      Gleich wie linke Zahl
+                    </Tooltip>
+                  )}
+                </Overlay>
+              )}
+            </ResultColumStyled>
           )}
         </ResultContainer>
       </ContentColumn>

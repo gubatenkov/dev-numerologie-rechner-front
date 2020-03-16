@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { useAccordionToggle } from "react-bootstrap";
+import React from "react";
 
 import iconArrowUp from "../images/icon_arrow_up-24px.svg";
 import iconArrowDown from "../images/icon_arrow_down-24px.svg";
 
-const AnalysisBrowserToggle = ({ children, eventKey, canExpand }) => {
-  const [isCollapsed, setCollapsed] = useState(false);
-  const decoratedOnClick = useAccordionToggle(eventKey, () => {
-    setCollapsed(!isCollapsed);
-  });
-
+const AnalysisBrowserToggle = ({
+  children,
+  eventKey,
+  canExpand,
+  isCollapsed,
+  onClick
+}) => {
   const handleOnClick = () => {
-    if (canExpand) decoratedOnClick();
+    onClick();
   };
 
   return (
@@ -23,8 +23,8 @@ const AnalysisBrowserToggle = ({ children, eventKey, canExpand }) => {
       }`}
     >
       <div className="text">{children}</div>
-      {canExpand && !isCollapsed && <img src={iconArrowDown} alt="Down" />}
-      {isCollapsed && <img src={iconArrowUp} alt="Up" />}
+      {canExpand && !isCollapsed && <img src={iconArrowDown} alt="Up" />}
+      {isCollapsed && <img src={iconArrowUp} alt="Down" />}
     </div>
   );
 };

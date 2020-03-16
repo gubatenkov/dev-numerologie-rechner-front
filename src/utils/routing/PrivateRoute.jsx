@@ -25,7 +25,6 @@ class PrivateRoute extends Component {
    * component or passed target component
    */
   render() {
-    // console.log(this.props);
     return (
       <Route
         render={() => {

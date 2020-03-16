@@ -252,6 +252,9 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
         }
       }
       hfhp {
+        hf {
+          ...AnalysisResultItemFragment
+        }
         hf1 {
           ...AnalysisResultItemFragment
         }
@@ -262,6 +265,9 @@ export function buildPersonalAnalysisResultFragment(isPdf) {
           ...AnalysisResultItemFragment
         }
         hf4 {
+          ...AnalysisResultItemFragment
+        }
+        hp {
           ...AnalysisResultItemFragment
         }
         hp1 {
