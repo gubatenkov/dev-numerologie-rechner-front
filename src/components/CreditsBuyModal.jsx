@@ -41,14 +41,14 @@ const baseUrl = "https://www.bios-shop.eu";
  * e.g. ['42', '42', '55', '63'].
  * @param {String} windowToken A unique token identifying the new shop window. This is used by the shop to match the window
  * with an order number upon completion in the database. So windowToken and wpOrderId will be matched in the db
+ * @param {*} wpAccessToken the user wordpress access token to authenticate
  */
-function addProductsToShopCart(productIds, windowToken) {
+function addProductsToShopCart(productIds, windowToken, wpAccessToken) {
   // generating string of productIds to add include in the URI
   const productIDsURI = encodeURIComponent(productIds.join(","));
 
   // generating add to cart URL for products
-  const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}`;
-
+  const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}&remote_login=true&access_token=${wpAccessToken}`;
   // opening and focusing link
   const shopWindow = window.open(addToCartURI, "_blank");
   if (shopWindow) {
@@ -89,7 +89,7 @@ export function buyCredits(
   }
 
   // opening shop window and adding products to cart
-  addProductsToShopCart(ids, windowToken);
+  addProductsToShopCart(ids, windowToken, wpAccessToken);
 }
 
 const CreditsBuyModal = ({

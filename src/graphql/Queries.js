@@ -23,6 +23,7 @@ export const currentUserQuery = gql`
     currentUser {
       email
       resultConfiguration
+      wpAccessToken
       groups {
         id
         name
