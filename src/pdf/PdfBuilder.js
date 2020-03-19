@@ -1,12 +1,20 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import * as _ from "lodash";
 import pdfFonts from "./fonts/vfs_fonts";
+import { OVERALL_INTRO_KEY, CI_COLORS, CI_COLOR_IDS } from "../utils/Constants";
 
-import { OVERALL_INTRO_KEY, CI_COLORS } from "../utils/Constants";
-
-import { convertHTMLTextToPDFSyntax } from "./PdfHelper";
-import { COVER_IMAGE_BY_LZ, BACKGROUND_IMAGES } from "./images/Images";
-import { COPYRIGHT_NOTICE, LEGAL_NOTICE, PROMOTION_TEXT } from "./PdfTexts";
+import { convertHTMLTextToPDFSyntax, imagePathToDataURL } from "./PdfHelper";
+import {
+  COVER_IMAGE_BY_LZ,
+  BACKGROUND_IMAGES,
+  BOOK_COVER
+} from "./images/Images";
+import {
+  COPYRIGHT_NOTICE,
+  LEGAL_NOTICE,
+  PROMOTION_TEXT,
+  BOOK_PROMOTION_TEXT
+} from "./PdfTexts";
 
 // constant for how many centimeters an inch is
 const INCH_IN_CM = 2.54;
@@ -58,6 +66,9 @@ const PDF_STYLES = {
   },
   B: {
     bold: true
+  },
+  LIST: {
+    markerColor: CI_COLORS.GREEN
   },
   SUBTITLE: {
     marginBottom: 10,
@@ -275,7 +286,9 @@ function calculateResultOverviewTable(
         overviewTableBody.push([
           { text: name, alignment: "left" },
           value,
-          compareValue
+          shouldShowDuplicatedComparisonResult(numberItem.numberId)
+            ? compareValue
+            : ""
         ]);
       } else {
         overviewTableBody.push([
@@ -290,6 +303,37 @@ function calculateResultOverviewTable(
     });
   });
   return overviewTableBody;
+}
+
+export function shouldShowDuplicatedComparisonResult(numberId) {
+  const notToShow = [
+    "LZ",
+    "WZ",
+    "GZ",
+    "TZ",
+    "BfZ",
+    "GDR",
+    "GDR-V",
+    "GDR-F",
+    "GDR-I",
+    "VZ-B",
+    "VZ-P",
+    "VZ-E",
+    "HF",
+    "HF1",
+    "HF2",
+    "HF3",
+    "HF4",
+    "HP",
+    "HP1",
+    "HP2",
+    "HP3",
+    "HP4",
+    "PJ",
+    "PJNJ"
+  ];
+
+  return notToShow.findIndex(id => id === numberId) === -1;
 }
 
 /**
@@ -392,19 +436,21 @@ export async function createPDFFromAnalysisResult(
   const lzValue = analysisResult.lz.result.value;
   const titleImage = COVER_IMAGE_BY_LZ[lzValue] || COVER_IMAGE_BY_LZ[0];
 
+  const titleImageData = await imagePathToDataURL(titleImage);
+
   // defining pdf and default styling
   const docDefinition = {
     pageSize: "A4",
     background(page) {
       // first pages => title page with background image
-      // if (page === 1) {
-      //   return [
-      //     {
-      //       image: titleImage,
-      //       width: 600
-      //     }
-      //   ];
-      // }
+      if (page === 1) {
+        return [
+          {
+            image: titleImageData,
+            width: 600
+          }
+        ];
+      }
 
       // checking if the page is in a range of level pages => background image
       let currentSectionName = null;
@@ -428,13 +474,27 @@ export async function createPDFFromAnalysisResult(
       ) {
         return [
           {
-            image: BACKGROUND_IMAGES[currentResultSection.color],
+            image: currentResultSection.color,
             absolutePosition: { x: 550, y: 350 },
             width: 50
           }
         ];
       }
       return null;
+    },
+    images: {
+      [CI_COLOR_IDS.RED_ORANGE_YELLOW]:
+        BACKGROUND_IMAGES[CI_COLOR_IDS.RED_ORANGE_YELLOW],
+      [CI_COLOR_IDS.RED]: BACKGROUND_IMAGES[CI_COLOR_IDS.RED],
+      [CI_COLOR_IDS.ORANGE]: BACKGROUND_IMAGES[CI_COLOR_IDS.ORANGE],
+      [CI_COLOR_IDS.YELLOW]: BACKGROUND_IMAGES[CI_COLOR_IDS.YELLOW],
+      [CI_COLOR_IDS.GREEN]: BACKGROUND_IMAGES[CI_COLOR_IDS.GREEN],
+      [CI_COLOR_IDS.BLUE]: BACKGROUND_IMAGES[CI_COLOR_IDS.BLUE],
+      [CI_COLOR_IDS.PURPLE]: BACKGROUND_IMAGES[CI_COLOR_IDS.PURPLE],
+      [CI_COLOR_IDS.SILVER]: BACKGROUND_IMAGES[CI_COLOR_IDS.SILVER],
+      [CI_COLOR_IDS.GREY]: BACKGROUND_IMAGES[CI_COLOR_IDS.GREY],
+      [CI_COLOR_IDS.BLACK]: BACKGROUND_IMAGES[CI_COLOR_IDS.BLACK],
+      [CI_COLOR_IDS.WHITE]: BACKGROUND_IMAGES[CI_COLOR_IDS.WHITE]
     },
     pageOrientation: "portrait",
     pageMargins: [
@@ -606,6 +666,7 @@ export async function createPDFFromAnalysisResult(
         docDefinition.content.push({
           text: resultSection.introText.title,
           style: ["H0", { color: resultColor, alignment: "center" }],
+          marginBottom: 50,
           pageBreak: "before",
           tocItem: true,
           tocStyle: { color: resultColor }
@@ -618,13 +679,8 @@ export async function createPDFFromAnalysisResult(
       }
 
       // adding number results for all numbers with descriptionText
-      resultSection.numbers
-        .filter(number => {
-          // filter out numbers without description text. Rule: No numbers without description text (only result)
-          const itemDescriptionText = number.descriptionText;
-          return itemDescriptionText && itemDescriptionText.length > 0;
-        })
-        .forEach((number, resultIndex) => {
+      resultSection.numbers.forEach((number, resultIndex) => {
+        if (number.descriptionText && number.descriptionText.length > 0) {
           // getting name and value of
           const itemName = number.name;
           const itemValue =
@@ -763,7 +819,8 @@ export async function createPDFFromAnalysisResult(
               }
             }
           }
-        });
+        }
+      });
 
       // saving information about last element of level -> the index saved will be the last index
       // of this level
@@ -775,7 +832,7 @@ export async function createPDFFromAnalysisResult(
   if (!includePromotion) {
     // pushing title
     docDefinition.content.push({
-      text: "Vergleich zur Langtext-Version",
+      text: "Entdecken Sie noch mehr über sich in der Langtext-Version",
       style: ["H1"],
       tocItem: true,
       pageBreak: "before",
@@ -808,6 +865,42 @@ export async function createPDFFromAnalysisResult(
 
   docDefinition.content.push({
     text: LEGAL_NOTICE
+  });
+
+  docDefinition.content.push({
+    text: "Weiterführende Inhalte",
+    style: ["H1"],
+    tocItem: true,
+    pageBreak: "before",
+    marginBottom: 10
+  });
+
+  docDefinition.content.push(
+    ...convertHTMLTextToPDFSyntax(BOOK_PROMOTION_TEXT.intro)
+  );
+
+  const cover1ImageData = await imagePathToDataURL(BOOK_COVER[1]);
+  const cover2ImageData = await imagePathToDataURL(BOOK_COVER[2]);
+
+  docDefinition.content.push({
+    columns: [
+      ...convertHTMLTextToPDFSyntax(BOOK_PROMOTION_TEXT.cover1),
+      {
+        image: cover1ImageData,
+        width: 150,
+        marginLeft: 50
+      }
+    ]
+  });
+  docDefinition.content.push({
+    columns: [
+      ...convertHTMLTextToPDFSyntax(BOOK_PROMOTION_TEXT.cover2),
+      {
+        image: cover2ImageData,
+        width: 150,
+        marginLeft: 50
+      }
+    ]
   });
 
   // creating pdf and opening in new tab

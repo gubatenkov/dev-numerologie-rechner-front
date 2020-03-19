@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import NavigationDropdownMenu from "./NavigationDropdownMenu";
@@ -37,11 +37,25 @@ const AnalysisListEntry = ({
   onBuyLongPdfClicked,
   onAnalysisDelete
 }) => {
+  const [hasLong, setHasLong] = useState(
+    analysis.usedCreditTypes.includes(LONG_TYPE)
+  );
+  const [hasShort, setHasShort] = useState(
+    analysis.usedCreditTypes.includes(SHORT_TYPE)
+  );
+
+  useEffect(() => {
+    setHasLong(analysis.usedCreditTypes.includes(LONG_TYPE));
+    setHasShort(analysis.usedCreditTypes.includes(SHORT_TYPE));
+  }, [analysis]);
+
   const lifeNumbers = analysis.personalAnalysisResults
     .filter(result => result.lz)
     .map(result => result.lz.result.value);
   // assuming that if i have multiple entries they are the same - only display the first:
   const lifeNumber = lifeNumbers[0];
+
+  const toggle = <PdfToggleIcon hasLong={hasLong} hasShort={hasShort} />;
 
   return (
     <div className="akb-list-entry">
@@ -52,14 +66,11 @@ const AnalysisListEntry = ({
         </Link>
       </LeftDiv>
       <RightDiv>
-        <NavigationDropdownMenu
-          key="GeneratePdfMenu"
-          customToggle={PdfToggleIcon}
-        >
+        <NavigationDropdownMenu key="GeneratePdfMenu" customToggle={toggle}>
           {/* Short Pdfs */}
-          {analysis.usedCreditTypes.includes(SHORT_TYPE) ? (
+          {hasShort ? (
             <NavigationDropdownMenuItem onClick={onShortPdfClicked}>
-              <img src={shortPdfIcon} alt="" /> Kurzes PDF
+              <img src={shortPdfIcon} alt="" /> Kurzes PDF herunterladen
             </NavigationDropdownMenuItem>
           ) : (
             <NavigationDropdownMenuItem onClick={onBuyShortPdfClicked}>
@@ -67,9 +78,9 @@ const AnalysisListEntry = ({
             </NavigationDropdownMenuItem>
           )}
           {/* Long Pdfs */}
-          {analysis.usedCreditTypes.includes(LONG_TYPE) ? (
+          {hasLong ? (
             <NavigationDropdownMenuItem onClick={onLongPdfClicked}>
-              <img src={longPdfIcon} alt="" /> Langes PDF
+              <img src={longPdfIcon} alt="" /> Langes PDF herunterladen
             </NavigationDropdownMenuItem>
           ) : (
             <NavigationDropdownMenuItem onClick={onBuyLongPdfClicked}>

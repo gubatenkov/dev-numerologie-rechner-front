@@ -94,7 +94,17 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache({
     fragmentMatcher
-  })
+  }),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "no-cache",
+      errorPolicy: "ignore"
+    },
+    query: {
+      fetchPolicy: "no-cache",
+      errorPolicy: "all"
+    }
+  }
 });
 
 ReactDOM.render(

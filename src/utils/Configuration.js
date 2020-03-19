@@ -87,12 +87,24 @@ export const PERSONAL_RESULT_CONFIGURATIONS = {
         },
         {
           name: "Herausforderungen",
-          numberIds: ["hfhp.hf1", "hfhp.hf2", "hfhp.hf3", "hfhp.hf4"],
+          numberIds: [
+            "hfhp.hf",
+            "hfhp.hf1",
+            "hfhp.hf2",
+            "hfhp.hf3",
+            "hfhp.hf4"
+          ],
           showTitle: true
         },
         {
           name: "Höhepunkte",
-          numberIds: ["hfhp.hp1", "hfhp.hp2", "hfhp.hp3", "hfhp.hp4"],
+          numberIds: [
+            "hfhp.hp",
+            "hfhp.hp1",
+            "hfhp.hp2",
+            "hfhp.hp3",
+            "hfhp.hp4"
+          ],
           showTitle: true
         },
         {
@@ -168,7 +180,13 @@ export const PERSONAL_RESULT_CONFIGURATIONS = {
         },
         {
           name: "Herausforderungen",
-          numberIds: ["hfhp.hf1", "hfhp.hf2", "hfhp.hf3", "hfhp.hf4"],
+          numberIds: [
+            "hfhp.hf",
+            "hfhp.hf1",
+            "hfhp.hf2",
+            "hfhp.hf3",
+            "hfhp.hf4"
+          ],
           showTitle: true
         },
         {
