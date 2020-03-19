@@ -217,11 +217,13 @@ const NavigationBar = props => {
 
       // if settings changed => calling server to apply change
       if (settingsChanged) {
-        saveUserSettings({
-          variables: userSettings
-        });
+        setTimeout(async () => {
+          await saveUserSettings({
+            variables: userSettings
+          });
 
-        window.location.reload();
+          window.location.reload();
+        });
       }
     }
   }, [userSettings, loading, data, saveUserSettings, componentInitialized]);
