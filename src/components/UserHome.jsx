@@ -165,6 +165,7 @@ class UserHome extends Component {
           handleDeleteUser={() =>
             this.setState({ userDeletionDialogOpen: true })
           }
+          onCartClicked={this.toggleBuyModal}
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeContent">

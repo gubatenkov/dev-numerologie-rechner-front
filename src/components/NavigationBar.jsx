@@ -220,6 +220,8 @@ const NavigationBar = props => {
         saveUserSettings({
           variables: userSettings
         });
+
+        window.location.reload();
       }
     }
   }, [userSettings, loading, data, saveUserSettings, componentInitialized]);
@@ -378,12 +380,14 @@ const NavigationBar = props => {
       {loggedIn && (
         <CartIconButton
           imageIcon={iconCartPrimary}
-          onClick={() =>
-            window.open(
-              "https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/",
-              "_blank"
-            )
-          }
+          onClick={() => {
+            props.onCartClicked
+              ? props.onCartClicked()
+              : window.open(
+                  "https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/",
+                  "_blank"
+                );
+          }}
         />
       )}
       {loggedIn && (
@@ -422,7 +426,8 @@ NavigationBar.propTypes = {
   leftButtonOnClick: PropTypes.func,
   history: PropTypes.shape({
     push: PropTypes.func
-  })
+  }),
+  onCartClicked: PropTypes.func
 };
 
 export default withRouter(NavigationBar);
