@@ -185,21 +185,25 @@ const NavigationBar = props => {
       // extractin user result data
       const { currentUser } = data;
 
-      // setting initial state of the component based on result
-      setUserSettings({
-        ...userSettings,
-        resultConfiguration: currentUser.resultConfiguration,
-        showBookRecommendations: currentUser.showBookRecommendations,
-        showBookReferences: currentUser.showBookReferences,
-        showCategoryExplanations: currentUser.showCategoryExplanations,
-        showNumberMeaningExplanations:
-          currentUser.showNumberMeaningExplanations,
-        showNumberCalculationExplanations:
-          currentUser.showNumberCalculationExplanations
-      });
+      if (!currentUser) {
+        props.history.push("/login");
+      } else {
+        // setting initial state of the component based on result
+        setUserSettings({
+          ...userSettings,
+          resultConfiguration: currentUser.resultConfiguration,
+          showBookRecommendations: currentUser.showBookRecommendations,
+          showBookReferences: currentUser.showBookReferences,
+          showCategoryExplanations: currentUser.showCategoryExplanations,
+          showNumberMeaningExplanations:
+            currentUser.showNumberMeaningExplanations,
+          showNumberCalculationExplanations:
+            currentUser.showNumberCalculationExplanations
+        });
 
-      // setting initialized flag to indicate properly initialized state
-      setComponentInitialized(true);
+        // setting initialized flag to indicate properly initialized state
+        setComponentInitialized(true);
+      }
     }
   });
 
