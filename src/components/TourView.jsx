@@ -339,7 +339,7 @@ const TourView = props => {
     // building title and content for introduction text to section
     const elementTitle = `Einführung ${sectionIntro.title}`;
     const elementContent = sectionIntro.text;
-    console.log("sec intro:", sectionIntro.text);
+
     // returning result
     return [elementTitle, elementContent];
   };

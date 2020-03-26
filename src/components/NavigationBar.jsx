@@ -185,9 +185,7 @@ const NavigationBar = props => {
       // extractin user result data
       const { currentUser } = data;
 
-      if (!currentUser) {
-        props.history.push("/login");
-      } else {
+      if (currentUser) {
         // setting initial state of the component based on result
         setUserSettings({
           ...userSettings,

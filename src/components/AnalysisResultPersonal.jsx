@@ -13,7 +13,7 @@ import {
 
 import LoadingIndicator from "./LoadingIndicator";
 import AnalysisResultPersonalRender from "./AnalysisResultPersonalRender";
-
+import { deleteUserAuthData } from "../utils/AuthUtils";
 /**
  * result screen for personal analysis
  */
@@ -21,45 +21,51 @@ const AnalysisResultPersonal = props => {
   // extracting relevant parameters from props
   const { personalAnalysesById, personalAnalysesByNames } = props;
   let { currentUser } = props;
-
-  // if gql state loading => showing spinner
-  if (
-    (personalAnalysesById && personalAnalysesById.loading) ||
-    (personalAnalysesByNames && personalAnalysesByNames.loading) ||
-    (currentUser && currentUser.loading)
-  ) {
-    return <LoadingIndicator text="Berechne Resultate für Namen..." />;
-  }
-
-  // if gql state error => displaying error in loader to make it more visible for debugging
-  const error =
-    (personalAnalysesById && personalAnalysesById.error) ||
-    (personalAnalysesByNames && personalAnalysesByNames.error);
-  if (error) {
-    console.error(error);
-    return (
-      <LoadingIndicator
-        text={"A critical error occurred when fetching data..."}
-      />
-    );
-  }
-
-  // if current user query throws error => this means user is not authenticated
-  if (currentUser && currentUser.error) {
-    console.log("user not authenticated");
-    currentUser = null;
-  }
-
-  // this component fetches results in two cases
-  // a) An id of a stored analysis is provided => fetching result based on input parameters of stored id
-  // b) Input parameters (names + dob) are provided => fetching results based on input parameters passed
-  // both queries are configured for this component and are skipped if the params are not passed
   let personalAnalysisResults = [];
-  if (props.match.params.analysisId && personalAnalysesById) {
-    personalAnalysisResults =
-      personalAnalysesById.analysis.personalAnalysisResults;
-  } else {
-    personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
+  try {
+    // if gql state loading => showing spinner
+    if (
+      (personalAnalysesById && personalAnalysesById.loading) ||
+      (personalAnalysesByNames && personalAnalysesByNames.loading) ||
+      (currentUser && currentUser.loading)
+    ) {
+      return <LoadingIndicator text="Berechne Resultate für Namen..." />;
+    }
+
+    // if gql state error => displaying error in loader to make it more visible for debugging
+    const error =
+      (personalAnalysesById && personalAnalysesById.error) ||
+      (personalAnalysesByNames && personalAnalysesByNames.error);
+    if (error) {
+      console.error(error);
+      return (
+        <LoadingIndicator
+          text={"A critical error occurred when fetching data..."}
+        />
+      );
+    }
+
+    // if current user query throws error => this means user is not authenticated
+    if (currentUser && currentUser.error) {
+      console.log("user not authenticated");
+      currentUser = null;
+    }
+
+    // this component fetches results in two cases
+    // a) An id of a stored analysis is provided => fetching result based on input parameters of stored id
+    // b) Input parameters (names + dob) are provided => fetching results based on input parameters passed
+    // both queries are configured for this component and are skipped if the params are not passed
+
+    if (props.match.params.analysisId && personalAnalysesById) {
+      personalAnalysisResults =
+        personalAnalysesById.analysis.personalAnalysisResults;
+    } else {
+      personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
+    }
+  } catch (error) {
+    console.log("error AnalysisResultPersonal:", error.message);
+    deleteUserAuthData();
+    props.history.push("/login");
   }
 
   // returning render component with result param set (vs. analysis)
