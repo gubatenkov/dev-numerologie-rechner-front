@@ -5,6 +5,7 @@ import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
 import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
+import { useBuyModal } from "../contexts/BuyModalContext";
 
 import CreditsBuyWait from "./CreditsBuyWait";
 import { createWindowTokenMutation } from "../graphql/Mutations";
@@ -93,23 +94,22 @@ export function buyCredits(
   addProductsToShopCart(ids, windowToken, wpAccessToken);
 }
 
-const CreditsBuyModal = ({
-  currentUser,
-  wpAccessToken,
-  show,
-  onHide,
-  onSuccessfulPurchase,
-  createWindowToken
-}) => {
+const CreditsBuyModal = props => {
+  const { createWindowToken } = props;
   const [personalShorts, setPersonalShorts] = useState(1);
   const [personalLongs, setPersonalLongs] = useState(1);
   const [windowToken, setWindowToken] = useState(null);
   const [isWaitingCallback, setWaitingCallback] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
+  const { isOpen, setIsOpen } = useBuyModal();
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
 
+  if (props.data.loading || !props.data || !props.data.currentUser) {
+    return null;
+  }
+  const { currentUser } = props.data;
   const initiateBuy = async () => {
     const {
       data: { windowToken }
@@ -117,7 +117,7 @@ const CreditsBuyModal = ({
     buyCredits(
       personalShorts,
       personalLongs,
-      wpAccessToken,
+      currentUser.wpAccessToken,
       windowToken.windowToken
     );
     setWindowToken(windowToken.windowToken);
@@ -127,7 +127,7 @@ const CreditsBuyModal = ({
   const handleBuySuccess = () => {
     setWaitingCallback(false);
     setSuccess(true);
-    onSuccessfulPurchase();
+    window.location.reload();
   };
 
   return (
@@ -138,7 +138,7 @@ const CreditsBuyModal = ({
           windowToken={windowToken}
         />
       )}
-      <Modal show={show} onHide={onHide} size="lg">
+      <Modal show={isOpen} onHide={() => setIsOpen(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Guthaben kaufen</Modal.Title>
         </Modal.Header>
@@ -150,8 +150,8 @@ const CreditsBuyModal = ({
             </Alert>
           )}
           {!isSuccess &&
-            (!currentUser ||
-              !currentUser.credits ||
+            currentUser &&
+            (!currentUser.credits ||
               currentUser.credits.length === 0 ||
               currentUser.credits.filter(c => c.total > 0).length === 0) && (
               <p>
@@ -210,7 +210,7 @@ const CreditsBuyModal = ({
           </Table>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
+          <Button variant="secondary" onClick={() => setIsOpen(false)}>
             Abbrechen
           </Button>
           {!isSuccess && (

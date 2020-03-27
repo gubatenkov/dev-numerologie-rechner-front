@@ -32,6 +32,7 @@ import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 // auth utils
 import { deleteUserAuthData, getUserAuthData } from "../utils/AuthUtils";
+import { useBuyModal } from "../contexts/BuyModalContext";
 
 // container component of navbar
 const NavbarContainer = styled.nav`
@@ -167,6 +168,7 @@ const NavigationBar = props => {
     showNumberCalculationExplanations: false
   });
 
+  const { setIsOpen } = useBuyModal();
   // state flag indicating if the state of this component has already been properly initialized by server call
   const [componentInitialized, setComponentInitialized] = useState(false);
 
@@ -384,14 +386,7 @@ const NavigationBar = props => {
       {loggedIn && (
         <CartIconButton
           imageIcon={iconCartPrimary}
-          onClick={() => {
-            props.onCartClicked
-              ? props.onCartClicked()
-              : window.open(
-                  "https://www.bios-shop.eu/produkt-kategorie/numerologische-analysen/",
-                  "_blank"
-                );
-          }}
+          onClick={() => setIsOpen(true)}
         />
       )}
       {loggedIn && (
@@ -430,8 +425,7 @@ NavigationBar.propTypes = {
   leftButtonOnClick: PropTypes.func,
   history: PropTypes.shape({
     push: PropTypes.func
-  }),
-  onCartClicked: PropTypes.func
+  })
 };
 
 export default withRouter(NavigationBar);
