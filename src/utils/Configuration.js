@@ -191,7 +191,13 @@ export const PERSONAL_RESULT_CONFIGURATIONS = {
         },
         {
           name: "Höhepunkte",
-          numberIds: ["hfhp.hp1", "hfhp.hp2", "hfhp.hp3", "hfhp.hp4"],
+          numberIds: [
+            "hfhp.hp",
+            "hfhp.hp1",
+            "hfhp.hp2",
+            "hfhp.hp3",
+            "hfhp.hp4"
+          ],
           showTitle: true
         },
         {
