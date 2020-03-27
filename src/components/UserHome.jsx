@@ -36,7 +36,6 @@ class UserHome extends Component {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
       isBuyModalOpen: false,
-      isBuyProcessing: false,
       loading: false
     };
   }
@@ -50,12 +49,6 @@ class UserHome extends Component {
   toggleBuyModal = () => {
     this.setState({
       isBuyModalOpen: !this.state.isBuyModalOpen
-    });
-  };
-
-  handleBuy = () => {
-    this.setState({
-      isBuyProcessing: true
     });
   };
 
@@ -150,8 +143,7 @@ class UserHome extends Component {
     if (
       this.props.data.loading ||
       !this.props.data ||
-      !this.props.data.currentUser ||
-      this.state.isBuyProcessing
+      !this.props.data.currentUser
     ) {
       return <LoadingIndicator text="Lade..." />;
     }
@@ -234,7 +226,6 @@ class UserHome extends Component {
           wpAccessToken={this.props.data.currentUser.wpAccessToken}
           show={isBuyModalOpen}
           onHide={this.toggleBuyModal}
-          onBuy={this.handleBuy}
           onSuccessfulPurchase={this.handleSuccessfulPurchase}
         />
         <Footer />

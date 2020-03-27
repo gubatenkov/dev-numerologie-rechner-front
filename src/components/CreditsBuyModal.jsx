@@ -8,6 +8,7 @@ import * as compose from "lodash.flowright";
 
 import CreditsBuyWait from "./CreditsBuyWait";
 import { createWindowTokenMutation } from "../graphql/Mutations";
+import { currentUserQuery } from "../graphql/Queries";
 
 import "../styles/CreditsBuyModal.css";
 
@@ -93,12 +94,11 @@ export function buyCredits(
 }
 
 const CreditsBuyModal = ({
-  credits,
+  currentUser,
   wpAccessToken,
   show,
   onHide,
   onSuccessfulPurchase,
-  onBuy,
   createWindowToken
 }) => {
   const [personalShorts, setPersonalShorts] = useState(1);
@@ -150,9 +150,10 @@ const CreditsBuyModal = ({
             </Alert>
           )}
           {!isSuccess &&
-            (!credits ||
-              credits.length === 0 ||
-              credits.filter(c => c.total > 0).length === 0) && (
+            (!currentUser ||
+              !currentUser.credits ||
+              currentUser.credits.length === 0 ||
+              currentUser.credits.filter(c => c.total > 0).length === 0) && (
               <p>
                 Das Erstellen eines Numeroskop-PDFs ist ein kostenpflichtiger
                 Premium Service.
@@ -224,5 +225,6 @@ const CreditsBuyModal = ({
 };
 
 export default compose(
+  graphql(currentUserQuery),
   graphql(createWindowTokenMutation, { name: "createWindowToken" })
 )(CreditsBuyModal);
