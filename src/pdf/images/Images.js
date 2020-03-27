@@ -12,6 +12,10 @@ import image_bg_red from "./bg_red.png";
 import image_bg_silver from "./bg_silver.png";
 import image_bg_white from "./bg_white.png";
 import image_bg_yellow from "./bg_yellow.png";
+import image_bg_green_2 from "./label_2_gruen3.png";
+import image_bg_blue_3 from "./label_3_blau3.png";
+import image_bg_violett_4 from "./label_4_violett3.png";
+import image_bg_silver_5 from "./label_5_silber4.png";
 
 // loading cover images
 import image_cover_lz_1 from "./cover_lz_1.png";
@@ -39,16 +43,20 @@ export const BOOK_COVER = {
 // mapping colors to images
 export const BACKGROUND_IMAGES = {};
 BACKGROUND_IMAGES[CI_COLOR_IDS.BLACK] = image_bg_black;
-BACKGROUND_IMAGES[CI_COLOR_IDS.BLUE] = image_bg_blue;
-BACKGROUND_IMAGES[CI_COLOR_IDS.GREEN] = image_bg_green;
+// BACKGROUND_IMAGES[CI_COLOR_IDS.BLUE] = image_bg_blue;
+// BACKGROUND_IMAGES[CI_COLOR_IDS.GREEN] = image_bg_green;
 BACKGROUND_IMAGES[CI_COLOR_IDS.GREY] = image_bg_grey;
 BACKGROUND_IMAGES[CI_COLOR_IDS.ORANGE] = image_bg_orange;
-BACKGROUND_IMAGES[CI_COLOR_IDS.PURPLE] = image_bg_purple;
+// BACKGROUND_IMAGES[CI_COLOR_IDS.PURPLE] = image_bg_purple;
 BACKGROUND_IMAGES[CI_COLOR_IDS.RED_ORANGE_YELLOW] = image_bg_red_orange_yellow;
 BACKGROUND_IMAGES[CI_COLOR_IDS.RED] = image_bg_red;
-BACKGROUND_IMAGES[CI_COLOR_IDS.SILVER] = image_bg_silver;
+// BACKGROUND_IMAGES[CI_COLOR_IDS.SILVER] = image_bg_silver;
 BACKGROUND_IMAGES[CI_COLOR_IDS.WHITE] = image_bg_white;
 BACKGROUND_IMAGES[CI_COLOR_IDS.YELLOW] = image_bg_yellow;
+BACKGROUND_IMAGES[CI_COLOR_IDS.GREEN] = image_bg_green_2;
+BACKGROUND_IMAGES[CI_COLOR_IDS.BLUE] = image_bg_blue_3;
+BACKGROUND_IMAGES[CI_COLOR_IDS.PURPLE] = image_bg_violett_4;
+BACKGROUND_IMAGES[CI_COLOR_IDS.SILVER] = image_bg_silver_5;
 
 // defining base64 title images ordered by LZ
 export const COVER_IMAGE_BY_LZ = {
