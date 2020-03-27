@@ -24,6 +24,7 @@ import TextButton from "./Buttons/TextButton";
 import IconButton from "./Buttons/IconButton";
 import NameInputDialog from "./dialogs/NameInputDialog";
 import Footer from "./Footer";
+import CreditsBuyModal from "./CreditsBuyModal";
 
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
@@ -490,6 +491,7 @@ const AnalysisResultPersonalRender = props => {
           }
         }}
       />
+      <CreditsBuyModal />
       {!isTourOpen && <Footer />}
     </MainContainer>
   );

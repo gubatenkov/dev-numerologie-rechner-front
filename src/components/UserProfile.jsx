@@ -11,6 +11,7 @@ import MainContainer from "./MainContainer";
 import "../styles/UserProfile.scss";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
+import CreditsBuyModal from "./CreditsBuyModal";
 
 function UserProfile() {
   let history = useHistory();
@@ -99,6 +100,7 @@ function UserProfile() {
             </div>
           </div>
         </div>
+        <CreditsBuyModal />
       </MainContainer>
     );
   }

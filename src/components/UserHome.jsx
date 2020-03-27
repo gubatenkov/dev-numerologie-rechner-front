@@ -35,8 +35,6 @@ class UserHome extends Component {
     this.state = {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
-      isBuyModalOpen: false,
-      isBuyProcessing: false,
       loading: false
     };
   }
@@ -45,22 +43,6 @@ class UserHome extends Component {
     if (this.props.data && this.props.data.refetch) {
       this.props.data.refetch();
     }
-  };
-
-  toggleBuyModal = () => {
-    this.setState({
-      isBuyModalOpen: !this.state.isBuyModalOpen
-    });
-  };
-
-  handleBuy = () => {
-    this.setState({
-      isBuyProcessing: true
-    });
-  };
-
-  handleSuccessfulPurchase = () => {
-    this.props.data.refetch();
   };
 
   /**
@@ -150,13 +132,10 @@ class UserHome extends Component {
     if (
       this.props.data.loading ||
       !this.props.data ||
-      !this.props.data.currentUser ||
-      this.state.isBuyProcessing
+      !this.props.data.currentUser
     ) {
       return <LoadingIndicator text="Lade..." />;
     }
-
-    const { isBuyModalOpen } = this.state;
 
     return (
       <MainContainer>
@@ -165,7 +144,6 @@ class UserHome extends Component {
           handleDeleteUser={() =>
             this.setState({ userDeletionDialogOpen: true })
           }
-          onCartClicked={this.toggleBuyModal}
         />
         <div className="UserHomeContentArea">
           <div className="UserHomeContent">
@@ -228,15 +206,7 @@ class UserHome extends Component {
           }}
           groups={this.props.data.currentUser.groups}
         />
-
-        <CreditsBuyModal
-          credits={this.props.data.currentUser.credits}
-          wpAccessToken={this.props.data.currentUser.wpAccessToken}
-          show={isBuyModalOpen}
-          onHide={this.toggleBuyModal}
-          onBuy={this.handleBuy}
-          onSuccessfulPurchase={this.handleSuccessfulPurchase}
-        />
+        <CreditsBuyModal />
         <Footer />
       </MainContainer>
     );
