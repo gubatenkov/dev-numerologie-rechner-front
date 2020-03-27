@@ -47,7 +47,8 @@ export const BOOK_PROMOTION_TEXT = {
   
   2. (inhaltl. unver.) Auflage Juni 2017, 512 Seiten mit Illustrationen in Farbe, Format A5, Taschenbuch<br><br>
   
-  € 25,- <br><br><br>`,
+  <b>€ 25,- </b><br>
+  <a href="https://www.bios-shop.eu/produkt/psychologische-numerologie-band-1/">www.bios-shop.eu/produkt/psychologische-numerologie-band-1/</a><br><br>`,
   cover2: `<b>Psychologische Numerologie nach Dr. Mazza ® - Band 2</b><br>
   Lebensphasen und ihre Schwingung<br><br>
   
@@ -55,5 +56,6 @@ export const BOOK_PROMOTION_TEXT = {
   
   1. Aufl. September 2013, 410 Seiten, Format A5, Taschenbuch<br><br>
   
-  € 19,-`
+  <b>€ 19,- </b><br>
+  <a href="https://www.bios-shop.eu/produkt/psychologische-numerologie-band-2/">www.bios-shop.eu/produkt/psychologische-numerologie-band-2/</a><br><br>`
 };
