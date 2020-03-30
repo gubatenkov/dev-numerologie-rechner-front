@@ -94,6 +94,7 @@ const AnalysisBrowser = props => {
         `Die Gruppe ${groupName} wurde erfolgreich erstellt.`,
         { position: "top-right" }
       );
+      props.onRefetch();
     } catch (error) {
       // error occured -> displaying notification
       ToastNotifications.error(error.graphQLErrors[0].message, {
@@ -125,6 +126,7 @@ const AnalysisBrowser = props => {
         `Die Gruppe ${newName} wurde erfolgreich umbenannt.`,
         { position: "top-right" }
       );
+      props.onRefetch();
     } catch (error) {
       // error occured -> displaying notification
       ToastNotifications.error("Die Gruppe konnte nicht umbenannt werden", {
@@ -172,6 +174,7 @@ const AnalysisBrowser = props => {
         `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
         { position: "top-right" }
       );
+      props.onRefetch();
     } catch (error) {
       console.log(error);
       ToastNotifications.error("Gruppe konnte nicht gelöscht werden.", {
@@ -218,6 +221,7 @@ const AnalysisBrowser = props => {
         `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
         { position: "top-right" }
       );
+      props.onRefetch();
     } catch (error) {
       ToastNotifications.error("Analyse konnte nicht gelöscht werden.", {
         position: "top-right"
@@ -600,7 +604,8 @@ AnalysisBrowser.propTypes = {
   createGroup: PropTypes.func.isRequired,
   deleteGroup: PropTypes.func.isRequired,
   renameGroup: PropTypes.func.isRequired,
-  deleteAnalysis: PropTypes.func.isRequired
+  deleteAnalysis: PropTypes.func.isRequired,
+  onRefetch: PropTypes.func.isRequired
 };
 
 AnalysisBrowser.defaultProps = {};

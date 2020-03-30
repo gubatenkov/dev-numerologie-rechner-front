@@ -107,6 +107,7 @@ class UserHome extends Component {
         `Die Analyse ${name} wurde erfolgreich erstellt.`,
         { position: "top-right" }
       );
+      this.props.data.refetch();
     } catch (error) {
       // informing user of error
       ToastNotifications.error("Analyse konnte nicht gespreichert werden.", {
@@ -157,6 +158,7 @@ class UserHome extends Component {
               resultConfiguration={
                 this.props.data.currentUser.resultConfiguration
               }
+              onRefetch={() => this.props.data.refetch()}
             />
             {/* We will hide Ads at the beginning */}
             {/*<AdArea horizontal>*/}
