@@ -2,16 +2,23 @@ import { CI_COLOR_IDS } from "../../utils/Constants";
 
 // loading background images
 import image_bg_black from "./bg_black.png";
-import image_bg_blue from "./bg_blue.png";
-import image_bg_green from "./bg_green.png";
 import image_bg_grey from "./bg_grey.png";
 import image_bg_orange from "./bg_orange.png";
-import image_bg_purple from "./bg_purple.png";
-import image_bg_red_orange_yellow from "./bg_red_orange_yellow.png";
 import image_bg_red from "./bg_red.png";
-import image_bg_silver from "./bg_silver.png";
 import image_bg_white from "./bg_white.png";
 import image_bg_yellow from "./bg_yellow.png";
+import image_bg_blue from "./bg_blue.png";
+import bunt_1 from "./bunt_1.png";
+import bunt_3 from "./bunt_3.png";
+import bunt_4 from "./bunt_4.png";
+import green_2 from "./green_2.png";
+import green_1 from "./green_1.png";
+import blue_3 from "./blue_3.png";
+import purple_4 from "./purple_4.png";
+import purple_3 from "./purple_3.png";
+import purple_2 from "./purple_2.png";
+import silver_5 from "./silver_5.png";
+import silver_4 from "./silver_4.png";
 
 // loading cover images
 import image_cover_lz_1 from "./cover_lz_1.png";
@@ -37,18 +44,57 @@ export const BOOK_COVER = {
 };
 
 // mapping colors to images
-export const BACKGROUND_IMAGES = {};
-BACKGROUND_IMAGES[CI_COLOR_IDS.BLACK] = image_bg_black;
-BACKGROUND_IMAGES[CI_COLOR_IDS.BLUE] = image_bg_blue;
-BACKGROUND_IMAGES[CI_COLOR_IDS.GREEN] = image_bg_green;
-BACKGROUND_IMAGES[CI_COLOR_IDS.GREY] = image_bg_grey;
-BACKGROUND_IMAGES[CI_COLOR_IDS.ORANGE] = image_bg_orange;
-BACKGROUND_IMAGES[CI_COLOR_IDS.PURPLE] = image_bg_purple;
-BACKGROUND_IMAGES[CI_COLOR_IDS.RED_ORANGE_YELLOW] = image_bg_red_orange_yellow;
-BACKGROUND_IMAGES[CI_COLOR_IDS.RED] = image_bg_red;
-BACKGROUND_IMAGES[CI_COLOR_IDS.SILVER] = image_bg_silver;
-BACKGROUND_IMAGES[CI_COLOR_IDS.WHITE] = image_bg_white;
-BACKGROUND_IMAGES[CI_COLOR_IDS.YELLOW] = image_bg_yellow;
+export const BACKGROUND_IMAGES_STANDARD_SHORT = {};
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.BLACK] = image_bg_black;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.GREY] = image_bg_grey;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.ORANGE] = image_bg_orange;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.RED_ORANGE_YELLOW] = bunt_3;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.RED] = image_bg_red;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.WHITE] = image_bg_white;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.YELLOW] = image_bg_yellow;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.GREEN] = green_1;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.BLUE] = image_bg_blue;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.PURPLE] = purple_2;
+BACKGROUND_IMAGES_STANDARD_SHORT[CI_COLOR_IDS.SILVER] = silver_4;
+
+export const BACKGROUND_IMAGES_STANDARD_LONG = {};
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.BLACK] = image_bg_black;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.GREY] = image_bg_grey;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.ORANGE] = image_bg_orange;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.RED_ORANGE_YELLOW] = bunt_4;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.RED] = image_bg_red;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.WHITE] = image_bg_white;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.YELLOW] = image_bg_yellow;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.GREEN] = green_1;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.BLUE] = blue_3;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.PURPLE] = purple_2;
+BACKGROUND_IMAGES_STANDARD_LONG[CI_COLOR_IDS.SILVER] = silver_4;
+
+export const BACKGROUND_IMAGES_ADVANCED_SHORT = {};
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.BLACK] = image_bg_black;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.GREY] = image_bg_grey;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.ORANGE] = image_bg_orange;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.RED_ORANGE_YELLOW] = bunt_1;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.RED] = image_bg_red;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.WHITE] = image_bg_white;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.YELLOW] = image_bg_yellow;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.GREEN] = green_2;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.BLUE] = image_bg_blue;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.PURPLE] = purple_3;
+BACKGROUND_IMAGES_ADVANCED_SHORT[CI_COLOR_IDS.SILVER] = silver_4;
+
+export const BACKGROUND_IMAGES_ADVANCED_LONG = {};
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.BLACK] = image_bg_black;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.GREY] = image_bg_grey;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.ORANGE] = image_bg_orange;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.RED_ORANGE_YELLOW] = bunt_1;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.RED] = image_bg_red;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.WHITE] = image_bg_white;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.YELLOW] = image_bg_yellow;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.GREEN] = green_2;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.BLUE] = blue_3;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.PURPLE] = purple_4;
+BACKGROUND_IMAGES_ADVANCED_LONG[CI_COLOR_IDS.SILVER] = silver_5;
 
 // defining base64 title images ordered by LZ
 export const COVER_IMAGE_BY_LZ = {

@@ -6,8 +6,11 @@ import { OVERALL_INTRO_KEY, CI_COLORS, CI_COLOR_IDS } from "../utils/Constants";
 import { convertHTMLTextToPDFSyntax, imagePathToDataURL } from "./PdfHelper";
 import {
   COVER_IMAGE_BY_LZ,
-  BACKGROUND_IMAGES,
-  BOOK_COVER
+  BOOK_COVER,
+  BACKGROUND_IMAGES_STANDARD_SHORT,
+  BACKGROUND_IMAGES_STANDARD_LONG,
+  BACKGROUND_IMAGES_ADVANCED_SHORT,
+  BACKGROUND_IMAGES_ADVANCED_LONG
 } from "./images/Images";
 import {
   COPYRIGHT_NOTICE,
@@ -437,6 +440,21 @@ export async function createPDFFromAnalysisResult(
   const titleImage = COVER_IMAGE_BY_LZ[lzValue] || COVER_IMAGE_BY_LZ[0];
 
   const titleImageData = await imagePathToDataURL(titleImage);
+
+  let BACKGROUND_IMAGES;
+  if (configuration[0].color === CI_COLOR_IDS.GREEN) {
+    if (analysisResult.accessLevel.includes("SHORT")) {
+      BACKGROUND_IMAGES = BACKGROUND_IMAGES_STANDARD_SHORT;
+    } else {
+      BACKGROUND_IMAGES = BACKGROUND_IMAGES_STANDARD_LONG;
+    }
+  } else {
+    if (analysisResult.accessLevel.includes("SHORT")) {
+      BACKGROUND_IMAGES = BACKGROUND_IMAGES_ADVANCED_SHORT;
+    } else {
+      BACKGROUND_IMAGES = BACKGROUND_IMAGES_ADVANCED_LONG;
+    }
+  }
 
   // defining pdf and default styling
   const docDefinition = {
