@@ -89,13 +89,13 @@ class UserHome extends Component {
           name,
           group: groupId,
           inputs: nameInputs
-        },
-        update: (store, { data: { saveAnalysis } }) => {
-          // gettint the query from the local cache and adding group
-          const data = store.readQuery({ query: currentUserQuery });
-          data.analyses.push(saveAnalysis);
-          store.writeQuery({ query: currentUserQuery, data });
         }
+        // update: (store, { data: { saveAnalysis } }) => {
+        //   // gettint the query from the local cache and adding group
+        //     const data = store.readQuery({ query: currentUserQuery });
+        //     data.analyses.push(saveAnalysis);
+        //     store.writeQuery({ query: currentUserQuery, data });
+        // }
       });
       this.setState({ loading: false });
 
@@ -107,7 +107,11 @@ class UserHome extends Component {
         `Die Analyse ${name} wurde erfolgreich erstellt.`,
         { position: "top-right" }
       );
-      this.props.data.refetch();
+
+      // graphql ignores refetches if the same call is already pending, therefore we wait 2sec (randomly) and continue with a refetch
+      setTimeout(() => {
+        this.props.data.refetch();
+      }, 2000);
     } catch (error) {
       // informing user of error
       ToastNotifications.error("Analyse konnte nicht gespreichert werden.", {
@@ -158,7 +162,9 @@ class UserHome extends Component {
               resultConfiguration={
                 this.props.data.currentUser.resultConfiguration
               }
-              onRefetch={() => this.props.data.refetch()}
+              onRefetch={() => {
+                this.props.data.refetch();
+              }}
             />
             {/* We will hide Ads at the beginning */}
             {/*<AdArea horizontal>*/}
@@ -202,7 +208,6 @@ class UserHome extends Component {
 
             // saving analysis
             this.saveAnalysis(analysisName, group.id);
-
             // hiding dialog
             this.setState({ saveDialogOpen: false, loading: true });
           }}
