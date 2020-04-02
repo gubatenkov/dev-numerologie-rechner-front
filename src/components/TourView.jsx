@@ -20,6 +20,7 @@ import {
   MOBILE_RESOLUTION_THRESHOLD
 } from "../utils/Constants";
 import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
+import { TourOverViewMobileStep } from "./TourOverviewMobileStep";
 
 // constants used for content styling
 const CONTENT_STYLING_CLASS_SUBHEADING = "subheading";
@@ -263,6 +264,10 @@ const TourView = props => {
     compareName
   } = props;
 
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   // handler for clicks on the steps directly in the overview
   const handleStepClick = sectionTitleClicked => {
     // getting index of section title clicked and setting it's index as current section index
@@ -457,6 +462,8 @@ const TourView = props => {
   let tourStepTitle;
   let tourStepContent;
 
+  let shortTourStepTitle = "";
+
   // determining if book promotion should be shown (not for intro text and based on user config)
   let showBookPromotion = !props.user || props.user.showBookRecommendations;
   // getting result item to render given current section and element index
@@ -466,10 +473,13 @@ const TourView = props => {
   if (resultItem.type === "sectionIntroText") {
     // building step from section intro
     [tourStepTitle, tourStepContent] = buildIntroTextTourStep(resultItem);
+    shortTourStepTitle = resultItem.title;
 
     // not showing book promotion for intro text
     showBookPromotion = false;
   } else {
+    shortTourStepTitle = resultItem.name;
+
     // no compare result
     if (
       !compareTourData ||
@@ -530,6 +540,10 @@ const TourView = props => {
           <TourOverViewBackButton
             imageIcon={iconBackPrimary}
             onClick={() => handleBackClick()}
+          />
+          <TourOverViewMobileStep
+            tourStepTitle={shortTourStepTitle}
+            onClick={scrollToTop}
           />
           <TourOverviewSteps horizontal>
             {tourData.map((tourSection, tourSectionIndex) => (
