@@ -50,7 +50,7 @@ const ResultTableRowStyled = styled.div`
   left and right padding for row to be aligned with others*/
   padding: ${props =>
     `15px ${props.highlighted ? "8px" : "12px"} 15px ${
-      props.highlighted ? "20px" : "24px"
+      props.highlighted ? "8px" : "12px"
     }`};
   border: ${props =>
     props.highlighted ? `solid ${props.theme.white} 4px` : "none"};
@@ -69,6 +69,9 @@ const ContentColumn = styled.div`
   This container is used to wrap results on low resolutions*/
   display: flex;
   flex-direction: row;
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    flex-direction: column;
+  }
   flex-basis: 100%;
   /* vertically centering all items */
   align-items: center;
@@ -79,22 +82,19 @@ const ContentColumn = styled.div`
 
 // element holding the name of the result
 const NameColumn = styled.div`
-  /* 40% of the width */
-  flex-basis: 40%;
-
-  /* allow it to grow in case other elements flow to next row. E.g. 
-  content results flow to next line: we want this to take up 100% of the width */
-  flex-grow: 1;
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    width: 100%;
+  }
+  flex-grow: 4;
 `;
 
 /* container holding all results (might be multiple ones). This container is needed as we
 don't want results to be wrapped independently = results on different rows */
 const ResultContainer = styled.div`
   /* 60% of width which is then split up between all results */
-  flex-basis: 60%;
 
   /* allow container to grow */
-  flex-grow: 1;
+  flex-grow: 6;
 
   /* container is row in itself of all results */
   display: flex;

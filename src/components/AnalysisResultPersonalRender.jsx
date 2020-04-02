@@ -26,6 +26,8 @@ import NameInputDialog from "./dialogs/NameInputDialog";
 import Footer from "./Footer";
 import CreditsBuyModal from "./CreditsBuyModal";
 
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
+
 import {
   PERSONAL_RESULT_CONFIGURATION_DEFAULT,
   PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
@@ -48,6 +50,9 @@ const ContentArea = styled.div`
 
 const ResultContent = styled.div`
   margin-right: 50px;
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    margin-right: 30px;
+  }
   margin-left: 30px;
   width: 100%;
 `;

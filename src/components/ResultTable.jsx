@@ -39,7 +39,7 @@ const ResultWatermark = styled.h3`
 const TableCaption = styled.div`
   caption-side: top;
   text-transform: uppercase;
-  margin-left: 24px;
+  margin-left: 12px;
   margin-bottom: 4px;
   font-size: 20px;
   font-weight: 600;
