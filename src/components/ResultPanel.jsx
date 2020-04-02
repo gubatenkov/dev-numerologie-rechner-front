@@ -22,7 +22,10 @@ const PanelContainer = styled.div`
 const PanelHeader = styled.div`
   /* configuring grid with 3 columns: left action (button), right action (button) amd cemter element with title */
   display: grid;
-  grid-template-columns: 40px auto 40px;
+
+  @media (min-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    grid-template-columns: 40px auto 40px;
+  }
 
   /* aligning items at the end (=bottom) so they align at the bottom*/
   align-items: end;
@@ -64,11 +67,13 @@ const PanelTitle = styled.div`
   text-align: center;
 
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  white-space: wrap;
+  @media (min-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    text-overflow: ellipsis;
+  }
 
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    font-size: 32px;
+    font-size: 24px;
     line-height: 42px;
   }
 `;

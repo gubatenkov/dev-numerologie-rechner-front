@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
-import _ from "lodash";
+// import _ from "lodash";
 import ToastNotifications from "cogo-toast";
 
 import LoadingIndicator from "./LoadingIndicator";
@@ -18,7 +18,6 @@ import { OVERALL_INTRO_KEY } from "../utils/Constants";
 import { getUserAuthData } from "../utils/AuthUtils";
 import { createPDFFromAnalysisResult } from "../pdf/PdfBuilder";
 import {
-  currentUserQuery,
   buildPersonalAnalysisByIdQuery,
   introTextQuery
 } from "../graphql/Queries";
