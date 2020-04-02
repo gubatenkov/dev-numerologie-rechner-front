@@ -157,7 +157,6 @@ class UserHome extends Component {
               groups={this.props.data.currentUser.groups}
               analyses={this.props.data.analyses}
               credits={this.props.data.currentUser.credits}
-              onInsufficientCredits={this.toggleBuyModal}
               onUsedCredit={this.handleUsedCredit}
               resultConfiguration={
                 this.props.data.currentUser.resultConfiguration

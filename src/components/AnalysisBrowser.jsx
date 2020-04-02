@@ -43,6 +43,7 @@ import {
   ActionToggleIcon,
   AddToggleIcon
 } from "./Dropdowns/DropdownMenuAddUtils";
+import { useBuyModal } from "../contexts/BuyModalContext";
 
 const AnalysisBrowser = props => {
   // declaring state variables
@@ -69,6 +70,8 @@ const AnalysisBrowser = props => {
   const [activeKey, setActiveKey] = useState(
     props.groups && props.groups.length > 0 ? props.groups[0].id : undefined
   );
+
+  const buyModal = useBuyModal();
 
   /**
    * handler for the creation of a group
@@ -329,14 +332,14 @@ const AnalysisBrowser = props => {
    * @param {string} type type of the credit to be used (e.g. long and short)
    */
   const handleOnUseCredit = (analysisId, type) => {
-    const { credits, onInsufficientCredits } = props;
+    const { credits } = props;
     const filtered = credits.filter(c => c.type === type);
     if (filtered.length === 1 && filtered[0].total > 0) {
       // opening confirm dialog and storing credits to be used
       setConfirmUseCreditDialogOpen(true);
       setCreditToBeUsed({ analysisId, type });
     } else {
-      onInsufficientCredits();
+      buyModal.setIsOpen(true);
     }
   };
 
