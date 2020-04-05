@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react"
+import PropTypes from "prop-types"
+import styled from "styled-components"
 
 // importing threshold to switch to mobile optimized layout
-import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants"
 
 // container for navigation
 const ContentSidebar = styled.div`
@@ -20,7 +20,7 @@ const ContentSidebar = styled.div`
     /* hiding whole sidebar on phones */
     display: none;
   }
-`;
+`
 
 // title of the sidebar
 const ContentTitel = styled.div`
@@ -32,7 +32,7 @@ const ContentTitel = styled.div`
   margin-bottom: 20px;
   font-family: ${props => props.theme.fontFamily};
   color: ${props => props.theme.darkGrey};
-`;
+`
 
 // container for items
 const ContentItemContainer = styled.div`
@@ -46,7 +46,7 @@ const ContentItemContainer = styled.div`
   > * + * {
     margin-top: 24px;
   }
-`;
+`
 
 // an content item shown in the sidebar
 const ContentItem = styled.div`
@@ -58,7 +58,7 @@ const ContentItem = styled.div`
   font-family: ${props => props.theme.fontFamily};
 
   cursor: pointer;
-`;
+`
 
 // component displaying table of contents and navigation at the left hand side
 const ContentNavigation = props => {
@@ -66,7 +66,7 @@ const ContentNavigation = props => {
   const [
     lastActiveContentSectionIndex,
     setLastActiveContentSectionIndex
-  ] = useState(0);
+  ] = useState(0)
 
   // adding and removing listeners to adapt section highlighting
   useEffect(() => {
@@ -76,59 +76,59 @@ const ContentNavigation = props => {
      */
     const checkIfSectionInViewPort = stepAnchor => {
       // getting item from DOM
-      const domElement = document.getElementById(stepAnchor);
+      const domElement = document.getElementById(stepAnchor)
 
       // if item is presnet, checkinf if in viewport
       if (domElement) {
         // in viewport = bottom is visible
-        const elementBottomPosition = domElement.getBoundingClientRect().bottom;
+        const elementBottomPosition = domElement.getBoundingClientRect().bottom
 
         // calculating if in viewport
-        return elementBottomPosition < window.innerHeight;
+        return elementBottomPosition < window.innerHeight
       }
       // section is not in view
-      return false;
-    };
+      return false
+    }
 
     /**
      * checks for the last section currently visible and sets the state variable to reflect the index
      */
     const updateSectionHighlighting = () => {
       // assigning anchors
-      const sectionAnchors = props.contentItems.map(item => item.name);
+      const sectionAnchors = props.contentItems.map(item => item.name)
 
       // finding last shown anchor of anchors in viewport from back to front
       const lastAnchorIndexInView = sectionAnchors
         .reverse()
-        .findIndex(anchor => checkIfSectionInViewPort(anchor));
+        .findIndex(anchor => checkIfSectionInViewPort(anchor))
 
       // if any anchor in view => updating index of last anchor in view
       if (lastAnchorIndexInView > -1) {
         // note: as used reverse before => we need to transform the index to: last index - found index
         setLastActiveContentSectionIndex(
           sectionAnchors.length - 1 - lastAnchorIndexInView
-        );
+        )
       }
-    };
+    }
 
     // if component is supposed to self adapt to visible content -> adding scroll listener
     if (props.autoAdapt) {
-      window.addEventListener("scroll", updateSectionHighlighting, false);
-      window.addEventListener("resize", updateSectionHighlighting, false);
+      window.addEventListener("scroll", updateSectionHighlighting, false)
+      window.addEventListener("resize", updateSectionHighlighting, false)
     }
 
     // calling initially
-    updateSectionHighlighting();
+    updateSectionHighlighting()
 
     // returning cleanup code
     return () => {
       // if component is supposed to self adapt to visible content -> adding scroll listener
       if (props.autoAdapt) {
-        window.removeEventListener("scroll", updateSectionHighlighting, false);
-        window.removeEventListener("resize", updateSectionHighlighting, false);
+        window.removeEventListener("scroll", updateSectionHighlighting, false)
+        window.removeEventListener("resize", updateSectionHighlighting, false)
       }
-    };
-  }, [props.autoAdapt, props.contentItems]);
+    }
+  }, [props.autoAdapt, props.contentItems])
 
   // returning list of sections with nested list of items
   // NOTE!! container div is needed for positio sticky to work
@@ -149,8 +149,8 @@ const ContentNavigation = props => {
         </ContentItemContainer>
       </ContentSidebar>
     </div>
-  );
-};
+  )
+}
 
 // adding proptypes
 ContentNavigation.propTypes = {
@@ -166,6 +166,6 @@ ContentNavigation.propTypes = {
     })
   ).isRequired,
   onItemClick: PropTypes.func
-};
+}
 
-export default ContentNavigation;
+export default ContentNavigation
