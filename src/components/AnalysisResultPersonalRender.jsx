@@ -25,6 +25,7 @@ import IconButton from "./Buttons/IconButton";
 import NameInputDialog from "./dialogs/NameInputDialog";
 import Footer from "./Footer";
 import CreditsBuyModal from "./CreditsBuyModal";
+import AnalysisAutoSave from "./dialogs/AnalysisAutoSave";
 
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
@@ -64,6 +65,8 @@ const AnalysisResultPersonalRender = props => {
   // getting relevant parameters from props
   const { user } = props;
   const { resultConfigurationId } = props.match.params;
+
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   // determining configuration for result
   // 3) if no user and param set => using default
@@ -297,7 +300,21 @@ const AnalysisResultPersonalRender = props => {
   // a) analysis => display
   // b) analysis result => display result
   // c) compare result => the compare result for a different name (if present)
-  const { personalAnalysisResult, personalAnalysisCompareResult } = props;
+  const {
+    personalAnalysisResult,
+    personalAnalysisCompareResult,
+    match: {
+      params: { analysisId }
+    }
+  } = props;
+
+  const handleClose = () => {
+    if (analysisId) {
+      props.history.push("/userHome");
+    } else {
+      setShowSaveModal(true);
+    }
+  };
 
   // render table, table shows spinner
   return (
@@ -305,7 +322,7 @@ const AnalysisResultPersonalRender = props => {
       <NavigationBar
         leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
         leftButtonOnClick={
-          isTourOpen ? () => setIsTourOpen(false) : () => props.history.goBack()
+          isTourOpen ? () => setIsTourOpen(false) : () => handleClose()
         }
       />
       {/* displaying content if tour is not open */}
@@ -497,6 +514,12 @@ const AnalysisResultPersonalRender = props => {
         }}
       />
       <CreditsBuyModal />
+      <AnalysisAutoSave
+        onAction={handleSaveAnalysis}
+        isOpen={showSaveModal}
+        onCancel={() => props.history.push("/userHome")}
+        onClose={() => setShowSaveModal(false)}
+      />
       {!isTourOpen && <Footer />}
     </MainContainer>
   );
