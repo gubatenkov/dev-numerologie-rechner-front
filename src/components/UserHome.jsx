@@ -1,25 +1,25 @@
-import React, { Component } from "react"
-import PropTypes from "prop-types"
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import { withRouter, Redirect } from "react-router-dom"
-import { graphql } from "react-apollo"
-import * as compose from "lodash.flowright"
-import ToastNotifications from "cogo-toast"
+import { withRouter, Redirect } from "react-router-dom";
+import { graphql } from "react-apollo";
+import * as compose from "lodash.flowright";
+import ToastNotifications from "cogo-toast";
 
-import "../styles/UserHome.scss"
+import "../styles/UserHome.scss";
 
-import NavigationBar from "./NavigationBar"
-import AnalysisBrowser from "./AnalysisBrowser"
-import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog"
-import LoadingIndicator from "./LoadingIndicator"
-import CreditsBuyModal from "./CreditsBuyModal"
-import Footer from "./Footer"
+import NavigationBar from "./NavigationBar";
+import AnalysisBrowser from "./AnalysisBrowser";
+import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
+import LoadingIndicator from "./LoadingIndicator";
+import CreditsBuyModal from "./CreditsBuyModal";
+import Footer from "./Footer";
 
-import { currentUserQuery } from "../graphql/Queries"
-import { saveAnalysisMutation } from "../graphql/Mutations"
-import MainContainer from "./MainContainer"
-import CreditsOverview from "./CreditsOverview"
-const SAVE_ANALYSIS_COMMAND = "saveAnalysis"
+import { currentUserQuery } from "../graphql/Queries";
+import { saveAnalysisMutation } from "../graphql/Mutations";
+import MainContainer from "./MainContainer";
+import CreditsOverview from "./CreditsOverview";
+const SAVE_ANALYSIS_COMMAND = "saveAnalysis";
 
 /**
  * Home screen of the user displaying analyses, groups and credits
@@ -29,21 +29,21 @@ class UserHome extends Component {
    * default constructor
    */
   constructor(props) {
-    super(props)
+    super(props);
 
     // setting initial state
     this.state = {
       saveDialogOpen:
         this.props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND,
       loading: false
-    }
+    };
   }
 
   handleUsedCredit = () => {
     if (this.props.data && this.props.data.refetch) {
-      this.props.data.refetch()
+      this.props.data.refetch();
     }
-  }
+  };
 
   /**
    * saves the analysis passed to user home
@@ -54,24 +54,24 @@ class UserHome extends Component {
     // decoding url param values
     const firstNames = decodeURIComponent(
       this.props.computedMatch.params.firstNames
-    )
+    );
     const lastNames = decodeURIComponent(
       this.props.computedMatch.params.lastNames
-    )
+    );
     const dateOfBirth = decodeURIComponent(
       this.props.computedMatch.params.dateOfBirth
-    )
+    );
 
     // one or more names?
-    let nameInputs = []
+    let nameInputs = [];
     if (lastNames.split(",").length > 1) {
-      const firstNamesArray = firstNames.split(",")
-      const lastNamesArray = lastNames.split(",")
+      const firstNamesArray = firstNames.split(",");
+      const lastNamesArray = lastNames.split(",");
       nameInputs = firstNamesArray.map((item, index) => ({
         firstNames: item,
         lastName: lastNamesArray[index],
         dateOfBirth
-      }))
+      }));
     } else {
       nameInputs = [
         {
@@ -79,7 +79,7 @@ class UserHome extends Component {
           lastName: lastNames,
           dateOfBirth
         }
-      ]
+      ];
     }
 
     try {
@@ -96,27 +96,27 @@ class UserHome extends Component {
         //     data.analyses.push(saveAnalysis);
         //     store.writeQuery({ query: currentUserQuery, data });
         // }
-      })
-      this.setState({ loading: false })
+      });
+      this.setState({ loading: false });
 
       // redirecting to user home
-      this.props.history.push("/userHome")
+      this.props.history.push("/userHome");
 
       // sending notification to user
       ToastNotifications.success(
         `Die Analyse ${name} wurde erfolgreich erstellt.`,
         { position: "top-right" }
-      )
+      );
 
       // graphql ignores refetches if the same call is already pending, therefore we wait 2sec (randomly) and continue with a refetch
       setTimeout(() => {
-        this.props.data.refetch()
-      }, 2000)
+        this.props.data.refetch();
+      }, 2000);
     } catch (error) {
       // informing user of error
       ToastNotifications.error("Analyse konnte nicht gespreichert werden.", {
         position: "top-right"
-      })
+      });
     }
   }
 
@@ -125,13 +125,13 @@ class UserHome extends Component {
    */
   render() {
     if (!this.props.data.loading && this.props.data.error) {
-      console.log("GQL error")
-      console.log(this.props.data.error)
-      return <Redirect to="/login" />
+      console.log("GQL error");
+      console.log(this.props.data.error);
+      return <Redirect to="/login" />;
     }
 
     if (this.props.error) {
-      console.log(this.props.error)
+      console.log(this.props.error);
     }
 
     if (
@@ -139,7 +139,7 @@ class UserHome extends Component {
       !this.props.data ||
       !this.props.data.currentUser
     ) {
-      return <LoadingIndicator text="Lade..." />
+      return <LoadingIndicator text="Lade..." />;
     }
 
     return (
@@ -162,7 +162,7 @@ class UserHome extends Component {
                 this.props.data.currentUser.resultConfiguration
               }
               onRefetch={() => {
-                this.props.data.refetch()
+                this.props.data.refetch();
               }}
             />
             {/* We will hide Ads at the beginning */}
@@ -181,41 +181,41 @@ class UserHome extends Component {
             // decoding url param values
             const firstNames = decodeURIComponent(
               this.props.computedMatch.params.firstNames
-            )
+            );
             const lastNames = decodeURIComponent(
               this.props.computedMatch.params.lastNames
-            )
+            );
             const dateOfBirth = decodeURIComponent(
               this.props.computedMatch.params.dateOfBirth
-            )
+            );
 
             // constructing name for analysis
-            let analysisName
+            let analysisName;
             if (lastNames.split(",").length > 1) {
               // gettin names
-              const firstName = firstNames.split(",")[0]
-              const firstNameComfort = firstNames.split(",")[1]
-              const lastName = lastNames.split(",")[0]
-              const lastNameComfort = lastNames.split(",")[1]
+              const firstName = firstNames.split(",")[0];
+              const firstNameComfort = firstNames.split(",")[1];
+              const lastName = lastNames.split(",")[0];
+              const lastNameComfort = lastNames.split(",")[1];
 
               // constructing name
-              analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`
+              analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
             } else {
               // constructing name
-              analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`
+              analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
             }
 
             // saving analysis
-            this.saveAnalysis(analysisName, group.id)
+            this.saveAnalysis(analysisName, group.id);
             // hiding dialog
-            this.setState({ saveDialogOpen: false, loading: true })
+            this.setState({ saveDialogOpen: false, loading: true });
           }}
           groups={this.props.data.currentUser.groups}
         />
         <CreditsBuyModal />
         <Footer />
       </MainContainer>
-    )
+    );
   }
 }
 
@@ -233,9 +233,9 @@ UserHome.propTypes = {
     })
   }).isRequired,
   saveAnalysis: PropTypes.func.isRequired
-}
+};
 
 export default compose(
   graphql(currentUserQuery),
   graphql(saveAnalysisMutation, { name: "saveAnalysis" })
-)(withRouter(UserHome))
+)(withRouter(UserHome));
