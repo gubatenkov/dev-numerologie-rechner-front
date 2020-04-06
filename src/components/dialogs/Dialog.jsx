@@ -8,6 +8,7 @@ class Dialog extends Component {
     isOpen: PropTypes.bool,
     onAction: PropTypes.func,
     onClose: PropTypes.func,
+    onCancel: PropTypes.func,
     title: PropTypes.string.isRequired,
     cancelTitle: PropTypes.string,
     actionTitle: PropTypes.string
@@ -16,6 +17,7 @@ class Dialog extends Component {
   static defaultProps = {
     isOpen: false,
     onAction: () => {},
+    onCancel: null,
     onClose: () => {},
     cancelTitle: null,
     actionTitle: null
@@ -73,7 +75,9 @@ class Dialog extends Component {
                 type="button"
                 className="btn btn-default"
                 data-dismiss="modal"
-                onClick={this.props.onClose}
+                onClick={
+                  this.props.onCancel ? this.props.onCancel : this.props.onClose
+                }
               >
                 {this.props.cancelTitle}
               </button>
