@@ -35,7 +35,8 @@ const AnalysisListEntry = ({
   onBuyShortPdfClicked,
   onLongPdfClicked,
   onBuyLongPdfClicked,
-  onAnalysisDelete
+  onAnalysisDelete,
+  credits
 }) => {
   const [hasLong, setHasLong] = useState(
     analysis.usedCreditTypes.includes(LONG_TYPE)
@@ -48,6 +49,24 @@ const AnalysisListEntry = ({
     setHasLong(analysis.usedCreditTypes.includes(LONG_TYPE));
     setHasShort(analysis.usedCreditTypes.includes(SHORT_TYPE));
   }, [analysis]);
+
+  const hasUnusedCredits = type => {
+    const creditType = credits.find(credit => credit.type === type);
+
+    if (!creditType) {
+      return false;
+    }
+
+    return creditType.total > 0;
+  };
+
+  const hasUnusedShortCredits = () => {
+    return hasUnusedCredits("persoenlichkeit_kurz");
+  };
+
+  const hasUnusedLongCredits = () => {
+    return hasUnusedCredits("persoenlichkeit_lang");
+  };
 
   const lifeNumbers = analysis.personalAnalysisResults
     .filter(result => result.lz)
@@ -74,7 +93,10 @@ const AnalysisListEntry = ({
             </NavigationDropdownMenuItem>
           ) : (
             <NavigationDropdownMenuItem onClick={onBuyShortPdfClicked}>
-              <img src={shortPdfIcon} alt="" /> Kurzes PDF kaufen
+              <img src={shortPdfIcon} alt="" />{" "}
+              {hasUnusedShortCredits()
+                ? "Kurzes PDF einlösen"
+                : "Kurzes PDF kaufen"}
             </NavigationDropdownMenuItem>
           )}
           {/* Long Pdfs */}
@@ -84,7 +106,10 @@ const AnalysisListEntry = ({
             </NavigationDropdownMenuItem>
           ) : (
             <NavigationDropdownMenuItem onClick={onBuyLongPdfClicked}>
-              <img src={longPdfIcon} alt="" /> Langes PDF kaufen
+              <img src={longPdfIcon} alt="" />{" "}
+              {hasUnusedLongCredits()
+                ? "Langes PDF einlösen"
+                : "Langes PDF kaufen"}
             </NavigationDropdownMenuItem>
           )}
         </NavigationDropdownMenu>

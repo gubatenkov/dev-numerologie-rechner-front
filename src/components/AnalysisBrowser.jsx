@@ -448,6 +448,7 @@ const AnalysisBrowser = props => {
                     <AnalysisListEntry
                       key={analysis.id}
                       analysis={analysis}
+                      credits={props.credits}
                       onAnalysisDelete={ev => {
                         setAnalysisToBeDeleted(analysis);
                         setConfirmAnalysisDeletionDialogOpen(true);
