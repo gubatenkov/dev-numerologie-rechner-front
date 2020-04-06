@@ -92,38 +92,29 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-let isAuthenticating = false;
-
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.map(async ({ message, locations, path }) => {
-      if (message === "User not authenticated" && !isAuthenticating) {
-        isAuthenticating = true;
-        try {
-          // Useful code for future jwt refresh token implementation
+      if (message === "User not authenticated") {
+        // Useful code for future jwt refresh token implementation
 
-          // const { token } = getUserAuthData();
-          // // Token is set if user was already logged in once
-          // if (token) {
-          //   const response = await postJsonData("/login", {
-          //     email: "useremail", // from localstorage
-          //     password: "userPwd" // from localstorage
-          //   }); // or create a /refresh route
-          //   setUserAuthData({
-          //     email: "useremail",
-          //     token: response.token
-          //   });
+        // const { token } = getUserAuthData();
+        // // Token is set if user was already logged in once
+        // if (token) {
+        //   const response = await postJsonData("/login", {
+        //     email: "useremail", // from localstorage
+        //     password: "userPwd" // from localstorage
+        //   }); // or create a /refresh route
+        //   setUserAuthData({
+        //     email: "useremail",
+        //     token: response.token
+        //   });
 
-          //   window.location.reload();
-          // }
+        //   window.location.reload();
+        // }
 
-          deleteUserAuthData();
-          window.location.href = "/login";
-        } catch (error) {
-          isAuthenticating = false;
-          // Redirect to login
-        }
-        isAuthenticating = false;
+        deleteUserAuthData();
+        window.location.href = "/login";
       }
     });
   }
