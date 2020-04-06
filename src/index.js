@@ -19,6 +19,7 @@ import { ApolloProvider as ApolloHooksProvider } from "@apollo/react-hooks";
 
 import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
+import { onError } from "apollo-link-error";
 import {
   InMemoryCache,
   IntrospectionFragmentMatcher
@@ -41,11 +42,16 @@ import UserHome from "./components/UserHome";
 import PrivateRoute from "./utils/routing/PrivateRoute";
 
 import registerServiceWorker from "./utils/registerServiceWorker";
-import { isUserAuthenticated, getUserAuthData } from "./utils/AuthUtils";
+import {
+  isUserAuthenticated,
+  getUserAuthData,
+  deleteUserAuthData
+} from "./utils/AuthUtils";
 
 import { GRAPHQL_ENDPOINT } from "./utils/Configuration";
 import UserProfile from "./components/UserProfile";
 import { BuyModalProvider } from "./contexts/BuyModalContext";
+
 // defining UI themes
 const lightTheme = {
   primary: "#01b2d4",
@@ -86,12 +92,49 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-// creating http link
+let isAuthenticating = false;
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.map(async ({ message, locations, path }) => {
+      if (message === "User not authenticated" && !isAuthenticating) {
+        isAuthenticating = true;
+        try {
+          // Useful code for future jwt refresh token implementation
+
+          // const { token } = getUserAuthData();
+          // // Token is set if user was already logged in once
+          // if (token) {
+          //   const response = await postJsonData("/login", {
+          //     email: "useremail", // from localstorage
+          //     password: "userPwd" // from localstorage
+          //   }); // or create a /refresh route
+          //   setUserAuthData({
+          //     email: "useremail",
+          //     token: response.token
+          //   });
+
+          //   window.location.reload();
+          // }
+
+          deleteUserAuthData();
+          window.location.href = "/login";
+        } catch (error) {
+          isAuthenticating = false;
+          // Redirect to login
+        }
+        isAuthenticating = false;
+      }
+    });
+  }
+
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
+
 const httpLink = createHttpLink({ uri: GRAPHQL_ENDPOINT });
 
-// creating client for graphQL connection
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(errorLink).concat(httpLink),
   cache: new InMemoryCache({
     fragmentMatcher
   }),
