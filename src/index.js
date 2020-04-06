@@ -98,9 +98,12 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       if (message === "User not authenticated") {
         // Useful code for future jwt refresh token implementation
 
-        // const { token } = getUserAuthData();
-        // // Token is set if user was already logged in once
-        // if (token) {
+        const { token } = getUserAuthData();
+        // Token is set if user was already logged in once
+        if (token) {
+          deleteUserAuthData();
+          window.location.href = "/login";
+        }
         //   const response = await postJsonData("/login", {
         //     email: "useremail", // from localstorage
         //     password: "userPwd" // from localstorage
@@ -112,9 +115,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
         //   window.location.reload();
         // }
-
-        deleteUserAuthData();
-        window.location.href = "/login";
       }
     });
   }
