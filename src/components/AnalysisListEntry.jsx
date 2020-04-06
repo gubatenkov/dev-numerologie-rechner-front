@@ -95,7 +95,7 @@ const AnalysisListEntry = ({
             <NavigationDropdownMenuItem onClick={onBuyShortPdfClicked}>
               <img src={shortPdfIcon} alt="" />{" "}
               {hasUnusedShortCredits()
-                ? "Kurzes PDF einlösen"
+                ? "Kurzes PDF - Credit einlösen"
                 : "Kurzes PDF kaufen"}
             </NavigationDropdownMenuItem>
           )}
@@ -108,7 +108,7 @@ const AnalysisListEntry = ({
             <NavigationDropdownMenuItem onClick={onBuyLongPdfClicked}>
               <img src={longPdfIcon} alt="" />{" "}
               {hasUnusedLongCredits()
-                ? "Langes PDF einlösen"
+                ? "Langes PDF - Credit einlösen"
                 : "Langes PDF kaufen"}
             </NavigationDropdownMenuItem>
           )}
