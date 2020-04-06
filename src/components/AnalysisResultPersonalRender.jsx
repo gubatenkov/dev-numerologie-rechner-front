@@ -25,7 +25,7 @@ import IconButton from "./Buttons/IconButton";
 import NameInputDialog from "./dialogs/NameInputDialog";
 import Footer from "./Footer";
 import CreditsBuyModal from "./CreditsBuyModal";
-import AnalysisAutoSave from "./dialogs/AnalysisAutoSave";
+import AnalysisAutoSaveDialog from "./dialogs/AnalysisAutoSaveDialog";
 
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
@@ -514,7 +514,7 @@ const AnalysisResultPersonalRender = props => {
         }}
       />
       <CreditsBuyModal />
-      <AnalysisAutoSave
+      <AnalysisAutoSaveDialog
         onAction={handleSaveAnalysis}
         isOpen={showSaveModal}
         onCancel={() => props.history.push("/userHome")}
