@@ -162,7 +162,7 @@ const CreditsBuyModal = props => {
                 die Möglichkeit, folgende Arten von Guthaben zu erwerben:
               </p>
             )}
-          <Table>
+          <Table responsive={true}>
             <thead>
               <tr>
                 <td>Analyseart</td>
