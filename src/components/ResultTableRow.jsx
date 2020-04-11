@@ -12,9 +12,6 @@ import lockIcon from "../images/icon_lock.svg";
 
 import IconButton from "./Buttons/IconButton";
 
-// constants around responsiveness
-import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
-
 // identifiers for results
 import {
   TYPE_ID_NUMBER,
@@ -69,7 +66,9 @@ const ContentColumn = styled.div`
   This container is used to wrap results on low resolutions*/
   display: flex;
   flex-direction: row;
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+
+  justify-content: space-between;
+  @media (max-width: 945px) {
     flex-direction: column;
   }
   flex-basis: 100%;
@@ -82,38 +81,43 @@ const ContentColumn = styled.div`
 
 // element holding the name of the result
 const NameColumn = styled.div`
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+  @media (max-width: 945px) {
     width: 100%;
   }
-  flex-grow: 4;
+  width: 220px;
 `;
 
 /* container holding all results (might be multiple ones). This container is needed as we
 don't want results to be wrapped independently = results on different rows */
 const ResultContainer = styled.div`
-  /* 60% of width which is then split up between all results */
-
-  /* allow container to grow */
-  flex-grow: 6;
-
   /* container is row in itself of all results */
   display: flex;
+  flex: 1;
+  justify-content: center;
   flex-direction: row;
   align-items: center;
   /* allowing results to wrap on smallest devices*/
   flex-wrap: wrap;
 `;
 
+const NumberResultContainer = styled.div`
+  width: ${props => (props.matrix ? "100%" : "220px")};
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+`;
+
 // element holding the result value (matrix, list or number)
 const ResultColumn = styled.div`
   /* centering horizontally */
-  text-align: center;
 
+  text-align: ${props =>
+    !props.hasCompare ? "center" : props.left ? "right" : "left"};
+  width: ${props => (props.matrix ? "" : "110px")};
   /* results take up equal space in container*/
-  flex-grow: 1;
 
   /* padding results to make sure that two elements next to each other can be distinguished */
-  padding: 5px;
+  margin-left: ${props => (props.left ? "0" : "12")}px;
 `;
 
 // element to the very right holidng action button
@@ -141,7 +145,7 @@ const MatrixTable = styled.table`
   border-style: hidden;
 
   /* on mobile => making matrix and font size smaller*/
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+  @media (max-width: 1167px) {
     height: 114px;
     width: 114px;
     font-size: 14px;
@@ -162,7 +166,7 @@ const MatrixCell = styled.td`
   border: solid ${props => props.theme.matrixBorderGrey} 1px;
 
   /* on mobile => making cells smaller*/
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+  @media (max-width: 1167px) {
     height: 38px;
     width: 38px;
   }
@@ -182,7 +186,7 @@ const MatrixContainer = styled.div`
   margin: 12px auto 12px auto;
 
   /* on mobile => making container same size as smaller matrix */
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+  @media (max-width: 1167px) {
     height: 116px;
     width: 116px;
   }
@@ -201,9 +205,9 @@ const RowIconButton = styled(IconButton)`
   }
 `;
 
-const ResultColumStyled = styled(ResultColumn)`
-  display: "block";
-`;
+// const ResultColumStyled = styled(ResultColumn)`
+//   display: "block";
+// `;
 
 /**
  * row rendering a single row item of an analysis result
@@ -269,6 +273,25 @@ const ResultTableRow = props => {
     );
   };
 
+  const renderPlaceholderResultMatrix = () => {
+    return (
+      <MatrixContainer>
+        <MatrixTable>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%"
+            }}
+          >
+            -
+          </div>
+        </MatrixTable>
+      </MatrixContainer>
+    );
+  };
+
   /**
    * renders a readable represetnation of the list result item type
    * @param resultItem the received result item of type list
@@ -296,7 +319,11 @@ const ResultTableRow = props => {
   }
 
   if (compareItem && props.notShowCompareItem) {
-    compareContentColumn = "-";
+    if (item.result.type === TYPE_ID_MATRIX) {
+      compareContentColumn = renderPlaceholderResultMatrix();
+    } else {
+      compareContentColumn = "-";
+    }
   }
 
   // determining if the current row is unlocked
@@ -315,42 +342,54 @@ const ResultTableRow = props => {
       <ContentColumn>
         <NameColumn compare={!!compareContentColumn}>{item.name}</NameColumn>
         <ResultContainer>
-          <ResultColumn compare={!!compareContentColumn}>
-            {contentColumn}
-          </ResultColumn>
-          {compareContentColumn && (
-            <ResultColumStyled
-              tabIndex={
-                compareContentColumn === "-" && isMobile ? "0" : undefined
-              }
-              compare={compareContentColumn}
-              onClick={
-                isMobile ? () => setShowTooltip(!showTooltip) : undefined
-              }
-              onBlur={isMobile ? () => setShowTooltip(false) : undefined}
-              onMouseEnter={!isMobile ? () => setShowTooltip(true) : undefined}
-              onMouseLeave={!isMobile ? () => setShowTooltip(false) : undefined}
+          <NumberResultContainer matrix={item.result.type === TYPE_ID_MATRIX}>
+            <ResultColumn
+              left
+              hasCompare={compareContentColumn}
+              matrix={item.result.type === TYPE_ID_MATRIX}
             >
-              <div ref={target}>{compareContentColumn}</div>
-              {compareContentColumn === "-" && (
-                <Overlay
-                  target={target.current}
-                  show={showTooltip}
-                  placement="top"
-                >
-                  {props => (
-                    <Tooltip
-                      id="overlay-example"
-                      {...props}
-                      show={props.show.toString()}
-                    >
-                      Gleich wie linke Zahl
-                    </Tooltip>
-                  )}
-                </Overlay>
-              )}
-            </ResultColumStyled>
-          )}
+              {contentColumn}
+            </ResultColumn>
+            {compareContentColumn && (
+              <ResultColumn
+                hasCompare={compareContentColumn}
+                matrix={item.result.type === TYPE_ID_MATRIX}
+                tabIndex={
+                  compareContentColumn === "-" && isMobile ? "0" : undefined
+                }
+                compare={compareContentColumn}
+                onClick={
+                  isMobile ? () => setShowTooltip(!showTooltip) : undefined
+                }
+                onBlur={isMobile ? () => setShowTooltip(false) : undefined}
+                onMouseEnter={
+                  !isMobile ? () => setShowTooltip(true) : undefined
+                }
+                onMouseLeave={
+                  !isMobile ? () => setShowTooltip(false) : undefined
+                }
+              >
+                <div ref={target}>{compareContentColumn}</div>
+                {compareContentColumn === "-" && (
+                  <Overlay
+                    target={target.current}
+                    show={showTooltip}
+                    placement="top"
+                  >
+                    {props => (
+                      <Tooltip
+                        id="overlay-example"
+                        {...props}
+                        show={props.show.toString()}
+                      >
+                        Gleich wie linke Zahl
+                      </Tooltip>
+                    )}
+                  </Overlay>
+                )}
+              </ResultColumn>
+            )}
+          </NumberResultContainer>
         </ResultContainer>
       </ContentColumn>
 
