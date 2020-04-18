@@ -11,7 +11,7 @@ import MainContainer from "./MainContainer";
 import "../styles/UserProfile.scss";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import CreditsBuyModal from "./CreditsBuyModal";
+import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
 
 function UserProfile() {
   let history = useHistory();
