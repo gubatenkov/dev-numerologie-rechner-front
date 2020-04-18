@@ -12,7 +12,7 @@ import NavigationBar from "./NavigationBar";
 import AnalysisBrowser from "./AnalysisBrowser";
 import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
 import LoadingIndicator from "./LoadingIndicator";
-import CreditsBuyModal from "./CreditsBuyModal";
+import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
 import Footer from "./Footer";
 
 import { currentUserQuery } from "../graphql/Queries";

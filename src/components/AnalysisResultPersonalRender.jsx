@@ -24,7 +24,7 @@ import TextButton from "./Buttons/TextButton";
 import IconButton from "./Buttons/IconButton";
 import NameInputDialog from "./dialogs/NameInputDialog";
 import Footer from "./Footer";
-import CreditsBuyModal from "./CreditsBuyModal";
+import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
 import AnalysisAutoSaveDialog from "./dialogs/AnalysisAutoSaveDialog";
 
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";

@@ -5,13 +5,15 @@ import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
 import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
-import { useBuyModal } from "../contexts/BuyModalContext";
 
-import CreditsBuyWait from "./CreditsBuyWait";
-import { createWindowTokenMutation } from "../graphql/Mutations";
-import { currentUserQuery } from "../graphql/Queries";
+import { useBuyModal } from "../../contexts/BuyModalContext";
+import { CreditsBuyModalBodyMobile } from "./CreditsBuyModalBodyMobile";
+import CreditsBuyWait from "../CreditsBuyWait";
+import { createWindowTokenMutation } from "../../graphql/Mutations";
+import { currentUserQuery } from "../../graphql/Queries";
+import { useMobile } from "../../utils/useMobile";
 
-import "../styles/CreditsBuyModal.css";
+import "../../styles/CreditsBuyModal.css";
 
 // webshop product ids and price of short and long personal analysis credit
 const CREDIT_PERSONAL_SHORT_WPID = 364;
@@ -102,6 +104,7 @@ const CreditsBuyModal = props => {
   const [isWaitingCallback, setWaitingCallback] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const { isOpen, setIsOpen } = useBuyModal();
+  const isMobile = useMobile();
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
@@ -109,6 +112,7 @@ const CreditsBuyModal = props => {
   if (props.data.loading || !props.data || !props.data.currentUser) {
     return null;
   }
+
   const { currentUser } = props.data;
   const initiateBuy = async () => {
     const {
@@ -128,6 +132,71 @@ const CreditsBuyModal = props => {
     setWaitingCallback(false);
     setSuccess(true);
     window.location.reload();
+  };
+
+  const renderMobile = () => {
+    return (
+      <CreditsBuyModalBodyMobile
+        personalLongs={personalLongs}
+        setPersonalLongs={setPersonalLongs}
+        personalShorts={personalShorts}
+        setPersonalShorts={setPersonalShorts}
+        PRICE_PERSONAL_SHORT={PRICE_PERSONAL_SHORT}
+        PRICE_PERSONAL_LONG={PRICE_PERSONAL_LONG}
+        totalPrice={totalPrice}
+      />
+    );
+  };
+
+  const renderTable = () => {
+    return (
+      <Table responsive={true}>
+        <thead>
+          <tr>
+            <td>Analyseart</td>
+            <td>Preis kurze Version</td>
+            <td className="buyModalNumberCell">Anzahl</td>
+            <td>Preis lange Version</td>
+            <td className="buyModalNumberCell">Anzahl</td>
+            <td>Gesamt</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Persönlichkeitsnumeroskop</td>
+            <td>€ {PRICE_PERSONAL_SHORT}</td>
+            <td className="buyModalNumberCell">
+              <input
+                disabled={isSuccess}
+                className="buyModalNumber"
+                type="number"
+                size={2}
+                value={personalShorts}
+                onChange={e => setPersonalShorts(e.target.value)}
+              />
+            </td>
+            <td>€ {PRICE_PERSONAL_LONG}</td>
+            <td className="buyModalNumberCell">
+              <input
+                disabled={isSuccess}
+                className="buyModalNumber"
+                type="number"
+                size={2}
+                value={personalLongs}
+                onChange={e => setPersonalLongs(e.target.value)}
+              />
+            </td>
+            <td>€ {totalPrice}</td>
+          </tr>
+          <tr>
+            <td colSpan={5}>Gesamt</td>
+            <td>
+              <strong>€ {totalPrice}</strong>
+            </td>
+          </tr>
+        </tbody>
+      </Table>
+    );
   };
 
   return (
@@ -162,59 +231,19 @@ const CreditsBuyModal = props => {
                 die Möglichkeit, folgende Arten von Guthaben zu erwerben:
               </p>
             )}
-          <Table responsive={true}>
-            <thead>
-              <tr>
-                <td>Analyseart</td>
-                <td>Preis kurze Version</td>
-                <td className="buyModalNumberCell">Anzahl</td>
-                <td>Preis lange Version</td>
-                <td className="buyModalNumberCell">Anzahl</td>
-                <td>Gesamt</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Persönlichkeitsnumeroskop</td>
-                <td>€ {PRICE_PERSONAL_SHORT}</td>
-                <td className="buyModalNumberCell">
-                  <input
-                    disabled={isSuccess}
-                    className="buyModalNumber"
-                    type="number"
-                    size={2}
-                    value={personalShorts}
-                    onChange={e => setPersonalShorts(e.target.value)}
-                  />
-                </td>
-                <td>€ {PRICE_PERSONAL_LONG}</td>
-                <td className="buyModalNumberCell">
-                  <input
-                    disabled={isSuccess}
-                    className="buyModalNumber"
-                    type="number"
-                    size={2}
-                    value={personalLongs}
-                    onChange={e => setPersonalLongs(e.target.value)}
-                  />
-                </td>
-                <td>€ {totalPrice}</td>
-              </tr>
-              <tr>
-                <td colSpan={5}>Gesamt</td>
-                <td>
-                  <strong>€ {totalPrice}</strong>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
+          {isMobile ? renderMobile() : renderTable()}
+          {/* {renderTable()} */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setIsOpen(false)}>
             Abbrechen
           </Button>
           {!isSuccess && (
-            <Button variant="primary" onClick={initiateBuy}>
+            <Button
+              variant="primary"
+              onClick={initiateBuy}
+              disabled={personalLongs === 0 && personalShorts === 0}
+            >
               Kaufen
             </Button>
           )}
