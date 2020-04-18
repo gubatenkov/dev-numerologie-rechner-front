@@ -11,7 +11,7 @@ import { CreditsBuyModalBodyMobile } from "./CreditsBuyModalBodyMobile";
 import CreditsBuyWait from "../CreditsBuyWait";
 import { createWindowTokenMutation } from "../../graphql/Mutations";
 import { currentUserQuery } from "../../graphql/Queries";
-import { useMobile } from "../../utils/useMobile";
+import { useMediaQuery } from "../../utils/useMediaQuery";
 
 import "../../styles/CreditsBuyModal.css";
 
@@ -104,7 +104,7 @@ const CreditsBuyModal = props => {
   const [isWaitingCallback, setWaitingCallback] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const { isOpen, setIsOpen } = useBuyModal();
-  const isMobile = useMobile();
+  const isMobile = useMediaQuery(1000);
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
@@ -232,7 +232,6 @@ const CreditsBuyModal = props => {
               </p>
             )}
           {isMobile ? renderMobile() : renderTable()}
-          {/* {renderTable()} */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setIsOpen(false)}>
