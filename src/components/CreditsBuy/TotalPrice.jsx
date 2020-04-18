@@ -32,7 +32,7 @@ export const TotalPrice = props => {
 
   return (
     <div style={styles.container}>
-      <p style={styles.text}>Total</p>
+      <p style={styles.text}>Gesamt inkl. MwSt.:</p>
       <p style={styles.text}>€ {totalPrice}</p>
     </div>
   );

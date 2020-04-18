@@ -30,21 +30,14 @@ export const CreditsBuyModalBodyMobile = props => {
 
   return (
     <div style={styles.container}>
-      <p style={styles.text}>- Analyse inkl. aller Kurztexte</p>
-      <p style={styles.text}>
-        - Einleitungen und leicht verständliche Beschreibungen
-      </p>
-      <p style={styles.text}>- PDF zum Druck und Download</p>
-      <p style={styles.text}>- Analyseart Persönlichkeitsnumeroskop</p>
-
       <CreditsSelector
-        name="PDF-Kurzversion"
+        name="Persönlichkeitsnumeroskop kurz"
         value={personalShorts}
         setValue={setPersonalShorts}
         price={PRICE_PERSONAL_SHORT}
       />
       <CreditsSelector
-        name="PDF-Langversion"
+        name="Persönlichkeitsnumeroskop lang"
         value={personalLongs}
         setValue={setPersonalLongs}
         price={PRICE_PERSONAL_LONG}
