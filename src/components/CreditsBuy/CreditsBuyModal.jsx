@@ -54,9 +54,9 @@ function addProductsToShopCart(productIds, windowToken, wpAccessToken) {
   // generating add to cart URL for products
   const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}&remote_login=true&access_token=${wpAccessToken}`;
   // opening and focusing link
-  const shopWindow = window.open(addToCartURI, "_blank");
-  if (shopWindow) {
-    shopWindow.focus();
+  const windowReference = window.open();
+  if (windowReference) {
+    windowReference.location.assign(addToCartURI);
   }
 }
 
