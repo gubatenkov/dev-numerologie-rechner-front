@@ -10,11 +10,11 @@ import { useBuyModal } from "../../contexts/BuyModalContext";
 import { CreditsBuyModalBodyMobile } from "./CreditsBuyModalBodyMobile";
 import CreditsBuyWait from "../CreditsBuyWait";
 import { createWindowTokenMutation } from "../../graphql/Mutations";
-import { currentUserQuery } from "../../graphql/Queries";
 import { useMediaQuery } from "../../utils/useMediaQuery";
 
 import "../../styles/CreditsBuyModal.css";
 import { useEffect } from "react";
+import { useUser } from "../../contexts/UserContext";
 
 // webshop product ids and price of short and long personal analysis credit
 const CREDIT_PERSONAL_SHORT_WPID = 364;
@@ -106,6 +106,7 @@ const CreditsBuyModal = props => {
   const [isSuccess, setSuccess] = useState(false);
   const { isOpen, setIsOpen } = useBuyModal();
   const isMobile = useMediaQuery(1000);
+  const User = useUser();
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
@@ -119,16 +120,15 @@ const CreditsBuyModal = props => {
     }, 0);
   }, [createWindowToken]);
 
-  if (props.data.loading || !props.data || !props.data.currentUser) {
+  if (User.isFetching || !User.user) {
     return null;
   }
 
-  const { currentUser } = props.data;
   const initiateBuy = () => {
     buyCredits(
       personalShorts,
       personalLongs,
-      currentUser.wpAccessToken,
+      User.user.currentUser.wpAccessToken,
       windowToken
     );
     setWaitingCallback(true);
@@ -225,10 +225,11 @@ const CreditsBuyModal = props => {
             </Alert>
           )}
           {!isSuccess &&
-            currentUser &&
-            (!currentUser.credits ||
-              currentUser.credits.length === 0 ||
-              currentUser.credits.filter(c => c.total > 0).length === 0) && (
+            User.user.currentUser &&
+            (!User.user.currentUser.credits ||
+              User.user.currentUser.credits.length === 0 ||
+              User.user.currentUser.credits.filter(c => c.total > 0).length ===
+                0) && (
               <p>
                 Das Erstellen eines Numeroskop-PDFs ist ein kostenpflichtiger
                 Premium Service.
@@ -259,6 +260,5 @@ const CreditsBuyModal = props => {
 };
 
 export default compose(
-  graphql(currentUserQuery),
   graphql(createWindowTokenMutation, { name: "createWindowToken" })
 )(CreditsBuyModal);

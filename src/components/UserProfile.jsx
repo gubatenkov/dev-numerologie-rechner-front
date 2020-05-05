@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { withRouter, useHistory } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
-import { currentUserQuery } from "../graphql/Queries";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import ConfirmUserDeletionDialog from "./dialogs/ConfirmUserDeletionDialog";
 import { deleteUserMutation } from "../graphql/Mutations";
@@ -12,12 +11,13 @@ import "../styles/UserProfile.scss";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
+import { useUser } from "../contexts/UserContext";
 
 function UserProfile() {
   let history = useHistory();
   const [userDeletionDialogOpen, setUserDeletionDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { data } = useQuery(currentUserQuery);
+  const { user } = useUser();
   const [deleteUser] = useMutation(deleteUserMutation);
 
   function handleOnOpenDeletionDialog() {
@@ -47,7 +47,7 @@ function UserProfile() {
     });
   }
 
-  if (loading || !data) {
+  if (loading || !user) {
     return <LoadingIndicator text="Lade..." />;
   } else {
     return (
@@ -75,7 +75,7 @@ function UserProfile() {
                 <h5>Email</h5>
                 <Form.Control
                   type="email"
-                  value={data.currentUser.email}
+                  value={user.currentUser.email}
                   disabled={true}
                 />
               </div>

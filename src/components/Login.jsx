@@ -9,6 +9,7 @@ import LoadingIndicator from "./LoadingIndicator";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 import "../styles/InputForm.css";
 import "../styles/Login.css";
+import { useUser } from "../contexts/UserContext";
 
 // Login form component
 const Login = props => {
@@ -16,7 +17,7 @@ const Login = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { fetchUser } = useUser();
   const loginUser = async () => {
     // getting react router history from props
     const { history } = props;
@@ -37,6 +38,7 @@ const Login = props => {
         email,
         token: response.token
       });
+      fetchUser(); // async call
 
       // redirecting to user home
       history.push("/userHome");

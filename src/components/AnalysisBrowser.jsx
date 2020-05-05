@@ -84,12 +84,6 @@ const AnalysisBrowser = props => {
         variables: {
           groupName
         }
-        // update: (store, { data: { createAnalysisGroup } }) => {
-        //   // getting the query from the local cache and adding group
-        //   const data = store.readQuery({ query: currentUserQuery });
-        //   data.currentUser.groups.push(createAnalysisGroup);
-        //   store.writeQuery({ query: currentUserQuery, data });
-        // }
       });
       // notifying user
       ToastNotifications.success(
@@ -150,25 +144,6 @@ const AnalysisBrowser = props => {
         variables: {
           id
         }
-        // update: (store, { data: { deleteAnalysisGroup } }) => {
-        //   // gettint the query from the local cache and deleting group
-        //   const data = store.readQuery({ query: currentUserQuery });
-        //   // getting index of item to delete
-        //   const groupIndex = _.findIndex(
-        //     data.currentUser.groups,
-        //     item =>
-        //       item.id === deleteAnalysisGroup.id &&
-        //       item.name === deleteAnalysisGroup.name
-        //   );
-
-        //   // deleting item if present
-        //   if (groupIndex > -1) {
-        //     data.currentUser.groups.splice(groupIndex, 1);
-        //   }
-
-        //   // writing object back to cache
-        //   store.writeQuery({ query: currentUserQuery, data });
-        // }
       });
 
       // informing the user
@@ -198,24 +173,6 @@ const AnalysisBrowser = props => {
         variables: {
           id
         }
-        // update: (store, { data: { deleteAnalysis } }) => {
-        //   // getting the query from the local cache and deleting analysis
-        //   const data = store.readQuery({ query: currentUserQuery });
-
-        //   // getting index of item to delete
-        //   const analysisIndex = _.findIndex(
-        //     data.analyses,
-        //     item => item.id === deleteAnalysis.id
-        //   );
-
-        //   // deleting item if present
-        //   if (analysisIndex > -1) {
-        //     data.analyses.splice(analysisIndex, 1);
-        //   }
-
-        //   // writing object back to cache
-        //   store.writeQuery({ query: currentUserQuery, data });
-        // }
       });
 
       // shooting notification informting the user
