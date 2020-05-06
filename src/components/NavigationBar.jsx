@@ -226,6 +226,7 @@ const NavigationBar = props => {
             variables: userSettings
           });
 
+          // just refetch User doesn't update the Analysis Result, so this is easier for now
           window.location.reload();
         });
       }

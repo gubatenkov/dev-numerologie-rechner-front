@@ -38,7 +38,7 @@ const Login = props => {
         email,
         token: response.token
       });
-      fetchUser(); // async call
+      await fetchUser();
 
       // redirecting to user home
       history.push("/userHome");

@@ -1,6 +1,8 @@
 import React, { useContext, createContext, useState } from "react";
 import { currentUserQuery } from "../graphql/Queries";
-import { useQuery, useApolloClient } from "@apollo/react-hooks";
+import { deleteUserMutation } from "../graphql/Mutations";
+import { useApolloClient } from "@apollo/react-hooks";
+import { deleteUserAuthData } from "../utils/AuthUtils";
 import { useEffect } from "react";
 
 const UserContext = createContext({});
@@ -21,30 +23,32 @@ const useUserProvider = () => {
   const [isFetching, setIsFetching] = useState(true);
   const client = useApolloClient();
 
-  const fetchUser = () => {
-    console.log("fetchUser");
+  const fetchUser = async () => {
     setIsFetching(true);
-    client
-      .query({ query: currentUserQuery })
-      .then(response => {
-        setUser(response.data);
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log("error while refetching user:", e.message);
-      })
-      .finally(() => {
-        setIsFetching(false);
-      });
+    try {
+      const response = await client.query({ query: currentUserQuery });
+      setUser(response.data);
+    } catch (e) {
+      console.log("error while refetching user:", e.message);
+    }
+    setIsFetching(false);
+  };
+
+  const deleteUser = async () => {
+    // error should be caught whenever the func is called
+    await client.mutate({ query: deleteUserMutation });
+    deleteUserAuthData();
+    setUser(undefined);
   };
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     user,
     isFetching,
-    fetchUser
+    fetchUser,
+    deleteUser
   };
 };

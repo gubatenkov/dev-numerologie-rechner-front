@@ -116,7 +116,7 @@ const CreditsBuyModal = props => {
       const {
         data: { windowToken }
       } = await createWindowToken();
-      setWindowToken(windowToken);
+      setWindowToken(windowToken.windowToken);
     }, 0);
   }, [createWindowToken]);
 
@@ -134,10 +134,10 @@ const CreditsBuyModal = props => {
     setWaitingCallback(true);
   };
 
-  const handleBuySuccess = () => {
+  const handleBuySuccess = async () => {
+    await User.fetchUser();
     setWaitingCallback(false);
     setSuccess(true);
-    window.location.reload();
   };
 
   const renderMobile = () => {

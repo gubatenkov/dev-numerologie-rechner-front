@@ -321,9 +321,6 @@ const AnalysisBrowser = props => {
         "Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.",
         { position: "top-right" }
       );
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     } catch (error) {
       console.log("Using credit failed");
       console.log(error);
