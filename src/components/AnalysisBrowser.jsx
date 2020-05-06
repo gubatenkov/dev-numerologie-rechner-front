@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
-// import _ from "lodash";
 import ToastNotifications from "cogo-toast";
 
 import LoadingIndicator from "./LoadingIndicator";
@@ -44,10 +43,9 @@ import {
   AddToggleIcon
 } from "./Dropdowns/DropdownMenuAddUtils";
 import { useBuyModal } from "../contexts/BuyModalContext";
+import { useTranslation } from "react-i18next";
 
 const AnalysisBrowser = props => {
-  // declaring state variables
-  //const [expandedIndex, setExpandedIndex] = useState(-1);
   const [
     confirmGroupDeletionDialogOpen,
     setConfirmGroupDeletionDialogOpen
@@ -72,73 +70,51 @@ const AnalysisBrowser = props => {
   );
 
   const buyModal = useBuyModal();
+  const { t } = useTranslation();
 
-  /**
-   * handler for the creation of a group
-   * @param groupName the name of the new group to be created
-   */
   const createGroup = async groupName => {
     try {
-      // performing mutation call to create group
       await props.createGroup({
         variables: {
           groupName
         }
       });
-      // notifying user
       ToastNotifications.success(
         `Die Gruppe ${groupName} wurde erfolgreich erstellt.`,
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      // error occured -> displaying notification
       ToastNotifications.error(error.graphQLErrors[0].message, {
         position: "top-right"
       });
     }
-    // resetting loading
     setLoading(false);
   };
 
-  /**
-   * handler for the rename action of group rows
-   * @param newName the name to be renamed to
-   * @param id the id of the item to renamed
-   */
   const renameGroup = async (newName, id) => {
-    // getting createGroup mutation
     const { renameGroup } = props;
     try {
-      // performing mutation call
       await renameGroup({
         variables: {
           id,
           newName
         }
       });
-      // notifying user
       ToastNotifications.success(
         `Die Gruppe ${newName} wurde erfolgreich umbenannt.`,
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      // error occured -> displaying notification
       ToastNotifications.error("Die Gruppe konnte nicht umbenannt werden", {
         position: "top-right"
       });
     }
-    // resetting loading state
     setLoading(false);
   };
 
-  /**
-   * deletes the group identified by id from the server
-   * @param id: the id of the group to be deleted
-   */
   const deleteGroup = async id => {
-    // deleting group
     try {
       const deletedGroup = await props.deleteGroup({
         variables: {
@@ -146,7 +122,6 @@ const AnalysisBrowser = props => {
         }
       });
 
-      // informing the user
       ToastNotifications.success(
         `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
         { position: "top-right" }
@@ -158,16 +133,10 @@ const AnalysisBrowser = props => {
         position: "top-right"
       });
     }
-    // resetting loading state
     setLoading(false);
   };
 
-  /**
-   * handler for deleting a specific analysis
-   * @param id the id of the analysis to be deleted
-   */
   const deleteAnalysis = async id => {
-    // deleting analysis
     try {
       const deletedAnalysis = await props.deleteAnalysis({
         variables: {
@@ -175,7 +144,6 @@ const AnalysisBrowser = props => {
         }
       });
 
-      // shooting notification informting the user
       ToastNotifications.success(
         `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
         { position: "top-right" }
@@ -186,27 +154,20 @@ const AnalysisBrowser = props => {
         position: "top-right"
       });
     }
-    // resetting loading state
     setLoading(false);
   };
 
-  /**
-   * creates a pdf for the analysis and opens it in a new tab
-   */
   const createAnalysisPdf = async targetAnalysis => {
-    // checking if logged in => otherwise redirecting to login
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
       props.history.push("/login");
       return;
     }
 
-    // setting activity indicator
     setLoading(true);
     setLoadingText("Berechne detaillierte Auswertung und erstelle PDF...");
 
     try {
-      // getting long texts used for pdf (if allowed)
       const result = await props.client.query({
         query: buildPersonalAnalysisByIdQuery(true),
         variables: {
@@ -216,16 +177,13 @@ const AnalysisBrowser = props => {
         }
       });
 
-      // getting user default result configuration
       const resultConfiguration = getConfigurationForId(
         props.resultConfiguration
       );
 
-      // getting section ids to get intro texts for including overall intro text
       const sectionIds = resultConfiguration.map(section => section.name);
       sectionIds.push(OVERALL_INTRO_KEY(props.resultConfiguration));
 
-      // getting intro texts for all sections in configuration
       const { introTexts } = (
         await props.client.query({
           query: introTextQuery,
@@ -237,10 +195,8 @@ const AnalysisBrowser = props => {
         })
       ).data;
 
-      // getting analysis from result
       const { analysis } = result.data;
 
-      // creating pdf and downloading with custom name
       if (analysis.personalAnalysisResults.length > 1) {
         const [
           personalAnalysisResult,
@@ -276,23 +232,15 @@ const AnalysisBrowser = props => {
       console.log("Creating PDF failed");
       console.log(error);
     } finally {
-      // removing loading indicator
       setLoading(false);
       setLoadingText(null);
     }
   };
 
-  /**
-   * handles the spending of a credit = decreases the available credits and associates a given
-   * credit with an analysis
-   * @param {string} analysisId the id of the analysis to spend the credit on
-   * @param {string} type type of the credit to be used (e.g. long and short)
-   */
   const handleOnUseCredit = (analysisId, type) => {
     const { credits } = props;
     const filtered = credits.filter(c => c.type === type);
     if (filtered.length === 1 && filtered[0].total > 0) {
-      // opening confirm dialog and storing credits to be used
       setConfirmUseCreditDialogOpen(true);
       setCreditToBeUsed({ analysisId, type });
     } else {
@@ -300,15 +248,10 @@ const AnalysisBrowser = props => {
     }
   };
 
-  /**
-   * uses a user credit
-   */
   const spendCredit = async () => {
-    // showing loading indicator
     setLoading(true);
     setLoadingText("Ihr Guthaben wird eingelöst...");
     try {
-      // preparing arguments to use credit
       const { analysisId, type } = creditToBeUsed;
       await props.useCredit({
         variables: {
@@ -334,8 +277,6 @@ const AnalysisBrowser = props => {
     }
   };
 
-  // render
-  // determining content of panel based on if there is data or not
   let panelContent = null;
 
   if (props.groups.length > 0) {
@@ -464,12 +405,10 @@ const AnalysisBrowser = props => {
         group={groupToBeDeleted}
         isOpen={confirmGroupDeletionDialogOpen}
         onClose={() => {
-          // clearing to be deleted group and hiding dialog
           setConfirmGroupDeletionDialogOpen(false);
           setGroupToBeDeleted(null);
         }}
         onAction={() => {
-          // hiding dialog, deleting group and clearing to be deleted group
           setConfirmGroupDeletionDialogOpen(false);
           setLoading(true);
           deleteGroup(groupToBeDeleted.id);
@@ -484,7 +423,6 @@ const AnalysisBrowser = props => {
           setAnalysisToBeDeleted(null);
         }}
         onAction={() => {
-          // hiding dialog, deleting analysis and clearing to be deleted group
           setConfirmAnalysisDeletionDialogOpen(false);
           setLoading(true);
           deleteAnalysis(analysisToBeDeleted.id);
@@ -495,10 +433,7 @@ const AnalysisBrowser = props => {
         isOpen={createGroupDialogOpen}
         onClose={() => setCreateGroupDialogOpen(false)}
         onAction={groupName => {
-          // calling handler
           createGroup(groupName);
-
-          // hiding dialog
           setCreateGroupDialogOpen(false);
           setLoading(true);
         }}
@@ -507,17 +442,12 @@ const AnalysisBrowser = props => {
       <RenameGroupDialog
         isOpen={renameGroupDialogOpen}
         onClose={() => {
-          // clearing to be renamed field
           setGroupToBeRenamed(null);
-
-          // hiding dialog
           setRenameGroupDialogOpen(false);
         }}
         onAction={(id, newName) => {
-          // renaming group
           renameGroup(newName, id);
 
-          // hiding dialog
           setRenameGroupDialogOpen(false);
           setLoading(true);
         }}
