@@ -5,6 +5,7 @@ import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
 import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
+import { useTranslation } from "react-i18next";
 
 import { useBuyModal } from "../../contexts/BuyModalContext";
 import { CreditsBuyModalBodyMobile } from "./CreditsBuyModalBodyMobile";
@@ -22,80 +23,7 @@ const CREDIT_PERSONAL_LONG_WPID = 365;
 const PRICE_PERSONAL_SHORT = 29;
 const PRICE_PERSONAL_LONG = 59;
 
-// baseURL of the shop
 const baseUrl = "https://www.bios-shop.eu";
-
-/**
- * Authenticates the user in the woocommerce webshop and redirects to the
- * provided URI after authentication has been successful. NOTE: This is not working
- * yet and therefore was removed for now.
- * @param {*} redirectUri the URI to redirect to after authentication
- * @param {*} wpAccessToken the user wordpress access token to authenticate
- * @param {*} windowToken TBA
- */
-/* function authenticateAndRedirectToUrl(redirectUri, wpAccessToken, windowToken) {
-  const url = `${loginUri}&window_token=${windowToken}&access_token=${wpAccessToken}&redirect_uri=${redirectUri}`;
-  const win = window.open(url, '_blank');
-  win.focus();
-} */
-
-/**
- * Opens a browser window with shop, add the products identified
- * by passed ids to cart and navigate to cart
- * @param {Array} productIds An array of product id strings of all products to add to the cart.
- * e.g. ['42', '42', '55', '63'].
- * @param {String} windowToken A unique token identifying the new shop window. This is used by the shop to match the window
- * with an order number upon completion in the database. So windowToken and wpOrderId will be matched in the db
- * @param {*} wpAccessToken the user wordpress access token to authenticate
- */
-function addProductsToShopCart(productIds, windowToken, wpAccessToken) {
-  // generating string of productIds to add include in the URI
-  const productIDsURI = encodeURIComponent(productIds.join(","));
-
-  // generating add to cart URL for products
-  const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}&remote_login=true&access_token=${wpAccessToken}`;
-  // opening and focusing link
-  const shopWindow = window.open(addToCartURI, "", "_blank");
-  if (shopWindow) {
-    shopWindow.focus();
-  }
-}
-
-/**
- * opens a browser window for the shop and adds the selected credits to the shop
- * @param {Integer} personalShorts Number of short credits to buy in the shop
- * @param {Integer} personalLongs Number of long credits to buy in the shop
- * @param {*} wpAccessToken A wordpress access token to log the user in on the webshop (not yet implemented)
- * @param {*} windowToken A unique window token for the shop to match with an order ID upon completion.
- * Once a purchase is completed, this windowId will be matched with an wpOrderId in the db marking completion
- * of the purchase.
- */
-export function buyCredits(
-  personalShorts = 0,
-  personalLongs = 0,
-  wpAccessToken,
-  windowToken
-) {
-  // getting array of ids for short and long credit products
-  const idsPersonalShorts = Array(parseInt(personalShorts, 10)).fill(
-    CREDIT_PERSONAL_SHORT_WPID
-  );
-  const idsPersonalLongs = Array(parseInt(personalLongs, 10)).fill(
-    CREDIT_PERSONAL_LONG_WPID
-  );
-
-  // constructing array of all product ids
-  const ids = [];
-  if (idsPersonalShorts) {
-    ids.push(...idsPersonalShorts);
-  }
-  if (idsPersonalLongs) {
-    ids.push(...idsPersonalLongs);
-  }
-
-  // opening shop window and adding products to cart
-  addProductsToShopCart(ids, windowToken, wpAccessToken);
-}
 
 const CreditsBuyModal = props => {
   const { createWindowToken } = props;
@@ -107,6 +35,7 @@ const CreditsBuyModal = props => {
   const { isOpen, setIsOpen } = useBuyModal();
   const isMobile = useMediaQuery(1000);
   const User = useUser();
+  const { t } = useTranslation();
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
@@ -122,6 +51,59 @@ const CreditsBuyModal = props => {
 
   if (User.isFetching || !User.user) {
     return null;
+  }
+
+  /**
+   * Opens a browser window with shop, add the products identified
+   * by passed ids to cart and navigate to cart
+   * @param {Array} productIds An array of product id strings of all products to add to the cart.
+   * e.g. ['42', '42', '55', '63'].
+   * @param {String} windowToken A unique token identifying the new shop window. This is used by the shop to match the window
+   * with an order number upon completion in the database. So windowToken and wpOrderId will be matched in the db
+   * @param {*} wpAccessToken the user wordpress access token to authenticate
+   */
+  function addProductsToShopCart(productIds, windowToken, wpAccessToken) {
+    const productIDsURI = encodeURIComponent(productIds.join(","));
+
+    const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}&remote_login=true&access_token=${wpAccessToken}`;
+
+    const shopWindow = window.open(addToCartURI, "", "_blank");
+    if (shopWindow) {
+      shopWindow.focus();
+    }
+  }
+
+  /**
+   * opens a browser window for the shop and adds the selected credits to the shop
+   * @param {Integer} personalShorts Number of short credits to buy in the shop
+   * @param {Integer} personalLongs Number of long credits to buy in the shop
+   * @param {*} wpAccessToken A wordpress access token to log the user in on the webshop (not yet implemented)
+   * @param {*} windowToken A unique window token for the shop to match with an order ID upon completion.
+   * Once a purchase is completed, this windowId will be matched with an wpOrderId in the db marking completion
+   * of the purchase.
+   */
+  function buyCredits(
+    personalShorts = 0,
+    personalLongs = 0,
+    wpAccessToken,
+    windowToken
+  ) {
+    const idsPersonalShorts = Array(parseInt(personalShorts, 10)).fill(
+      CREDIT_PERSONAL_SHORT_WPID
+    );
+    const idsPersonalLongs = Array(parseInt(personalLongs, 10)).fill(
+      CREDIT_PERSONAL_LONG_WPID
+    );
+
+    const ids = [];
+    if (idsPersonalShorts) {
+      ids.push(...idsPersonalShorts);
+    }
+    if (idsPersonalLongs) {
+      ids.push(...idsPersonalLongs);
+    }
+
+    addProductsToShopCart(ids, windowToken, wpAccessToken);
   }
 
   const initiateBuy = () => {
@@ -159,17 +141,17 @@ const CreditsBuyModal = props => {
       <Table responsive={true}>
         <thead>
           <tr>
-            <td>Analyseart</td>
-            <td>Preis kurze Version</td>
-            <td className="buyModalNumberCell">Anzahl</td>
-            <td>Preis lange Version</td>
-            <td className="buyModalNumberCell">Anzahl</td>
-            <td>Gesamt</td>
+            <td>{t("BUY_MODAL.ANALYSIS_TYPE")}</td>
+            <td>{t("BUY_MODAL.SHORT_VERSION_PRICE")}</td>
+            <td className="buyModalNumberCell">{t("BUY_MODAL.AMOUNT")}</td>
+            <td>{t("BUY_MODAL.LONG_VERSION_PRICE")}</td>
+            <td className="buyModalNumberCell">{t("BUY_MODAL.AMOUNT")}</td>
+            <td>{t("BUY_MODAL.TOTAL")}</td>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Persönlichkeitsnumeroskop</td>
+            <td>{t("BUY_MODAL.PERSONALITY_NUMEROLOSCOPE")}</td>
             <td>€ {PRICE_PERSONAL_SHORT}</td>
             <td className="buyModalNumberCell">
               <input
@@ -195,7 +177,7 @@ const CreditsBuyModal = props => {
             <td>€ {totalPrice}</td>
           </tr>
           <tr>
-            <td colSpan={5}>Gesamt</td>
+            <td colSpan={5}>{t("BUY_MODAL.TOTAL")}</td>
             <td>
               <strong>€ {totalPrice}</strong>
             </td>
@@ -215,13 +197,13 @@ const CreditsBuyModal = props => {
       )}
       <Modal show={isOpen} onHide={() => setIsOpen(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Guthaben kaufen</Modal.Title>
+          <Modal.Title>{t("BUY_MODAL.BUY_CREDITS")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isSuccess && (
             <Alert variant="success">
-              <strong>Gratuliere!</strong> Der Guthaben-Kauf war erfolgreich!
-              Sie können dieses Fenster nun schließen.
+              <strong>{t("BUY_MODAL.CONGRATS!")}</strong>
+              {t("BUY_MODAL.SUCCESSFUL_PURCHASE")}
             </Alert>
           )}
           {!isSuccess &&
@@ -231,18 +213,16 @@ const CreditsBuyModal = props => {
               User.user.currentUser.credits.filter(c => c.total > 0).length ===
                 0) && (
               <p>
-                Das Erstellen eines Numeroskop-PDFs ist ein kostenpflichtiger
-                Premium Service.
+                {t("BUY_MODAL.PREMIUM_SERVICE_INFO")}
                 <br />
-                Derzeit haben Sie dafür kein Guthaben zur Verfügung. Sie haben
-                die Möglichkeit, folgende Arten von Guthaben zu erwerben:
+                {t("BUY_MODAL.BUY_OPPORTUNITY_INFO")}
               </p>
             )}
           {isMobile ? renderMobile() : renderTable()}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setIsOpen(false)}>
-            Abbrechen
+            {t("BUY_MODAL.CANCEL")}
           </Button>
           {!isSuccess && (
             <Button
@@ -250,7 +230,7 @@ const CreditsBuyModal = props => {
               onClick={initiateBuy}
               disabled={personalLongs === 0 && personalShorts === 0}
             >
-              Kaufen
+              {t("BUY_MODAL.BUY")}
             </Button>
           )}
         </Modal.Footer>

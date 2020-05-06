@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useTranslation } from "react-i18next";
 import { CreditsSelector } from "./CreditsSelector";
 import { TotalPrice } from "./TotalPrice";
 
@@ -27,17 +27,18 @@ export const CreditsBuyModalBodyMobile = props => {
   } = props;
 
   const styles = useStyles();
+  const { t } = useTranslation();
 
   return (
     <div style={styles.container}>
       <CreditsSelector
-        name="Persönlichkeitsnumeroskop kurz"
+        name={t("BUY_MODAL.PERSONALITY_NUMEROLOSCOPE_SHORT")}
         value={personalShorts}
         setValue={setPersonalShorts}
         price={PRICE_PERSONAL_SHORT}
       />
       <CreditsSelector
-        name="Persönlichkeitsnumeroskop lang"
+        name={t("BUY_MODAL.PERSONALITY_NUMEROLOSCOPE_LONG")}
         value={personalLongs}
         setValue={setPersonalLongs}
         price={PRICE_PERSONAL_LONG}

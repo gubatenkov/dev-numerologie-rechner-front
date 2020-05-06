@@ -1,80 +1,60 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
+import { useEffect, useState } from "react";
 
-/**
- * Dialog to save an analysis
- */
-class CreateGroupDialog extends Component {
-  static propTypes = {
-    groups: PropTypes.arrayOf(PropTypes.string).isRequired,
-    onAction: PropTypes.func
-  };
+const CreateGroupDialog = props => {
+  const { t } = useTranslation();
+  const [groupName, setGroupName] = useState(null);
+  const [groupNameInput, setGroupNameInput] = useState(null);
 
-  static defaultProps = {
-    onAction: () => {}
-  };
-
-  /**
-   * default lifecylce method
-   */
-  componentDidUpdate() {
-    // if rendered and input is there -> focusing
-    if (this.groupNameInput) {
-      this.groupNameInput.focus();
+  useEffect(() => {
+    if (groupNameInput) {
+      groupNameInput.focus();
     }
-  }
+  });
 
-  // member for the group name
-  groupName = null;
-
-  // input ref
-  groupNameInput = null;
-
-  /**
-   * handler for clicks on the create button
-   */
-  handleCreateClick = () => {
+  const handleCreateClick = () => {
     // todo add validation
-    if (this.groupName) {
-      this.props.onAction(this.groupName);
+    if (groupName) {
+      props.onAction(groupName);
     }
   };
 
-  /**
-   * handler for the user changing the name of the new group
-   * @param newGroupName: the new input text to the group name field
-   */
-  handleInputchange = newGroupName => {
-    this.groupName = newGroupName.target.value;
+  const handleInputchange = newGroupName => {
+    setGroupName(newGroupName.target.value);
   };
 
-  /**
-   * default render method
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        onAction={this.handleCreateClick}
-        title="Neue Gruppe erstellen"
-        cancelTitle="Abbrechen"
-        actionTitle="Erstellen"
-      >
-        <p>Bitte geben Sie den Namen der neuen Gruppe an</p>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Neue Gruppe"
-          onChange={this.handleInputchange}
-          ref={ref => {
-            this.groupNameInput = ref;
-          }}
-        />
-      </Dialog>
-    );
-  }
-}
+  return (
+    <Dialog
+      {...props}
+      onAction={handleCreateClick}
+      title={t("DIALOG.CREATE_NEW_GROUP")}
+      cancelTitle={t("DIALOG.CANCEL")}
+      actionTitle={t("DIALOG.CREATE")}
+    >
+      <p>{t("DIALOG.GROUP_NAME")}</p>
+      <input
+        type="text"
+        className="form-control"
+        placeholder={t("DIALOG.NEW_GROUP")}
+        onChange={handleInputchange}
+        ref={ref => {
+          setGroupNameInput(ref);
+        }}
+      />
+    </Dialog>
+  );
+};
+
+CreateGroupDialog.propTypes = {
+  groups: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onAction: PropTypes.func
+};
+
+CreateGroupDialog.defaultProps = {
+  onAction: () => {}
+};
 
 export default CreateGroupDialog;

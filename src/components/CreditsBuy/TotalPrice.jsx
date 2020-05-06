@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const useStyles = () => {
   return {
@@ -27,12 +28,12 @@ const useStyles = () => {
 
 export const TotalPrice = props => {
   const styles = useStyles();
-
+  const { t } = useTranslation();
   const { totalPrice } = props;
 
   return (
     <div style={styles.container}>
-      <p style={styles.text}>Gesamt inkl. MwSt.:</p>
+      <p style={styles.text}>{t("BUY_MODAL.TOTAL_INCL_UST")}</p>
       <p style={styles.text}>€ {totalPrice}</p>
     </div>
   );

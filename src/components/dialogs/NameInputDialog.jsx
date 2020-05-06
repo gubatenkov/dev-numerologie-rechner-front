@@ -1,25 +1,21 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import PropType from "prop-types";
+import { useTranslation } from "react-i18next";
 
-// lib components
 import Modal from "react-bootstrap/Modal";
 import ModalHeader from "react-bootstrap/ModalHeader";
 import ModalBody from "react-bootstrap/ModalBody";
 import ModalFooter from "react-bootstrap/ModalFooter";
 
-// own components
 import TextButton from "../Buttons/TextButton";
 
-// threshold for mobile layout
 import { MOBILE_RESOLUTION_THRESHOLD } from "../../utils/Constants";
 
-// text button block
 const ActionTextButton = styled(TextButton)`
   width: 100%;
 `;
 
-// custom modal
 const NameInputModal = styled(Modal)`
   /* backdrop color => might not be working as bootstrap modal defines as !important*/
   background-color: rgba(50, 50, 50, 0.3) !important;
@@ -33,7 +29,6 @@ const NameInputModal = styled(Modal)`
   }
 `;
 
-// header of dialog
 const NameInputModalHeader = styled(ModalHeader)`
   /* removing bootstrap borders */
   border: none;
@@ -54,7 +49,6 @@ const NameInputModalHeader = styled(ModalHeader)`
   }
 `;
 
-// body of the dialog
 const NameInputModalBody = styled(ModalBody)`
   /* padding to header*/
   margin-top: 8px;
@@ -73,13 +67,11 @@ const NameInputModalBody = styled(ModalBody)`
   }
 `;
 
-// dialog footer with buttons
 const NameInputModalFooter = styled(ModalFooter)`
   /* removing border */
   border: none;
 `;
 
-/* container around input fields for responsiveness */
 const InputFieldContainer = styled.div`
   width: 100%;
   display: flex;
@@ -113,9 +105,9 @@ const InputFieldContainer = styled.div`
   }
 `;
 
-// dialog to change or add names
 const NameInputDialog = props => {
-  // defining state of the dialog
+  const { t } = useTranslation();
+
   const [firstNames, setFirstNames] = useState(props.firstNames);
   const [lastName, setLastName] = useState(props.lastName);
   const [compareFirstNames, setCompareFirstNames] = useState(
@@ -128,36 +120,36 @@ const NameInputDialog = props => {
   return (
     <NameInputModal show={props.show} onHide={props.onHide} centered={true}>
       <NameInputModalHeader closeButton>
-        <h2>Namen vergleichen</h2>
+        <h2>{t("DIALOG.COMPARE_NAME")}</h2>
       </NameInputModalHeader>
       <NameInputModalBody>
-        <p>Geben Sie hier die Namen ein.</p>
-        <h4>Aktueller Name</h4>
+        <p>{t("DIALOG.ENTER_NAME")}</p>
+        <h4>{t("DIALOG.CURRENT_NAME")}</h4>
         <InputFieldContainer>
           <input
             type="text"
-            placeholder={"Vorname(n)"}
+            placeholder={t("DIALOG.FIRSTNAME")}
             value={firstNames}
             onChange={event => setFirstNames(event.target.value)}
           />
           <input
             type="text"
-            placeholder={"Nachname"}
+            placeholder={t("DIALOG.LASTNAME")}
             value={lastName}
             onChange={event => setLastName(event.target.value)}
           />
         </InputFieldContainer>
-        <h4>Vergleichsname</h4>
+        <h4>{t("DIALOG.NAME_TO_COMPARE")}</h4>
         <InputFieldContainer>
           <input
             type="text"
-            placeholder={"Vorname(n)"}
+            placeholder={t("DIALOG.FIRSTNAME")}
             value={compareFirstNames}
             onChange={event => setCompareFirstNames(event.target.value)}
           />
           <input
             type="text"
-            placeholder={"Nachname"}
+            placeholder={t("DIALOG.LASTNAME")}
             value={compareLastName}
             onChange={event => setCompareLastName(event.target.value)}
           />
@@ -165,7 +157,7 @@ const NameInputDialog = props => {
       </NameInputModalBody>
       <NameInputModalFooter>
         <ActionTextButton
-          title="Namen vergleichen"
+          title={t("DIALOG.COMPARE_NAME")}
           primary
           onClick={() =>
             props.onChange(

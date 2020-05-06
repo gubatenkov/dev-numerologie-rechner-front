@@ -1,40 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTyes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
 
-/**
- * dialog that prompts the user to confirm the deletion of an analysis
- */
-class ConfirmAnalysisDeletionDialog extends Component {
-  static propTypes = {
-    analysis: PropTyes.shape({
-      name: PropTyes.string.isRequired
-    })
-  };
+const ConfirmAnalysisDeletionDialog = props => {
+  const { t } = useTranslation();
+  return (
+    <Dialog
+      {...props}
+      title={t("DIALOG.DELETE_ANALYSIS")}
+      cancelTitle={t("DIALOG.CANCEL")}
+      actionTitle={t("DIALOG.DELETE")}
+    >
+      <p>
+        {t("DIALOG.SURE_TO_DELETE_NAME", {
+          name: props.analysis && props.analysis.name
+        })}
+      </p>
+    </Dialog>
+  );
+};
 
-  static defaultProps = {
-    analysis: null
-  };
+ConfirmAnalysisDeletionDialog.propTypes = {
+  analysis: PropTyes.shape({
+    name: PropTyes.string.isRequired
+  })
+};
 
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        title="Analyse löschen"
-        cancelTitle="Abbrechen"
-        actionTitle="Löschen"
-      >
-        <p>
-          {`Sind Sie sicher, dass Sie die Analyse "${this.props.analysis &&
-            this.props.analysis.name}" löschen wollen? `}
-        </p>
-      </Dialog>
-    );
-  }
-}
+ConfirmAnalysisDeletionDialog.defaultProps = {
+  analysis: null
+};
 
 export default ConfirmAnalysisDeletionDialog;

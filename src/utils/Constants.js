@@ -1,8 +1,6 @@
-// key used to obtain intro text for whole analysis result
 export const OVERALL_INTRO_KEY = configurationId =>
   `Einführung_${configurationId.toLowerCase()}`;
 
-// ids of ci colors
 export const CI_COLOR_IDS = {
   RED_ORANGE_YELLOW: "RED_ORANGE_YELLOW",
   RED: "RED",
@@ -17,7 +15,6 @@ export const CI_COLOR_IDS = {
   WHITE: "WHITE"
 };
 
-// used colors (mapping from color ids)
 export const CI_COLORS = {
   RED_ORANGE_YELLOW: "#fb2c2c",
   RED: "#fb2c2c",
@@ -32,12 +29,9 @@ export const CI_COLORS = {
   WHITE: "#FFFFFF"
 };
 
-// identifiers for results
 export const TYPE_ID_NUMBER = "number";
 export const TYPE_ID_LIST = "list";
 export const TYPE_ID_MATRIX = "matrix";
 
-// threshold for switching to the mobile optimized styling
-// this refers to horizontal pixels of the resulotion of the users device
 export const MOBILE_RESOLUTION_THRESHOLD = 767;
 export const MAIN_CONTAINER_MAX_WIDTH = 1440;

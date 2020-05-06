@@ -1,79 +1,57 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
 
-/**
- * Dialog to save an analysis
- */
-class SaveAnalysisDialog extends Component {
-  static propTypes = {
-    groups: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    isOpen: PropTypes.bool,
-    onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
-  };
+const SaveAnalysisDialog = props => {
+  const { t } = useTranslation();
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
-  static defaultProps = {
-    isOpen: false
-  };
+  return (
+    <Dialog
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onAction={() => props.onSave(selectedGroup)}
+      title={t("DIALOG.SAVE_ANALYSIS")}
+      cancelTitle={t("DIALOG.CANCEL")}
+      actionTitle={t("DIALOG.YES")}
+    >
+      <p>{t("DIALOG.GROUP")}</p>
+      <div className="dropdown">
+        <select
+          className="form-control"
+          onChange={newSelect => {
+            setSelectedGroup(
+              props.groups.find(item => item.name === newSelect.target.value)
+            );
+          }}
+        >
+          {props.groups.map(item => (
+            <option key={item.name}>{item.name}</option>
+          ))}
+        </select>
+      </div>
+      <p>
+        <small>{t("DIALOG.CHOOSE_GROUP")}</small>
+      </p>
+    </Dialog>
+  );
+};
 
-  /**
-   * default constructor
-   */
-  constructor(props) {
-    super(props);
+SaveAnalysisDialog.propTypes = {
+  groups: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired
+    })
+  ).isRequired,
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired
+};
 
-    // setting default group
-    [this.selectedGroup] = this.props.groups;
-  }
-
-  // selected group
-  selectedGroup = null;
-
-  /**
-   * default render method
-   */
-  render() {
-    return (
-      <Dialog
-        isOpen={this.props.isOpen}
-        onClose={this.props.onClose}
-        onAction={() => this.props.onSave(this.selectedGroup)}
-        title="Analyse Speichern"
-        cancelTitle="Abbrechen"
-        actionTitle="Speichern"
-      >
-        <p>Gruppe</p>
-        <div className="dropdown">
-          <select
-            className="form-control"
-            onChange={newSelect => {
-              // setting group
-              this.selectedGroup = this.props.groups.find(
-                item => item.name === newSelect.target.value
-              );
-            }}
-          >
-            {this.props.groups.map(item => (
-              <option key={item.name}>{item.name}</option>
-            ))}
-          </select>
-        </div>
-        <p>
-          <small>
-            Bitte geben Sie die Gruppe an der die Analyse zugeordnet werden
-            soll.
-          </small>
-        </p>
-      </Dialog>
-    );
-  }
-}
+SaveAnalysisDialog.defaultProps = {
+  isOpen: false
+};
 
 export default SaveAnalysisDialog;
