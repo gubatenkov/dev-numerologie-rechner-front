@@ -31,7 +31,7 @@ const CreateGroupDialog = props => {
       {...props}
       onAction={handleCreateClick}
       title={t("DIALOG.CREATE_NEW_GROUP")}
-      cancelTitle={t("DIALOG.CANCEL")}
+      cancelTitle={t("CANCEL")}
       actionTitle={t("DIALOG.CREATE")}
     >
       <p>{t("DIALOG.GROUP_NAME")}</p>

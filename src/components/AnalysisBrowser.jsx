@@ -80,14 +80,19 @@ const AnalysisBrowser = props => {
         }
       });
       ToastNotifications.success(
-        `Die Gruppe ${groupName} wurde erfolgreich erstellt.`,
+        t("TOAST.GROUP_CREATED_SUCCESSFULLY", { groupName }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      ToastNotifications.error(error.graphQLErrors[0].message, {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
     setLoading(false);
   };
@@ -102,14 +107,19 @@ const AnalysisBrowser = props => {
         }
       });
       ToastNotifications.success(
-        `Die Gruppe ${newName} wurde erfolgreich umbenannt.`,
+        t("TOAST.GROUP_RENAMED_SUCCESSFULLY", { groupName: newName }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      ToastNotifications.error("Die Gruppe konnte nicht umbenannt werden", {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
     setLoading(false);
   };
@@ -123,15 +133,21 @@ const AnalysisBrowser = props => {
       });
 
       ToastNotifications.success(
-        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
+        t("TOAST.GROUP_DELETED_SUCCESSFULLY", {
+          groupName: deletedGroup.data.deleteAnalysisGroup.name
+        }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      console.log(error);
-      ToastNotifications.error("Gruppe konnte nicht gelöscht werden.", {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
     setLoading(false);
   };
@@ -145,14 +161,21 @@ const AnalysisBrowser = props => {
       });
 
       ToastNotifications.success(
-        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
+        t("TOAST.ANALYSIS_DELETED_SUCCESSFULLY", {
+          analysisName: deletedAnalysis.data.deleteAnalysis.name
+        }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      ToastNotifications.error("Analyse konnte nicht gelöscht werden.", {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
     setLoading(false);
   };
@@ -165,7 +188,7 @@ const AnalysisBrowser = props => {
     }
 
     setLoading(true);
-    setLoadingText("Berechne detaillierte Auswertung und erstelle PDF...");
+    setLoadingText(t("CREATE_PDF_LOADING_INFO"));
 
     try {
       const result = await props.client.query({
@@ -209,7 +232,12 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
+          t("COMPARE_PDF_NAME", {
+            firstname: personalAnalysisResult.firstNames,
+            lastname: personalAnalysisResult.lastName,
+            compareFirstname: personalAnalysisResultCompare.firstNames,
+            compareLastname: personalAnalysisResultCompare.lastName
+          }),
           targetAnalysis.longTexts || false,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
@@ -224,13 +252,15 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
+          t("PDF_NAME", {
+            firstname: personalAnalysisResult.firstNames,
+            lastname: personalAnalysisResult.lastName
+          }),
           targetAnalysis.longTexts || false
         );
       }
     } catch (error) {
-      console.log("Creating PDF failed");
-      console.log(error);
+      console.log("Creating PDF failed", error);
     } finally {
       setLoading(false);
       setLoadingText(null);
@@ -250,7 +280,7 @@ const AnalysisBrowser = props => {
 
   const spendCredit = async () => {
     setLoading(true);
-    setLoadingText("Ihr Guthaben wird eingelöst...");
+    setLoadingText(t("USING_CREDITS_LOADING_INFO"));
     try {
       const { analysisId, type } = creditToBeUsed;
       await props.useCredit({
@@ -260,16 +290,17 @@ const AnalysisBrowser = props => {
         }
       });
       props.onUsedCredit();
-      ToastNotifications.success(
-        "Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.",
-        { position: "top-right" }
-      );
+      ToastNotifications.success(t("TOAST.CREDITS_USED_SUCCESSFULLY"), {
+        position: "top-right"
+      });
     } catch (error) {
-      console.log("Using credit failed");
-      console.log(error);
       ToastNotifications.error(
-        "Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.",
-        { position: "top-right" }
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
       );
     } finally {
       setLoading(false);
@@ -372,7 +403,7 @@ const AnalysisBrowser = props => {
   } else {
     panelContent = (
       <p className="AnalysisBrowser--placeholder">
-        Keine Gruppen oder Analysen
+        {t("NO_GROUPS_OR_ANALYSIS")}
       </p>
     );
   }
@@ -380,7 +411,7 @@ const AnalysisBrowser = props => {
     <div className="akb-analysis-browser">
       {loading && <LoadingIndicator text={loadingText} />}
       <div className="panel-header">
-        <div className="header">Analysen</div>
+        <div className="header"> {t("ANALYSISS")}</div>
         <div>
           <NavigationDropdownMenu
             key="AddGroupAnalysis"
@@ -389,17 +420,17 @@ const AnalysisBrowser = props => {
             <NavigationDropdownMenuItem
               onClick={() => setCreateGroupDialogOpen(true)}
             >
-              <img src={iconGroup} alt="" /> Gruppe
+              <img src={iconGroup} alt="" /> {t("GROUP")}
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem
               onClick={() => props.history.push("/analysisInput")}
             >
-              <img src={iconAnalysis} alt="" /> Analyse
+              <img src={iconAnalysis} alt="" /> {t("ANALYSIS")}
             </NavigationDropdownMenuItem>
           </NavigationDropdownMenu>
         </div>
       </div>
-      <div className="akb-group-headline">Gruppen</div>
+      <div className="akb-group-headline">{t("GROUPS")}</div>
       <div className="panel-content">{panelContent}</div>
       <ConfirmGroupDeletionDialog
         group={groupToBeDeleted}

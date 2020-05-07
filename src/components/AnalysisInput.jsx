@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import * as yup from "yup";
 import moment from "moment";
 import queryString from "querystring";
-
+import { useTranslation } from "react-i18next";
 import ToastNotifications from "cogo-toast";
 
 import Panel from "./Panel";
@@ -44,36 +44,20 @@ const inputSchemaPersonalCompare = yup.object({
     .required()
 });
 
-class AnalysisInput extends Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired
-    }).isRequired
-  };
+const AnalysisInput = props => {
+  const { t } = useTranslation();
 
-  /**
-   * default constructor
-   */
-  constructor(props) {
-    // calling super class constructor
-    super(props);
+  const [firstNames, setFirstNames] = useState(null);
+  const [lastNames, setLastNames] = useState(null);
+  const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [firstNamesComfort, setFirstNamesComfort] = useState(null);
+  const [lastNameComfort, setLastNameComfort] = useState(null);
 
-    // setting values for members
-    this.firstNames = null;
-    this.lastNames = null;
-    this.dateOfBirth = null;
-    this.firstNamesComfort = null;
-    this.lastNameComfort = null;
+  const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
 
-    this.state = {
-      comfortNameFieldsShown: false
-    };
-  }
-
-  componentDidMount() {
-    // setting background dynamically
+  useEffect(() => {
     document.body.style.backgroundColor = "#00b3d4";
-    const querString = this.props.location.search.replace("?", "");
+    const querString = props.location.search.replace("?", "");
     const values = queryString.parse(querString);
     const firstNameParam = values.firstNames;
     const lastNameParam = values.lastNames;
@@ -84,199 +68,177 @@ class AnalysisInput extends Component {
       lastNameParam != null &&
       dateOfBirthParam != null
     ) {
-      this.firstNames = firstNameParam;
-      this.lastNames = lastNameParam;
-      this.dateOfBirth = dateOfBirthParam;
-      this.startAnalysis();
+      setFirstNames(firstNameParam);
+      setLastNames(lastNameParam);
+      setDateOfBirth(dateOfBirthParam);
+      startAnalysis();
     }
-  }
 
-  componentWillUnmount() {
-    // unsetting background dynamically
-    document.body.style.backgroundColor = null;
-  }
+    return () => {
+      document.body.style.backgroundColor = null;
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /**
-   * validates the input and displays a notification
-   * in case of faulty input
-   */
-  validateInput = async () => {
+  const validateInput = async () => {
     let valid;
-    if (this.firstNamesComfort || this.lastNameComfort) {
-      // validating input
+    if (firstNamesComfort || lastNameComfort) {
       valid = await inputSchemaPersonalCompare.isValid({
-        firstNames: this.firstNames,
-        lastName: this.lastNames,
-        firstNamesCompare: this.firstNamesComfort,
-        lastNameCompare: this.lastNameComfort
+        firstNames: firstNames,
+        lastName: lastNames,
+        firstNamesCompare: firstNamesComfort,
+        lastNameCompare: lastNameComfort
       });
     } else {
-      // validating input
       valid = await inputSchemaPersonal.isValid({
-        firstNames: this.firstNames,
-        lastName: this.lastNames
+        firstNames: firstNames,
+        lastName: lastNames
       });
     }
 
-    // setting error message
     if (!valid) {
-      ToastNotifications.error(
-        "Vor- und Nachname müssen (für alle Namen) angegeben werden.",
-        { position: "top-right" }
-      );
+      ToastNotifications.error(t("TOAST.FIRST_AND_LASTNAME_REQUIRED"), {
+        position: "top-right"
+      });
       return false;
     }
 
     // validating dateOfBirth
-    const date = moment(this.dateOfBirth, "DD.MM.YYYY", true);
+    const date = moment(dateOfBirth, "DD.MM.YYYY", true);
     if (!date.isValid()) {
-      ToastNotifications.error(
-        "Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.",
-        { position: "top-right" }
-      );
+      ToastNotifications.error(t("TOAST.DATE_FORMAT_REQUIRED"), {
+        position: "top-right"
+      });
       return false;
     }
 
     return true;
   };
 
-  /**
-   * starts the analysis upon button click
-   */
-  startAnalysis = async () => {
-    // if input is not valid => skipping
-    if (!(await this.validateInput())) {
+  const startAnalysis = async () => {
+    if (!(await validateInput())) {
       return;
     }
 
-    // navigating to right analysis screen
-    if (this.firstNamesComfort && this.lastNameComfort) {
-      // encoding params
+    if (firstNamesComfort && lastNameComfort) {
       const firstNamesEncoded = encodeURIComponent([
-        this.firstNames,
-        this.firstNamesComfort
+        firstNames,
+        firstNamesComfort
       ]);
-      const lastNamesEncoded = encodeURIComponent([
-        this.lastNames,
-        this.lastNameComfort
-      ]);
-      const dateOfBirthEncoded = encodeURIComponent(this.dateOfBirth);
+      const lastNamesEncoded = encodeURIComponent([lastNames, lastNameComfort]);
+      const dateOfBirthEncoded = encodeURIComponent(dateOfBirth);
 
-      // navigating to results
-      this.props.history.push(
+      props.history.push(
         `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`
       );
     } else {
-      // encoding parameters
-      const firstNamesEncoded = encodeURIComponent(this.firstNames);
-      const lastNameEncoded = encodeURIComponent(this.lastNames);
-      const dateOfBirthEncoded = encodeURIComponent(this.dateOfBirth);
+      const firstNamesEncoded = encodeURIComponent(firstNames);
+      const lastNameEncoded = encodeURIComponent(lastNames);
+      const dateOfBirthEncoded = encodeURIComponent(dateOfBirth);
 
       // navigating to results
-      this.props.history.push(
+      props.history.push(
         `/resultPersonal/${firstNamesEncoded}/${lastNameEncoded}/${dateOfBirthEncoded}`
       );
     }
   };
 
-  render() {
-    return (
-      <div className="page-register-v3 layout-full">
-        <div className="page vertical-align">
-          <div className="page-content">
-            <div className="text-center">
-              <a href="https://www.psychologischenumerologie.eu/">
-                <img
-                  className="brand-img logo"
-                  height="250"
-                  src={logoTransparentWhite}
-                  alt="logo"
+  return (
+    <div className="page-register-v3 layout-full">
+      <div className="page vertical-align">
+        <div className="page-content">
+          <div className="text-center">
+            <a href={t("HOMEPAGE")}>
+              <img
+                className="brand-img logo"
+                height="250"
+                src={logoTransparentWhite}
+                alt="logo"
+              />
+            </a>
+          </div>
+          <div className="row justify-content-md-center">
+            <div className="col-lg-4">
+              <Panel title={t("NUM_ANALYSIS")}>
+                <h6>{t("FAV_NAME")}</h6>
+                <InputField
+                  icon="wb-user"
+                  fieldName={t("FIRSTNAME")}
+                  onChange={event => {
+                    setFirstNames(event.target.value);
+                  }}
                 />
-              </a>
-            </div>
-            <div className="row justify-content-md-center">
-              <div className="col-lg-4">
-                <Panel title="Numerologische Analyse">
-                  <h6>Wohlfühlname</h6>
-                  <InputField
-                    icon="wb-user"
-                    fieldName="Vorname(n)"
-                    onChange={event => {
-                      this.firstNames = event.target.value;
-                    }}
-                  />
-                  <InputField
-                    icon="wb-user"
-                    fieldName="Nachname"
-                    onChange={event => {
-                      this.lastNames = event.target.value;
-                    }}
-                  />
-                  <InputField
-                    icon="wb-calendar"
-                    fieldName="Geburtsdatum"
-                    onChange={event => {
-                      this.dateOfBirth = event.target.value;
-                    }}
-                  />
-                  {this.state.comfortNameFieldsShown && (
-                    <div>
-                      <h6>Geburtsname / Alternativer Name</h6>
-                      <InputField
-                        icon="wb-user"
-                        fieldName="Vorname(n)"
-                        onChange={event => {
-                          this.firstNamesComfort = event.target.value;
-                        }}
-                      />
-                      <InputField
-                        icon="wb-user"
-                        fieldName="Nachname"
-                        onChange={event => {
-                          this.lastNameComfort = event.target.value;
-                        }}
-                      />
-                    </div>
-                  )}
-                  <div
-                    role="link"
-                    onClick={() =>
-                      this.setState({
-                        comfortNameFieldsShown: !this.state
-                          .comfortNameFieldsShown
-                      })
-                    }
-                  >
-                    <h6 className="linkText">
-                      {`Vergleichsnamen ${
-                        this.state.comfortNameFieldsShown
-                          ? "ausblenden"
-                          : "einblenden"
-                      }`}
-                    </h6>
+                <InputField
+                  icon="wb-user"
+                  fieldName={t("LASTNAME")}
+                  onChange={event => {
+                    setLastNames(event.target.value);
+                  }}
+                />
+                <InputField
+                  icon="wb-calendar"
+                  fieldName={t("BIRTH_DATE")}
+                  onChange={event => {
+                    setDateOfBirth(event.target.value);
+                  }}
+                />
+                {comfortNameFieldsShown && (
+                  <div>
+                    <h6>{t("BIRTHNAME_ALT_NAME")}</h6>
+                    <InputField
+                      icon="wb-user"
+                      fieldName={t("FIRSTNAME")}
+                      onChange={event => {
+                        setFirstNamesComfort(event.target.value);
+                      }}
+                    />
+                    <InputField
+                      icon="wb-user"
+                      fieldName={t("LASTNAME")}
+                      onChange={event => {
+                        setLastNameComfort(event.target.value);
+                      }}
+                    />
                   </div>
-                  <button
-                    className="btn btn-primary btn-block"
-                    onClick={this.startAnalysis}
-                  >
-                    Starten
-                  </button>
-                  <div className="InputForm__options">
-                    <Link to="/userHome">
-                      <h6>Anmelden</h6>
-                    </Link>
-                    <Link to="/register">
-                      <h6>Registrieren</h6>
-                    </Link>
-                  </div>
-                </Panel>
-              </div>
+                )}
+                <div
+                  role="link"
+                  onClick={() =>
+                    setComfortNameFieldsShown(!comfortNameFieldsShown)
+                  }
+                >
+                  <h6 className="linkText">
+                    {comfortNameFieldsShown
+                      ? t("SHOW_COMPARE_NAME")
+                      : t("HIDE_COMPARE_NAME")}
+                  </h6>
+                </div>
+                <button
+                  className="btn btn-primary btn-block"
+                  onClick={startAnalysis}
+                >
+                  {t("START")}
+                </button>
+                <div className="InputForm__options">
+                  <Link to="/userHome">
+                    <h6>{t("SIGN_IN")}</h6>
+                  </Link>
+                  <Link to="/register">
+                    <h6>{t("REGISTER")}</h6>
+                  </Link>
+                </div>
+              </Panel>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+AnalysisInput.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired
+};
 
 export default withRouter(AnalysisInput);

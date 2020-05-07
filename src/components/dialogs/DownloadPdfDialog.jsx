@@ -10,8 +10,8 @@ const DownloadPdfDialog = props => {
     <Dialog
       {...props}
       title={t("DIALOG.DOWNLOAD_PDF")}
-      cancelTitle={t("DIALOG.CANCEL")}
-      actionTitle={t("DIALOG.DOWNLOAD")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DOWNLOAD")}
     >
       <p>{t("DIALOG.DOWNLOAD_INFO")}</p>
     </Dialog>

@@ -9,7 +9,7 @@ const ConfirmUseCreditDialog = props => {
     <Dialog
       {...props}
       title={t("DIALOG.USE_CREDITS")}
-      cancelTitle={t("DIALOG.CANCEL")}
+      cancelTitle={t("CANCEL")}
       actionTitle={t("DIALOG.YES_USE_IT")}
     >
       <p>{t("DIALOG.USE_CREDIT_INFO")}</p>

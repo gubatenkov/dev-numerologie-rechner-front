@@ -9,8 +9,8 @@ const ConfirmGroupDeletionDialog = props => {
     <Dialog
       {...props}
       title={t("DIALOG.DELETE_GROUP")}
-      cancelTitle={t("DIALOG.CANCEL")}
-      actionTitle={t("DIALOG.DELETE")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DELETE")}
     >
       <p>
         {t("DIALOG.SURE_TO_DELETE_GROUP", {

@@ -124,32 +124,32 @@ const NameInputDialog = props => {
       </NameInputModalHeader>
       <NameInputModalBody>
         <p>{t("DIALOG.ENTER_NAME")}</p>
-        <h4>{t("DIALOG.CURRENT_NAME")}</h4>
+        <h4>{t("CURRENT_NAME")}</h4>
         <InputFieldContainer>
           <input
             type="text"
-            placeholder={t("DIALOG.FIRSTNAME")}
+            placeholder={t("FIRSTNAME")}
             value={firstNames}
             onChange={event => setFirstNames(event.target.value)}
           />
           <input
             type="text"
-            placeholder={t("DIALOG.LASTNAME")}
+            placeholder={t("LASTNAME")}
             value={lastName}
             onChange={event => setLastName(event.target.value)}
           />
         </InputFieldContainer>
-        <h4>{t("DIALOG.NAME_TO_COMPARE")}</h4>
+        <h4>{t("NAME_TO_COMPARE")}</h4>
         <InputFieldContainer>
           <input
             type="text"
-            placeholder={t("DIALOG.FIRSTNAME")}
+            placeholder={t("FIRSTNAME")}
             value={compareFirstNames}
             onChange={event => setCompareFirstNames(event.target.value)}
           />
           <input
             type="text"
-            placeholder={t("DIALOG.LASTNAME")}
+            placeholder={t("LASTNAME")}
             value={compareLastName}
             onChange={event => setCompareLastName(event.target.value)}
           />

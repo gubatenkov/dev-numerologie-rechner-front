@@ -222,7 +222,7 @@ const CreditsBuyModal = props => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setIsOpen(false)}>
-            {t("BUY_MODAL.CANCEL")}
+            {t("CANCEL")}
           </Button>
           {!isSuccess && (
             <Button
@@ -230,7 +230,7 @@ const CreditsBuyModal = props => {
               onClick={initiateBuy}
               disabled={personalLongs === 0 && personalShorts === 0}
             >
-              {t("BUY_MODAL.BUY")}
+              {t("BUY")}
             </Button>
           )}
         </Modal.Footer>

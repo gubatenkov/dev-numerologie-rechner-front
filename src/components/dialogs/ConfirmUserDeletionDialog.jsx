@@ -8,8 +8,8 @@ const ConfirmUserDeletionDialog = props => {
     <Dialog
       {...props}
       title={t("DIALOG.DELETE_USER")}
-      cancelTitle={t("DIALOG.CANCEL")}
-      actionTitle={t("DIALOG.DELETE")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DELETE")}
     >
       <p>{t("DIALOG.DELETE_USER_INFO")}</p>
     </Dialog>

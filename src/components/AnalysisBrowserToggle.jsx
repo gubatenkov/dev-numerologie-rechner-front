@@ -5,7 +5,6 @@ import iconArrowDown from "../images/icon_arrow_down-24px.svg";
 
 const AnalysisBrowserToggle = ({
   children,
-  eventKey,
   canExpand,
   isCollapsed,
   onClick

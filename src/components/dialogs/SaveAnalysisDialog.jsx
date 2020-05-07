@@ -13,10 +13,10 @@ const SaveAnalysisDialog = props => {
       onClose={props.onClose}
       onAction={() => props.onSave(selectedGroup)}
       title={t("DIALOG.SAVE_ANALYSIS")}
-      cancelTitle={t("DIALOG.CANCEL")}
+      cancelTitle={t("CANCEL")}
       actionTitle={t("DIALOG.YES")}
     >
-      <p>{t("DIALOG.GROUP")}</p>
+      <p>{t("GROUP")}</p>
       <div className="dropdown">
         <select
           className="form-control"
