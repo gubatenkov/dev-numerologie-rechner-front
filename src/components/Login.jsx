@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import ToastNotifications from "cogo-toast";
-
+import { useTranslation } from "react-i18next";
 import Panel from "./Panel";
 import InputField from "./InputField";
 import LoadingIndicator from "./LoadingIndicator";
@@ -11,64 +11,47 @@ import "../styles/InputForm.css";
 import "../styles/Login.css";
 import { useUser } from "../contexts/UserContext";
 
-// Login form component
 const Login = props => {
-  // email and password state variable
+  const { t } = useTranslation();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { fetchUser } = useUser();
   const loginUser = async () => {
-    // getting react router history from props
     const { history } = props;
-
-    // sending request to server
     try {
-      // setting loading indication
       setLoading(true);
 
-      // making actual request
       const response = await postJsonData("/login", {
         email,
         password
       });
 
-      // saving received token
       setUserAuthData({
         email,
         token: response.token
       });
       await fetchUser();
-
-      // redirecting to user home
       history.push("/userHome");
     } catch (error) {
-      // resetting loading indication
       setLoading(false);
-      ToastNotifications.error(
-        "Login fehlgeschlagen. Bitte versuchen Sie es erneut.",
-        { position: "top-right" }
-      );
+      ToastNotifications.error(t("LOGIN_FAILED"), { position: "top-right" });
     }
   };
 
-  // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
-    // setting background dynamically
     document.body.style.backgroundColor = "#00b3d4";
 
     return () => {
-      // resetting background dynamically
       document.body.style.backgroundColor = null;
     };
   });
 
-  // if loading => Showing indicator to user
   if (loading) {
-    return <LoadingIndicator text="Anmeldung..." />;
+    return <LoadingIndicator text={t("SIGNING_IN")} />;
   }
 
-  // returning login form
   return (
     <div className="page-register-v3 layout-full">
       <div className="page vertical-align">
@@ -77,11 +60,11 @@ const Login = props => {
             className="text-center"
             style={{ padding: `${50}px`, color: "white" }}
           >
-            <h1 className="Login__title">Psychologische Numerologie Rechner</h1>
+            <h1 className="Login__title">{t("NUM_CALCULATOR")}</h1>
           </div>
           <div className="row justify-content-md-center">
             <div className="col-lg-4">
-              <Panel title="Anmelden">
+              <Panel title={t("SIGN_IN")}>
                 <form>
                   <InputField
                     icon="wb-user"
@@ -102,14 +85,14 @@ const Login = props => {
                   className="btn btn-primary btn-block"
                   onClick={loginUser}
                 >
-                  Anmelden
+                  {t("SIGN_IN")}
                 </button>
                 <div className="InputForm__options">
                   <Link to="/reset">
-                    <h6>Passwort zurücksetzen</h6>
+                    <h6>{t("RESET_PASSWORD")}</h6>
                   </Link>
                   <Link to="/register">
-                    <h6>Registrieren</h6>
+                    <h6>{t("REGISTER")}</h6>
                   </Link>
                 </div>
               </Panel>

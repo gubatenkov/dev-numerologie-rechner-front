@@ -5,7 +5,6 @@ import BoostrapPopover from "react-bootstrap/Popover";
 import Switch from "./Switches/Switch";
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
-// applying custom style to boostrap popover
 const Popover = styled(BoostrapPopover)`
   /* adjusting border radius, overwriting boostrap */
   border-radius: 8px !important;
@@ -28,7 +27,6 @@ const Popover = styled(BoostrapPopover)`
 a) Text => Use PopoverTextContent and PopoverTextItem
 b) Settings => Use PopoverSettingsContent, PopoverSettingsSection and PopoverSettingsItem */
 
-// content container for text based popovers
 export const PopoverTextContent = styled(Popover.Content)`
   /* vertical flex column */
   display: flex;
@@ -51,7 +49,6 @@ export const PopoverTextContent = styled(Popover.Content)`
   }
 `;
 
-// item for text based popovers
 export const PopoverTextItem = styled.a`
   /* setting basic styling of text item based on theme */
   color: ${props => props.theme.darkGrey} !important;
@@ -68,7 +65,6 @@ export const PopoverTextItem = styled.a`
   }
 `;
 
-// content container for a settings popover
 export const PopoverSettingsContent = styled(Popover.Content)`
   /* one column of sections*/
   display: flex;
@@ -92,7 +88,6 @@ export const PopoverSettingsContent = styled(Popover.Content)`
   padding: 0 !important;
 `;
 
-// item for settings popover
 const PopoverSettingsSectionContainer = styled.div`
   /* one column where all the items go*/
   display: flex;
@@ -115,7 +110,6 @@ const PopoverSettingsSectionContainer = styled.div`
   }
 `;
 
-// header for settings section
 const PopoverSettingsHeader = styled.h2`
   /* text styling */
   color: ${props => props.theme.darkGrey} !important;
@@ -128,7 +122,6 @@ const PopoverSettingsHeader = styled.h2`
   margin-bottom: 8px;
 `;
 
-// section containing of a container, title (title prop) and all children passed into it
 export const PopoverSettingsSection = props => (
   <PopoverSettingsSectionContainer className={props.className}>
     {props.title && (
@@ -138,7 +131,6 @@ export const PopoverSettingsSection = props => (
   </PopoverSettingsSectionContainer>
 );
 
-// container for the settings switch element
 const SwitchSettingItemContainer = styled.div`
   /* flex row with items left and right*/
   display: flex;
@@ -149,7 +141,6 @@ const SwitchSettingItemContainer = styled.div`
   width: 100%;
 `;
 
-// title of the swtich item
 const SwitchSettingTitle = styled.div`
   /* basic text styling */
   color: ${props =>
@@ -160,7 +151,6 @@ const SwitchSettingTitle = styled.div`
   line-height: 30px;
 `;
 
-// item containing of a title and switch for settings
 export const SwitchSettingItem = props => (
   <SwitchSettingItemContainer className={props.className}>
     {props.title && (

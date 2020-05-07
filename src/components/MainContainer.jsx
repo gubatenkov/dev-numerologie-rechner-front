@@ -1,14 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
-class MainContainer extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired
-  };
+const MainContainer = props => {
+  return <div className="main-container">{props.children}</div>;
+};
 
-  render() {
-    return <div className="main-container">{this.props.children}</div>;
-  }
-}
+MainContainer.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export default MainContainer;
