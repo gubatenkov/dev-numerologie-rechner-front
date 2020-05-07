@@ -138,6 +138,9 @@
     "PRIVACY_POLICY_CONTENT_2": "Sie dürfen die obigen personenbezogenen Daten von anderen Menschen in den Psychologische Numerologie Rechner nur dann eingeben, wenn Sie deren ausdrückliche Zustimmung vorher eingeholt haben.",
     "PRIVACY_POLICY_CONTENT_3": "Die von Heroku bereitgestellten Server und Datenbanken stehen in Deutschland/Europa und unterliegen den europäischen Datenschutzbestimmungen. Für den Fall, dass personenbezogene Daten in die USA übertragen werden, haben sich Heroku und Salesforce dem EU-US Privacy Shield unterworfen. ",
     "PRIVACY_POLICY_CONTENT_4": "Die Webseiten des Psychologische Numerologie Rechners nutzen die Funktionen des Webanalysedienstes Google Analytics der Google LLC (USA). Dabei wird Ihre IP ausschließlich mit der Erweiterung _anonymizeIp() erfasst, die eine Anonymisierung der IP-Adresse durch Kürzung sicherstellt und eine direkte Personenbeziehbarkeit ausschließt. Nur in Ausnahmefällen wird die volle IP-Adresse an einen Server von Google in den USA übertragen und dort gekürzt, wobei sich Google dem EU-US Privacy Shield unterworfen hat. In diesen Ausnahmefällen erfolgt diese Verarbeitung gemäß Art. 6 Abs. 1 lit. f DSGVO.",
-    "PRIVACY_POLICY_MORE_INFOS": "Nähere Informationen findest Du in unserer <2>Datenschutzerklärung.</2>"
+    "PRIVACY_POLICY_MORE_INFOS": "Nähere Informationen findest Du in unserer <2>Datenschutzerklärung.</2>",
+    "EMAIL_WAS_SENT": "Ein Email mit einer Anleitung zum Zurücksetzten des Passworts wurde versendet.",
+    "RESET_FAILED": "Rücksetzen fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "SEND_EMAIL": "Sending Email..."
   }
 }
