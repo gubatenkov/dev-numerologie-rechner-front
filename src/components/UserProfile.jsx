@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 import { withRouter, useHistory } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
-import { currentUserQuery } from "../graphql/Queries";
-import { useMutation, useQuery } from "@apollo/react-hooks";
 import ConfirmUserDeletionDialog from "./dialogs/ConfirmUserDeletionDialog";
-import { deleteUserMutation } from "../graphql/Mutations";
-import { deleteUserAuthData } from "../utils/AuthUtils";
 import LoadingIndicator from "./LoadingIndicator";
 import MainContainer from "./MainContainer";
 import "../styles/UserProfile.scss";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
+import { useUser } from "../contexts/UserContext";
 
 function UserProfile() {
   let history = useHistory();
   const [userDeletionDialogOpen, setUserDeletionDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { data } = useQuery(currentUserQuery);
-  const [deleteUser] = useMutation(deleteUserMutation);
+  const User = useUser();
 
   function handleOnOpenDeletionDialog() {
     setUserDeletionDialogOpen(true);
@@ -29,25 +25,19 @@ function UserProfile() {
   }
 
   function handleOnConfirmDeletionDialog() {
-    // dismissing dialog
     setUserDeletionDialogOpen(false);
-
     setLoading(true);
-    // deleting user & clearing the token
-    deleteUser().then(() => {
-      // removing token from local storage => logout
-      deleteUserAuthData();
-
-      // navigating to input for user
-      history.push("/analysisInput");
-
-      setLoading(false);
-      // reloading to clear cache
-      window.location.reload();
-    });
+    User.deleteUser()
+      .then(() => {
+        history.push("/analysisInput");
+      })
+      .catch(e => {
+        console.log("Error while deleting user:", e.message);
+        setLoading(false);
+      });
   }
 
-  if (loading || !data) {
+  if (loading || !User.user) {
     return <LoadingIndicator text="Lade..." />;
   } else {
     return (
@@ -75,7 +65,7 @@ function UserProfile() {
                 <h5>Email</h5>
                 <Form.Control
                   type="email"
-                  value={data.currentUser.email}
+                  value={User.user.currentUser.email}
                   disabled={true}
                 />
               </div>

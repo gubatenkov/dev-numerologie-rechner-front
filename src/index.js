@@ -51,6 +51,7 @@ import {
 import { GRAPHQL_ENDPOINT } from "./utils/Configuration";
 import UserProfile from "./components/UserProfile";
 import { BuyModalProvider } from "./contexts/BuyModalContext";
+import { UserProvider } from "./contexts/UserContext";
 
 // defining UI themes
 const lightTheme = {
@@ -145,46 +146,48 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <ApolloHooksProvider client={client}>
       <ThemeProvider theme={lightTheme}>
-        <BuyModalProvider>
-          <BrowserRouter>
-            <Switch>
-              <Route path="/login" component={withTracker(Login)} />
-              <Route path="/register" component={withTracker(Register)} />
-              <Route path="/reset" component={withTracker(ResetPassword)} />
-              <Route
-                path="/input-set-password/:token?"
-                component={withTracker(SetPassword)}
-              />
-              <Route
-                exact
-                path="/resultPersonal/:analysisId/:resultConfigurationId?"
-                component={withTracker(AnalysisResultPersonal)}
-              />
-              <Route
-                exact
-                path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
-                component={withTracker(AnalysisResultPersonal)}
-              />
-              <Route
-                path="/analysisInput"
-                component={withTracker(AnalysisInput)}
-              />
-              <PrivateRoute
-                path="/userProfile"
-                isAuthenticated={isUserAuthenticated}
-                loginPath="/login"
-                component={UserProfile}
-              />
-              <PrivateRoute
-                path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
-                isAuthenticated={isUserAuthenticated}
-                loginPath="/login"
-                component={withTracker(UserHome)}
-              />
-              <Route path="/" component={withTracker(AnalysisInput)} />
-            </Switch>
-          </BrowserRouter>
-        </BuyModalProvider>
+        <UserProvider>
+          <BuyModalProvider>
+            <BrowserRouter>
+              <Switch>
+                <Route path="/login" component={withTracker(Login)} />
+                <Route path="/register" component={withTracker(Register)} />
+                <Route path="/reset" component={withTracker(ResetPassword)} />
+                <Route
+                  path="/input-set-password/:token?"
+                  component={withTracker(SetPassword)}
+                />
+                <Route
+                  exact
+                  path="/resultPersonal/:analysisId/:resultConfigurationId?"
+                  component={withTracker(AnalysisResultPersonal)}
+                />
+                <Route
+                  exact
+                  path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
+                  component={withTracker(AnalysisResultPersonal)}
+                />
+                <Route
+                  path="/analysisInput"
+                  component={withTracker(AnalysisInput)}
+                />
+                <PrivateRoute
+                  path="/userProfile"
+                  isAuthenticated={isUserAuthenticated}
+                  loginPath="/login"
+                  component={UserProfile}
+                />
+                <PrivateRoute
+                  path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
+                  isAuthenticated={isUserAuthenticated}
+                  loginPath="/login"
+                  component={withTracker(UserHome)}
+                />
+                <Route path="/" component={withTracker(AnalysisInput)} />
+              </Switch>
+            </BrowserRouter>
+          </BuyModalProvider>
+        </UserProvider>
       </ThemeProvider>
     </ApolloHooksProvider>
   </ApolloProvider>,
