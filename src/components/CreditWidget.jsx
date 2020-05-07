@@ -1,55 +1,48 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Panel from "./Panel";
 import Card from "./Card";
 
 import "../styles/CreditWidget.css";
 
-/**
- * Widget displaying the users different credit values
- * and allows to purchase additional credits
- */
-class CreditWidget extends Component {
-  static propTypes = {
-    credits: PropTypes.arrayOf(
-      PropTypes.shape({
-        type: PropTypes.shape({
-          name: PropTypes.string.isRequired,
-          description: PropTypes.string.isRequired
-        }).isRequired,
-        value: PropTypes.number.isRequired
-      })
-    ).isRequired,
-    handleBuyCredits: PropTypes.func.isRequired
-  };
+const CreditWidget = props => {
+  const { t } = useTranslation();
 
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <Panel
-        title="Guthaben"
-        actions={[
-          <a href="" key="addCredits" onClick={this.props.handleBuyCredits}>
-            Kaufen
-          </a>
-        ]}
-      >
-        <div className="card-columns creditCardColumns">
-          {this.props.credits.map(credit => (
-            <Card
-              key={credit.type.name}
-              title={credit.type.name}
-              body={credit.value}
-              description={credit.type.description}
-            />
-          ))}
-        </div>
-      </Panel>
-    );
-  }
-}
+  return (
+    <Panel
+      title="Guthaben"
+      actions={[
+        <a href="" key="addCredits" onClick={props.handleBuyCredits}>
+          {t("BUY")}
+        </a>
+      ]}
+    >
+      <div className="card-columns creditCardColumns">
+        {props.credits.map(credit => (
+          <Card
+            key={credit.type.name}
+            title={credit.type.name}
+            body={credit.value}
+            description={credit.type.description}
+          />
+        ))}
+      </div>
+    </Panel>
+  );
+};
+
+CreditWidget.propTypes = {
+  credits: PropTypes.arrayOf(
+    PropTypes.shape({
+      type: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired
+      }).isRequired,
+      value: PropTypes.number.isRequired
+    })
+  ).isRequired,
+  handleBuyCredits: PropTypes.func.isRequired
+};
 
 export default CreditWidget;

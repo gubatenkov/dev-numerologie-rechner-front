@@ -141,7 +141,7 @@ const CreditsBuyModal = props => {
       <Table responsive={true}>
         <thead>
           <tr>
-            <td>{t("BUY_MODAL.ANALYSIS_TYPE")}</td>
+            <td>{t("ANALYSIS_TYPE")}</td>
             <td>{t("BUY_MODAL.SHORT_VERSION_PRICE")}</td>
             <td className="buyModalNumberCell">{t("BUY_MODAL.AMOUNT")}</td>
             <td>{t("BUY_MODAL.LONG_VERSION_PRICE")}</td>
@@ -151,7 +151,7 @@ const CreditsBuyModal = props => {
         </thead>
         <tbody>
           <tr>
-            <td>{t("BUY_MODAL.PERSONALITY_NUMEROLOSCOPE")}</td>
+            <td>{t("PERSONALITY_NUMEROLOSCOPE")}</td>
             <td>€ {PRICE_PERSONAL_SHORT}</td>
             <td className="buyModalNumberCell">
               <input

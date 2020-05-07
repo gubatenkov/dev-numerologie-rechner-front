@@ -32,13 +32,13 @@ export const CreditsBuyModalBodyMobile = props => {
   return (
     <div style={styles.container}>
       <CreditsSelector
-        name={t("BUY_MODAL.PERSONALITY_NUMEROLOSCOPE_SHORT")}
+        name={t("PERSONALITY_NUMEROLOSCOPE_SHORT")}
         value={personalShorts}
         setValue={setPersonalShorts}
         price={PRICE_PERSONAL_SHORT}
       />
       <CreditsSelector
-        name={t("BUY_MODAL.PERSONALITY_NUMEROLOSCOPE_LONG")}
+        name={t("PERSONALITY_NUMEROLOSCOPE_LONG")}
         value={personalLongs}
         setValue={setPersonalLongs}
         price={PRICE_PERSONAL_LONG}

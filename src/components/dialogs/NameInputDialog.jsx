@@ -120,7 +120,7 @@ const NameInputDialog = props => {
   return (
     <NameInputModal show={props.show} onHide={props.onHide} centered={true}>
       <NameInputModalHeader closeButton>
-        <h2>{t("DIALOG.COMPARE_NAME")}</h2>
+        <h2>{t("COMPARE_NAME")}</h2>
       </NameInputModalHeader>
       <NameInputModalBody>
         <p>{t("DIALOG.ENTER_NAME")}</p>
@@ -157,7 +157,7 @@ const NameInputDialog = props => {
       </NameInputModalBody>
       <NameInputModalFooter>
         <ActionTextButton
-          title={t("DIALOG.COMPARE_NAME")}
+          title={t("COMPARE_NAME")}
           primary
           onClick={() =>
             props.onChange(

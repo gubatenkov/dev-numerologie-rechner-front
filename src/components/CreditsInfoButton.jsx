@@ -2,9 +2,10 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
+import { useTranslation } from "react-i18next";
 import Table from "react-bootstrap/Table";
 
-function normalizeCreitsData(raw) {
+const normalizeCreditsData = raw => {
   const data = {
     personalShorts: 0,
     personalLongs: 0,
@@ -32,10 +33,11 @@ function normalizeCreitsData(raw) {
     }
   });
   return data;
-}
+};
 
 export default ({ credits: rawCredits }) => {
-  const credits = normalizeCreitsData(rawCredits);
+  const { t } = useTranslation();
+  const credits = normalizeCreditsData(rawCredits);
   return (
     <OverlayTrigger
       trigger="click"
@@ -46,14 +48,14 @@ export default ({ credits: rawCredits }) => {
           <Table>
             <thead>
               <tr>
-                <th>Analyseart</th>
-                <th>Kurz PDF</th>
-                <th>Lang PDF</th>
+                <th>{t("ANALYSIS_TYPE")}</th>
+                <th>{t("PDF_SHORT")}</th>
+                <th>{t("PDF_LONG")}</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Persönlichkeitsnumeroskop</td>
+                <td>{t("PERSONALITY_NUMEROLOSCOPE")}</td>
                 <td>{credits.personalShorts}</td>
                 <td>{credits.personalLongs}</td>
               </tr>
