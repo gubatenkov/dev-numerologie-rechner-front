@@ -11,7 +11,7 @@ const CreditWidget = props => {
 
   return (
     <Panel
-      title="Guthaben"
+      title={t("CREDIT")}
       actions={[
         <a href="" key="addCredits" onClick={props.handleBuyCredits}>
           {t("BUY")}

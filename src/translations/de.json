@@ -84,7 +84,7 @@
     "BUY_CREDIT_PDF_LONG": "Langes PDF kaufen",
     "USE_CREDIT_PDF_SHORT": "Kurzes PDF - Credit einlösen",
     "BUY_CREDIT_PDF_SHORT": "Kurzes PDF kaufen",
-    "CACULATING_RESULT_FOR_NAME": "Berechne Resultate für Namen...",
+    "CALCULATING_RESULT_FOR_NAME": "Berechne Resultate für Namen...",
     "ERROR_OCCURED": "Ein kritischer Fehler beim Laden der Daten ist aufgetreten...",
     "GENERATE_REPORT": "Erstelle Auswertung...",
     "COMPARE_NAME": "Namen vergleichen",
@@ -176,6 +176,7 @@
     "MORE_INFOS": "Mehr Infos dazu",
     "MORE_INFOS_CONTENT": "Mehr Infos zu Inhalten und Übungen",
     "PERSONAL_INFO": "Persönliche Information",
-    "DELETE_ACCOUNT": "Konto löschen"
+    "DELETE_ACCOUNT": "Konto löschen",
+    "CREDIT": "Guthaben"
   }
 }

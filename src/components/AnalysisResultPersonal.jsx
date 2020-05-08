@@ -27,7 +27,7 @@ const AnalysisResultPersonal = props => {
       (personalAnalysesByNames && personalAnalysesByNames.loading) ||
       (currentUser && currentUser.loading)
     ) {
-      return <LoadingIndicator text={t("CACULATING_RESULT_FOR_NAME")} />;
+      return <LoadingIndicator text={t("CALCULATING_RESULT_FOR_NAME")} />;
     }
 
     const error =
