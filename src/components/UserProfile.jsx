@@ -9,8 +9,10 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
 import { useUser } from "../contexts/UserContext";
+import { useTranslation } from "react-i18next";
 
-function UserProfile() {
+const UserProfile = () => {
+  const { t } = useTranslation();
   let history = useHistory();
   const [userDeletionDialogOpen, setUserDeletionDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,7 +40,7 @@ function UserProfile() {
   }
 
   if (loading || !User.user) {
-    return <LoadingIndicator text="Lade..." />;
+    return <LoadingIndicator text={t("LOADING")} />;
   } else {
     return (
       <MainContainer>
@@ -50,7 +52,7 @@ function UserProfile() {
             <div className="akb-my-profile-navigation"></div>
             <div className="akb-user-info">
               <div className="akb-personal-info">
-                <h2>Personal Information</h2>
+                <h2>{t("PERSONAL_INFO")}</h2>
                 {/*<h4>Aktueller Name</h4>*/}
                 {/*<Form>*/}
                 {/*  <Row>*/}
@@ -62,7 +64,7 @@ function UserProfile() {
                 {/*    </Col>*/}
                 {/*  </Row>*/}
                 {/*</Form>*/}
-                <h5>Email</h5>
+                <h5>{t("EMAIL")}</h5>
                 <Form.Control
                   type="email"
                   value={User.user.currentUser.email}
@@ -76,7 +78,7 @@ function UserProfile() {
                   size="lg"
                   onClick={handleOnOpenDeletionDialog}
                 >
-                  Konto löschen
+                  {t("DELETE_ACCOUNT")}
                 </Button>
                 <ConfirmUserDeletionDialog
                   isOpen={userDeletionDialogOpen}
@@ -94,6 +96,6 @@ function UserProfile() {
       </MainContainer>
     );
   }
-}
+};
 
 export default withRouter(UserProfile);

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Overlay, Tooltip } from "react-bootstrap";
 import { isMobile } from "react-device-detect";
 
-// importing all icons used as actions in the row
 import bookIcon from "../images/icon_openBook_primary.svg";
 import bookShortIcon from "../images/icon_textShort.svg";
 import bookLongLongIcon from "../images/icon_textLong.svg";
@@ -12,14 +11,12 @@ import lockIcon from "../images/icon_lock.svg";
 
 import IconButton from "./Buttons/IconButton";
 
-// identifiers for results
 import {
   TYPE_ID_NUMBER,
   TYPE_ID_LIST,
   TYPE_ID_MATRIX
 } from "../utils/Constants";
 
-// mapping from access level to used icon in row
 const ACCESS_LEVEL_ICON_MAPPING = {
   ACCESS_LEVEL_GUEST: bookIcon,
   ACCESS_LEVEL_USER: bookIcon,
@@ -27,7 +24,6 @@ const ACCESS_LEVEL_ICON_MAPPING = {
   ACCESS_LEVEL_PAID_LONG: bookLongLongIcon
 };
 
-// the row in the results table
 const ResultTableRowStyled = styled.div`
   /* flexbox row with action item to the right and content taking rest of width*/
   display: flex;
@@ -60,7 +56,6 @@ const ResultTableRowStyled = styled.div`
   line-height: 30px;
 `;
 
-// Column holding the whole content of the row (=name + all values)
 const ContentColumn = styled.div`
   /* flex row that takes all remaining space (except action at right). 
   This container is used to wrap results on low resolutions*/
@@ -79,7 +74,6 @@ const ContentColumn = styled.div`
   flex-wrap: wrap;
 `;
 
-// element holding the name of the result
 const NameColumn = styled.div`
   @media (max-width: 945px) {
     width: 100%;
@@ -107,7 +101,6 @@ const NumberResultContainer = styled.div`
   flex-direction: row;
 `;
 
-// element holding the result value (matrix, list or number)
 const ResultColumn = styled.div`
   /* centering horizontally */
 
@@ -120,13 +113,11 @@ const ResultColumn = styled.div`
   margin-left: ${props => (props.left ? "0" : "12")}px;
 `;
 
-// element to the very right holidng action button
 const ActionColumn = styled.div`
   /* vertically aligning button at start as supposed to stick at top of container */
   align-self: flex-start;
 `;
 
-// the result matrix table
 const MatrixTable = styled.table`
   /* centering text in cells*/
   text-align: center;
@@ -152,7 +143,6 @@ const MatrixTable = styled.table`
   }
 `;
 
-// cell of the matrix table
 const MatrixCell = styled.td`
   /* if in highlighted state => adapting background color */
   background-color: ${props =>
@@ -172,7 +162,6 @@ const MatrixCell = styled.td`
   }
 `;
 
-// container around matrix used to draw rounded border
 const MatrixContainer = styled.div`
   /* defining border around matrix*/
   border: solid ${props => props.theme.matrixBorderGrey} 1px;
@@ -192,7 +181,6 @@ const MatrixContainer = styled.div`
   }
 `;
 
-// custom icon button with different size
 const RowIconButton = styled(IconButton)`
   height: 40px;
   width: 40px;
@@ -205,31 +193,15 @@ const RowIconButton = styled(IconButton)`
   }
 `;
 
-// const ResultColumStyled = styled(ResultColumn)`
-//   display: "block";
-// `;
-
-/**
- * row rendering a single row item of an analysis result
- */
 const ResultTableRow = props => {
-  // getting item and compare item from passed props
   const { item, compareItem } = props;
   const [showTooltip, setShowTooltip] = useState(false);
   const target = useRef(null);
 
-  /**
-   * renders a result matrix as content of the table
-   * @param item the item of type 'matrix'
-   */
   const renderResultMatrix = resultItem => {
-    // extracting dimensions
     const matrixDimensions = resultItem.result.dimensions;
-
-    // extracting highlighted indices
     const highlightedIndices = resultItem.result.highlighted;
 
-    // rendering and returning matrix
     return (
       <MatrixContainer>
         <MatrixTable>
@@ -244,16 +216,13 @@ const ResultTableRow = props => {
                 }
               >
                 {[...Array(matrixDimensions.cols)].map((colItem, colIndex) => {
-                  // determining current index composed of cols and rows
                   const currentIndex =
                     rowIndex * matrixDimensions.cols + colIndex;
                   const highlighted = highlightedIndices[currentIndex];
 
-                  // extracting result value or placeholder
                   const resultValue =
                     resultItem.result.values[currentIndex] || "";
 
-                  // returning cell for element
                   return (
                     <MatrixCell
                       highlighted={highlighted}
@@ -412,7 +381,6 @@ const ResultTableRow = props => {
   );
 };
 
-// propTypes
 ResultTableRow.propTypes = {
   item: PropTypes.object.isRequired,
   onTextDetailClick: PropTypes.func.isRequired,

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import _ from "lodash";
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
-// styling container fro steps elements. Most of the styling ist handled by the container for the elements
 const StepsContainer = styled.div`
   /* row flex container with items*/
   display: flex;
@@ -59,15 +58,10 @@ const StepsContainer = styled.div`
   }
 `;
 
-/**
- * a container component for steps that draws a connection
- * line between steps and handles alignment of steps
- */
 export const Steps = props => (
   <StepsContainer className={props.className}>{props.children}</StepsContainer>
 );
 
-// styling step element (text only)
 const StyledStep = styled.div`
   /* important to position line*/
   position: relative;
@@ -88,7 +82,6 @@ const StyledStep = styled.div`
   line-height: 26px;
 `;
 
-// A step in the progess steps component
 export const Step = props => {
   let isActive = props.stepIndex <= props.currentIndex;
   return (

@@ -1,11 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-
+import { useTranslation } from "react-i18next";
 import ResultTableRow from "./ResultTableRow";
 import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
 
-// result table root element
 const ResultTableStyled = styled.div`
   width: 100%;
   display: flex;
@@ -25,7 +24,6 @@ const ResultTableStyled = styled.div`
   }
 `;
 
-// watermark shown when user tries to print results
 const ResultWatermark = styled.h3`
   /* watermark is not shown on web */
   display: none;
@@ -46,39 +44,34 @@ const TableCaption = styled.div`
   color: ${props => props.theme.black};
 `;
 
-/**
- * table capable of rendering calculation and number results
- * returned from the server
- */
 const ResultTable = props => {
-  /**
-   * handles clicks on action button in rows and forwards to parent
-   * @param {String} numberId the id of the number/row that the action was performed in
-   */
+  const { t } = useTranslation();
+
   const handleTextDetailClick = numberId => {
     props.handleTextDetailClick(props.sectionId, numberId);
   };
 
-  return [
-    <ResultTableStyled key={`ResultTable ${props.name}`}>
-      {props.showTitle && <TableCaption>{props.name}</TableCaption>}
-      {props.numbers.map((item, index) => (
-        <ResultTableRow
-          key={`ResultTableRow ${item.numberId}`}
-          item={item}
-          compareItem={props.compareNumbers && props.compareNumbers[index]}
-          notShowCompareItem={
-            !shouldShowDuplicatedComparisonResult(item.numberId)
-          }
-          onTextDetailClick={handleTextDetailClick}
-          accessLevel={props.accessLevel}
-        />
-      ))}
-    </ResultTableStyled>,
-    <ResultWatermark key="watermark">
-      Bitte kaufen Sie ein PDF Paket um ein PDF der Analyse zu generieren.
-    </ResultWatermark>
-  ];
+  return (
+    <>
+      <ResultTableStyled key={`ResultTable ${props.name}`}>
+        {props.showTitle && <TableCaption>{props.name}</TableCaption>}
+        {props.numbers.map((item, index) => (
+          <ResultTableRow
+            key={`ResultTableRow ${item.numberId}`}
+            item={item}
+            compareItem={props.compareNumbers && props.compareNumbers[index]}
+            notShowCompareItem={
+              !shouldShowDuplicatedComparisonResult(item.numberId)
+            }
+            onTextDetailClick={handleTextDetailClick}
+            accessLevel={props.accessLevel}
+          />
+        ))}
+      </ResultTableStyled>
+      {t("BUY_PACKAGE_TO_SEE_CONTENT")}
+      <ResultWatermark key="watermark"></ResultWatermark>
+    </>
+  );
 };
 
 // setting proptypes on component

@@ -7,7 +7,6 @@ import "../styles/_typography.scss";
 
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
-// the container => body of the panel
 const PanelContainer = styled.div`
   /* basic padding of content inside the container*/
   padding: 32px 24px 24px 24px;
@@ -18,7 +17,6 @@ const PanelContainer = styled.div`
   margin-bottom: 60px;
 `;
 
-// header component showing title and actions a the top
 const PanelHeader = styled.div`
   /* configuring grid with 3 columns: left action (button), right action (button) amd cemter element with title */
   display: grid;
@@ -33,13 +31,11 @@ const PanelHeader = styled.div`
   margin-right: 8px;
 `;
 
-// left action in the header
 const LeftPanelAction = styled.div`
   /* positioning at the left */
   grid-column-start: 1;
 `;
 
-// right action in the header
 const RightPanelAction = styled.div`
   /* positioning at the right*/
   grid-column-start: 3;
@@ -50,7 +46,6 @@ const RightPanelAction = styled.div`
   }
 `;
 
-// the title displayed at the top center of the panel
 const PanelTitle = styled.div`
   /* positioning at center of header*/
   grid-column-start: 2;
@@ -82,14 +77,12 @@ const PanelTitleContainer = styled.div`
   overflow: hidden;
 `;
 
-// icon button used for left and right action
 const PanelIconButton = styled(IconButton)`
   /* adapting from larger standard size*/
   width: 40px;
   height: 40px;
 `;
 
-// the body of the panel
 const PanelBody = styled.div`
   > * + * {
     margin-top: 40px;

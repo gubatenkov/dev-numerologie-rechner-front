@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import { withRouter, Redirect } from "react-router-dom";
 import { graphql } from "react-apollo";
@@ -21,10 +22,9 @@ import CreditsOverview from "./CreditsOverview";
 import { useUser } from "../contexts/UserContext";
 const SAVE_ANALYSIS_COMMAND = "saveAnalysis";
 
-/**
- * Home screen of the user displaying analyses, groups and credits
- */
 const UserHome = props => {
+  const { t } = useTranslation();
+
   const [saveDialogOpen, setSaveDialogOpen] = useState(
     props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND
   );
@@ -34,13 +34,7 @@ const UserHome = props => {
     User.fetchUser();
   };
 
-  /**
-   * saves the analysis passed to user home
-   * @param name: the name of the new analysis
-   * @param groupId: the id of the group of the new analysis
-   */
   async function saveAnalysis(name, groupId) {
-    // decoding url param values
     const firstNames = decodeURIComponent(
       props.computedMatch.params.firstNames
     );
@@ -49,7 +43,6 @@ const UserHome = props => {
       props.computedMatch.params.dateOfBirth
     );
 
-    // one or more names?
     let nameInputs = [];
     if (lastNames.split(",").length > 1) {
       const firstNamesArray = firstNames.split(",");
@@ -103,7 +96,7 @@ const UserHome = props => {
   }
 
   if (!User.isFetching && !User.user) {
-    console.log("GQL error");
+    console.log("GQL error: no User");
     return <Redirect to="/login" />;
   }
 
@@ -112,7 +105,7 @@ const UserHome = props => {
   }
 
   if (!User.user) {
-    return <LoadingIndicator text="Lade..." />;
+    return <LoadingIndicator text={t("LOADING")} />;
   }
 
   return (
@@ -145,7 +138,6 @@ const UserHome = props => {
         isOpen={saveDialogOpen}
         onClose={() => setSaveDialogOpen(false)}
         onSave={group => {
-          // decoding url param values
           const firstNames = decodeURIComponent(
             props.computedMatch.params.firstNames
           );
@@ -156,25 +148,19 @@ const UserHome = props => {
             props.computedMatch.params.dateOfBirth
           );
 
-          // constructing name for analysis
           let analysisName;
           if (lastNames.split(",").length > 1) {
-            // gettin names
             const firstName = firstNames.split(",")[0];
             const firstNameComfort = firstNames.split(",")[1];
             const lastName = lastNames.split(",")[0];
             const lastNameComfort = lastNames.split(",")[1];
 
-            // constructing name
             analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
           } else {
-            // constructing name
             analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
           }
 
-          // saving analysis
           saveAnalysis(analysisName, group.id);
-          // hiding dialog
           setSaveDialogOpen(false);
           setLoading(true);
         }}
@@ -186,7 +172,6 @@ const UserHome = props => {
   );
 };
 
-// props validation
 UserHome.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired
