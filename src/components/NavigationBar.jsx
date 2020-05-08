@@ -55,7 +55,7 @@ const NavBarIconButton = styled(IconButton)`
 // styling icon button for left element (icon is passed externally)
 const LeftIconButton = styled(NavBarIconButton)`
   /* positioning at start of the navbar (first element to the left)*/
-  grid-column-start: 1;
+  grid-column-start: 3;
 `;
 
 const LogoContainer = styled.a`

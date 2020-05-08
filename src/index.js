@@ -47,12 +47,15 @@ import {
   getUserAuthData,
   deleteUserAuthData
 } from "./utils/AuthUtils";
+import { Sidebar } from "./components/Sidebar";
 
 import { GRAPHQL_ENDPOINT } from "./utils/Configuration";
 import UserProfile from "./components/UserProfile";
 import { BuyModalProvider } from "./contexts/BuyModalContext";
 import { UserProvider } from "./contexts/UserContext";
 import { initTranslationFramework } from "./utils/initTranslationFramework";
+import { SidebarProvider } from "./contexts/SidebarContext";
+import { OpenSidebarButton } from "./components/OpenSidebarButton";
 
 initTranslationFramework();
 
@@ -188,6 +191,10 @@ ReactDOM.render(
                 />
                 <Route path="/" component={withTracker(AnalysisInput)} />
               </Switch>
+              <SidebarProvider>
+                <OpenSidebarButton />
+                <Sidebar />
+              </SidebarProvider>
             </BrowserRouter>
           </BuyModalProvider>
         </UserProvider>

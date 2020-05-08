@@ -35,3 +35,15 @@ export const TYPE_ID_MATRIX = "matrix";
 
 export const MOBILE_RESOLUTION_THRESHOLD = 767;
 export const MAIN_CONTAINER_MAX_WIDTH = 1440;
+
+export const LANGUAGES = [
+  {
+    code: "DE"
+  },
+  {
+    code: "EN"
+  },
+  {
+    code: "IT"
+  }
+];

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 59.1 (101010) - https://sketch.com -->
+    <title>5D74F033-F848-4BF5-8AC9-59706B8A80E1</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M18.295,5.705 C17.9056393,5.31563925 17.2743607,5.31563925 16.885,5.705 L12,10.59 L12,10.59 L7.115,5.705 C6.72563925,5.31563925 6.09436075,5.31563925 5.705,5.705 C5.31563925,6.09436075 5.31563925,6.72563925 5.705,7.115 L10.59,12 L10.59,12 L5.705,16.885 C5.31563925,17.2743607 5.31563925,17.9056393 5.705,18.295 C6.09436075,18.6843607 6.72563925,18.6843607 7.115,18.295 L12,13.41 L12,13.41 L16.885,18.295 C17.2743607,18.6843607 17.9056393,18.6843607 18.295,18.295 C18.6843607,17.9056393 18.6843607,17.2743607 18.295,16.885 L13.41,12 L13.41,12 L18.295,7.115 C18.6843607,6.72563925 18.6843607,6.09436075 18.295,5.705 Z" id="path-1"></path>
+    </defs>
+    <g id="Asset-Artboard-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/Menu-Icons-/-Close">
+            <rect id="Rectangle" fill="#F8F8F8" x="0" y="0" width="36" height="36" rx="6"></rect>
+            <g id="Icons/Close" transform="translate(6.000000, 6.000000)">
+                <g id="baseline-close-24px">
+                    <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Shape" fill="#323232" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

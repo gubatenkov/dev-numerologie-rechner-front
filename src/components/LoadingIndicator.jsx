@@ -14,7 +14,7 @@ const LoadingIndicatorContainer = styled.div`
   right: 0;
   bottom: 0;
   background-color: #ffffff;
-  opacity: 0.7;
+  opacity: 1;
   z-index: 10000;
 `;
 

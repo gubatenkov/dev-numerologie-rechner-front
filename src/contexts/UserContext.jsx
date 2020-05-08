@@ -19,6 +19,7 @@ export const useUser = () => {
 };
 
 const useUserProvider = () => {
+  const [currentLanguageIndex, setCurrentLanguageIndex] = useState(0);
   const [user, setUser] = useState();
   const [isFetching, setIsFetching] = useState(true);
   const client = useApolloClient();
@@ -50,11 +51,18 @@ const useUserProvider = () => {
     fetchUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const setLanguage = index => {
+    // TODO update language of i18n
+    setCurrentLanguageIndex(index);
+  };
+
   return {
     user,
     isFetching,
     fetchUser,
     deleteUser,
-    logoutUser
+    logoutUser,
+    currentLanguageIndex,
+    setLanguage
   };
 };
