@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Interweave from "interweave";
 import styled from "styled-components";
 import _ from "lodash";
+import { useTranslation } from "react-i18next";
 
 import IconButton from "./Buttons/IconButton";
 import { Steps, Step } from "./Steps";
@@ -10,11 +11,9 @@ import UserLevelPromotionWidget from "./UserLevelPromotionWidget";
 import BookPromotionWidget from "./BookPromotionWidget";
 import ResultLockedWidget from "./ResultLockedWidget";
 
-// icons
 import iconBackPrimary from "../images/icon_back_primary.svg";
 import iconForwardPrimary from "../images/icon_forward_primary.svg";
 
-// treshhold for mobile view
 import {
   MAIN_CONTAINER_MAX_WIDTH,
   MOBILE_RESOLUTION_THRESHOLD
@@ -22,7 +21,6 @@ import {
 import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
 import { TourOverViewMobileStep } from "./TourOverviewMobileStep";
 
-// constants used for content styling
 const CONTENT_STYLING_CLASS_SUBHEADING = "subheading";
 const CONTENT_STYLING_CLASS_DESCRIPTION = "descriptionText";
 const CONTENT_STYLING_CLASS_NAME_HEADER = "nameHeading";
@@ -31,7 +29,6 @@ const CONTENT_STYLING_CLASS_HEADER_RESULTNUMBER = "resultNumber";
 const DESKTOP_TOUR_OVERVIEW_HEIGHT_PX = 80;
 const MOBILE_TOUR_OVERVIEW_HEIGHT_PX = 80; // TODO: Make less
 
-// main container for view layout
 const TourContentContainer = styled.div`
   /* one row that contains a spacer (invisible), the content and the promotion sidebar*/
   display: flex;
@@ -51,7 +48,6 @@ const TourContentContainer = styled.div`
   }
 `;
 
-// an invisible spacer element to the left
 const Spacer = styled.div`
   /* max size of 300px and the only element in the row that shrinks*/
   flex-basis: 300px;
@@ -163,7 +159,6 @@ const ContentArea = styled.div`
   // }
 `;
 
-// promotion are to the right
 const PromotionArea = styled.div`
   /* fixed size that cannot shrink or grow */
   flex-basis: 300px;
@@ -194,7 +189,6 @@ const TourOverViewInnerWrapper = styled.div`
   width: ${MAIN_CONTAINER_MAX_WIDTH}px;
 `;
 
-// container for the fixed overview component at the bottom
 const TourOverView = styled.div`
   /* basic box styling */
   height: 100%;
@@ -211,7 +205,6 @@ const TourOverView = styled.div`
   grid-template-columns: 36px auto 36px;
 `;
 
-// button used in the tour overview
 const TourOverViewButton = styled(IconButton)`
   /* adapting size and alignemnt*/
   width: 36px;
@@ -222,19 +215,16 @@ const TourOverViewButton = styled(IconButton)`
   margin-bottom: 22px;
 `;
 
-// button to the left to navigate back
 const TourOverViewBackButton = styled(TourOverViewButton)`
   /* colmn to the very left */
   grid-column-start: 1;
 `;
 
-// button to the right to navigate forth
 const TourOverViewForwardButton = styled(TourOverViewButton)`
   /* column to the very right */
   grid-column-start: 3;
 `;
 
-// customizing steps component to fit into layout
 const TourOverviewSteps = styled(Steps)`
   /* fixed size */
   width: 100%;
@@ -251,9 +241,8 @@ const TourOverviewSteps = styled(Steps)`
   margin-bottom: 16px;
 `;
 
-// tour view component allowing users to explore their analysis results
 const TourView = props => {
-  // getting used values out of props
+  const { t } = useTranslation();
   const {
     sectionIndex,
     elementIndex,
@@ -268,9 +257,7 @@ const TourView = props => {
     window.scrollTo(0, 0);
   };
 
-  // handler for clicks on the steps directly in the overview
   const handleStepClick = sectionTitleClicked => {
-    // getting index of section title clicked and setting it's index as current section index
     const index = tourData.findIndex(
       item => item.sectionName === sectionTitleClicked
     );
@@ -280,7 +267,6 @@ const TourView = props => {
     }
   };
 
-  // handler for clicking on back button
   const handleBackClick = () => {
     if (elementIndex > 0) {
       onIndexChange(sectionIndex, elementIndex - 1);
@@ -292,21 +278,16 @@ const TourView = props => {
     }
   };
 
-  // handler for click on the next button
   const handleNextClick = () => {
-    // navigate within section
     if (elementIndex < tourData[sectionIndex].sectionElements.length - 1) {
       onIndexChange(sectionIndex, elementIndex + 1);
-      // navigate to first element of next section
     } else if (sectionIndex < tourData.length - 1) {
       onIndexChange(sectionIndex + 1, 0);
     }
   };
 
-  // handler for key press
   const handleKeyDown = event => {
     switch (event.key) {
-      // determining which key was pressed
       case "ArrowRight":
         handleNextClick();
         return;
@@ -323,7 +304,6 @@ const TourView = props => {
   // ref to root container to focus upon mount (needed for shortcuts to work)
   const componentContainer = useRef();
 
-  // disabling/enabling scrolling and focus for key input if is shown/hidden
   useEffect(() => {
     // if tour is visible => focusing container so key inputs work
     if (componentContainer && componentContainer.current) {
@@ -331,51 +311,36 @@ const TourView = props => {
     }
   });
 
-  // scrolling to top after change in step
   useEffect(() => {
     window.scrollTo(0, 0);
   });
 
-  /**
-   * builds a tour element for an introduction text into a section
-   * @param sectionIntro the section intro object
-   */
   const buildIntroTextTourStep = sectionIntro => {
-    // building title and content for introduction text to section
-    const elementTitle = `Einführung ${sectionIntro.title}`;
+    const elementTitle = t("INTRO_TOUR_STEP_TITLE", {
+      title: sectionIntro.title
+    });
     const elementContent = sectionIntro.text;
 
-    // returning result
     return [elementTitle, elementContent];
   };
 
-  /**
-   * build title and content for a number result item and returns it as an array
-   * @param numberResult the result element to build title and content from
-   */
   const buildNumberTourStep = numberResult => {
-    // if element is default result => using standard result
-    // title is name and value
     const elementTitle = `${numberResult.name} ${numberResult.result.value ||
       numberResult.result.list ||
       ""}`;
-    // if item is locked => returning promotion
+
     if (numberResult.descriptionText.length === 0) {
-      // returning title and locked widget element
       return [elementTitle, null];
     }
 
-    // building content based on user preferences
     let elementContent = "";
 
-    // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
       if (numberResult.numberDescription.description) {
         elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
       }
     }
 
-    // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
       if (numberResult.numberDescription.calculationDescription) {
         elementContent += !!numberResult.numberDescription
@@ -385,7 +350,6 @@ const TourView = props => {
       }
     }
 
-    // adding description text of result
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
     elementContent = elementContent
@@ -395,47 +359,34 @@ const TourView = props => {
     return [elementTitle, elementContent];
   };
 
-  /**
-   * build title and content for two number result items in compare mode and returns it as an array
-   * @param numberResult the result element
-   * @param numberCompareResult the compare result element
-   */
   const buildNumberTourCompareStep = (numberResult, numberCompareResult) => {
-    // title is name
     const elementTitle = numberResult.name;
 
-    // if item is locked => returning promotion
     if (numberResult.descriptionText.length === 0) {
       return [elementTitle, null];
     }
 
-    // building content based on user preferences
     let elementContent = "";
 
-    // adding number explanation text if configured
     if (!props.user || props.user.showNumberMeaningExplanations) {
       if (numberResult.numberDescription.description) {
         elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.description}</p>`;
       }
     }
 
-    // adding number calcuation explanation text if configured
     if (props.user && props.user.showNumberCalculationExplanations) {
       if (numberResult.numberDescription.calculationDescription) {
         elementContent += `<p class="${CONTENT_STYLING_CLASS_SUBHEADING}">${numberResult.numberDescription.calculationDescription} </p>`;
       }
     }
 
-    // adding result for first name
     elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div class=${CONTENT_STYLING_CLASS_HEADER_RESULTNUMBER}>${numberResult
       .result.value ||
       numberResult.result.list ||
       ""} </div><div class="${CONTENT_STYLING_CLASS_NAME_HEADER}">${name}</div></div> `;
 
-    // adding description text for first name
     elementContent += `<p class=${CONTENT_STYLING_CLASS_DESCRIPTION}>${numberResult.descriptionText}</p>`;
 
-    // adding result for second name
     elementContent += `<div class=${CONTENT_STYLING_CLASS_HEADER}><div class=${CONTENT_STYLING_CLASS_HEADER_RESULTNUMBER}>${numberCompareResult
       .result.value ||
       numberCompareResult.result.list ||
@@ -458,41 +409,31 @@ const TourView = props => {
     return [elementTitle, elementContent];
   };
 
-  // defining content and compare content
   let tourStepTitle;
   let tourStepContent;
 
   let shortTourStepTitle = "";
 
-  // determining if book promotion should be shown (not for intro text and based on user config)
   let showBookPromotion = !props.user || props.user.showBookRecommendations;
-  // getting result item to render given current section and element index
   const resultItem = tourData[sectionIndex].sectionElements[elementIndex];
 
-  // if first element => building intro text element
   if (resultItem.type === "sectionIntroText") {
-    // building step from section intro
     [tourStepTitle, tourStepContent] = buildIntroTextTourStep(resultItem);
     shortTourStepTitle = resultItem.title;
 
-    // not showing book promotion for intro text
     showBookPromotion = false;
   } else {
     shortTourStepTitle = resultItem.name;
 
-    // no compare result
     if (
       !compareTourData ||
       !shouldShowDuplicatedComparisonResult(resultItem.numberId)
     ) {
-      // building tour step for result item
       [tourStepTitle, tourStepContent] = buildNumberTourStep(resultItem);
     } else {
-      // getting compare item
       const compareResultItem =
         compareTourData[sectionIndex].sectionElements[elementIndex];
 
-      // building compare content
       [tourStepTitle, tourStepContent] = buildNumberTourCompareStep(
         resultItem,
         compareResultItem
@@ -567,7 +508,6 @@ const TourView = props => {
   ];
 };
 
-// defining proptypes
 TourView.propTypes = {
   tourData: PropTypes.array.isRequired,
   compareTourData: PropTypes.array,
@@ -578,7 +518,6 @@ TourView.propTypes = {
   accessLevel: PropTypes.string.isRequired
 };
 
-// defining default props
 TourView.defaultProps = {
   sectionIndex: 0,
   elementIndex: 0,

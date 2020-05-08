@@ -8,7 +8,6 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
-// container for all title elements
 const TitleBarContainer = styled.div`
   /* one row container centered*/
   display: flex;
@@ -33,7 +32,6 @@ const TitleBarContainer = styled.div`
   }
 `;
 
-// an item in the title bar
 const TitleBarItemContainer = styled.div`
   /* one column centered*/
   display: flex;
@@ -55,7 +53,6 @@ const TitleBarItemContainer = styled.div`
   }
 `;
 
-// Container for close icon
 const CloseIconContainer = styled.div`
   /* one row that spans whole with where icon is aligned at the top end*/
   display: flex;
@@ -71,7 +68,6 @@ const CloseIconContainer = styled.div`
   cursor: default;
 `;
 
-// x icon on top
 const CloseIcon = styled(FontAwesomeIcon)`
   /* default is transparent => only visible when hovering */
   color: transparent;
@@ -85,7 +81,6 @@ const CloseIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-// name in a title item
 const TitleBarName = styled.div`
   color: ${props => props.theme.darkGrey};
   font-family: ${props => props.theme.fontFamily};
@@ -124,7 +119,6 @@ const TitleBarDate = styled.div`
   }
 `;
 
-// item of the tite bar containing of name and date of birth
 const TitleBarItem = props => (
   <TitleBarItemContainer
     className={props.className}
@@ -141,10 +135,6 @@ const TitleBarItem = props => (
   </TitleBarItemContainer>
 );
 
-/**
- * title bar on top of screen featuring a page title showing the user
- * names and dob of the currently displayed analysis
- */
 const TitleBar = props => (
   <TitleBarContainer>
     <TitleBarItem

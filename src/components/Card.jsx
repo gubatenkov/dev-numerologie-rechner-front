@@ -1,32 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import "../styles/Card.css";
 
-/**
- * card component to display data in tile formats
- */
-class Card extends Component {
-  static propTypes = {
-    title: PropTypes.string.isRequired,
-    body: PropTypes.number.isRequired,
-    description: PropTypes.string.isRequired
-  };
+const Card = props => {
+  return (
+    <div className="card card-block">
+      <h4 className="card-title">{props.title}</h4>
+      <p className="card-text Card__body">{props.body}</p>
+      <p className="card-text">
+        <small className="text-muted">{props.description}</small>
+      </p>
+    </div>
+  );
+};
 
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <div className="card card-block">
-        <h4 className="card-title">{this.props.title}</h4>
-        <p className="card-text Card__body">{this.props.body}</p>
-        <p className="card-text">
-          <small className="text-muted">{this.props.description}</small>
-        </p>
-      </div>
-    );
-  }
-}
+Card.propTypes = {
+  title: PropTypes.string.isRequired,
+  body: PropTypes.number.isRequired,
+  description: PropTypes.string.isRequired
+};
 
 export default Card;

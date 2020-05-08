@@ -1,29 +1,19 @@
-import React, { Component } from "react";
-
+import React from "react";
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
 
-class AnalysisAutoSaveDialog extends Component {
-  static propTypes = {};
-
-  static defaultProps = {};
-
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        title="Analyse speichern"
-        cancelTitle="Nein"
-        actionTitle="Ja, bitte speichern"
-      >
-        <p>
-          {`Wollen Sie diese Analyse vor dem Verlassen der Seite speichern?`}
-        </p>
-      </Dialog>
-    );
-  }
-}
+const AnalysisAutoSaveDialog = props => {
+  const { t } = useTranslation();
+  return (
+    <Dialog
+      {...props}
+      title={t("DIALOG.SAVE_ANALYSIS")}
+      cancelTitle={t("NO")}
+      actionTitle={t("DIALOG.YES_SAVE")}
+    >
+      <p>{t("DIALOG.SAVE_BEFORE_LEAVING")}</p>
+    </Dialog>
+  );
+};
 
 export default AnalysisAutoSaveDialog;

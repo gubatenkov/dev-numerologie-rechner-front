@@ -10,6 +10,7 @@ import {
 import shortPdfIcon from "../images/icon_openBookPremium_primary.svg";
 import longPdfIcon from "../images/icon_textLong.svg";
 import iconDelete from "../images/icon_delete.svg";
+import { useTranslation } from "react-i18next";
 
 export const SHORT_TYPE = "persoenlichkeit_kurz";
 export const LONG_TYPE = "persoenlichkeit_lang";
@@ -38,6 +39,8 @@ const AnalysisListEntry = ({
   onAnalysisDelete,
   credits
 }) => {
+  const { t } = useTranslation();
+
   const [hasLong, setHasLong] = useState(
     analysis.usedCreditTypes.includes(LONG_TYPE)
   );
@@ -89,27 +92,27 @@ const AnalysisListEntry = ({
           {/* Short Pdfs */}
           {hasShort ? (
             <NavigationDropdownMenuItem onClick={onShortPdfClicked}>
-              <img src={shortPdfIcon} alt="" /> Kurzes PDF herunterladen
+              <img src={shortPdfIcon} alt="" /> {t("DOWNLOAD_PDF_SHORT")}
             </NavigationDropdownMenuItem>
           ) : (
             <NavigationDropdownMenuItem onClick={onBuyShortPdfClicked}>
               <img src={shortPdfIcon} alt="" />{" "}
               {hasUnusedShortCredits()
-                ? "Kurzes PDF - Credit einlösen"
-                : "Kurzes PDF kaufen"}
+                ? t("USE_CREDIT_PDF_SHORT")
+                : t("BUY_CREDIT_PDF_SHORT")}
             </NavigationDropdownMenuItem>
           )}
           {/* Long Pdfs */}
           {hasLong ? (
             <NavigationDropdownMenuItem onClick={onLongPdfClicked}>
-              <img src={longPdfIcon} alt="" /> Langes PDF herunterladen
+              <img src={longPdfIcon} alt="" /> {t("DOWNLOAD_PDF_LONG")}
             </NavigationDropdownMenuItem>
           ) : (
             <NavigationDropdownMenuItem onClick={onBuyLongPdfClicked}>
               <img src={longPdfIcon} alt="" />{" "}
               {hasUnusedLongCredits()
-                ? "Langes PDF - Credit einlösen"
-                : "Langes PDF kaufen"}
+                ? t("USE_CREDIT_PDF_LONG")
+                : t("BUY_CREDIT_PDF_LONG")}
             </NavigationDropdownMenuItem>
           )}
         </NavigationDropdownMenu>
@@ -119,7 +122,7 @@ const AnalysisListEntry = ({
           customToggle={ActionToggleIcon}
         >
           <NavigationDropdownMenuItem onClick={onAnalysisDelete}>
-            <img src={iconDelete} alt="" /> Löschen
+            <img src={iconDelete} alt="" /> {t("DELETE")}
           </NavigationDropdownMenuItem>
         </NavigationDropdownMenu>
       </RightDiv>

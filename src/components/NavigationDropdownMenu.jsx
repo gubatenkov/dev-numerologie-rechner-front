@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import "../styles/NavigationDropdownMenu.css";
@@ -19,34 +19,26 @@ const CustomToggleFactory = child =>
     </div>
   ));
 
-/**
- * A Dropdown Menu in the navigation bar
- */
-class NavigationDropdownMenu extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    customToggle: PropTypes.node
-  };
+const NavigationDropdownMenu = props => {
+  return (
+    <Dropdown alignRight>
+      <Dropdown.Toggle
+        as={CustomToggleFactory(props.customToggle)}
+        id="dropdown-custom-components"
+      />
+      <Dropdown.Menu>{props.children}</Dropdown.Menu>
+    </Dropdown>
+  );
+};
 
-  static defaultProps = {
-    children: null,
-    customToggle: <IconAdd />
-  };
+NavigationDropdownMenu.propTypes = {
+  children: PropTypes.node,
+  customToggle: PropTypes.node
+};
 
-  /**
-   * renders nav dropdown item with title and children as menu items
-   */
-  render() {
-    return (
-      <Dropdown alignRight onBlur={this.handleBlur}>
-        <Dropdown.Toggle
-          as={CustomToggleFactory(this.props.customToggle)}
-          id="dropdown-custom-components"
-        />
-        <Dropdown.Menu>{this.props.children}</Dropdown.Menu>
-      </Dropdown>
-    );
-  }
-}
+NavigationDropdownMenu.defaultProps = {
+  children: null,
+  customToggle: <IconAdd />
+};
 
 export default NavigationDropdownMenu;

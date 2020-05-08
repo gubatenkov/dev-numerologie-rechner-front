@@ -1,32 +1,19 @@
-import React, { Component } from "react";
-
+import React from "react";
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
 
-/**
- * dialog that prompts the user to confirm the deletion of a group
- */
-class ConfirmUserDeletionDialog extends Component {
-  static propTypes = {};
-
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        title="Benutzer löschen"
-        cancelTitle="Abbrechen"
-        actionTitle="Löschen"
-      >
-        <p>
-          {
-            "Sind Sie sicher, dass Sie Ihren Benutzer und alle Daten sowie alle Analysen löschen wollen?"
-          }
-        </p>
-      </Dialog>
-    );
-  }
-}
+const ConfirmUserDeletionDialog = props => {
+  const { t } = useTranslation();
+  return (
+    <Dialog
+      {...props}
+      title={t("DIALOG.DELETE_USER")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DELETE")}
+    >
+      <p>{t("DIALOG.DELETE_USER_INFO")}</p>
+    </Dialog>
+  );
+};
 
 export default ConfirmUserDeletionDialog;

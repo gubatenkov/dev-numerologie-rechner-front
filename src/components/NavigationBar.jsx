@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 
-// styling related
 import styled from "styled-components";
-
+import { useTranslation } from "react-i18next";
 import Avatar from "react-avatar";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Spinner from "react-bootstrap/Spinner";
@@ -24,17 +23,14 @@ import Popover, {
 import IconButton from "./Buttons/IconButton";
 import TextButton from "./Buttons/TextButton";
 
-// images
 import logo from "../images/logo.png";
 
-// importing threshold to switch to mobile optimized layout
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
-// auth utils
-import { deleteUserAuthData, getUserAuthData } from "../utils/AuthUtils";
+import { getUserAuthData } from "../utils/AuthUtils";
 import { useBuyModal } from "../contexts/BuyModalContext";
+import { useUser } from "../contexts/UserContext";
 
-// container component of navbar
 const NavbarContainer = styled.nav`
   /* fixed bar height*/
   height: 130px;
@@ -51,7 +47,6 @@ const NavbarContainer = styled.nav`
   margin: 32px 32px 0 32px;
 `;
 
-// resizing button for bar use
 const NavBarIconButton = styled(IconButton)`
   width: 36px;
   height: 36px;
@@ -63,7 +58,6 @@ const LeftIconButton = styled(NavBarIconButton)`
   grid-column-start: 1;
 `;
 
-// styling logo container => center
 const LogoContainer = styled.a`
   /* positioning in the (true) center */
   grid-column-start: 4;
@@ -88,19 +82,16 @@ const LogoContainer = styled.a`
   }
 `;
 
-// styling setting icon button to the right (shown if user is logged in)
 const SettingsIconButton = styled(NavBarIconButton)`
   /* positioning at start of area for element to the right */
   grid-column-start: 5;
 `;
 
-// styling shopping cart icon button to the right (shown if user is logged in)
 const CartIconButton = styled(NavBarIconButton)`
   /* positioning at center of area for elements to the right */
   grid-column-start: 6;
 `;
 
-// styling button element that is displayed to the right if user not logged in
 const RightActionButton = styled(TextButton)`
   /* right action spans across all of are for elements to the right */
   grid-column-start: 5;
@@ -113,7 +104,6 @@ const RightActionButton = styled(TextButton)`
   font-size: 16px;
 `;
 
-// user avatar image (based on avatar library)
 const UserAvatar = styled(Avatar)`
   /* last element to the right */
   grid-column-start: 7;
@@ -124,7 +114,6 @@ const UserAvatar = styled(Avatar)`
   height: 36px !important;
 `;
 
-// container for segmented button group
 const SegmentContainer = styled(ButtonGroup)`
   /* making sure it spreads out in container */
   width: 100%;
@@ -134,7 +123,6 @@ const SegmentContainer = styled(ButtonGroup)`
   justify-content: space-around;
 `;
 
-// the text button in the segmented button group
 const SegmentButton = styled(TextButton)`
   /* making sure button grows to equal share with other children */
   flex-grow: 1;
@@ -145,7 +133,6 @@ const SegmentButton = styled(TextButton)`
   height: 38px;
 `;
 
-// spinner when loading
 const NavbarSpinner = styled(Spinner)`
   /* spinner is placed to the right */
   grid-column-start: 4;
@@ -154,11 +141,7 @@ const NavbarSpinner = styled(Spinner)`
   justify-self: center;
 `;
 
-/**
- * the navigation bar for the application on top
- */
 const NavigationBar = props => {
-  // defining state as user settings
   const [userSettings, setUserSettings] = useState({
     resultConfiguration: null,
     showBookRecommendations: false,
@@ -167,16 +150,13 @@ const NavigationBar = props => {
     showNumberMeaningExplanations: false,
     showNumberCalculationExplanations: false
   });
-
+  const { t } = useTranslation();
   const { setIsOpen } = useBuyModal();
-  // state flag indicating if the state of this component has already been properly initialized by server call
+  const User = useUser();
   const [componentInitialized, setComponentInitialized] = useState(false);
 
-  // defining mutation used to update user settings on backend
   const [saveUserSettings] = useMutation(saveUserSettingsMutation);
 
-  // defining query loading user data and setting state upon completion
-  // setting fetch policy to prevent caching issues
   const { loading, data, error } = useQuery(userSettingsQuery, {
     fetchPolicy: "network-only",
     onCompleted: data => {
@@ -184,11 +164,9 @@ const NavigationBar = props => {
         return;
       }
 
-      // extractin user result data
       const { currentUser } = data;
 
       if (currentUser) {
-        // setting initial state of the component based on result
         setUserSettings({
           ...userSettings,
           resultConfiguration: currentUser.resultConfiguration,
@@ -201,39 +179,31 @@ const NavigationBar = props => {
             currentUser.showNumberCalculationExplanations
         });
 
-        // setting initialized flag to indicate properly initialized state
         setComponentInitialized(true);
       }
     }
   });
 
-  // defining effect that calls server whenever settings change
   useEffect(() => {
-    // only applying change to server if not loadign, data is present and flag for proper initialization has been set
     if (!loading && data && componentInitialized) {
-      // extracting user data from prop
       const { currentUser } = data;
 
-      // checking if any of the values changed
       const settingsChanged = !Object.entries(userSettings).every(
         ([settingKey, settingValue]) => currentUser[settingKey] === settingValue
       );
 
-      // if settings changed => calling server to apply change
       if (settingsChanged) {
         setTimeout(async () => {
           await saveUserSettings({
             variables: userSettings
           });
 
-          // just refetch User doesn't update the Analysis Result, so this is easier for now
           window.location.reload();
         });
       }
     }
   }, [userSettings, loading, data, saveUserSettings, componentInitialized]);
 
-  // returning loading indicator if data is still loading
   if (loading) {
     return (
       <NavbarContainer>
@@ -242,33 +212,25 @@ const NavigationBar = props => {
     );
   }
 
-  // checking if user is logged in in two ways
-  // a) query returned user information b) we have a token stored locally.
-  // if a) but not b), we have inconsistent state
   const loggedIn =
     data &&
     data.currentUser &&
     data.currentUser.email &&
     getUserAuthData().token;
 
-  // handles a logout of the user
   const handleLogout = () => {
-    // deleting auth credentials stored in local storage
-    deleteUserAuthData();
-
-    // redirecting user to login page
+    User.logoutUser();
     props.history.push("/login");
   };
 
-  // defining popover for settings button
   const settingsPopup = (
     <Popover>
       <PopoverSettingsContent>
-        <PopoverSettingsSection title="Reihenfolge der Zahlen – Übersicht und Tour">
+        <PopoverSettingsSection title={t("USER_SETTINGS.ORDER")}>
           <SegmentContainer>
             <SegmentButton
               primary={userSettings.resultConfiguration === "starter"}
-              title={"Standard"}
+              title={t("USER_SETTINGS.STANDARD")}
               onClick={() =>
                 setUserSettings({
                   ...userSettings,
@@ -278,7 +240,7 @@ const NavigationBar = props => {
             />
             <SegmentButton
               primary={userSettings.resultConfiguration === "levels"}
-              title={"Fortgeschritten"}
+              title={t("USER_SETTINGS.ADVANCED")}
               onClick={() =>
                 setUserSettings({
                   ...userSettings,
@@ -288,7 +250,7 @@ const NavigationBar = props => {
             />
           </SegmentContainer>
           <SwitchSettingItem
-            title="Seitenzahl zum Nachschlagen – Übersicht"
+            title={t("USER_SETTINGS.PAGE_TO_LOOK_UP")}
             onChange={newValue =>
               setUserSettings({ ...userSettings, showBookReferences: newValue })
             }
@@ -296,7 +258,7 @@ const NavigationBar = props => {
             disabled={true}
           />
           <SwitchSettingItem
-            title="Buchreferenz mit Seitenzahl – Tour"
+            title={t("USER_SETTINGS.BOOK_REF")}
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
@@ -307,7 +269,7 @@ const NavigationBar = props => {
           />
 
           <SwitchSettingItem
-            title="Erklärungen zu Ebenen / Abschnitten"
+            title={t("USER_SETTINGS.EXPLANATIONS")}
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
@@ -317,7 +279,7 @@ const NavigationBar = props => {
             checked={userSettings.showCategoryExplanations}
           />
           <SwitchSettingItem
-            title="Erklärungen zu Bedeutung der Zahlen"
+            title={t("USER_SETTINGS.NUMBER_DESCRIPTIONS")}
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
@@ -328,7 +290,7 @@ const NavigationBar = props => {
           />
 
           <SwitchSettingItem
-            title="Erklärungen zur Zahlenberechnung"
+            title={t("USER_SETTINGS.NUMBER_CALCULATION")}
             onChange={newValue =>
               setUserSettings({
                 ...userSettings,
@@ -347,12 +309,12 @@ const NavigationBar = props => {
     <Popover>
       <PopoverTextContent>
         <PopoverTextItem onClick={() => props.history.push("/userHome")}>
-          Meine Analysen
+          {t("MY_ANALYSIS")}
         </PopoverTextItem>
         <PopoverTextItem onClick={() => props.history.push("/userProfile")}>
-          Mein Profil
+          {t("MY_PROFILE")}
         </PopoverTextItem>
-        <PopoverTextItem onClick={handleLogout}>Abmelden</PopoverTextItem>
+        <PopoverTextItem onClick={handleLogout}>{t("LOG_OUT")}</PopoverTextItem>
       </PopoverTextContent>
     </Popover>
   );
@@ -366,10 +328,7 @@ const NavigationBar = props => {
         />
       )}
 
-      <LogoContainer
-        href="https://www.psychologischenumerologie.eu/"
-        target="_blank"
-      >
+      <LogoContainer href={t("HOMEPAGE")} target="_blank">
         <img src={logo} alt={logo} />
       </LogoContainer>
 
@@ -408,7 +367,7 @@ const NavigationBar = props => {
 
       {!loggedIn && (
         <RightActionButton
-          title={props.register ? "Registrieren" : "Anmelden"}
+          title={props.register ? t("REGISTER") : t("SIGN_IN")}
           onClick={
             props.register
               ? () => props.history.push("/register")

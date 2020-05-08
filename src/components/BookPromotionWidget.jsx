@@ -2,12 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Interweave from "interweave";
-
-// images for promotions
+import { useTranslation, Trans } from "react-i18next";
 import book1Cover from "../images/book_1.png";
 import book2Cover from "../images/book_2.png";
 
-// widget container for the book
 const BookPromotion = styled.div`
   border-radius: 6px;
 
@@ -53,7 +51,6 @@ const BookPromotion = styled.div`
   }
 `;
 
-// container for the image positioned at the bottom center
 const BookPromotionImageContainer = styled.div`
   /* using flex row to center image*/
   display: flex;
@@ -61,8 +58,9 @@ const BookPromotionImageContainer = styled.div`
   justify-content: center;
 `;
 
-// widget holding promotion content for a book based on a book reference string
 const BookPromotionWidget = props => {
+  const { t } = useTranslation();
+
   // finding out which book cover to include based on book reference string
   // TODO determine this based on passed book number from backend
   const bookCoverIcon = props.bookReference.includes("Band 1")
@@ -71,10 +69,13 @@ const BookPromotionWidget = props => {
 
   return (
     <BookPromotion className={props.className}>
-      <h4>Detaillierte Beschreibungen</h4>
+      <h4>{t("DETAILED_DESCRIPTION")}</h4>
       <p>
-        ...über Ihre/n <b>{`${props.resultTitle}`}</b> finden Sie in unserem
-        Buch <Interweave content={props.bookReference} />
+        <Trans i18nKey="BOOK_PROMO">
+          ...über Ihre/n <strong>{{ title: props.resultTitle }}</strong> finden
+          Sie in unserem Buch
+        </Trans>
+        <Interweave content={props.bookReference} />
       </p>
 
       <BookPromotionImageContainer>
@@ -84,7 +85,6 @@ const BookPromotionWidget = props => {
   );
 };
 
-// setting proptype
 BookPromotionWidget.propTypes = {
   resultTitle: PropTypes.string.isRequired,
   bookReference: PropTypes.string.isRequired

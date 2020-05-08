@@ -41,6 +41,11 @@ const useUserProvider = () => {
     setUser(undefined);
   };
 
+  const logoutUser = () => {
+    deleteUserAuthData();
+    setUser(undefined);
+  };
+
   useEffect(() => {
     fetchUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -49,6 +54,7 @@ const useUserProvider = () => {
     user,
     isFetching,
     fetchUser,
-    deleteUser
+    deleteUser,
+    logoutUser
   };
 };

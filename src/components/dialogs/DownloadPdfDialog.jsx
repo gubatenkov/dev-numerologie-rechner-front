@@ -1,37 +1,30 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTyes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
 
-/**
- * dialog that prompts the user to confirm the deletion of an analysis
- */
-class DownloadPdfDialog extends Component {
-  static propTypes = {
-    analysis: PropTyes.shape({
-      name: PropTyes.string.isRequired
-    })
-  };
+const DownloadPdfDialog = props => {
+  const { t } = useTranslation();
 
-  static defaultProps = {
-    analysis: null
-  };
+  return (
+    <Dialog
+      {...props}
+      title={t("DIALOG.DOWNLOAD_PDF")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DOWNLOAD")}
+    >
+      <p>{t("DIALOG.DOWNLOAD_INFO")}</p>
+    </Dialog>
+  );
+};
 
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        title="Download PDF"
-        cancelTitle="Cancel"
-        actionTitle="Download"
-      >
-        <p>{`How do you want to get your PDF file?`}</p>
-      </Dialog>
-    );
-  }
-}
+DownloadPdfDialog.propTypes = {
+  analysis: PropTyes.shape({
+    name: PropTyes.string.isRequired
+  })
+};
 
+DownloadPdfDialog.defaultProps = {
+  analysis: null
+};
 export default DownloadPdfDialog;

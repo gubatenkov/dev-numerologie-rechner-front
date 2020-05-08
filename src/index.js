@@ -52,6 +52,9 @@ import { GRAPHQL_ENDPOINT } from "./utils/Configuration";
 import UserProfile from "./components/UserProfile";
 import { BuyModalProvider } from "./contexts/BuyModalContext";
 import { UserProvider } from "./contexts/UserContext";
+import { initTranslationFramework } from "./utils/initTranslationFramework";
+
+initTranslationFramework();
 
 // defining UI themes
 const lightTheme = {

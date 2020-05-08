@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
-// container for links in the footer
 const FooterContainer = styled.div`
   /* One row wrapping*/
   display: flex;
@@ -20,7 +20,6 @@ const FooterContainer = styled.div`
   margin-left: -35px;
 `;
 
-// link in the footer
 const FooterLink = styled.a`
   /* text styling*/
   font-family: ${props => props.theme.fontFamily};
@@ -38,43 +37,30 @@ const FooterLink = styled.a`
   }
 `;
 
-// footer component showing copyright notice and basic links such as about us and data protection.
-const Footer = props => (
-  <FooterContainer>
-    <FooterLink href="https://www.akademiebios.eu " target="_blank">
-      &copy;{` ${new Date().getFullYear()} akademie bios`}&reg;
-    </FooterLink>
-    <FooterLink
-      href="https://www.psychologischenumerologie.eu/psychologische-numerologie-und-numerologie-coaching/"
-      target="_blank"
-    >
-      Psychologische Numerologie
-    </FooterLink>
-    <FooterLink
-      href="https://www.psychologischenumerologie.eu/dr-ernestina-mazza/"
-      target="_blank"
-    >
-      Über uns
-    </FooterLink>
-    <FooterLink
-      href="https://www.psychologischenumerologie.eu/impressum/"
-      target="_blank"
-    >
-      Impressum
-    </FooterLink>
-    <FooterLink
-      href="https://www.psychologischenumerologie.eu/datenschutz/"
-      target="_blank"
-    >
-      Datenschutz
-    </FooterLink>
-    <FooterLink
-      href="https://www.psychologischenumerologie.eu/nutzungsbedingungen/"
-      target="_blank"
-    >
-      Nutzungsbedingungen
-    </FooterLink>
-  </FooterContainer>
-);
+const Footer = props => {
+  const { t } = useTranslation();
+  return (
+    <FooterContainer>
+      <FooterLink href={t("HOMEPAGE")} target="_blank">
+        &copy;{` ${new Date().getFullYear()} akademie bios`}&reg;
+      </FooterLink>
+      <FooterLink href={t("HOMEPAGE_COACHING")} target="_blank">
+        {t("PSYCHOLOGICAL_NUMEROLOGY")}
+      </FooterLink>
+      <FooterLink href={t("HOMEPAGE_ABOUT_US")} target="_blank">
+        {t("ABOUT_US")}
+      </FooterLink>
+      <FooterLink href={t("HOMEPAGE_IMPRINT")} target="_blank">
+        {t("IMPRINT")}
+      </FooterLink>
+      <FooterLink href={t("HOMEPAGE_PRIVACY_POLICY")} target="_blank">
+        {t("PRIVACY_POLICY")}
+      </FooterLink>
+      <FooterLink href={t("HOMEPAGE_TERMS")} target="_blank">
+        {t("TERMS")}
+      </FooterLink>
+    </FooterContainer>
+  );
+};
 
 export default Footer;

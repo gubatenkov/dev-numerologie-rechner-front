@@ -1,7 +1,9 @@
 import React, { Fragment } from "react";
+import { useTranslation } from "react-i18next";
 import Button from "react-bootstrap/Button";
 
 export default ({ type, typeMessage, usedTypes, onBuy }) => {
+  const { t } = useTranslation();
   const isTypeIncluded = usedTypes && usedTypes.includes(type);
   return (
     <Button
@@ -18,12 +20,12 @@ export default ({ type, typeMessage, usedTypes, onBuy }) => {
       {isTypeIncluded ? (
         <Fragment>
           {" "}
-          | <strong>Herunterladen</strong>
+          | <strong>{t("DOWNLOAD")}</strong>
         </Fragment>
       ) : (
         <Fragment>
           {" "}
-          | <strong>Kaufen</strong>
+          | <strong>{t("BUY")}</strong>
         </Fragment>
       )}
     </Button>

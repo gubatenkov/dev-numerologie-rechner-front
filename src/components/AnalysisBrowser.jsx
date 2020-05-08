@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
-// import _ from "lodash";
 import ToastNotifications from "cogo-toast";
 
 import LoadingIndicator from "./LoadingIndicator";
@@ -44,10 +43,9 @@ import {
   AddToggleIcon
 } from "./Dropdowns/DropdownMenuAddUtils";
 import { useBuyModal } from "../contexts/BuyModalContext";
+import { useTranslation } from "react-i18next";
 
 const AnalysisBrowser = props => {
-  // declaring state variables
-  //const [expandedIndex, setExpandedIndex] = useState(-1);
   const [
     confirmGroupDeletionDialogOpen,
     setConfirmGroupDeletionDialogOpen
@@ -72,73 +70,61 @@ const AnalysisBrowser = props => {
   );
 
   const buyModal = useBuyModal();
+  const { t } = useTranslation();
 
-  /**
-   * handler for the creation of a group
-   * @param groupName the name of the new group to be created
-   */
   const createGroup = async groupName => {
     try {
-      // performing mutation call to create group
       await props.createGroup({
         variables: {
           groupName
         }
       });
-      // notifying user
       ToastNotifications.success(
-        `Die Gruppe ${groupName} wurde erfolgreich erstellt.`,
+        t("TOAST.GROUP_CREATED_SUCCESSFULLY", { groupName }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      // error occured -> displaying notification
-      ToastNotifications.error(error.graphQLErrors[0].message, {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
-    // resetting loading
     setLoading(false);
   };
 
-  /**
-   * handler for the rename action of group rows
-   * @param newName the name to be renamed to
-   * @param id the id of the item to renamed
-   */
   const renameGroup = async (newName, id) => {
-    // getting createGroup mutation
     const { renameGroup } = props;
     try {
-      // performing mutation call
       await renameGroup({
         variables: {
           id,
           newName
         }
       });
-      // notifying user
       ToastNotifications.success(
-        `Die Gruppe ${newName} wurde erfolgreich umbenannt.`,
+        t("TOAST.GROUP_RENAMED_SUCCESSFULLY", { groupName: newName }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      // error occured -> displaying notification
-      ToastNotifications.error("Die Gruppe konnte nicht umbenannt werden", {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
-    // resetting loading state
     setLoading(false);
   };
 
-  /**
-   * deletes the group identified by id from the server
-   * @param id: the id of the group to be deleted
-   */
   const deleteGroup = async id => {
-    // deleting group
     try {
       const deletedGroup = await props.deleteGroup({
         variables: {
@@ -146,28 +132,27 @@ const AnalysisBrowser = props => {
         }
       });
 
-      // informing the user
       ToastNotifications.success(
-        `Die Gruppe ${deletedGroup.data.deleteAnalysisGroup.name} wurde erfolgreich gelöscht.`,
+        t("TOAST.GROUP_DELETED_SUCCESSFULLY", {
+          groupName: deletedGroup.data.deleteAnalysisGroup.name
+        }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      console.log(error);
-      ToastNotifications.error("Gruppe konnte nicht gelöscht werden.", {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
-    // resetting loading state
     setLoading(false);
   };
 
-  /**
-   * handler for deleting a specific analysis
-   * @param id the id of the analysis to be deleted
-   */
   const deleteAnalysis = async id => {
-    // deleting analysis
     try {
       const deletedAnalysis = await props.deleteAnalysis({
         variables: {
@@ -175,38 +160,37 @@ const AnalysisBrowser = props => {
         }
       });
 
-      // shooting notification informting the user
       ToastNotifications.success(
-        `Die Analyse ${deletedAnalysis.data.deleteAnalysis.name} wurde erfolgreich gelöscht.`,
+        t("TOAST.ANALYSIS_DELETED_SUCCESSFULLY", {
+          analysisName: deletedAnalysis.data.deleteAnalysis.name
+        }),
         { position: "top-right" }
       );
       props.onRefetch();
     } catch (error) {
-      ToastNotifications.error("Analyse konnte nicht gelöscht werden.", {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
+      );
     }
-    // resetting loading state
     setLoading(false);
   };
 
-  /**
-   * creates a pdf for the analysis and opens it in a new tab
-   */
   const createAnalysisPdf = async targetAnalysis => {
-    // checking if logged in => otherwise redirecting to login
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
       props.history.push("/login");
       return;
     }
 
-    // setting activity indicator
     setLoading(true);
-    setLoadingText("Berechne detaillierte Auswertung und erstelle PDF...");
+    setLoadingText(t("CREATE_PDF_LOADING_INFO"));
 
     try {
-      // getting long texts used for pdf (if allowed)
       const result = await props.client.query({
         query: buildPersonalAnalysisByIdQuery(true),
         variables: {
@@ -216,16 +200,13 @@ const AnalysisBrowser = props => {
         }
       });
 
-      // getting user default result configuration
       const resultConfiguration = getConfigurationForId(
         props.resultConfiguration
       );
 
-      // getting section ids to get intro texts for including overall intro text
       const sectionIds = resultConfiguration.map(section => section.name);
       sectionIds.push(OVERALL_INTRO_KEY(props.resultConfiguration));
 
-      // getting intro texts for all sections in configuration
       const { introTexts } = (
         await props.client.query({
           query: introTextQuery,
@@ -237,10 +218,8 @@ const AnalysisBrowser = props => {
         })
       ).data;
 
-      // getting analysis from result
       const { analysis } = result.data;
 
-      // creating pdf and downloading with custom name
       if (analysis.personalAnalysisResults.length > 1) {
         const [
           personalAnalysisResult,
@@ -253,7 +232,12 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Namensvergleich_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}_${personalAnalysisResultCompare.firstNames}_${personalAnalysisResultCompare.lastName}.pdf`,
+          t("COMPARE_PDF_NAME", {
+            firstname: personalAnalysisResult.firstNames,
+            lastname: personalAnalysisResult.lastName,
+            compareFirstname: personalAnalysisResultCompare.firstNames,
+            compareLastname: personalAnalysisResultCompare.lastName
+          }),
           targetAnalysis.longTexts || false,
           personalAnalysisResultCompare,
           personalAnalysisResultCompare.firstNames,
@@ -268,31 +252,25 @@ const AnalysisBrowser = props => {
           introTexts,
           personalAnalysisResult.firstNames,
           personalAnalysisResult.lastName,
-          `Persönlichkeitsnumeroskop_${personalAnalysisResult.firstNames}_${personalAnalysisResult.lastName}.pdf`,
+          t("PDF_NAME", {
+            firstname: personalAnalysisResult.firstNames,
+            lastname: personalAnalysisResult.lastName
+          }),
           targetAnalysis.longTexts || false
         );
       }
     } catch (error) {
-      console.log("Creating PDF failed");
-      console.log(error);
+      console.log("Creating PDF failed", error);
     } finally {
-      // removing loading indicator
       setLoading(false);
       setLoadingText(null);
     }
   };
 
-  /**
-   * handles the spending of a credit = decreases the available credits and associates a given
-   * credit with an analysis
-   * @param {string} analysisId the id of the analysis to spend the credit on
-   * @param {string} type type of the credit to be used (e.g. long and short)
-   */
   const handleOnUseCredit = (analysisId, type) => {
     const { credits } = props;
     const filtered = credits.filter(c => c.type === type);
     if (filtered.length === 1 && filtered[0].total > 0) {
-      // opening confirm dialog and storing credits to be used
       setConfirmUseCreditDialogOpen(true);
       setCreditToBeUsed({ analysisId, type });
     } else {
@@ -300,15 +278,10 @@ const AnalysisBrowser = props => {
     }
   };
 
-  /**
-   * uses a user credit
-   */
   const spendCredit = async () => {
-    // showing loading indicator
     setLoading(true);
-    setLoadingText("Ihr Guthaben wird eingelöst...");
+    setLoadingText(t("USING_CREDITS_LOADING_INFO"));
     try {
-      // preparing arguments to use credit
       const { analysisId, type } = creditToBeUsed;
       await props.useCredit({
         variables: {
@@ -317,16 +290,17 @@ const AnalysisBrowser = props => {
         }
       });
       props.onUsedCredit();
-      ToastNotifications.success(
-        "Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.",
-        { position: "top-right" }
-      );
+      ToastNotifications.success(t("TOAST.CREDITS_USED_SUCCESSFULLY"), {
+        position: "top-right"
+      });
     } catch (error) {
-      console.log("Using credit failed");
-      console.log(error);
       ToastNotifications.error(
-        "Es ist ein Fehler aufgetreten und das Guthaben konnte nicht eingelöst werden.",
-        { position: "top-right" }
+        t("TOAST.GRAPHQL_ERROR", {
+          errorMessage: error.graphQLErrors[0].message
+        }),
+        {
+          position: "top-right"
+        }
       );
     } finally {
       setLoading(false);
@@ -334,8 +308,6 @@ const AnalysisBrowser = props => {
     }
   };
 
-  // render
-  // determining content of panel based on if there is data or not
   let panelContent = null;
 
   if (props.groups.length > 0) {
@@ -431,7 +403,7 @@ const AnalysisBrowser = props => {
   } else {
     panelContent = (
       <p className="AnalysisBrowser--placeholder">
-        Keine Gruppen oder Analysen
+        {t("NO_GROUPS_OR_ANALYSIS")}
       </p>
     );
   }
@@ -439,7 +411,7 @@ const AnalysisBrowser = props => {
     <div className="akb-analysis-browser">
       {loading && <LoadingIndicator text={loadingText} />}
       <div className="panel-header">
-        <div className="header">Analysen</div>
+        <div className="header"> {t("ANALYSISS")}</div>
         <div>
           <NavigationDropdownMenu
             key="AddGroupAnalysis"
@@ -448,28 +420,26 @@ const AnalysisBrowser = props => {
             <NavigationDropdownMenuItem
               onClick={() => setCreateGroupDialogOpen(true)}
             >
-              <img src={iconGroup} alt="" /> Gruppe
+              <img src={iconGroup} alt="" /> {t("GROUP")}
             </NavigationDropdownMenuItem>
             <NavigationDropdownMenuItem
               onClick={() => props.history.push("/analysisInput")}
             >
-              <img src={iconAnalysis} alt="" /> Analyse
+              <img src={iconAnalysis} alt="" /> {t("ANALYSIS")}
             </NavigationDropdownMenuItem>
           </NavigationDropdownMenu>
         </div>
       </div>
-      <div className="akb-group-headline">Gruppen</div>
+      <div className="akb-group-headline">{t("GROUPS")}</div>
       <div className="panel-content">{panelContent}</div>
       <ConfirmGroupDeletionDialog
         group={groupToBeDeleted}
         isOpen={confirmGroupDeletionDialogOpen}
         onClose={() => {
-          // clearing to be deleted group and hiding dialog
           setConfirmGroupDeletionDialogOpen(false);
           setGroupToBeDeleted(null);
         }}
         onAction={() => {
-          // hiding dialog, deleting group and clearing to be deleted group
           setConfirmGroupDeletionDialogOpen(false);
           setLoading(true);
           deleteGroup(groupToBeDeleted.id);
@@ -484,7 +454,6 @@ const AnalysisBrowser = props => {
           setAnalysisToBeDeleted(null);
         }}
         onAction={() => {
-          // hiding dialog, deleting analysis and clearing to be deleted group
           setConfirmAnalysisDeletionDialogOpen(false);
           setLoading(true);
           deleteAnalysis(analysisToBeDeleted.id);
@@ -495,10 +464,7 @@ const AnalysisBrowser = props => {
         isOpen={createGroupDialogOpen}
         onClose={() => setCreateGroupDialogOpen(false)}
         onAction={groupName => {
-          // calling handler
           createGroup(groupName);
-
-          // hiding dialog
           setCreateGroupDialogOpen(false);
           setLoading(true);
         }}
@@ -507,17 +473,12 @@ const AnalysisBrowser = props => {
       <RenameGroupDialog
         isOpen={renameGroupDialogOpen}
         onClose={() => {
-          // clearing to be renamed field
           setGroupToBeRenamed(null);
-
-          // hiding dialog
           setRenameGroupDialogOpen(false);
         }}
         onAction={(id, newName) => {
-          // renaming group
           renameGroup(newName, id);
 
-          // hiding dialog
           setRenameGroupDialogOpen(false);
           setLoading(true);
         }}

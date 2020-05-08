@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -10,41 +10,34 @@ import PropTypes from "prop-types";
  * if authenticated, false else
  * - loginPath: Path to be redirected to if not authenticated
  */
-class PrivateRoute extends Component {
-  static propTypes = {
-    isAuthenticated: PropTypes.func.isRequired,
-    loginPath: PropTypes.string.isRequired,
-    location: PropTypes.object
-  };
+const PrivateRoute = props => {
+  return (
+    <Route
+      render={() => {
+        if (props.isAuthenticated()) {
+          return <props.component {...props} />;
+        }
+        return (
+          <Redirect
+            to={{
+              pathname: props.loginPath,
+              state: { from: props.location }
+            }}
+          />
+        );
+      }}
+    />
+  );
+};
 
-  static defaultProps = {
-    location: null
-  };
-  /**
-   * default render method that checks login status and renders either passed login
-   * component or passed target component
-   */
-  render() {
-    return (
-      <Route
-        render={() => {
-          // if authenticated -> rendering intended component in Route
-          if (this.props.isAuthenticated()) {
-            return <this.props.component {...this.props} />;
-          }
-          // redirecting to passed login page
-          return (
-            <Redirect
-              to={{
-                pathname: this.props.loginPath,
-                state: { from: this.props.location }
-              }}
-            />
-          );
-        }}
-      />
-    );
-  }
-}
+PrivateRoute.propTypes = {
+  isAuthenticated: PropTypes.func.isRequired,
+  loginPath: PropTypes.string.isRequired,
+  location: PropTypes.object
+};
+
+PrivateRoute.defaultProps = {
+  location: null
+};
 
 export default PrivateRoute;

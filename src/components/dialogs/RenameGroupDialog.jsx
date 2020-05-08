@@ -1,86 +1,67 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
+import { useEffect, useState } from "react";
 
-/**
- * Dialog to rename a group
- */
-class RenameGroupDialog extends Component {
-  static propTypes = {
-    group: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired
-    }),
-    onAction: PropTypes.func.isRequired
-  };
+const RenameGroupDialog = props => {
+  const { t } = useTranslation();
+  const [groupName, setgroupName] = useState(null);
+  const [groupNameInput, setGroupNameInput] = useState(null);
 
-  static defaultProps = {
-    group: null
-  };
-
-  /**
-   * default lifecylce method
-   */
-  componentDidUpdate() {
-    // if rendered and input is there -> focusing
-    if (this.groupNameInput) {
-      this.groupNameInput.focus();
+  useEffect(() => {
+    if (groupNameInput) {
+      groupNameInput.focus();
     }
-  }
+  });
 
-  // member for the group name
-  groupName = null;
-
-  // input ref
-  groupNameInput = null;
-
-  /**
-   * handler for clicks on the create button
-   */
-  handleRenameClick = () => {
+  const handleRenameClick = () => {
     // todo add validation
-    if (this.groupName) {
-      this.props.onAction(this.props.group.id, this.groupName);
+    if (groupName) {
+      props.onAction(props.group.id, groupName);
     }
   };
 
-  /**
-   * handler for the user changing the name of the new group
-   * @param newGroupName: the new input text to the group name field
-   */
-  handleInputchange = newGroupName => {
-    this.groupName = newGroupName.target.value;
+  const handleInputchange = newGroupName => {
+    setgroupName(newGroupName.target.value);
   };
 
-  /**
-   * default render method
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        onAction={this.handleRenameClick}
-        title="Gruppe umbenennen"
-        cancelTitle="Abbrechen"
-        actionTitle="Umbenennen"
-      >
-        <p>
-          {`Bitte geben Sie den neuen Namen für ${this.props.group &&
-            this.props.group.name} an.`}
-        </p>
-        <input
-          type="text"
-          className="form-control"
-          placeholder={this.props.group && this.props.group.name}
-          onChange={this.handleInputchange}
-          ref={ref => {
-            this.groupNameInput = ref;
-          }}
-        />
-      </Dialog>
-    );
-  }
-}
+  return (
+    <Dialog
+      {...props}
+      onAction={handleRenameClick}
+      title={t("DIALOG.RENAME_GROUP")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DIALOG.RENAME")}
+    >
+      <p>
+        {t("DIALOG.ENTER_NAME_FOR_GROUP", {
+          name: props.group && props.group.name
+        })}
+      </p>
+      <input
+        type="text"
+        className="form-control"
+        placeholder={props.group && props.group.name}
+        onChange={handleInputchange}
+        ref={ref => {
+          setGroupNameInput(ref);
+        }}
+      />
+    </Dialog>
+  );
+};
+
+RenameGroupDialog.propTypes = {
+  group: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired
+  }),
+  onAction: PropTypes.func.isRequired
+};
+
+RenameGroupDialog.defaultProps = {
+  group: null
+};
 
 export default RenameGroupDialog;

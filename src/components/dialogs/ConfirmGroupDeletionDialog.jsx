@@ -1,41 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTyes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
 
-/**
- * dialog that prompts the user to confirm the deletion of a group
- */
-class ConfirmGroupDeletionDialog extends Component {
-  static propTypes = {
-    group: PropTyes.shape({
-      name: PropTyes.string.isRequired
-    })
-  };
+const ConfirmGroupDeletionDialog = props => {
+  const { t } = useTranslation();
+  return (
+    <Dialog
+      {...props}
+      title={t("DIALOG.DELETE_GROUP")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DELETE")}
+    >
+      <p>
+        {t("DIALOG.SURE_TO_DELETE_GROUP", {
+          group: props.group && props.group.name
+        })}
+      </p>
+    </Dialog>
+  );
+};
 
-  static defaultProps = {
-    group: null
-  };
+ConfirmGroupDeletionDialog.propTypes = {
+  group: PropTyes.shape({
+    name: PropTyes.string.isRequired
+  })
+};
 
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        title="Gruppe löschen"
-        cancelTitle="Abbrechen"
-        actionTitle="Löschen"
-      >
-        <p>
-          {`Sind Sie sicher, dass Sie die Gruppe "${this.props.group &&
-            this.props.group.name}" und alle Analysen in dieser Gruppe
-          löschen wollen? `}
-        </p>
-      </Dialog>
-    );
-  }
-}
+ConfirmGroupDeletionDialog.defaultProps = {
+  group: null
+};
 
 export default ConfirmGroupDeletionDialog;

@@ -1,39 +1,30 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTyes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 import Dialog from "./Dialog";
 
-/**
- * dialog that prompts the user to confirm the deletion of an analysis
- */
-class ConfirmUseCreditDialog extends Component {
-  static propTypes = {
-    analysis: PropTyes.shape({
-      name: PropTyes.string.isRequired
-    })
-  };
+const ConfirmUseCreditDialog = props => {
+  const { t } = useTranslation();
+  return (
+    <Dialog
+      {...props}
+      title={t("DIALOG.USE_CREDITS")}
+      cancelTitle={t("CANCEL")}
+      actionTitle={t("DIALOG.YES_USE_IT")}
+    >
+      <p>{t("DIALOG.USE_CREDIT_INFO")}</p>
+    </Dialog>
+  );
+};
 
-  static defaultProps = {
-    analysis: null
-  };
+ConfirmUseCreditDialog.propTypes = {
+  analysis: PropTyes.shape({
+    name: PropTyes.string.isRequired
+  })
+};
 
-  /**
-   * default render
-   */
-  render() {
-    return (
-      <Dialog
-        {...this.props}
-        title="Guthaben verwenden"
-        cancelTitle="Abbrechen"
-        actionTitle="Ja, bitte Guthaben verwenden"
-      >
-        <p>
-          {`Sie sind dabei, einen Guthaben-Punkt für die Erstellung eines Numeroskop-PDFs zu verwenden. Möchten Sie dies? `}
-        </p>
-      </Dialog>
-    );
-  }
-}
+ConfirmUseCreditDialog.defaultProps = {
+  analysis: null
+};
 
 export default ConfirmUseCreditDialog;
