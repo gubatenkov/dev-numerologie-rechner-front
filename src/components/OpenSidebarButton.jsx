@@ -3,6 +3,8 @@ import Menu from "../images/Menu.svg";
 import styled from "styled-components";
 import { useSidebar } from "../contexts/SidebarContext";
 
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
+
 const Button = styled.button`
   outline: none !important;
   width: 36px;
@@ -16,6 +18,11 @@ const Button = styled.button`
   position: absolute;
   top: 32px;
   left: 60px;
+
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    top: 32px;
+    left: 32px;
+  }
 `;
 
 export const OpenSidebarButton = props => {

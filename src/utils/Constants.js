@@ -38,12 +38,17 @@ export const MAIN_CONTAINER_MAX_WIDTH = 1440;
 
 export const LANGUAGES = [
   {
+    id: "de",
     code: "DE"
   },
   {
+    id: "en",
     code: "EN"
   },
   {
+    id: "it",
     code: "IT"
   }
 ];
+
+export const LANGUAGE_KEY = "lang";

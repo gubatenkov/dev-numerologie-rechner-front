@@ -72,7 +72,7 @@ export const LanguageSwitcher = props => {
           <LanguageItem
             key={index}
             onClick={() => {
-              User.setLanguage(index);
+              User.setLanguageWithId(lang.id);
               Sidebar.setShowLanguages(false);
             }}
           >
@@ -81,7 +81,7 @@ export const LanguageSwitcher = props => {
         ))}
       </LanguageDropDown>
       <Container onClick={openDropdown}>
-        <Language>{LANGUAGES[User.currentLanguageIndex].code}</Language>
+        <Language>{User.currentLanguage.code}</Language>
         <ArrowContainer>
           <ArrowDown />
         </ArrowContainer>

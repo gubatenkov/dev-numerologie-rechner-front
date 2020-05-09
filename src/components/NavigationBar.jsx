@@ -56,6 +56,11 @@ const NavBarIconButton = styled(IconButton)`
 const LeftIconButton = styled(NavBarIconButton)`
   /* positioning at start of the navbar (first element to the left)*/
   grid-column-start: 3;
+
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    grid-column-start: 1;
+    margin-top: 60px;
+  }
 `;
 
 const LogoContainer = styled.a`
