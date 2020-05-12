@@ -22,6 +22,7 @@ const Register = props => {
   const [readyToSubmit, setReadyToSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
     document.body.style.backgroundColor = "#00b3d4";
@@ -37,7 +38,8 @@ const Register = props => {
 
       const response = await postJsonData("/register", {
         email,
-        password
+        password,
+        langId: User.currentLanguage.id
       });
 
       setUserAuthData({ email, token: response.token });

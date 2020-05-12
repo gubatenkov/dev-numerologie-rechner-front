@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import ArrowDown from "./ArrowDown";
 import { LANGUAGES } from "../utils/Constants";

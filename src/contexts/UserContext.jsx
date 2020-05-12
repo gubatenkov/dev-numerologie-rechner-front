@@ -1,6 +1,9 @@
 import React, { useContext, createContext, useState } from "react";
 import { currentUserQuery } from "../graphql/Queries";
-import { deleteUserMutation } from "../graphql/Mutations";
+import {
+  deleteUserMutation,
+  setUserLangIdMutation
+} from "../graphql/Mutations";
 import { useApolloClient } from "@apollo/react-hooks";
 import { deleteUserAuthData } from "../utils/AuthUtils";
 import { useEffect } from "react";
@@ -33,6 +36,7 @@ const useUserProvider = () => {
     try {
       const response = await client.query({ query: currentUserQuery });
       setUser(response.data);
+      console.log("currentUser:", response.data.currentUser);
       const userLangId = response.data.currentUser.langId;
       if (userLangId) {
         if (currentLanguage.id !== userLangId) {
@@ -44,6 +48,8 @@ const useUserProvider = () => {
             setCurrentLanguage(newLang);
           }
         }
+      } else {
+        // TODO set current lang to user in db
       }
     } catch (e) {
       console.log("error while refetching user:", e.message);
@@ -53,7 +59,7 @@ const useUserProvider = () => {
 
   const deleteUser = async () => {
     // error should be caught whenever the func is called
-    await client.mutate({ query: deleteUserMutation });
+    await client.mutate({ mutation: deleteUserMutation });
     deleteUserAuthData();
     setUser(undefined);
   };
@@ -71,11 +77,15 @@ const useUserProvider = () => {
     if (currentLanguage.id !== i18next.language) {
       i18next.changeLanguage(currentLanguage.id);
       localStorage.setItem(LANGUAGE_KEY, currentLanguage.id);
+      console.log("Lang changed to:", currentLanguage.id);
     }
   }, [currentLanguage]);
 
-  const setLanguageWithId = id => {
-    // TODO Send language update to backend
+  const setLanguageWithId = async id => {
+    await client.mutate({
+      mutation: setUserLangIdMutation,
+      variables: { langId: id }
+    });
     setCurrentLanguage(LANGUAGES.find(lang => lang.id === id));
   };
 

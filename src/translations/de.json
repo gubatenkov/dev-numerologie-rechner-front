@@ -178,6 +178,12 @@
     "PERSONAL_INFO": "Persönliche Information",
     "DELETE_ACCOUNT": "Konto löschen",
     "CREDIT": "Guthaben",
-    "PASSWORD": "Passwort"
+    "PASSWORD": "Passwort",
+    "SIDEBAR": {
+      "START": "Start",
+      "INTRO": "Einführung",
+      "FAQ": "FAQ",
+      "CONTACT": "Kontakt"
+    }
   }
 }

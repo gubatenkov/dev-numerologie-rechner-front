@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import Dock from "react-dock";
 import { CloseButton } from "./CloseButton";
@@ -16,6 +16,7 @@ const Container = styled.div`
 
 const BoldText = styled.div`
   color: #323232;
+  visibility: hidden;
   font-family: Roboto;
   font-size: 20px;
   font-weight: 500;
@@ -25,6 +26,7 @@ const BoldText = styled.div`
 
 const NormalText = styled.div`
   color: #323232;
+  visibility: hidden;
   font-family: Roboto;
   font-size: 18px;
   letter-spacing: 0;
@@ -61,18 +63,18 @@ export const Sidebar = props => {
         <CloseButton onClick={() => Sidebar.setIsVisible(!Sidebar.isVisible)} />
         <SpaceBetween>
           <EqualSpacing height={250}>
-            <BoldText>Start</BoldText>
-            <BoldText>Einführung</BoldText>
-            <BoldText>FAQ</BoldText>
-            <BoldText>Über uns</BoldText>
-            <BoldText>Kontakt</BoldText>
+            <BoldText>{t("SIDEBAR.START")}</BoldText>
+            <BoldText>{t("SIDEBAR.INTRO")}</BoldText>
+            <BoldText>{t("SIDEBAR.FAQ")}</BoldText>
+            <BoldText>{t("ABOUT_US")}</BoldText>
+            <BoldText>{t("SIDEBAR.CONTACT")}</BoldText>
           </EqualSpacing>
           <EqualSpacing height={350}>
-            <NormalText>Impressum</NormalText>
-            <NormalText>Nutzungsbedingungen</NormalText>
-            <NormalText>Datenschutz</NormalText>
-            <NormalText>Pychologische Numerologie</NormalText>
-            <NormalText>2020 akademie bios</NormalText>
+            <NormalText>{t("IMPRINT")}</NormalText>
+            <NormalText>{t("PRIVACY_POLICY")}</NormalText>
+            <NormalText>{t("TERMS")}</NormalText>
+            <NormalText>{t("PSYCHOLOGICAL_NUMEROLOGY")}</NormalText>
+            <NormalText>&copy;akademie bios&reg;</NormalText>
             <LanguageSwitcher />
           </EqualSpacing>
         </SpaceBetween>
