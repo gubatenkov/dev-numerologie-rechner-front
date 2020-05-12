@@ -36,7 +36,6 @@ const useUserProvider = () => {
     try {
       const response = await client.query({ query: currentUserQuery });
       setUser(response.data);
-      console.log("currentUser:", response.data.currentUser);
       const userLangId = response.data.currentUser.langId;
       if (userLangId) {
         if (currentLanguage.id !== userLangId) {
@@ -48,8 +47,6 @@ const useUserProvider = () => {
             setCurrentLanguage(newLang);
           }
         }
-      } else {
-        // TODO set current lang to user in db
       }
     } catch (e) {
       console.log("error while refetching user:", e.message);
@@ -77,7 +74,6 @@ const useUserProvider = () => {
     if (currentLanguage.id !== i18next.language) {
       i18next.changeLanguage(currentLanguage.id);
       localStorage.setItem(LANGUAGE_KEY, currentLanguage.id);
-      console.log("Lang changed to:", currentLanguage.id);
     }
   }, [currentLanguage]);
 
