@@ -23,12 +23,12 @@ const useLoadingOverlayProvider = () => {
   const [text, setText] = useState(t("LOADING"));
 
   const showWithText = text => {
-    setIsShowing(true);
     if (text) {
       setText(text);
     } else {
       setText(t("LOADING"));
     }
+    setIsShowing(true);
   };
 
   const hide = () => {

@@ -185,7 +185,6 @@ const AnalysisBrowser = props => {
       props.history.push("/login");
       return;
     }
-
     LoadingOverlay.showWithText(t("CREATE_PDF_LOADING_INFO"));
 
     try {
@@ -197,6 +196,7 @@ const AnalysisBrowser = props => {
           longTexts: targetAnalysis.longTexts || false
         }
       });
+      LoadingOverlay.showWithText("Downloading PDF");
 
       const resultConfiguration = getConfigurationForId(
         props.resultConfiguration

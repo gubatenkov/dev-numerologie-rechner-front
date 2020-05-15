@@ -12,7 +12,11 @@ import "../styles/UserHome.scss";
 import NavigationBar from "./NavigationBar";
 import AnalysisBrowser from "./AnalysisBrowser";
 import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
-import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+import {
+  useLoadingOverlay,
+  LoadingOverlayProvider
+} from "../contexts/LoadingOverlayContext";
+import LoadingOverlayComp from "./LoadingOverlay";
 import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
 import Footer from "./Footer";
 
@@ -116,16 +120,19 @@ const UserHome = props => {
       <div className="UserHomeContentArea">
         <div className="UserHomeContent">
           <CreditsOverview credits={User.user.currentUser.credits} />
-          <AnalysisBrowser
-            groups={User.user.currentUser.groups}
-            analyses={User.user.analyses}
-            credits={User.user.currentUser.credits}
-            onUsedCredit={handleUsedCredit}
-            resultConfiguration={User.user.currentUser.resultConfiguration}
-            onRefetch={() => {
-              User.fetchUser();
-            }}
-          />
+          <LoadingOverlayProvider>
+            <AnalysisBrowser
+              groups={User.user.currentUser.groups}
+              analyses={User.user.analyses}
+              credits={User.user.currentUser.credits}
+              onUsedCredit={handleUsedCredit}
+              resultConfiguration={User.user.currentUser.resultConfiguration}
+              onRefetch={() => {
+                User.fetchUser();
+              }}
+            />
+            <LoadingOverlayComp />
+          </LoadingOverlayProvider>
           {/* We will hide Ads at the beginning */}
           {/*<AdArea horizontal>*/}
           {/*<AdAreaItem*/}
