@@ -11,14 +11,8 @@ import ConfirmGroupDeletionDialog from "./dialogs/ConfirmGroupDeletionDialog";
 import ConfirmAnalysisDeletionDialog from "./dialogs/ConfirmAnalysisDeletionDialog";
 import RenameGroupDialog from "./dialogs/RenameGroupDialog";
 import ConfirmUseCreditDialog from "./dialogs/ConfirmUseCreditDialog";
-import { getConfigurationForId } from "../utils/Configuration";
-import { OVERALL_INTRO_KEY } from "../utils/Constants";
 import { getUserAuthData } from "../utils/AuthUtils";
-import { createPDFFromAnalysisResult } from "../pdf/PdfBuilder";
-import {
-  buildPersonalAnalysisByIdQuery,
-  introTextQuery
-} from "../graphql/Queries";
+import { getAnalysisPdfQuery } from "../graphql/Queries";
 import {
   deleteGroupMutation,
   createGroupMutation,
@@ -179,7 +173,7 @@ const AnalysisBrowser = props => {
     LoadingOverlay.hide();
   };
 
-  const createAnalysisPdf = async targetAnalysis => {
+  const getAnalysisPdf = async targetAnalysis => {
     const authUser = getUserAuthData();
     if (!authUser || !authUser.token || !authUser.email) {
       props.history.push("/login");
@@ -189,78 +183,43 @@ const AnalysisBrowser = props => {
 
     try {
       const result = await props.client.query({
-        query: buildPersonalAnalysisByIdQuery(true),
+        query: getAnalysisPdfQuery,
         variables: {
           id: targetAnalysis.id,
-          isPdf: true,
           longTexts: targetAnalysis.longTexts || false
         }
       });
-      LoadingOverlay.showWithText("Downloading PDF");
 
-      const resultConfiguration = getConfigurationForId(
-        props.resultConfiguration
-      );
-
-      const sectionIds = resultConfiguration.map(section => section.name);
-      sectionIds.push(OVERALL_INTRO_KEY(props.resultConfiguration));
-
-      const { introTexts } = (
-        await props.client.query({
-          query: introTextQuery,
-          variables: {
-            sectionIds,
-            isPdf: true,
-            longText: targetAnalysis.longTexts || false
-          }
-        })
-      ).data;
-
-      const { analysis } = result.data;
-
-      if (analysis.personalAnalysisResults.length > 1) {
-        const [
-          personalAnalysisResult,
-          personalAnalysisResultCompare
-        ] = analysis.personalAnalysisResults;
-        await createPDFFromAnalysisResult(
-          personalAnalysisResult,
-          resultConfiguration,
-          props.resultConfiguration,
-          introTexts,
-          personalAnalysisResult.firstNames,
-          personalAnalysisResult.lastName,
-          t("COMPARE_PDF_NAME", {
-            firstname: personalAnalysisResult.firstNames,
-            lastname: personalAnalysisResult.lastName,
-            compareFirstname: personalAnalysisResultCompare.firstNames,
-            compareLastname: personalAnalysisResultCompare.lastName
-          }),
-          targetAnalysis.longTexts || false,
-          personalAnalysisResultCompare,
-          personalAnalysisResultCompare.firstNames,
-          personalAnalysisResultCompare.lastName
-        );
+      LoadingOverlay.showWithText(t("LOADING"));
+      let fileName;
+      if (targetAnalysis.personalAnalysisResults.length > 1) {
+        fileName = t("COMPARE_PDF_NAME", {
+          firstname: targetAnalysis.inputs[0].firstNames,
+          lastname: targetAnalysis.inputs[0].lastName,
+          compareFirstname: targetAnalysis.inputs[1].firstNames,
+          compareLastname: targetAnalysis.inputs[1].lastName
+        });
       } else {
-        const [personalAnalysisResult] = analysis.personalAnalysisResults;
-        await createPDFFromAnalysisResult(
-          personalAnalysisResult,
-          resultConfiguration,
-          props.resultConfiguration,
-          introTexts,
-          personalAnalysisResult.firstNames,
-          personalAnalysisResult.lastName,
-          t("PDF_NAME", {
-            firstname: personalAnalysisResult.firstNames,
-            lastname: personalAnalysisResult.lastName
-          }),
-          targetAnalysis.longTexts || false
-        );
+        fileName = t("PDF_NAME", {
+          firstname: targetAnalysis.inputs[0].firstNames,
+          lastname: targetAnalysis.inputs[0].lastName
+        });
       }
+      const linkSource = `data:application/pdf;base64,${result.data.getAnalysisPdf}`;
+      const downloadLink = document.createElement("a");
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.addEventListener("progress", function(event) {
+        console.log("onEvent:", event);
+      });
+      downloadLink.click();
     } catch (error) {
       console.log("Creating PDF failed", error);
     } finally {
-      LoadingOverlay.hide();
+      // to see the download overlay for a sec
+      setTimeout(() => {
+        // LoadingOverlay.hide();
+      }, 1000);
     }
   };
 
@@ -375,13 +334,13 @@ const AnalysisBrowser = props => {
                         setConfirmAnalysisDeletionDialogOpen(true);
                       }}
                       onShortPdfClicked={() => {
-                        createAnalysisPdf({ ...analysis, longTexts: false });
+                        getAnalysisPdf({ ...analysis, longTexts: false });
                       }}
                       onBuyShortPdfClicked={() => {
                         handleOnUseCredit(analysis.id, SHORT_TYPE);
                       }}
                       onLongPdfClicked={() => {
-                        createAnalysisPdf({ ...analysis, longTexts: true });
+                        getAnalysisPdf({ ...analysis, longTexts: true });
                       }}
                       onBuyLongPdfClicked={() => {
                         handleOnUseCredit(analysis.id, LONG_TYPE);

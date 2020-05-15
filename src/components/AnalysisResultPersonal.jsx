@@ -92,7 +92,7 @@ export default compose(
   graphql(userSettingsQuery, {
     name: "currentUser"
   }),
-  graphql(buildPersonalAnalysisByIdQuery(false), {
+  graphql(buildPersonalAnalysisByIdQuery, {
     options: params => ({
       variables: {
         id: parseInt(params.match.params.analysisId, 10),
@@ -104,7 +104,7 @@ export default compose(
     skip: params => !params.match.params.analysisId,
     name: "personalAnalysesById"
   }),
-  graphql(buildPersonalAnalysisByNameQuery(false), {
+  graphql(buildPersonalAnalysisByNameQuery, {
     options: params => {
       const firstNames = decodeURIComponent(params.match.params.firstNames);
       const lastNames = decodeURIComponent(params.match.params.lastNames);

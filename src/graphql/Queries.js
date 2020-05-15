@@ -5,7 +5,6 @@ import { disableFragmentWarnings } from "graphql-tag";
 
 disableFragmentWarnings();
 
-// query for the window token used to identify purchases with open shop windows
 export const currentWindowToken = gql`
   query windowToken($windowToken: String!) {
     windowToken(windowToken: $windowToken) {
@@ -17,7 +16,6 @@ export const currentWindowToken = gql`
   }
 `;
 
-// queries the current user with needed properties
 export const currentUserQuery = gql`
   query currentUser {
     currentUser {
@@ -63,7 +61,6 @@ export const currentUserQuery = gql`
   }
 `;
 
-// queries the current user's result configuration
 export const userSettingsQuery = gql`
   query currentUserResultConfiguration {
     currentUser {
@@ -78,7 +75,6 @@ export const userSettingsQuery = gql`
   }
 `;
 
-// queries the current user with needed properties
 export const introTextQuery = gql`
   query introText(
     $sectionIds: [String!]!
@@ -93,7 +89,6 @@ export const introTextQuery = gql`
   }
 `;
 
-// result fragment for default analysis result item for the analysis on the web (not pdf)
 export const webAnalysisResultItemFragment = gql`
   fragment AnalysisResultItemFragment on AnalysisResultItem {
     name
@@ -127,217 +122,164 @@ export const webAnalysisResultItemFragment = gql`
   }
 `;
 
-// result fragment for default analysis result item for the analysis in a pdf to be generated
-export const pdfAnalysisResultItemFragment = gql`
-  fragment AnalysisResultItemFragment on AnalysisResultItem {
-    name
-    numberId
-    descriptionText
-    bookReference
-    numberDescription {
-      description
-      calculationDescription
+export const buildPersonalAnalysisResultFragment = gql`
+  fragment PersonalAnalysisResultFragment on PersonalAnalysisResult {
+    firstNames
+    lastName
+    dateOfBirth
+    accessLevel
+    az {
+      ...AnalysisResultItemFragment
     }
-    highlighted
-    result {
-      ... on AnalysisResultValueNumber {
-        type
-        value
+    lz {
+      ...AnalysisResultItemFragment
+    }
+    bz {
+      ...AnalysisResultItemFragment
+    }
+    nnz {
+      ...AnalysisResultItemFragment
+    }
+    wz {
+      ...AnalysisResultItemFragment
+    }
+    iz {
+      ...AnalysisResultItemFragment
+    }
+    gz {
+      ...AnalysisResultItemFragment
+    }
+    gdr {
+      gdr {
+        ...AnalysisResultItemFragment
       }
-      ... on AnalysisResultValueList {
-        type
-        list
+      gdrv {
+        ...AnalysisResultItemFragment
       }
-      ... on AnalysisResultValueMatrix {
-        type
-        dimensions {
-          rows
-          cols
-        }
-        values
-        highlighted
+      gdrf {
+        ...AnalysisResultItemFragment
+      }
+      gdri {
+        ...AnalysisResultItemFragment
+      }
+    }
+    visz {
+      ...AnalysisResultItemFragment
+    }
+    tz {
+      ...AnalysisResultItemFragment
+    }
+    kz {
+      ...AnalysisResultItemFragment
+    }
+    bfz {
+      ...AnalysisResultItemFragment
+    }
+    visz {
+      ...AnalysisResultItemFragment
+    }
+    sz {
+      ...AnalysisResultItemFragment
+    }
+    iniz {
+      ...AnalysisResultItemFragment
+    }
+    sm {
+      ...AnalysisResultItemFragment
+    }
+    smv {
+      ...AnalysisResultItemFragment
+    }
+    kl {
+      ...AnalysisResultItemFragment
+    }
+    zsa {
+      ...AnalysisResultItemFragment
+    }
+    vz {
+      vzb {
+        ...AnalysisResultItemFragment
+      }
+      vzp {
+        ...AnalysisResultItemFragment
+      }
+      vze {
+        ...AnalysisResultItemFragment
+      }
+    }
+    hfhp {
+      hf {
+        ...AnalysisResultItemFragment
+      }
+      hf1 {
+        ...AnalysisResultItemFragment
+      }
+      hf2 {
+        ...AnalysisResultItemFragment
+      }
+      hf3 {
+        ...AnalysisResultItemFragment
+      }
+      hf4 {
+        ...AnalysisResultItemFragment
+      }
+      hp {
+        ...AnalysisResultItemFragment
+      }
+      hp1 {
+        ...AnalysisResultItemFragment
+      }
+      hp2 {
+        ...AnalysisResultItemFragment
+      }
+      hp3 {
+        ...AnalysisResultItemFragment
+      }
+      hp4 {
+        ...AnalysisResultItemFragment
+      }
+    }
+    pj {
+      pj {
+        ...AnalysisResultItemFragment
+      }
+      pjnj {
+        ...AnalysisResultItemFragment
       }
     }
   }
+  ${webAnalysisResultItemFragment}
 `;
 
-/**
- * generates the result fragment for a personal analysis result
- * @param {Boolean} isPdf true if the result is used for a pdf generation, false else
- * @returns a gql fragment of the personal analysis result
- */
-export function buildPersonalAnalysisResultFragment(isPdf) {
-  return gql`
-    fragment PersonalAnalysisResultFragment on PersonalAnalysisResult {
-      firstNames
-      lastName
-      dateOfBirth
-      accessLevel
-      az {
-        ...AnalysisResultItemFragment
-      }
-      lz {
-        ...AnalysisResultItemFragment
-      }
-      bz {
-        ...AnalysisResultItemFragment
-      }
-      nnz {
-        ...AnalysisResultItemFragment
-      }
-      wz {
-        ...AnalysisResultItemFragment
-      }
-      iz {
-        ...AnalysisResultItemFragment
-      }
-      gz {
-        ...AnalysisResultItemFragment
-      }
-      gdr {
-        gdr {
-          ...AnalysisResultItemFragment
-        }
-        gdrv {
-          ...AnalysisResultItemFragment
-        }
-        gdrf {
-          ...AnalysisResultItemFragment
-        }
-        gdri {
-          ...AnalysisResultItemFragment
-        }
-      }
-      visz {
-        ...AnalysisResultItemFragment
-      }
-      tz {
-        ...AnalysisResultItemFragment
-      }
-      kz {
-        ...AnalysisResultItemFragment
-      }
-      bfz {
-        ...AnalysisResultItemFragment
-      }
-      visz {
-        ...AnalysisResultItemFragment
-      }
-      sz {
-        ...AnalysisResultItemFragment
-      }
-      iniz {
-        ...AnalysisResultItemFragment
-      }
-      sm {
-        ...AnalysisResultItemFragment
-      }
-      smv {
-        ...AnalysisResultItemFragment
-      }
-      kl {
-        ...AnalysisResultItemFragment
-      }
-      zsa {
-        ...AnalysisResultItemFragment
-      }
-      vz {
-        vzb {
-          ...AnalysisResultItemFragment
-        }
-        vzp {
-          ...AnalysisResultItemFragment
-        }
-        vze {
-          ...AnalysisResultItemFragment
-        }
-      }
-      hfhp {
-        hf {
-          ...AnalysisResultItemFragment
-        }
-        hf1 {
-          ...AnalysisResultItemFragment
-        }
-        hf2 {
-          ...AnalysisResultItemFragment
-        }
-        hf3 {
-          ...AnalysisResultItemFragment
-        }
-        hf4 {
-          ...AnalysisResultItemFragment
-        }
-        hp {
-          ...AnalysisResultItemFragment
-        }
-        hp1 {
-          ...AnalysisResultItemFragment
-        }
-        hp2 {
-          ...AnalysisResultItemFragment
-        }
-        hp3 {
-          ...AnalysisResultItemFragment
-        }
-        hp4 {
-          ...AnalysisResultItemFragment
-        }
-      }
-      pj {
-        pj {
-          ...AnalysisResultItemFragment
-        }
-        pjnj {
-          ...AnalysisResultItemFragment
-        }
-      }
+export const buildPersonalAnalysisByNameQuery = gql`
+  query personalAnalysesByNames($inputs: [AnalysisInput!]!) {
+    personalAnalysisResults: personalAnalysesByNames(inputs: $inputs) {
+      ...PersonalAnalysisResultFragment
     }
-    ${isPdf ? pdfAnalysisResultItemFragment : webAnalysisResultItemFragment}
-  `;
-}
+  }
+  ${buildPersonalAnalysisResultFragment}
+`;
 
-/**
- * generates the query for the results of a personal analysis by name (=input parameters are name and dob)
- * @param {Boolean} forPdf true if inteded for generating pdfs, false else
- * @returns a graphql query object
- */
-export function buildPersonalAnalysisByNameQuery(isPdf) {
-  return gql`
-    query personalAnalysesByNames($inputs: [AnalysisInput!]!) {
-      personalAnalysisResults: personalAnalysesByNames(inputs: $inputs) {
+export const buildPersonalAnalysisByIdQuery = gql`
+  query personalAnalysesById($id: ID!, $isPdf: Boolean!, $longTexts: Boolean!) {
+    analysis(id: $id) {
+      id
+      name
+      inputs {
+        firstNames
+        lastName
+        dateOfBirth
+      }
+      personalAnalysisResults(isPdf: $isPdf, longTexts: $longTexts) {
         ...PersonalAnalysisResultFragment
       }
     }
-    ${buildPersonalAnalysisResultFragment(isPdf)}
-  `;
-}
+  }
+  ${buildPersonalAnalysisResultFragment}
+`;
 
-/**
- * generates the query for the results of a personal analysis by id (=id of existing analysis)
- * @param {Boolean} forPdf true if inteded for generating pdfs, false else
- * @returns a graphql query object
- */
-export function buildPersonalAnalysisByIdQuery(isPdf) {
-  return gql`
-    query personalAnalysesById(
-      $id: ID!
-      $isPdf: Boolean!
-      $longTexts: Boolean!
-    ) {
-      analysis(id: $id) {
-        id
-        name
-        inputs {
-          firstNames
-          lastName
-          dateOfBirth
-        }
-        personalAnalysisResults(isPdf: $isPdf, longTexts: $longTexts) {
-          ...PersonalAnalysisResultFragment
-        }
-      }
-    }
-    ${buildPersonalAnalysisResultFragment(isPdf)}
-  `;
-}
+export const getAnalysisPdfQuery = gql`
+  query getAnalysisPdf($id: ID!, $longTexts: Boolean!) {
+    getAnalysisPdf(id: $id, longText: $longTexts)
+  }
+`;

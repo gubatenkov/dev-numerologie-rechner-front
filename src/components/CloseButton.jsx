@@ -8,7 +8,7 @@ const CloseButtonStyled = styled.button`
   border: none;
   background-image: url(${CloseButtonImage});
   outline: none !important;
-  border-radius: 6px;
+  background-color: transparent;
 `;
 
 export const CloseButton = props => {
