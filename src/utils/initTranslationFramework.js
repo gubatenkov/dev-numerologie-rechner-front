@@ -22,8 +22,6 @@ export const initTranslationFramework = () => {
     localStorage.setItem(LANGUAGE_KEY, lang);
   }
 
-  console.log("Lang:", lang);
-
   i18n
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
@@ -41,6 +39,5 @@ export const initTranslationFramework = () => {
 
 const getLocallyStoredLang = () => {
   const storedLang = localStorage.getItem(LANGUAGE_KEY);
-  console.log("storedLang:", storedLang);
   return storedLang;
 };

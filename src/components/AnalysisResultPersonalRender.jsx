@@ -41,7 +41,7 @@ import { introTextQuery } from "../graphql/Queries";
 import { OVERALL_INTRO_KEY, TYPE_ID_MATRIX } from "../utils/Constants";
 
 import ActionBar from "./ActionBar";
-import LoadingIndicator from "./LoadingIndicator";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import MainContainer from "./MainContainer";
 
 const ContentArea = styled.div`
@@ -70,6 +70,7 @@ const AnalysisResultPersonalRender = props => {
   } = props;
 
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const LoadingOverlay = useLoadingOverlay();
 
   let resultConfig = PERSONAL_RESULT_CONFIGURATION_DEFAULT;
   let resultConfigId = PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID;
@@ -103,11 +104,13 @@ const AnalysisResultPersonalRender = props => {
   const [tourElementIndex, setTourElementIndex] = useState(0);
 
   if (loading) {
-    return <LoadingIndicator text={t("GENERATE_REPORT")} />;
+    LoadingOverlay.showWithText(t("GENERATE_REPORT"));
+    return null;
   }
 
   if (error) {
-    return <LoadingIndicator text={t("ERROR_OCCURED")} />;
+    LoadingOverlay.showWithText(t("ERROR_OCCURED"));
+    return null;
   }
 
   const { introTexts } = data;
@@ -250,6 +253,8 @@ const AnalysisResultPersonalRender = props => {
       setShowSaveModal(true);
     }
   };
+
+  LoadingOverlay.hide();
 
   return (
     <MainContainer>

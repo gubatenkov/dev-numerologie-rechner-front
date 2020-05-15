@@ -12,7 +12,7 @@ import "../styles/UserHome.scss";
 import NavigationBar from "./NavigationBar";
 import AnalysisBrowser from "./AnalysisBrowser";
 import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
-import LoadingIndicator from "./LoadingIndicator";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
 import Footer from "./Footer";
 
@@ -20,6 +20,7 @@ import { saveAnalysisMutation } from "../graphql/Mutations";
 import MainContainer from "./MainContainer";
 import CreditsOverview from "./CreditsOverview";
 import { useUser } from "../contexts/UserContext";
+
 const SAVE_ANALYSIS_COMMAND = "saveAnalysis";
 
 const UserHome = props => {
@@ -28,7 +29,7 @@ const UserHome = props => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(
     props.computedMatch.params.userAction === SAVE_ANALYSIS_COMMAND
   );
-  const [loading, setLoading] = useState(false);
+  const LoadingOverlay = useLoadingOverlay();
   const User = useUser();
   const handleUsedCredit = () => {
     User.fetchUser();
@@ -72,7 +73,7 @@ const UserHome = props => {
         }
       });
 
-      setLoading(false);
+      LoadingOverlay.hide();
 
       // redirecting to user home
       props.history.push("/userHome");
@@ -105,12 +106,12 @@ const UserHome = props => {
   }
 
   if (!User.user) {
-    return <LoadingIndicator text={t("LOADING")} />;
+    LoadingOverlay.showWithText(t("LOADING"));
+    return null;
   }
-
+  LoadingOverlay.hide();
   return (
     <MainContainer>
-      {loading && <LoadingIndicator />}
       <NavigationBar />
       <div className="UserHomeContentArea">
         <div className="UserHomeContent">
@@ -162,7 +163,7 @@ const UserHome = props => {
 
           saveAnalysis(analysisName, group.id);
           setSaveDialogOpen(false);
-          setLoading(true);
+          LoadingOverlay.showWithText();
         }}
         groups={User.user.currentUser.groups}
       />

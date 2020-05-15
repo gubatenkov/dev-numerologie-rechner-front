@@ -4,7 +4,7 @@ import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
 import Panel from "./Panel";
 import InputField from "./InputField";
-import LoadingIndicator from "./LoadingIndicator";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 import "../styles/InputForm.css";
@@ -13,15 +13,15 @@ import { useUser } from "../contexts/UserContext";
 
 const Login = props => {
   const { t } = useTranslation();
-
+  const LoadingOverlay = useLoadingOverlay();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+
   const { fetchUser } = useUser();
   const loginUser = async () => {
     const { history } = props;
     try {
-      setLoading(true);
+      LoadingOverlay.showWithText(t("SIGNING_IN"));
 
       const response = await postJsonData("/login", {
         email,
@@ -35,8 +35,9 @@ const Login = props => {
       await fetchUser();
       history.push("/userHome");
     } catch (error) {
-      setLoading(false);
       ToastNotifications.error(t("LOGIN_FAILED"), { position: "top-right" });
+    } finally {
+      LoadingOverlay.hide();
     }
   };
 
@@ -47,10 +48,6 @@ const Login = props => {
       document.body.style.backgroundColor = null;
     };
   });
-
-  if (loading) {
-    return <LoadingIndicator text={t("SIGNING_IN")} />;
-  }
 
   return (
     <div className="page-register-v3 layout-full">

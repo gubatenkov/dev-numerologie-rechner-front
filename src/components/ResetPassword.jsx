@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
 import ToastNotifications from "cogo-toast";
-import LoadingIndicator from "./LoadingIndicator";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import { useTranslation } from "react-i18next";
 import { postJsonData } from "../utils/AuthUtils";
 
@@ -16,9 +16,8 @@ const DELAY_REDIRECT_AFTER_RESET = 3000;
 const ResetPassword = props => {
   const { t } = useTranslation();
   const { history } = props;
-
+  const LoadingOverlay = useLoadingOverlay();
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
@@ -31,27 +30,24 @@ const ResetPassword = props => {
 
   const resetPassword = async () => {
     try {
-      setLoading(true);
+      LoadingOverlay.showWithText(t("SEND_EMAIL"));
       await postJsonData("/reset-password", {
         email
       });
-
+      LoadingOverlay.hide();
       ToastNotifications.success(t("EMAIL_WAS_SENT"), {
         position: "top-right"
       });
 
       // redirecting to user home after delay
-      setTimeout(() => history.push("/login"), DELAY_REDIRECT_AFTER_RESET);
+      setTimeout(() => {
+        history.push("/login");
+      }, DELAY_REDIRECT_AFTER_RESET);
     } catch (error) {
+      LoadingOverlay.hide();
       ToastNotifications.error(t("RESET_FAILED"), { position: "top-right" });
-    } finally {
-      setLoading(false);
     }
   };
-
-  if (loading) {
-    return <LoadingIndicator text={t("SEND_EMAIL")} />;
-  }
 
   return (
     <div className="page-register-v3 layout-full">

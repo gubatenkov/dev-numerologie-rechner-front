@@ -8,7 +8,7 @@ import InputField from "./InputField";
 
 import logo from "../images/logo_weiss_trans.png";
 
-import LoadingIndicator from "./LoadingIndicator";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 import { useUser } from "../contexts/UserContext";
 import "../styles/InputForm.css";
@@ -20,8 +20,8 @@ const Register = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [readyToSubmit, setReadyToSubmit] = useState(false);
-  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+  const LoadingOverlay = useLoadingOverlay();
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
@@ -34,7 +34,7 @@ const Register = props => {
 
   const registerUser = async () => {
     try {
-      setLoading(true);
+      LoadingOverlay.showWithText(t("REGISTRATING"));
 
       const response = await postJsonData("/register", {
         email,
@@ -46,17 +46,14 @@ const Register = props => {
       await User.fetchUser();
       history.push("/userHome");
     } catch (error) {
-      setLoading(false);
       console.log("Reg failed:", error.message);
       ToastNotifications.error(t("REGISTRATION_FAILED"), {
         position: "top-right"
       });
+    } finally {
+      LoadingOverlay.hide();
     }
   };
-
-  if (loading) {
-    return <LoadingIndicator text={t("REGISTRATING")} />;
-  }
 
   return (
     <div className="page-register-v3 layout-full">

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { withRouter, useHistory } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
 import ConfirmUserDeletionDialog from "./dialogs/ConfirmUserDeletionDialog";
-import LoadingIndicator from "./LoadingIndicator";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import MainContainer from "./MainContainer";
 import "../styles/UserProfile.scss";
 import { Button } from "react-bootstrap";
@@ -15,7 +15,7 @@ const UserProfile = () => {
   const { t } = useTranslation();
   let history = useHistory();
   const [userDeletionDialogOpen, setUserDeletionDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const LoadingOverlay = useLoadingOverlay();
   const User = useUser();
 
   function handleOnOpenDeletionDialog() {
@@ -28,74 +28,79 @@ const UserProfile = () => {
 
   function handleOnConfirmDeletionDialog() {
     setUserDeletionDialogOpen(false);
-    setLoading(true);
+    LoadingOverlay.showWithText(t("LOADING"));
     User.deleteUser()
       .then(() => {
         history.push("/analysisInput");
       })
       .catch(e => {
         console.log("Error while deleting user:", e.message);
-        setLoading(false);
+      })
+      .finally(() => {
+        LoadingOverlay.hide();
       });
   }
 
-  if (loading || !User.user) {
-    return <LoadingIndicator text={t("LOADING")} />;
-  } else {
-    return (
-      <MainContainer>
+  if (!User.user) {
+    LoadingOverlay.showWithText(t("LOADING"));
+    return null;
+  }
+
+  LoadingOverlay.hide();
+
+  return (
+    <MainContainer>
+      <div>
         <div>
-          <div>
-            <NavigationBar />
+          <NavigationBar />
+        </div>
+        <div className="akb-user-profile-display">
+          <div className="akb-my-profile-navigation"></div>
+          <div className="akb-user-info">
+            <div className="akb-personal-info">
+              <h2>{t("PERSONAL_INFO")}</h2>
+              {/*<h4>Aktueller Name</h4>*/}
+              {/*<Form>*/}
+              {/*  <Row>*/}
+              {/*    <Col>*/}
+              {/*      <Form.Control placeholder="Vorname" />*/}
+              {/*    </Col>*/}
+              {/*    <Col>*/}
+              {/*      <Form.Control placeholder="Nachname" />*/}
+              {/*    </Col>*/}
+              {/*  </Row>*/}
+              {/*</Form>*/}
+              <h5>{t("EMAIL")}</h5>
+              <Form.Control
+                type="email"
+                value={User.user.currentUser.email}
+                disabled={true}
+              />
+            </div>
+            <div className="akb-delete-div">
+              <Button
+                className="akb-delete-button"
+                variant="danger"
+                size="lg"
+                onClick={handleOnOpenDeletionDialog}
+              >
+                {t("DELETE_ACCOUNT")}
+              </Button>
+              <ConfirmUserDeletionDialog
+                isOpen={userDeletionDialogOpen}
+                onClose={handleOnCloseDeletionDialog}
+                onAction={handleOnConfirmDeletionDialog}
+              />
+            </div>
           </div>
-          <div className="akb-user-profile-display">
-            <div className="akb-my-profile-navigation"></div>
-            <div className="akb-user-info">
-              <div className="akb-personal-info">
-                <h2>{t("PERSONAL_INFO")}</h2>
-                {/*<h4>Aktueller Name</h4>*/}
-                {/*<Form>*/}
-                {/*  <Row>*/}
-                {/*    <Col>*/}
-                {/*      <Form.Control placeholder="Vorname" />*/}
-                {/*    </Col>*/}
-                {/*    <Col>*/}
-                {/*      <Form.Control placeholder="Nachname" />*/}
-                {/*    </Col>*/}
-                {/*  </Row>*/}
-                {/*</Form>*/}
-                <h5>{t("EMAIL")}</h5>
-                <Form.Control
-                  type="email"
-                  value={User.user.currentUser.email}
-                  disabled={true}
-                />
-              </div>
-              <div className="akb-delete-div">
-                <Button
-                  className="akb-delete-button"
-                  variant="danger"
-                  size="lg"
-                  onClick={handleOnOpenDeletionDialog}
-                >
-                  {t("DELETE_ACCOUNT")}
-                </Button>
-                <ConfirmUserDeletionDialog
-                  isOpen={userDeletionDialogOpen}
-                  onClose={handleOnCloseDeletionDialog}
-                  onAction={handleOnConfirmDeletionDialog}
-                />
-              </div>
-            </div>
-            <div className="akb-save-container">
-              {/*<Button className="akb-save-button" variant="primary" size="lg">Save</Button>*/}
-            </div>
+          <div className="akb-save-container">
+            {/*<Button className="akb-save-button" variant="primary" size="lg">Save</Button>*/}
           </div>
         </div>
-        <CreditsBuyModal />
-      </MainContainer>
-    );
-  }
+      </div>
+      <CreditsBuyModal />
+    </MainContainer>
+  );
 };
 
 export default withRouter(UserProfile);

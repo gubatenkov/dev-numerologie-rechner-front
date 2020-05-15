@@ -56,6 +56,8 @@ import { UserProvider } from "./contexts/UserContext";
 import { initTranslationFramework } from "./utils/initTranslationFramework";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { OpenSidebarButton } from "./components/OpenSidebarButton";
+import LoadingOverlay from "./components/LoadingOverlay";
+import { LoadingOverlayProvider } from "./contexts/LoadingOverlayContext";
 
 initTranslationFramework();
 
@@ -153,50 +155,53 @@ ReactDOM.render(
     <ApolloHooksProvider client={client}>
       <ThemeProvider theme={lightTheme}>
         <UserProvider>
-          <BuyModalProvider>
-            <BrowserRouter>
-              <Switch>
-                <Route path="/login" component={withTracker(Login)} />
-                <Route path="/register" component={withTracker(Register)} />
-                <Route path="/reset" component={withTracker(ResetPassword)} />
-                <Route
-                  path="/input-set-password/:token?"
-                  component={withTracker(SetPassword)}
-                />
-                <Route
-                  exact
-                  path="/resultPersonal/:analysisId/:resultConfigurationId?"
-                  component={withTracker(AnalysisResultPersonal)}
-                />
-                <Route
-                  exact
-                  path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
-                  component={withTracker(AnalysisResultPersonal)}
-                />
-                <Route
-                  path="/analysisInput"
-                  component={withTracker(AnalysisInput)}
-                />
-                <PrivateRoute
-                  path="/userProfile"
-                  isAuthenticated={isUserAuthenticated}
-                  loginPath="/login"
-                  component={UserProfile}
-                />
-                <PrivateRoute
-                  path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
-                  isAuthenticated={isUserAuthenticated}
-                  loginPath="/login"
-                  component={withTracker(UserHome)}
-                />
-                <Route path="/" component={withTracker(AnalysisInput)} />
-              </Switch>
-              <SidebarProvider>
-                <OpenSidebarButton />
-                <Sidebar />
-              </SidebarProvider>
-            </BrowserRouter>
-          </BuyModalProvider>
+          <LoadingOverlayProvider>
+            <BuyModalProvider>
+              <BrowserRouter>
+                <Switch>
+                  <Route path="/login" component={withTracker(Login)} />
+                  <Route path="/register" component={withTracker(Register)} />
+                  <Route path="/reset" component={withTracker(ResetPassword)} />
+                  <Route
+                    path="/input-set-password/:token?"
+                    component={withTracker(SetPassword)}
+                  />
+                  <Route
+                    exact
+                    path="/resultPersonal/:analysisId/:resultConfigurationId?"
+                    component={withTracker(AnalysisResultPersonal)}
+                  />
+                  <Route
+                    exact
+                    path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
+                    component={withTracker(AnalysisResultPersonal)}
+                  />
+                  <Route
+                    path="/analysisInput"
+                    component={withTracker(AnalysisInput)}
+                  />
+                  <PrivateRoute
+                    path="/userProfile"
+                    isAuthenticated={isUserAuthenticated}
+                    loginPath="/login"
+                    component={UserProfile}
+                  />
+                  <PrivateRoute
+                    path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
+                    isAuthenticated={isUserAuthenticated}
+                    loginPath="/login"
+                    component={withTracker(UserHome)}
+                  />
+                  <Route path="/" component={withTracker(AnalysisInput)} />
+                </Switch>
+                <LoadingOverlay />
+                <SidebarProvider>
+                  <OpenSidebarButton />
+                  <Sidebar />
+                </SidebarProvider>
+              </BrowserRouter>
+            </BuyModalProvider>
+          </LoadingOverlayProvider>
         </UserProvider>
       </ThemeProvider>
     </ApolloHooksProvider>
