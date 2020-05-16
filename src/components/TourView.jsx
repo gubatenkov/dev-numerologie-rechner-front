@@ -10,6 +10,7 @@ import { Steps, Step } from "./Steps";
 import UserLevelPromotionWidget from "./UserLevelPromotionWidget";
 import BookPromotionWidget from "./BookPromotionWidget";
 import ResultLockedWidget from "./ResultLockedWidget";
+import { shouldShowDuplicatedComparisonResult } from "../utils/ResultUtils";
 
 import iconBackPrimary from "../images/icon_back_primary.svg";
 import iconForwardPrimary from "../images/icon_forward_primary.svg";
@@ -18,7 +19,6 @@ import {
   MAIN_CONTAINER_MAX_WIDTH,
   MOBILE_RESOLUTION_THRESHOLD
 } from "../utils/Constants";
-import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
 import { TourOverViewMobileStep } from "./TourOverviewMobileStep";
 
 const CONTENT_STYLING_CLASS_SUBHEADING = "subheading";
