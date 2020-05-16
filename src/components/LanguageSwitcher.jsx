@@ -23,7 +23,7 @@ const Language = styled.div`
   height: 24px;
   width: 20px;
   color: #000000;
-  font-family: "SF Pro Display";
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
   font-size: 16px;
   letter-spacing: 0;
   line-height: 24px;
@@ -42,7 +42,6 @@ const LanguageDropDown = styled.div`
   display: ${props => (!props.showing ? "none" : "unset")}
   left: 60px;
   bottom: 47px;
-  overflow-y: scroll;
   border-radius: 6px;
 `;
 
@@ -51,6 +50,7 @@ const LanguageItem = styled.button`
   background-color: #f8f8f8;
   width: 100%
   display: flex;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
   align-items: center;
   padding-left: 20px;
   border: none;

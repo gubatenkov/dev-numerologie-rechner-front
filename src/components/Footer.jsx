@@ -42,7 +42,7 @@ const Footer = props => {
   return (
     <FooterContainer>
       <FooterLink href={t("HOMEPAGE")} target="_blank">
-        &copy;{` ${new Date().getFullYear()} akademie bios`}&copy;;
+        &copy;{` ${new Date().getFullYear()} akademie bios`}&reg;
       </FooterLink>
       <FooterLink href={t("HOMEPAGE_COACHING")} target="_blank">
         {t("PSYCHOLOGICAL_NUMEROLOGY")}

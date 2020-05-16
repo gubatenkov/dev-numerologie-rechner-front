@@ -208,8 +208,8 @@ const AnalysisInput = props => {
                 >
                   <h6 className="linkText">
                     {comfortNameFieldsShown
-                      ? t("SHOW_COMPARE_NAME")
-                      : t("HIDE_COMPARE_NAME")}
+                      ? t("HIDE_COMPARE_NAME")
+                      : t("SHOW_COMPARE_NAME")}
                   </h6>
                 </div>
                 <button

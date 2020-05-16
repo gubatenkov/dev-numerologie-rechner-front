@@ -44,7 +44,7 @@ export default ({ credits: rawCredits }) => {
       key="credits-popover"
       placement="bottom"
       overlay={
-        <Popover id="credits-popover" title="Guthaben">
+        <Popover id="credits-popover" title={t("CREDIT")}>
           <Table>
             <thead>
               <tr>
@@ -69,7 +69,9 @@ export default ({ credits: rawCredits }) => {
         </Popover>
       }
     >
-      <Button variant="default">Guthaben: {credits.total}</Button>
+      <Button variant="default">
+        {t("CREDIT")}: {credits.total}
+      </Button>
     </OverlayTrigger>
   );
 };
