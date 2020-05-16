@@ -44,6 +44,7 @@
       "GROUP_RENAMED_SUCCESSFULLY": "Die Gruppe {{groupName}} wurde erfolgreich umbenannt.",
       "GROUP_DELETED_SUCCESSFULLY": "Die Gruppe {{groupName}} wurde erfolgreich gelöscht.",
       "ANALYSIS_DELETED_SUCCESSFULLY": "Die Analyse {{analysisName}} wurde erfolgreich gelöscht.",
+      "ANALYSIS_CREATED_SUCCESSFULLY": "Die Analyse {{name}} wurde erfolgreich erstellt.",
       "CREDITS_USED_SUCCESSFULLY": "Das Guthaben wurde erfolgreich eingelöst. Sie können das PDF nun herunterladen.",
       "GRAPHQL_ERROR": "Ein Fehler am Server ist aufgetreten: {{errorMessage}}",
       "DATE_FORMAT_REQUIRED": "Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.",

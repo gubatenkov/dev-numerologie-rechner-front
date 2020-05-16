@@ -68,7 +68,6 @@ const UserHome = props => {
     }
 
     try {
-      // performing mutation call
       await props.saveAnalysis({
         variables: {
           name,
@@ -79,12 +78,12 @@ const UserHome = props => {
 
       LoadingOverlay.hide();
 
-      // redirecting to user home
       props.history.push("/userHome");
 
-      // sending notification to user
       ToastNotifications.success(
-        `Die Analyse ${name} wurde erfolgreich erstellt.`,
+        t("TOAST.ANALYSIS_CREATED_SUCCESSFULLY", {
+          name
+        }),
         { position: "top-right" }
       );
 
@@ -93,10 +92,12 @@ const UserHome = props => {
         User.fetchUser();
       }, 2000);
     } catch (error) {
-      // informing user of error
-      ToastNotifications.error("Analyse konnte nicht gespreichert werden.", {
-        position: "top-right"
-      });
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", { errorMessage: error.message }),
+        {
+          position: "top-right"
+        }
+      );
     }
   }
 
