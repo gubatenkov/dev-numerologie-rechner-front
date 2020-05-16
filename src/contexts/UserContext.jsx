@@ -1,9 +1,14 @@
 import React, { useContext, createContext, useState } from "react";
 import { currentUserQuery } from "../graphql/Queries";
-import { deleteUserMutation } from "../graphql/Mutations";
+import {
+  deleteUserMutation,
+  setUserLangIdMutation
+} from "../graphql/Mutations";
 import { useApolloClient } from "@apollo/react-hooks";
 import { deleteUserAuthData } from "../utils/AuthUtils";
 import { useEffect } from "react";
+import { LANGUAGES, LANGUAGE_KEY } from "../utils/Constants";
+import i18next from "i18next";
 
 const UserContext = createContext({});
 
@@ -19,6 +24,9 @@ export const useUser = () => {
 };
 
 const useUserProvider = () => {
+  const [currentLanguage, setCurrentLanguage] = useState(
+    LANGUAGES.find(langObj => langObj.id === i18next.language)
+  );
   const [user, setUser] = useState();
   const [isFetching, setIsFetching] = useState(true);
   const client = useApolloClient();
@@ -28,6 +36,18 @@ const useUserProvider = () => {
     try {
       const response = await client.query({ query: currentUserQuery });
       setUser(response.data);
+      const userLangId = response.data.currentUser.langId;
+      if (userLangId) {
+        if (currentLanguage.id !== userLangId) {
+          const newLang = LANGUAGES.find(langObj => langObj.id === userLangId);
+          if (newLang === undefined) {
+            // No lang matches, async state backend&frontend
+            console.log("Frontend and Backend languages are out of sync!");
+          } else {
+            setCurrentLanguage(newLang);
+          }
+        }
+      }
     } catch (e) {
       console.log("error while refetching user:", e.message);
     }
@@ -36,7 +56,7 @@ const useUserProvider = () => {
 
   const deleteUser = async () => {
     // error should be caught whenever the func is called
-    await client.mutate({ query: deleteUserMutation });
+    await client.mutate({ mutation: deleteUserMutation });
     deleteUserAuthData();
     setUser(undefined);
   };
@@ -50,11 +70,28 @@ const useUserProvider = () => {
     fetchUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (currentLanguage.id !== i18next.language) {
+      i18next.changeLanguage(currentLanguage.id);
+      localStorage.setItem(LANGUAGE_KEY, currentLanguage.id);
+    }
+  }, [currentLanguage]);
+
+  const setLanguageWithId = async id => {
+    await client.mutate({
+      mutation: setUserLangIdMutation,
+      variables: { langId: id }
+    });
+    setCurrentLanguage(LANGUAGES.find(lang => lang.id === id));
+  };
+
   return {
     user,
     isFetching,
     fetchUser,
     deleteUser,
-    logoutUser
+    logoutUser,
+    currentLanguage,
+    setLanguageWithId
   };
 };

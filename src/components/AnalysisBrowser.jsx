@@ -6,7 +6,6 @@ import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
 import ToastNotifications from "cogo-toast";
 
-import LoadingIndicator from "./LoadingIndicator";
 import CreateGroupDialog from "./dialogs/CreateGroupDialog";
 import ConfirmGroupDeletionDialog from "./dialogs/ConfirmGroupDeletionDialog";
 import ConfirmAnalysisDeletionDialog from "./dialogs/ConfirmAnalysisDeletionDialog";
@@ -44,6 +43,7 @@ import {
 } from "./Dropdowns/DropdownMenuAddUtils";
 import { useBuyModal } from "../contexts/BuyModalContext";
 import { useTranslation } from "react-i18next";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 
 const AnalysisBrowser = props => {
   const [
@@ -60,8 +60,6 @@ const AnalysisBrowser = props => {
   const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [renameGroupDialogOpen, setRenameGroupDialogOpen] = useState(false);
   const [creditToBeUsed, setCreditToBeUsed] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loadingText, setLoadingText] = useState(false);
   const [groupToBeRenamed, setGroupToBeRenamed] = useState(null);
   const [groupToBeDeleted, setGroupToBeDeleted] = useState(null);
   const [analysisToBeDeleted, setAnalysisToBeDeleted] = useState(null);
@@ -70,6 +68,7 @@ const AnalysisBrowser = props => {
   );
 
   const buyModal = useBuyModal();
+  const LoadingOverlay = useLoadingOverlay();
   const { t } = useTranslation();
 
   const createGroup = async groupName => {
@@ -94,7 +93,7 @@ const AnalysisBrowser = props => {
         }
       );
     }
-    setLoading(false);
+    LoadingOverlay.hide();
   };
 
   const renameGroup = async (newName, id) => {
@@ -121,7 +120,7 @@ const AnalysisBrowser = props => {
         }
       );
     }
-    setLoading(false);
+    LoadingOverlay.hide();
   };
 
   const deleteGroup = async id => {
@@ -149,7 +148,7 @@ const AnalysisBrowser = props => {
         }
       );
     }
-    setLoading(false);
+    LoadingOverlay.hide();
   };
 
   const deleteAnalysis = async id => {
@@ -177,7 +176,7 @@ const AnalysisBrowser = props => {
         }
       );
     }
-    setLoading(false);
+    LoadingOverlay.hide();
   };
 
   const createAnalysisPdf = async targetAnalysis => {
@@ -186,9 +185,7 @@ const AnalysisBrowser = props => {
       props.history.push("/login");
       return;
     }
-
-    setLoading(true);
-    setLoadingText(t("CREATE_PDF_LOADING_INFO"));
+    LoadingOverlay.showWithText(t("CREATE_PDF_LOADING_INFO"));
 
     try {
       const result = await props.client.query({
@@ -199,6 +196,7 @@ const AnalysisBrowser = props => {
           longTexts: targetAnalysis.longTexts || false
         }
       });
+      LoadingOverlay.showWithText("Downloading PDF");
 
       const resultConfiguration = getConfigurationForId(
         props.resultConfiguration
@@ -262,8 +260,7 @@ const AnalysisBrowser = props => {
     } catch (error) {
       console.log("Creating PDF failed", error);
     } finally {
-      setLoading(false);
-      setLoadingText(null);
+      LoadingOverlay.hide();
     }
   };
 
@@ -279,8 +276,7 @@ const AnalysisBrowser = props => {
   };
 
   const spendCredit = async () => {
-    setLoading(true);
-    setLoadingText(t("USING_CREDITS_LOADING_INFO"));
+    LoadingOverlay.showWithText(t("USING_CREDITS_LOADING_INFO"));
     try {
       const { analysisId, type } = creditToBeUsed;
       await props.useCredit({
@@ -303,8 +299,7 @@ const AnalysisBrowser = props => {
         }
       );
     } finally {
-      setLoading(false);
-      setLoadingText(null);
+      LoadingOverlay.hide();
     }
   };
 
@@ -409,7 +404,6 @@ const AnalysisBrowser = props => {
   }
   return (
     <div className="akb-analysis-browser">
-      {loading && <LoadingIndicator text={loadingText} />}
       <div className="panel-header">
         <div className="header"> {t("ANALYSISS")}</div>
         <div>
@@ -441,7 +435,7 @@ const AnalysisBrowser = props => {
         }}
         onAction={() => {
           setConfirmGroupDeletionDialogOpen(false);
-          setLoading(true);
+          LoadingOverlay.showWithText();
           deleteGroup(groupToBeDeleted.id);
           setGroupToBeDeleted(null);
         }}
@@ -455,7 +449,7 @@ const AnalysisBrowser = props => {
         }}
         onAction={() => {
           setConfirmAnalysisDeletionDialogOpen(false);
-          setLoading(true);
+          LoadingOverlay.showWithText();
           deleteAnalysis(analysisToBeDeleted.id);
           setAnalysisToBeDeleted(null);
         }}
@@ -466,7 +460,7 @@ const AnalysisBrowser = props => {
         onAction={groupName => {
           createGroup(groupName);
           setCreateGroupDialogOpen(false);
-          setLoading(true);
+          LoadingOverlay.showWithText();
         }}
         groups={props.groups.map(item => item.name)}
       />
@@ -480,7 +474,7 @@ const AnalysisBrowser = props => {
           renameGroup(newName, id);
 
           setRenameGroupDialogOpen(false);
-          setLoading(true);
+          LoadingOverlay.showWithText();
         }}
         group={groupToBeRenamed}
       />

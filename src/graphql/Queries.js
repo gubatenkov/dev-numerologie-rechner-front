@@ -33,6 +33,7 @@ export const currentUserQuery = gql`
         type
         total
       }
+      langId
     }
     analyses {
       id

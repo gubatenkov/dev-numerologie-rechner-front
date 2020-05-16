@@ -79,6 +79,12 @@ export const deleteUserMutation = gql`
   }
 `;
 
+export const setUserLangIdMutation = gql`
+  mutation setUserLangId($langId: String!) {
+    setUserLangId(langId: $langId)
+  }
+`;
+
 export const useCreditMutation = gql`
   mutation useCredit($analysisId: ID!, $type: String!) {
     useCredit(analysisId: $analysisId, type: $type) {

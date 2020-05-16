@@ -146,7 +146,7 @@
     "USER_LOCKED_TEXT": "<1>Sie nutzen den Psychologische Numerologie Online Rechner derzeit als <strong>registrierter und angemeldeter Benutzer</strong>. Sie können sich somit alle 34 Zahlen einer vollständigen psychologisch-numerologischen Persönlichkeitsanalyse berechnen, erhalten dazu aber nur Beschreibungstexte zu <strong>ein paar ausgewählten Zahlen</strong> wie die Lebenszahl - u.a. in Beziehungen und Partnerschaft, die Seelenzahl - nun mit den Lernaufgaben - und auch Ihr aktueller Vibratorischer Zyklus, Ihre aktuelle Herausforderung und deren Höhepunkt und Ihr aktuelles Persönliches Jahr.</1><1>Sie können nun zu jeder berechneten Zahl die <strong>ausführliche Beschreibung im jeweiligen Psychologische Numerologie Buch nachschlagen und durchlesen.</strong> Sie finden die Angabe der jeweiligen Seitenzahl sowie das Buch, auf das sich diese bezieht, in der Buch-Empfehlungs-Infobox rechts bzw. unten.</1><1> Wenn Sie <strong> alle Beschreibungstexte einer kurzen psychologisch-numerologischen Persönlichkeitsanalyse </strong> direkt hier im Browser (oder auch als PDF zum Ausdrucken auf Papier) lesen möchten, können Sie unser <strong>Premium Angebot nutzen</strong> und entweder – für Ihre aktuelle Berechnung – eine <strong>kurze psychologisch-numerologische Persönlichkeitsanalyse im Umfang von ca. 50 Seiten A4 für € 29,- kaufen</strong>, siehe Infobox rechts, oder gleich eine vollständige, lange und ausführliche psychologisch-numerologische Persönlichkeitsanalyse mit allen Zahlen, langen Beschreibungstexten und zahlreichen Übungen für €59,- erwerben.</1>",
     "WHY_NO_TEXT": "Warum kann ich den Beschreibungstext hier nicht sehen?",
     "BUY_PACKAGE_TO_SEE_CONTENT": "Bitte kaufen Sie ein PDF Paket um ein PDF der Analyse zu generieren.",
-    "SET_PASSWORD_SUCCESSFULLY": "Das neues Passwort wurde erfolgreich gesetzt. Sie werden nun automatisch angemeldet.",
+    "SET_PASSWORD_SUCCESSFULLY": "Das neues Passwort wurde erfolgreich gesetzt. Melden Sie sich mit Ihren neue Daten an.",
     "SET_PASSWORD_FAILED": "Setzen des Passworts fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "SETTING_PASSWORD": "Setze Passwort...",
     "NEW_PASSWORD": "Neues Password",
@@ -178,6 +178,12 @@
     "PERSONAL_INFO": "Persönliche Information",
     "DELETE_ACCOUNT": "Konto löschen",
     "CREDIT": "Guthaben",
-    "PASSWORD": "Passwort"
+    "PASSWORD": "Passwort",
+    "SIDEBAR": {
+      "START": "Start",
+      "INTRO": "Einführung",
+      "FAQ": "FAQ",
+      "CONTACT": "Kontakt"
+    }
   }
 }

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { Query } from "react-apollo";
 import { currentWindowToken } from "../graphql/Queries";
-import LoadingIndicator from "./LoadingIndicator";
 import { useTranslation } from "react-i18next";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+
 const DEFAULT_REFRESH_INTERVAL = 10;
 
 /**
@@ -38,8 +39,9 @@ function useInterval(callback, delay) {
  * if provided data contains all required data.
  */
 const Wait = ({ onSuccess, data, refetch }) => {
-  const { t } = useTranslation();
+  const LoadingOverlay = useLoadingOverlay();
   if (data && data.windowToken && data.windowToken.wpOrderId) {
+    LoadingOverlay.hide();
     onSuccess();
   }
 
@@ -47,11 +49,14 @@ const Wait = ({ onSuccess, data, refetch }) => {
     refetch();
   }, DEFAULT_REFRESH_INTERVAL * 1000);
 
-  return <LoadingIndicator text={t("WAITING_INFORMATION")} />;
+  return null;
 };
 
 // TODO: Use apollo pollings
 export default ({ windowToken, onSuccess }) => {
+  const { t } = useTranslation();
+  const LoadingOverlay = useLoadingOverlay();
+  LoadingOverlay.showWithText(t("WAITING_INFORMATION"));
   return (
     <Query query={currentWindowToken} variables={{ windowToken }}>
       {({ loading, data, refetch }) => {

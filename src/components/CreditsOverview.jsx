@@ -13,7 +13,7 @@ const CreditsOverview = props => {
     .map(result => result.total)[0];
   return (
     <div className="akb-credits-overview-div">
-      <h1>Guthaben</h1>
+      <h1>{t("CREDIT")}</h1>
       <div className="akb-credits-div">
         <div className="akb-credits-box">
           <h3>{t("PERSONAL_SHORT_VERSION_PDF")}</h3>

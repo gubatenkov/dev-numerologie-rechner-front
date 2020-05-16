@@ -11,12 +11,13 @@ import {
   userSettingsQuery
 } from "../graphql/Queries";
 
-import LoadingIndicator from "./LoadingIndicator";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import AnalysisResultPersonalRender from "./AnalysisResultPersonalRender";
 import { deleteUserAuthData } from "../utils/AuthUtils";
 
 const AnalysisResultPersonal = props => {
   const { t } = useTranslation();
+  const LoadingOverlay = useLoadingOverlay();
 
   const { personalAnalysesById, personalAnalysesByNames, currentUser } = props;
   let personalAnalysisResults = [];
@@ -27,7 +28,8 @@ const AnalysisResultPersonal = props => {
       (personalAnalysesByNames && personalAnalysesByNames.loading) ||
       (currentUser && currentUser.loading)
     ) {
-      return <LoadingIndicator text={t("CALCULATING_RESULT_FOR_NAME")} />;
+      LoadingOverlay.showWithText(t("CALCULATING_RESULT_FOR_NAME"));
+      return null;
     }
 
     const error =
@@ -35,7 +37,8 @@ const AnalysisResultPersonal = props => {
       (personalAnalysesByNames && personalAnalysesByNames.error);
     if (error) {
       console.error(error);
-      return <LoadingIndicator text={t("ERROR_OCCURED")} />;
+      LoadingOverlay.showWithText(t("ERROR_OCCURED"));
+      return null;
     }
 
     // if current user query throws error => this means user is not authenticated
@@ -59,6 +62,8 @@ const AnalysisResultPersonal = props => {
     deleteUserAuthData();
     props.history.push("/login");
   }
+
+  LoadingOverlay.hide();
 
   return (
     <AnalysisResultPersonalRender

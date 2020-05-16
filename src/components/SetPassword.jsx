@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
-import LoadingIndicator from "./LoadingIndicator";
-import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+import { postJsonData } from "../utils/AuthUtils";
 
 import Panel from "./Panel";
 import InputField from "./InputField";
@@ -23,7 +23,7 @@ const SetPassword = props => {
   } = props;
 
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const LoadingOverlay = useLoadingOverlay();
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
@@ -36,35 +36,27 @@ const SetPassword = props => {
 
   const setUserPassword = async () => {
     try {
-      setLoading(true);
+      LoadingOverlay.showWithText(t("SETTING_PASSWORD"));
 
-      const response = await postJsonData("/set-password", {
+      await postJsonData("/set-password", {
         password,
         token
       });
 
-      setUserAuthData({
-        email: response.email,
-        token: response.token
-      });
+      LoadingOverlay.hide();
 
       ToastNotifications.success(t("SET_PASSWORD_SUCCESSFULLY"), {
         position: "top-right"
       });
 
-      setTimeout(() => history.push("/userHome"), DELAY_REDIRECT_AFTER_SET);
+      setTimeout(() => history.push("/logIn"), DELAY_REDIRECT_AFTER_SET);
     } catch (error) {
+      LoadingOverlay.hide();
       ToastNotifications.error(t("SET_PASSWORD_FAILED"), {
         position: "top-right"
       });
-    } finally {
-      setLoading(false);
     }
   };
-
-  if (loading) {
-    return <LoadingIndicator text={t("SETTING_PASSWORD")} />;
-  }
 
   return (
     <div className="page-register-v3 layout-full">
