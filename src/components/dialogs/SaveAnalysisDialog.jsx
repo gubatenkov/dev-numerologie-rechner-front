@@ -14,7 +14,7 @@ const SaveAnalysisDialog = props => {
       onAction={() => props.onSave(selectedGroup)}
       title={t("DIALOG.SAVE_ANALYSIS")}
       cancelTitle={t("CANCEL")}
-      actionTitle={t("DIALOG.YES")}
+      actionTitle={t("YES")}
     >
       <p>{t("GROUP")}</p>
       <div className="dropdown">
