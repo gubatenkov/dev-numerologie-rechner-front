@@ -5,7 +5,9 @@ import Dialog from "./Dialog";
 
 const SaveAnalysisDialog = props => {
   const { t } = useTranslation();
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(
+    props.groups ? props.groups[0] : null
+  );
 
   return (
     <Dialog
