@@ -66,8 +66,6 @@ const AnalysisResultPersonal = props => {
     props.history.push("/login");
   }
 
-  console.log(props);
-
   LoadingOverlay.hide();
 
   return (
