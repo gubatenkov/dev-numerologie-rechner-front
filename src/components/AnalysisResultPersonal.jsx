@@ -21,6 +21,7 @@ const AnalysisResultPersonal = props => {
 
   const { personalAnalysesById, personalAnalysesByNames, currentUser } = props;
   let personalAnalysisResults = [];
+  let config = [];
 
   try {
     if (
@@ -54,8 +55,10 @@ const AnalysisResultPersonal = props => {
     if (props.match.params.analysisId && personalAnalysesById) {
       personalAnalysisResults =
         personalAnalysesById.analysis.personalAnalysisResults;
+      config = personalAnalysesById.analysisConfiguration;
     } else {
       personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
+      config = personalAnalysesByNames.analysisConfiguration;
     }
   } catch (error) {
     console.log("error AnalysisResultPersonal:", error.message);
@@ -69,6 +72,7 @@ const AnalysisResultPersonal = props => {
     <AnalysisResultPersonalRender
       personalAnalysisResult={personalAnalysisResults[0]}
       personalAnalysisCompareResult={personalAnalysisResults[1]}
+      configuration={config}
       user={currentUser.currentUser}
     />
   );
