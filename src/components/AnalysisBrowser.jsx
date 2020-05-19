@@ -190,7 +190,7 @@ const AnalysisBrowser = props => {
         }
       });
 
-      LoadingOverlay.showWithText(t("LOADING"));
+      LoadingOverlay.showWithText(t("DOWNLOADING_PDF"));
       let fileName;
       if (targetAnalysis.personalAnalysisResults.length > 1) {
         fileName = t("COMPARE_PDF_NAME", {
@@ -218,7 +218,7 @@ const AnalysisBrowser = props => {
     } finally {
       // to see the download overlay for a sec
       setTimeout(() => {
-        // LoadingOverlay.hide();
+        LoadingOverlay.hide();
       }, 1000);
     }
   };
