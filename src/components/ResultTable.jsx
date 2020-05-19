@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import ResultTableRow from "./ResultTableRow";
-import { shouldShowDuplicatedComparisonResult } from "../pdf/PdfBuilder";
+import { shouldShowDuplicatedComparisonResult } from "../utils/ResultUtils";
 
 const ResultTableStyled = styled.div`
   width: 100%;

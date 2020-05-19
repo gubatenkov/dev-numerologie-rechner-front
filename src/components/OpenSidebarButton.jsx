@@ -7,14 +7,13 @@ import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 const Button = styled.button`
   outline: none !important;
+  border: none;
   width: 36px;
   height: 36px;
-  border-radius: 6px;
   background-image: url(${Menu});
   background-repeat: no-repeat;
   background-position: center;
-  border-width: 1px;
-  border-color: #01b2d4;
+  background-color: transparent;
   position: absolute;
   top: 32px;
   left: 60px;
