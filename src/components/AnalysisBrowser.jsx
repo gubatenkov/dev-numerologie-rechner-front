@@ -209,9 +209,6 @@ const AnalysisBrowser = props => {
       const downloadLink = document.createElement("a");
       downloadLink.href = linkSource;
       downloadLink.download = fileName;
-      downloadLink.addEventListener("progress", function(event) {
-        console.log("onEvent:", event);
-      });
       downloadLink.click();
     } catch (error) {
       console.log("Creating PDF failed", error);
