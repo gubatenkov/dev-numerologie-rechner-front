@@ -1,5 +1,3 @@
-import { CI_COLOR_IDS } from "./Constants";
-
 // graphql endpoint url configuration
 export const GRAPHQL_HOST =
   process.env.REACT_APP_BACKEND_HOST ||
