@@ -30,15 +30,11 @@ import AnalysisAutoSaveDialog from "./dialogs/AnalysisAutoSaveDialog";
 
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
-import {
-  PERSONAL_RESULT_CONFIGURATION_DEFAULT,
-  PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID,
-  getConfigurationForId
-} from "../utils/Configuration";
+import { PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID } from "../utils/Configuration";
 
 import { introTextQuery } from "../graphql/Queries";
 
-import { OVERALL_INTRO_KEY, TYPE_ID_MATRIX } from "../utils/Constants";
+import { TYPE_ID_MATRIX } from "../utils/Constants";
 
 import ActionBar from "./ActionBar";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
@@ -66,29 +62,24 @@ const AnalysisResultPersonalRender = props => {
     user,
     match: {
       params: { resultConfigurationId }
-    }
+    },
+    personalAnalysisResult,
+    personalAnalysisCompareResult,
+    match: {
+      params: { analysisId }
+    },
+    configuration
   } = props;
 
   const [showSaveModal, setShowSaveModal] = useState(false);
   const LoadingOverlay = useLoadingOverlay();
 
-  let resultConfig = PERSONAL_RESULT_CONFIGURATION_DEFAULT;
-  let resultConfigId = PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID;
-
-  if (resultConfigurationId && getConfigurationForId(resultConfigurationId)) {
-    resultConfig = getConfigurationForId(resultConfigurationId);
-    resultConfigId = resultConfigurationId;
-  } else if (
-    user &&
-    user.resultConfiguration &&
-    getConfigurationForId(user.resultConfiguration)
-  ) {
-    resultConfig = getConfigurationForId(user.resultConfiguration);
-    resultConfigId = user.resultConfiguration;
-  }
+  const resultConfig = configuration;
+  const resultConfigId =
+    resultConfigurationId || PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID;
 
   const sectionIds = resultConfig.map(section => section.name);
-  sectionIds.push(OVERALL_INTRO_KEY(resultConfigId));
+  sectionIds.push(resultConfigId.toLowerCase());
 
   const { loading, error, data } = useQuery(introTextQuery, {
     variables: {
@@ -237,14 +228,6 @@ const AnalysisResultPersonalRender = props => {
       )}`
     );
   };
-
-  const {
-    personalAnalysisResult,
-    personalAnalysisCompareResult,
-    match: {
-      params: { analysisId }
-    }
-  } = props;
 
   const handleClose = () => {
     if (analysisId) {

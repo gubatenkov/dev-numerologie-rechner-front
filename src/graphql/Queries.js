@@ -253,6 +253,15 @@ export const buildPersonalAnalysisResultFragment = gql`
 
 export const buildPersonalAnalysisByNameQuery = gql`
   query personalAnalysesByNames($inputs: [AnalysisInput!]!) {
+    analysisConfiguration {
+      name
+      color
+      tables {
+        name
+        numberIds
+        showTitle
+      }
+    }
     personalAnalysisResults: personalAnalysesByNames(inputs: $inputs) {
       ...PersonalAnalysisResultFragment
     }
@@ -262,6 +271,15 @@ export const buildPersonalAnalysisByNameQuery = gql`
 
 export const buildPersonalAnalysisByIdQuery = gql`
   query personalAnalysesById($id: ID!, $isPdf: Boolean!, $longTexts: Boolean!) {
+    analysisConfiguration {
+      name
+      color
+      tables {
+        name
+        numberIds
+        showTitle
+      }
+    }
     analysis(id: $id) {
       id
       name

@@ -1,6 +1,3 @@
-export const OVERALL_INTRO_KEY = configurationId =>
-  `Einführung_${configurationId.toLowerCase()}`;
-
 export const CI_COLOR_IDS = {
   RED_ORANGE_YELLOW: "RED_ORANGE_YELLOW",
   RED: "RED",
