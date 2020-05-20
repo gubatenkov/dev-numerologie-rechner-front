@@ -39,6 +39,7 @@ import { TYPE_ID_MATRIX } from "../utils/Constants";
 import ActionBar from "./ActionBar";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import MainContainer from "./MainContainer";
+import { useUser } from "../contexts/UserContext";
 
 const ContentArea = styled.div`
   display: flex;
@@ -57,6 +58,7 @@ const ResultContent = styled.div`
 
 const AnalysisResultPersonalRender = props => {
   const { t } = useTranslation();
+  const User = useUser();
 
   const {
     user,
@@ -85,7 +87,8 @@ const AnalysisResultPersonalRender = props => {
     variables: {
       sectionIds,
       isPdf: false,
-      longText: false
+      longText: false,
+      langId: User.currentLanguage.id
     }
   });
 

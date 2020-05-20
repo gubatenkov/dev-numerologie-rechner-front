@@ -80,8 +80,14 @@ export const introTextQuery = gql`
     $sectionIds: [String!]!
     $isPdf: Boolean!
     $longText: Boolean!
+    $langId: String
   ) {
-    introTexts(sectionIds: $sectionIds, isPdf: $isPdf, longText: $longText) {
+    introTexts(
+      sectionIds: $sectionIds
+      isPdf: $isPdf
+      longText: $longText
+      langId: $langId
+    ) {
       sectionId
       title
       text
@@ -252,8 +258,8 @@ export const buildPersonalAnalysisResultFragment = gql`
 `;
 
 export const buildPersonalAnalysisByNameQuery = gql`
-  query personalAnalysesByNames($inputs: [AnalysisInput!]!) {
-    analysisConfiguration {
+  query personalAnalysesByNames($inputs: [AnalysisInput!]!, $langId: String) {
+    analysisConfiguration(langId: $langId) {
       name
       color
       tables {
@@ -262,7 +268,10 @@ export const buildPersonalAnalysisByNameQuery = gql`
         showTitle
       }
     }
-    personalAnalysisResults: personalAnalysesByNames(inputs: $inputs) {
+    personalAnalysisResults: personalAnalysesByNames(
+      inputs: $inputs
+      langId: $langId
+    ) {
       ...PersonalAnalysisResultFragment
     }
   }
@@ -270,8 +279,13 @@ export const buildPersonalAnalysisByNameQuery = gql`
 `;
 
 export const buildPersonalAnalysisByIdQuery = gql`
-  query personalAnalysesById($id: ID!, $isPdf: Boolean!, $longTexts: Boolean!) {
-    analysisConfiguration {
+  query personalAnalysesById(
+    $id: ID!
+    $isPdf: Boolean!
+    $longTexts: Boolean!
+    $langId: String
+  ) {
+    analysisConfiguration(langId: $langId) {
       name
       color
       tables {

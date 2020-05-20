@@ -10,6 +10,7 @@ import {
   buildPersonalAnalysisByIdQuery,
   userSettingsQuery
 } from "../graphql/Queries";
+import i18next from "i18next";
 
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import AnalysisResultPersonalRender from "./AnalysisResultPersonalRender";
@@ -145,6 +146,8 @@ export default compose(
           ]
         };
       }
+
+      options.variables.langId = i18next.language;
 
       return options;
     },

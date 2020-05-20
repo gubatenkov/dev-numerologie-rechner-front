@@ -1,6 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { LANGUAGES, LANGUAGE_KEY } from "./Constants";
+import { LANGUAGES, LANGUAGE_KEY, DEFAULT_LANGUAGE_ID } from "./Constants";
 const de = require("../translations/de.json");
 
 export const initTranslationFramework = () => {
@@ -16,7 +16,9 @@ export const initTranslationFramework = () => {
       }
     }
     if (activeLangObj === undefined) {
-      activeLangObj = LANGUAGES[0];
+      activeLangObj = LANGUAGES.find(
+        langObj => langObj.id === DEFAULT_LANGUAGE_ID
+      );
     }
     lang = activeLangObj.id;
     localStorage.setItem(LANGUAGE_KEY, lang);

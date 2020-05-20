@@ -20,4 +20,6 @@ export const LANGUAGES = [
   }
 ];
 
+export const DEFAULT_LANGUAGE_ID = "de";
+
 export const LANGUAGE_KEY = "lang";
