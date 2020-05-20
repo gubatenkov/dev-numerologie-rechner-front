@@ -78,10 +78,15 @@ const useUserProvider = () => {
   }, [currentLanguage]);
 
   const setLanguageWithId = async id => {
-    await client.mutate({
-      mutation: setUserLangIdMutation,
-      variables: { langId: id }
-    });
+    try {
+      await client.mutate({
+        mutation: setUserLangIdMutation,
+        variables: { langId: id }
+      });
+    } catch (e) {
+      console.log("user might not be logged in:", e.message);
+    }
+
     setCurrentLanguage(LANGUAGES.find(lang => lang.id === id));
   };
 
