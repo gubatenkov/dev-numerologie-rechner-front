@@ -77,7 +77,6 @@ const useUserProvider = () => {
         try {
           currentAnalysis.refetch();
         } catch (e) {
-          console.log("catch currentAnalysis");
           setCurrentAnalysis(undefined);
         }
       }
