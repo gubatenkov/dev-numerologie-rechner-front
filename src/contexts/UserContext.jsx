@@ -84,7 +84,7 @@ const useUserProvider = () => {
       i18next.changeLanguage(currentLanguage.id);
       localStorage.setItem(LANGUAGE_KEY, currentLanguage.id);
     }
-  }, [currentLanguage]);
+  }, [currentLanguage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setLanguageWithId = async id => {
     try {
