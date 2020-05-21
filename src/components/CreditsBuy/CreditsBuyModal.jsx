@@ -42,10 +42,14 @@ const CreditsBuyModal = props => {
 
   useEffect(() => {
     setTimeout(async () => {
-      const {
-        data: { windowToken }
-      } = await createWindowToken();
-      setWindowToken(windowToken.windowToken);
+      try {
+        const {
+          data: { windowToken }
+        } = await createWindowToken();
+        setWindowToken(windowToken.windowToken);
+      } catch (e) {
+        console.log("createWindowToken error:", e.message);
+      }
     }, 0);
   }, [createWindowToken]);
 

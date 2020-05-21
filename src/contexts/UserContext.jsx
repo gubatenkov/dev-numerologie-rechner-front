@@ -30,6 +30,7 @@ const useUserProvider = () => {
   const [user, setUser] = useState();
   const [isFetching, setIsFetching] = useState(true);
   const client = useApolloClient();
+  const [currentAnalysis, setCurrentAnalysis] = useState();
 
   const fetchUser = async () => {
     setIsFetching(true);
@@ -72,10 +73,17 @@ const useUserProvider = () => {
 
   useEffect(() => {
     if (currentLanguage.id !== i18next.language) {
+      if (currentAnalysis) {
+        try {
+          currentAnalysis.refetch();
+        } catch (e) {
+          setCurrentAnalysis(undefined);
+        }
+      }
       i18next.changeLanguage(currentLanguage.id);
       localStorage.setItem(LANGUAGE_KEY, currentLanguage.id);
     }
-  }, [currentLanguage]);
+  }, [currentLanguage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setLanguageWithId = async id => {
     try {
@@ -97,6 +105,7 @@ const useUserProvider = () => {
     deleteUser,
     logoutUser,
     currentLanguage,
-    setLanguageWithId
+    setLanguageWithId,
+    setCurrentAnalysis
   };
 };

@@ -35,7 +35,7 @@
       "DOWNLOAD_INFO": "How do you want to get your PDF file?",
       "ENTER_NAME": "Geben Sie hier die Namen ein.",
       "RENAME_GROUP": "Gruppe umbenennen",
-      "RENAME": "Umbenennen",
+
       "ENTER_NAME_FOR_GROUP": "Bitte geben Sie den neuen Namen für {{name}} an.",
       "CHOOSE_GROUP": "Bitte geben Sie die Gruppe an der die Analyse zugeordnet werden soll."
     },
@@ -186,6 +186,7 @@
       "FAQ": "FAQ",
       "CONTACT": "Kontakt"
     },
-    "DOWNLOADING_PDF": "Das Analyse-PDF wird heruntergeladen..."
+    "DOWNLOADING_PDF": "Das Analyse-PDF wird heruntergeladen...",
+    "RENAME": "Umbenennen"
   }
 }

@@ -65,14 +65,14 @@ const Login = props => {
                 <form>
                   <InputField
                     icon="wb-user"
-                    fieldName="Email-Adresse"
+                    fieldName={t("EMAIL")}
                     onChange={event => setEmail(event.target.value)}
                     autoComplete="username"
                   />
                   <InputField
                     type="password"
                     icon="wb-lock"
-                    fieldName="Passwort"
+                    fieldName={t("PASSWORD")}
                     onChange={event => setPassword(event.target.value)}
                     autoComplete="current-password"
                   />

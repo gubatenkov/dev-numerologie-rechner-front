@@ -304,7 +304,7 @@ const AnalysisBrowser = props => {
                         setRenameGroupDialogOpen(true);
                       }}
                     >
-                      <img src={iconEdit} alt="" /> Umbenennen
+                      <img src={iconEdit} alt="" /> {t("RENAME")}
                     </NavigationDropdownMenuItem>
                     <NavigationDropdownMenuItem
                       onClick={() => {
@@ -314,7 +314,7 @@ const AnalysisBrowser = props => {
                         setConfirmGroupDeletionDialogOpen(true);
                       }}
                     >
-                      <img src={iconDelete} alt="" /> Löschen
+                      <img src={iconDelete} alt="" /> {t("DELETE")}
                     </NavigationDropdownMenuItem>
                   </NavigationDropdownMenu>
                 )}

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { withRouter } from "react-router-dom";
-import { graphql, withApollo } from "react-apollo";
+import { graphql, withApollo, useQuery } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,61 +10,79 @@ import {
   buildPersonalAnalysisByIdQuery,
   userSettingsQuery
 } from "../graphql/Queries";
-import i18next from "i18next";
 
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import AnalysisResultPersonalRender from "./AnalysisResultPersonalRender";
-import { deleteUserAuthData } from "../utils/AuthUtils";
+import { useUser } from "../contexts/UserContext";
+import {
+  prepOptionsAnalysisByName,
+  prepOptionsAnalysisById
+} from "../utils/GraphlqlUtil";
 
 const AnalysisResultPersonal = props => {
   const { t } = useTranslation();
   const LoadingOverlay = useLoadingOverlay();
+  const User = useUser();
 
-  const { personalAnalysesById, personalAnalysesByNames, currentUser } = props;
+  const {
+    currentUser,
+    match: { params }
+  } = props;
   let personalAnalysisResults = [];
   let config = [];
 
-  try {
-    if (
-      (personalAnalysesById && personalAnalysesById.loading) ||
-      (personalAnalysesByNames && personalAnalysesByNames.loading) ||
-      (currentUser && currentUser.loading)
-    ) {
-      LoadingOverlay.showWithText(t("CALCULATING_RESULT_FOR_NAME"));
-      return null;
-    }
+  const optionsByNames = prepOptionsAnalysisByName(
+    params,
+    User.currentLanguage.id
+  );
+  const personalAnalysesByNames = useQuery(
+    buildPersonalAnalysisByNameQuery,
+    optionsByNames
+  );
 
-    const error =
-      (personalAnalysesById && personalAnalysesById.error) ||
-      (personalAnalysesByNames && personalAnalysesByNames.error);
-    if (error) {
-      console.error(error);
-      LoadingOverlay.showWithText(t("ERROR_OCCURED"));
-      return null;
-    }
+  const optionsById = prepOptionsAnalysisById(params, User.currentLanguage.id);
+  const personalAnalysesById = useQuery(
+    buildPersonalAnalysisByIdQuery,
+    optionsById
+  );
+  if (
+    (personalAnalysesById && personalAnalysesById.loading) ||
+    (personalAnalysesByNames && personalAnalysesByNames.loading) ||
+    (currentUser && currentUser.loading)
+  ) {
+    LoadingOverlay.showWithText(t("CALCULATING_RESULT_FOR_NAME"));
+    return null;
+  }
 
-    // if current user query throws error => this means user is not authenticated
-    if (currentUser && currentUser.error) {
-      console.log("user not authenticated");
-    }
+  const error =
+    (personalAnalysesById && personalAnalysesById.error) ||
+    (personalAnalysesByNames && personalAnalysesByNames.error);
+  if (error) {
+    console.error(error);
+    LoadingOverlay.showWithText(t("ERROR_OCCURED"));
+    return null;
+  }
 
-    // this component fetches results in two cases
-    // a) An id of a stored analysis is provided => fetching result based on input parameters of stored id
-    // b) Input parameters (names + dob) are provided => fetching results based on input parameters passed
-    // both queries are configured for this component and are skipped if the params are not passed
+  // if current user query throws error => this means user is not authenticated
+  if (currentUser && currentUser.error) {
+    console.log("user not authenticated");
+  }
 
-    if (props.match.params.analysisId && personalAnalysesById) {
-      personalAnalysisResults =
-        personalAnalysesById.analysis.personalAnalysisResults;
-      config = personalAnalysesById.analysisConfiguration;
-    } else {
-      personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
-      config = personalAnalysesByNames.analysisConfiguration;
-    }
-  } catch (error) {
-    console.log("error AnalysisResultPersonal:", error.message);
-    deleteUserAuthData();
-    props.history.push("/login");
+  // this component fetches results in two cases
+  // a) An id of a stored analysis is provided => fetching result based on input parameters of stored id
+  // b) Input parameters (names + dob) are provided => fetching results based on input parameters passed
+  // both queries are configured for this component and are skipped if the params are not passed
+
+  if (params.analysisId && personalAnalysesById) {
+    User.setCurrentAnalysis(personalAnalysesById);
+    personalAnalysisResults =
+      personalAnalysesById.data.analysis.personalAnalysisResults;
+    config = personalAnalysesById.data.analysisConfiguration;
+  } else {
+    User.setCurrentAnalysis(personalAnalysesByNames);
+    personalAnalysisResults =
+      personalAnalysesByNames.data.personalAnalysisResults;
+    config = personalAnalysesByNames.data.analysisConfiguration;
   }
 
   LoadingOverlay.hide();
@@ -96,63 +114,17 @@ AnalysisResultPersonal.propTypes = {
 export default compose(
   graphql(userSettingsQuery, {
     name: "currentUser"
-  }),
-  graphql(buildPersonalAnalysisByIdQuery, {
-    options: params => ({
-      variables: {
-        id: parseInt(params.match.params.analysisId, 10),
-        isPdf: false,
-        longTexts: false
-      },
-      update: "network-only"
-    }),
-    skip: params => !params.match.params.analysisId,
-    name: "personalAnalysesById"
-  }),
-  graphql(buildPersonalAnalysisByNameQuery, {
-    options: params => {
-      const firstNames = decodeURIComponent(params.match.params.firstNames);
-      const lastNames = decodeURIComponent(params.match.params.lastNames);
-      const dateOfBirth = decodeURIComponent(params.match.params.dateOfBirth);
-
-      const options = {
-        fetchPolicy: "network-only"
-      };
-
-      // if more than one first name => splitting and getting results for both names
-      if (firstNames.split(",").length > 1) {
-        options.variables = {
-          inputs: [
-            {
-              firstNames: firstNames.split(",")[0],
-              lastName: lastNames.split(",")[0],
-              dateOfBirth
-            },
-            {
-              firstNames: firstNames.split(",")[1],
-              lastName: lastNames.split(",")[1],
-              dateOfBirth
-            }
-          ]
-        };
-      } else {
-        options.variables = {
-          inputs: [
-            {
-              firstNames,
-              lastName: lastNames,
-              dateOfBirth
-            }
-          ]
-        };
-      }
-
-      options.variables.langId = i18next.language;
-
-      return options;
-    },
-
-    skip: params => !params.match.params.firstNames,
-    name: "personalAnalysesByNames"
   })
+  // graphql(buildPersonalAnalysisByIdQuery, {
+  //   options: params => ({
+  //     variables: {
+  //       id: parseInt(params.match.params.analysisId, 10),
+  //       isPdf: false,
+  //       longTexts: false
+  //     },
+  //     update: "network-only"
+  //   }),
+  //   skip: params => !params.match.params.analysisId,
+  //   name: "personalAnalysesById"
+  // })
 )(withApollo(withRouter(AnalysisResultPersonal)));

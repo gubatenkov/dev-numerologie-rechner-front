@@ -32,7 +32,7 @@ const RenameGroupDialog = props => {
       onAction={handleRenameClick}
       title={t("DIALOG.RENAME_GROUP")}
       cancelTitle={t("CANCEL")}
-      actionTitle={t("DIALOG.RENAME")}
+      actionTitle={t("RENAME")}
     >
       <p>
         {t("DIALOG.ENTER_NAME_FOR_GROUP", {
