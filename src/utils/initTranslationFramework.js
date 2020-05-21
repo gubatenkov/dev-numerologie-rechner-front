@@ -33,7 +33,9 @@ export const initTranslationFramework = () => {
         en
       },
       lng: lang,
-      fallbackLng: LANGUAGES[0].id,
+      fallbackLng: LANGUAGES.find(
+        langObj => langObj.id === DEFAULT_LANGUAGE_ID
+      ),
 
       interpolation: {
         escapeValue: false
