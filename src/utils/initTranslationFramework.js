@@ -2,6 +2,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { LANGUAGES, LANGUAGE_KEY, DEFAULT_LANGUAGE_ID } from "./Constants";
 const de = require("../translations/de.json");
+const en = require("../translations/en.json");
 
 export const initTranslationFramework = () => {
   let lang = getLocallyStoredLang();
@@ -28,7 +29,8 @@ export const initTranslationFramework = () => {
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
       resources: {
-        de
+        de,
+        en
       },
       lng: lang,
       fallbackLng: LANGUAGES[0].id,
