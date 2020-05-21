@@ -14,7 +14,10 @@ import {
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import AnalysisResultPersonalRender from "./AnalysisResultPersonalRender";
 import { useUser } from "../contexts/UserContext";
-import { prepOptionsAnalysisByName } from "../utils/GraphlqlUtil";
+import {
+  prepOptionsAnalysisByName,
+  prepOptionsAnalysisById
+} from "../utils/GraphlqlUtil";
 
 const AnalysisResultPersonal = props => {
   const { t } = useTranslation();
@@ -22,18 +25,25 @@ const AnalysisResultPersonal = props => {
   const User = useUser();
 
   const {
-    personalAnalysesById,
     currentUser,
     match: { params }
   } = props;
   let personalAnalysisResults = [];
   let config = [];
 
-  const options = prepOptionsAnalysisByName(params, User.currentLanguage.id);
-
+  const optionsByNames = prepOptionsAnalysisByName(
+    params,
+    User.currentLanguage.id
+  );
   const personalAnalysesByNames = useQuery(
     buildPersonalAnalysisByNameQuery,
-    options
+    optionsByNames
+  );
+
+  const optionsById = prepOptionsAnalysisById(params, User.currentLanguage.id);
+  const personalAnalysesById = useQuery(
+    buildPersonalAnalysisByIdQuery,
+    optionsById
   );
   if (
     (personalAnalysesById && personalAnalysesById.loading) ||
@@ -66,8 +76,8 @@ const AnalysisResultPersonal = props => {
   if (params.analysisId && personalAnalysesById) {
     User.setCurrentAnalysis(personalAnalysesById);
     personalAnalysisResults =
-      personalAnalysesById.analysis.personalAnalysisResults;
-    config = personalAnalysesById.analysisConfiguration;
+      personalAnalysesById.data.analysis.personalAnalysisResults;
+    config = personalAnalysesById.data.analysisConfiguration;
   } else {
     User.setCurrentAnalysis(personalAnalysesByNames);
     personalAnalysisResults =
@@ -104,17 +114,17 @@ AnalysisResultPersonal.propTypes = {
 export default compose(
   graphql(userSettingsQuery, {
     name: "currentUser"
-  }),
-  graphql(buildPersonalAnalysisByIdQuery, {
-    options: params => ({
-      variables: {
-        id: parseInt(params.match.params.analysisId, 10),
-        isPdf: false,
-        longTexts: false
-      },
-      update: "network-only"
-    }),
-    skip: params => !params.match.params.analysisId,
-    name: "personalAnalysesById"
   })
+  // graphql(buildPersonalAnalysisByIdQuery, {
+  //   options: params => ({
+  //     variables: {
+  //       id: parseInt(params.match.params.analysisId, 10),
+  //       isPdf: false,
+  //       longTexts: false
+  //     },
+  //     update: "network-only"
+  //   }),
+  //   skip: params => !params.match.params.analysisId,
+  //   name: "personalAnalysesById"
+  // })
 )(withApollo(withRouter(AnalysisResultPersonal)));

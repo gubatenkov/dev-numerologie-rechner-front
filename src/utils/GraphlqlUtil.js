@@ -39,3 +39,18 @@ export const prepOptionsAnalysisByName = (params, langId) => {
   options.skip = params.firstNames === undefined;
   return options;
 };
+
+export const prepOptionsAnalysisById = (params, langId) => {
+  const options = {
+    variables: {
+      id: parseInt(params.analysisId, 10),
+      isPdf: false,
+      longTexts: false,
+      langId: langId
+    },
+    fetchPolicy: "network-only"
+  };
+  options.skip = params.analysisId === undefined;
+
+  return options;
+};
