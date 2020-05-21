@@ -13,11 +13,11 @@ export const LANGUAGES = [
   {
     id: "en",
     code: "EN"
-  },
-  {
-    id: "it",
-    code: "IT"
   }
+  // {
+  //   id: "it",
+  //   code: "IT"
+  // }
 ];
 
 export const DEFAULT_LANGUAGE_ID = "de";

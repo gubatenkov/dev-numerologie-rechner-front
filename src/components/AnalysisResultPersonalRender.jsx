@@ -77,6 +77,7 @@ const AnalysisResultPersonalRender = props => {
   const LoadingOverlay = useLoadingOverlay();
 
   const resultConfig = configuration;
+
   const resultConfigId =
     resultConfigurationId || PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID;
 
