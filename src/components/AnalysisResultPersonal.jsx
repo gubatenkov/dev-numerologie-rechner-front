@@ -15,10 +15,12 @@ import i18next from "i18next";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import AnalysisResultPersonalRender from "./AnalysisResultPersonalRender";
 import { deleteUserAuthData } from "../utils/AuthUtils";
+import { useUser } from "../contexts/UserContext";
 
 const AnalysisResultPersonal = props => {
   const { t } = useTranslation();
   const LoadingOverlay = useLoadingOverlay();
+  const User = useUser();
 
   const { personalAnalysesById, personalAnalysesByNames, currentUser } = props;
   let personalAnalysisResults = [];
@@ -54,10 +56,12 @@ const AnalysisResultPersonal = props => {
     // both queries are configured for this component and are skipped if the params are not passed
 
     if (props.match.params.analysisId && personalAnalysesById) {
+      User.setCurrentAnalysis(personalAnalysesById);
       personalAnalysisResults =
         personalAnalysesById.analysis.personalAnalysisResults;
       config = personalAnalysesById.analysisConfiguration;
     } else {
+      User.setCurrentAnalysis(personalAnalysesByNames);
       personalAnalysisResults = personalAnalysesByNames.personalAnalysisResults;
       config = personalAnalysesByNames.analysisConfiguration;
     }
