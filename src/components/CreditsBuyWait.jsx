@@ -57,6 +57,14 @@ export default ({ windowToken, onSuccess }) => {
   const { t } = useTranslation();
   const LoadingOverlay = useLoadingOverlay();
   LoadingOverlay.showWithText(t("WAITING_INFORMATION"));
+
+  useEffect(() => {
+    return () => {
+      LoadingOverlay.hide();
+    };
+    //eslint-disable-next-line
+  }, []);
+
   return (
     <Query query={currentWindowToken} variables={{ windowToken }}>
       {({ loading, data, refetch }) => {
