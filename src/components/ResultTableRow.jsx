@@ -10,6 +10,7 @@ import bookLongLongIcon from "../images/icon_textLong.svg";
 import lockIcon from "../images/icon_lock.svg";
 
 import IconButton from "./Buttons/IconButton";
+import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 import {
   TYPE_ID_NUMBER,
@@ -95,27 +96,36 @@ const ResultContainer = styled.div`
 `;
 
 const NumberResultContainer = styled.div`
-  width: ${props => (props.matrix ? "100%" : "220px")};
+  width: ${props => (props.matrix ? "100%" : "100%")};
+  max-width: ${props => (props.matrix ? "100%" : "4000px")};
   display: flex;
   justify-content: center;
   flex-direction: row;
+  align-items: center;
 `;
 
 const ResultColumn = styled.div`
   /* centering horizontally */
 
-  text-align: ${props =>
-    !props.hasCompare ? "center" : props.left ? "right" : "left"};
-  width: ${props => (props.matrix ? "" : "110px")};
+  text-align: center;
+  width: ${props => (props.matrix ? "" : "200px")};
+
+  @media (max-width: 1167px) {
+    width: ${props => (props.matrix ? "" : "120px")};
+  }
   /* results take up equal space in container*/
 
   /* padding results to make sure that two elements next to each other can be distinguished */
   margin-left: ${props => (props.left ? "0" : "12")}px;
+
+  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+    margin-top: 15px;
+  }
 `;
 
 const ActionColumn = styled.div`
   /* vertically aligning button at start as supposed to stick at top of container */
-  align-self: flex-start;
+  align-self: flex-center;
 `;
 
 const MatrixTable = styled.table`
@@ -184,6 +194,7 @@ const MatrixContainer = styled.div`
 const RowIconButton = styled(IconButton)`
   height: 40px;
   width: 40px;
+  margin-left: 10px;
 
   ${props => (props.yellow ? `background-color: ${props.theme.yellow}` : "")};
 

@@ -50,6 +50,16 @@
       "DATE_FORMAT_REQUIRED": "Es muss ein Datum im Format DD.MM.YYYY eingegeben werden.",
       "FIRST_AND_LASTNAME_REQUIRED": "Vor- und Nachname müssen (für alle Namen) angegeben werden."
     },
+    "GROUP_NAMES": {
+      "MY_ANALYSIS": "Meine Analysen",
+      "ANCESTRAL_FAMILY": "Stammfamilie",
+      "FAMILY": "Familie",
+      "FRIENDS": "Freunde",
+      "RELATIVES": "Verwandte",
+      "JOB": "Beruf",
+      "LEISURE": "Freizeit",
+      "OTHER": "Sonstiges"
+    },
     "CREATE_PDF_LOADING_INFO": "Berechne detaillierte Auswertung und erstelle PDF...",
     "COMPARE_PDF_NAME": "Namensvergleich_{{firstname}}_{{lastname}}_{{compareFirstname}}_{{compareLastname}}.pdf",
     "PDF_NAME": "Persönlichkeitsnumeroskop_{{firstname}}_{{lastname}}.pdf",
