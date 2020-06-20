@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { useTranslation } from "react-i18next";
 import ResultTableRow from "./ResultTableRow";
 import { shouldShowDuplicatedComparisonResult } from "../utils/ResultUtils";
 
@@ -45,8 +44,6 @@ const TableCaption = styled.div`
 `;
 
 const ResultTable = props => {
-  const { t } = useTranslation();
-
   const handleTextDetailClick = numberId => {
     props.handleTextDetailClick(props.sectionId, numberId);
   };
@@ -68,7 +65,6 @@ const ResultTable = props => {
           />
         ))}
       </ResultTableStyled>
-      {t("BUY_PACKAGE_TO_SEE_CONTENT")}
       <ResultWatermark key="watermark"></ResultWatermark>
     </>
   );
