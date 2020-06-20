@@ -9,7 +9,7 @@ const Container = styled.button`
   margin-top: 10px;
   margin-bottom: 10px;
   height: 40px;
-  width: 60px;
+  width: 100px;
   background-color: #f8f8f8;
   border-radius: 6px;
   display: flex;
@@ -21,7 +21,7 @@ const Container = styled.button`
 
 const Language = styled.div`
   height: 24px;
-  width: 20px;
+  width: 80px;
   color: #000000;
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   font-size: 16px;
@@ -34,7 +34,7 @@ const ArrowContainer = styled.div`
 `;
 
 const LanguageDropDown = styled.div`
-  width: 75px;
+  width: 100px;
   height: auto;
   background-color: #f8f8f8;
   max-height: 90px;

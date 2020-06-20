@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
+import { useTranslation } from "react-i18next";
 
 const ContentSidebar = styled.div`
   position: -webkit-sticky;
@@ -60,6 +61,7 @@ const ContentNavigation = props => {
     lastActiveContentSectionIndex,
     setLastActiveContentSectionIndex
   ] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkIfSectionInViewPort = stepAnchor => {
@@ -106,7 +108,7 @@ const ContentNavigation = props => {
   return (
     <div>
       <ContentSidebar>
-        <ContentTitel>Inhalt</ContentTitel>
+        <ContentTitel>{t("CONTENT")}</ContentTitel>
         <ContentItemContainer>
           {props.contentItems.map((contentSection, index) => (
             <ContentItem
