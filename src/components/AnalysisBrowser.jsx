@@ -291,7 +291,9 @@ const AnalysisBrowser = props => {
                     }
                   }}
                 >
-                  {group.isDefault ? t(group.name) : group.name}
+                  {group.isDefault
+                    ? t(`GROUP_NAMES.${group.name}`)
+                    : group.name}
                 </AnalysisBrowserToggle>
                 {!group.isDefault && (
                   <NavigationDropdownMenu

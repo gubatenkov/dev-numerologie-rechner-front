@@ -28,9 +28,16 @@ const SaveAnalysisDialog = props => {
             );
           }}
         >
-          {props.groups.map(item => (
-            <option key={item.name}>{item.name}</option>
-          ))}
+          {props.groups.map(item => {
+            const name = item.isDefault
+              ? t(`GROUP_NAMES.${item.name}`)
+              : item.name;
+            return (
+              <option key={item.name} value={item.name}>
+                {name}
+              </option>
+            );
+          })}
         </select>
       </div>
       <p>
