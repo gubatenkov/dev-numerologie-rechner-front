@@ -154,7 +154,7 @@
     "PRIVACY_POLICY_MORE_INFOS": "Nähere Informationen findest Du in unserer <2>Datenschutzerklärung.</2>",
     "EMAIL_WAS_SENT": "Ein Email mit einer Anleitung zum Zurücksetzten des Passworts wurde versendet.",
     "RESET_FAILED": "Rücksetzen fehlgeschlagen. Bitte versuchen Sie es erneut.",
-    "SEND_EMAIL": "Sending Email...",
+    "SEND_EMAIL": "Sende Email...",
     "GUEST_LOCKED_TEXT": "<1>Sie nutzen den Psychologische Numerologie Online Rechner derzeit als <strong>Gast-Benutzer</strong>. Sie können sich somit zwar alle 34 Zahlen einer vollständigen psychologisch-numerologischen Persönlichkeitsanalyse berechnen, erhalten dazu aber nur Beschreibungstexte zu einigen wenigen Zahlen als Vorschau und zum Kennenlernen dieses Rechners.</1><1>Wenn Sie mehr Zahlen Ihres Persönlichkeitsprofils kostenlos sehen möchten, dann <strong>werden Sie Teil unserer Gruppe an Psychologischer Numerologie Interessierten und Coaches indem Sie sich registrieren</strong> – siehe Infobox rechts bzw. unten.</1><1>Wir freuen uns auf Ihre Teilnahme!</1>",
     "USER_LOCKED_TEXT": "<1>Sie nutzen den Psychologische Numerologie Online Rechner derzeit als <strong>registrierter und angemeldeter Benutzer</strong>. Sie können sich somit alle 34 Zahlen einer vollständigen psychologisch-numerologischen Persönlichkeitsanalyse berechnen, erhalten dazu aber nur Beschreibungstexte zu <strong>ein paar ausgewählten Zahlen</strong> wie die Lebenszahl - u.a. in Beziehungen und Partnerschaft, die Seelenzahl - nun mit den Lernaufgaben - und auch Ihr aktueller Vibratorischer Zyklus, Ihre aktuelle Herausforderung und deren Höhepunkt und Ihr aktuelles Persönliches Jahr.</1><1>Sie können nun zu jeder berechneten Zahl die <strong>ausführliche Beschreibung im jeweiligen Psychologische Numerologie Buch nachschlagen und durchlesen.</strong> Sie finden die Angabe der jeweiligen Seitenzahl sowie das Buch, auf das sich diese bezieht, in der Buch-Empfehlungs-Infobox rechts bzw. unten.</1><1> Wenn Sie <strong> alle Beschreibungstexte einer kurzen psychologisch-numerologischen Persönlichkeitsanalyse </strong> direkt hier im Browser (oder auch als PDF zum Ausdrucken auf Papier) lesen möchten, können Sie unser <strong>Premium Angebot nutzen</strong> und entweder – für Ihre aktuelle Berechnung – eine <strong>kurze psychologisch-numerologische Persönlichkeitsanalyse im Umfang von ca. 50 Seiten A4 für € 29,- kaufen</strong>, siehe Infobox rechts, oder gleich eine vollständige, lange und ausführliche psychologisch-numerologische Persönlichkeitsanalyse mit allen Zahlen, langen Beschreibungstexten und zahlreichen Übungen für €59,- erwerben.</1>",
     "WHY_NO_TEXT": "Warum kann ich den Beschreibungstext hier nicht sehen?",
@@ -200,6 +200,20 @@
       "CONTACT": "Kontakt"
     },
     "DOWNLOADING_PDF": "Das Analyse-PDF wird heruntergeladen...",
-    "RENAME": "Umbenennen"
+    "RENAME": "Umbenennen",
+    "EMAIL_REQUIRED": "Es wird eine Email-Adresse benötigt",
+    "ENTER_VALID_EMAIL": "Bitte geben sie eine valide Email-Adresse ein",
+    "NO_PLUS_SIGN": "Es darf kein + in der Email-Adresse verwendet werden.",
+    "EMAIL_ALREADY_EXISTS": "Ein Benutzer mit dieser Email-Adresse existiert bereits!",
+    "MIN_EIGHT_CHARACTERS": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "NO_USER_WITH_EMAIL": "Ein Benutzer mit dieser Email-Adresse existiert nicht!",
+    "PASSWORD_REQUIRED": "Es wird ein Passwort benötigt",
+    "BROKEN_LINK": "Der Link scheint fehlerhaft zu sein.",
+    "INVALID_DATA": "Ungültige Daten",
+    "LOGIN_ERROR": "Es gab einen Fehler beim Einloggen",
+    "EMAIL_SENT": "Email erfolgreich gesendet",
+    "EMAIL_NOT_SENT": "Email konnte nicht gesendet werden",
+    "RESETTING_FAILED": "Password konnte nicht zurückgesetzt werden",
+    "INVALID_SESSION": "Ungültige Session"
   }
 }

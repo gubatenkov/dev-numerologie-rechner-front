@@ -9,6 +9,7 @@ import Panel from "./Panel";
 import InputField from "./InputField";
 
 import logo from "../images/logo_weiss_trans.png";
+import { useUser } from "../contexts/UserContext";
 
 const DELAY_REDIRECT_AFTER_SET = 3000;
 
@@ -24,6 +25,7 @@ const SetPassword = props => {
 
   const [password, setPassword] = useState("");
   const LoadingOverlay = useLoadingOverlay();
+  const User = useUser();
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
@@ -40,7 +42,8 @@ const SetPassword = props => {
 
       await postJsonData("/set-password", {
         password,
-        token
+        token,
+        langId: User.currentLanguage.id
       });
 
       LoadingOverlay.hide();

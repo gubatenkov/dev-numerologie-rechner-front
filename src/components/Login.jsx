@@ -17,7 +17,7 @@ const Login = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { fetchUser } = useUser();
+  const { fetchUser, currentLanguage } = useUser();
   const loginUser = async () => {
     const { history } = props;
     try {
@@ -25,7 +25,8 @@ const Login = props => {
 
       const response = await postJsonData("/login", {
         email,
-        password
+        password,
+        langId: currentLanguage.id
       });
 
       setUserAuthData({

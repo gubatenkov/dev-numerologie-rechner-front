@@ -3,6 +3,7 @@ import { withRouter, Link } from "react-router-dom";
 import ToastNotifications from "cogo-toast";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../contexts/UserContext";
 import { postJsonData } from "../utils/AuthUtils";
 
 import Panel from "./Panel";
@@ -18,6 +19,7 @@ const ResetPassword = props => {
   const { history } = props;
   const LoadingOverlay = useLoadingOverlay();
   const [email, setEmail] = useState("");
+  const User = useUser();
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
@@ -31,8 +33,10 @@ const ResetPassword = props => {
   const resetPassword = async () => {
     try {
       LoadingOverlay.showWithText(t("SEND_EMAIL"));
+      console.log(User.currentLanguage.id);
       await postJsonData("/reset-password", {
-        email
+        email,
+        langId: User.currentLanguage.id
       });
       LoadingOverlay.hide();
       ToastNotifications.success(t("EMAIL_WAS_SENT"), {
