@@ -8,7 +8,7 @@ const AnalysisAutoSaveDialog = props => {
     <Dialog
       {...props}
       title={t("DIALOG.SAVE_ANALYSIS")}
-      cancelTitle={t("NO")}
+      cancelTitle={t("LEAVE")}
       actionTitle={t("DIALOG.YES_SAVE")}
     >
       <p>{t("DIALOG.SAVE_BEFORE_LEAVING")}</p>

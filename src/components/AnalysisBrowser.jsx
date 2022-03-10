@@ -179,44 +179,58 @@ const AnalysisBrowser = props => {
       props.history.push("/login");
       return;
     }
-    LoadingOverlay.showWithText(t("CREATE_PDF_LOADING_INFO"));
 
-    try {
-      const result = await props.client.query({
-        query: getAnalysisPdfQuery,
-        variables: {
-          id: targetAnalysis.id,
-          longTexts: targetAnalysis.longTexts || false
+    if (!localStorage.getItem("isPdfLoading")) {
+      LoadingOverlay.showWithText(t("CREATE_PDF_LOADING_INFO"));
+      try {
+        localStorage.setItem("isPdfLoading", "1");
+        const result = await props.client.query({
+          query: getAnalysisPdfQuery,
+          variables: {
+            id: targetAnalysis.id,
+            longTexts: targetAnalysis.longTexts || false
+          }
+        });
+
+        LoadingOverlay.showWithText(t("DOWNLOADING_PDF"));
+        let fileName;
+        if (targetAnalysis.personalAnalysisResults.length > 1) {
+          fileName = t("COMPARE_PDF_NAME", {
+            firstname: targetAnalysis.inputs[0].firstNames,
+            lastname: targetAnalysis.inputs[0].lastName,
+            compareFirstname: targetAnalysis.inputs[1].firstNames,
+            compareLastname: targetAnalysis.inputs[1].lastName
+          });
+        } else {
+          fileName = t("PDF_NAME", {
+            firstname: targetAnalysis.inputs[0].firstNames,
+            lastname: targetAnalysis.inputs[0].lastName
+          });
         }
-      });
-
-      LoadingOverlay.showWithText(t("DOWNLOADING_PDF"));
-      let fileName;
-      if (targetAnalysis.personalAnalysisResults.length > 1) {
-        fileName = t("COMPARE_PDF_NAME", {
-          firstname: targetAnalysis.inputs[0].firstNames,
-          lastname: targetAnalysis.inputs[0].lastName,
-          compareFirstname: targetAnalysis.inputs[1].firstNames,
-          compareLastname: targetAnalysis.inputs[1].lastName
+        const linkSource = `data:application/pdf;base64,${result.data.getAnalysisPdf}`;
+        const downloadLink = document.createElement("a");
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+      } catch (error) {
+        console.log("Creating PDF failed", error);
+        ToastNotifications.error(t("Please, try to download PDF later"), {
+          position: "top-right"
         });
-      } else {
-        fileName = t("PDF_NAME", {
-          firstname: targetAnalysis.inputs[0].firstNames,
-          lastname: targetAnalysis.inputs[0].lastName
-        });
+      } finally {
+        localStorage.setItem("isPdfLoading", "");
+        // to see the download overlay for a sec
+        setTimeout(() => {
+          LoadingOverlay.hide();
+        }, 1000);
       }
-      const linkSource = `data:application/pdf;base64,${result.data.getAnalysisPdf}`;
-      const downloadLink = document.createElement("a");
-      downloadLink.href = linkSource;
-      downloadLink.download = fileName;
-      downloadLink.click();
-    } catch (error) {
-      console.log("Creating PDF failed", error);
-    } finally {
-      // to see the download overlay for a sec
-      setTimeout(() => {
-        LoadingOverlay.hide();
-      }, 1000);
+    } else {
+      ToastNotifications.error(
+        t("Please wait, previous document is not downloaded yet"),
+        {
+          position: "top-right"
+        }
+      );
     }
   };
 

@@ -27,7 +27,8 @@ const useUserProvider = () => {
   const [currentLanguage, setCurrentLanguage] = useState(
     LANGUAGES.find(langObj => langObj.id === i18next.language)
   );
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
+  const [isAnalResultWasSaved, setIsAnalResultWasSaved] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const client = useApolloClient();
   const [currentAnalysis, setCurrentAnalysis] = useState();
@@ -51,8 +52,16 @@ const useUserProvider = () => {
       }
     } catch (e) {
       console.log("error while refetching user:", e.message);
+    } finally {
+      setIsFetching(false);
     }
-    setIsFetching(false);
+  };
+
+  const getUser = async () => {
+    if (!user) {
+      await fetchUser();
+    }
+    return user;
   };
 
   const deleteUser = async () => {
@@ -100,8 +109,11 @@ const useUserProvider = () => {
 
   return {
     user,
+    isAnalResultWasSaved,
+    setIsAnalResultWasSaved,
     isFetching,
     fetchUser,
+    getUser,
     deleteUser,
     logoutUser,
     currentLanguage,

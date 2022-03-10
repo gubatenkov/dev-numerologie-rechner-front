@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, useLocation, withRouter } from "react-router-dom";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
 import Panel from "./Panel";
@@ -16,8 +16,9 @@ const Login = props => {
   const LoadingOverlay = useLoadingOverlay();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const { fetchUser, currentLanguage } = useUser();
+  const location = useLocation();
+
   const loginUser = async () => {
     const { history } = props;
     try {
@@ -34,7 +35,12 @@ const Login = props => {
         token: response.token
       });
       await fetchUser();
-      history.push("/userHome");
+      if (location?.search && location.search?.split("redirect=")?.length > 1) {
+        const redirectTo = location.search.split("redirect=")[1];
+        history.push(redirectTo);
+      } else {
+        history.push("/userHome");
+      }
     } catch (error) {
       ToastNotifications.error(t("LOGIN_FAILED"), { position: "top-right" });
     } finally {
@@ -49,6 +55,12 @@ const Login = props => {
       document.body.style.backgroundColor = null;
     };
   });
+
+  const handleRedirect = () => {
+    if (location.search?.split("redirect=")?.length > 1) {
+      return `?redirect=${decodeURI(location.search.split("redirect=")[1])}`;
+    }
+  };
 
   return (
     <div className="page-register-v3 layout-full">
@@ -86,10 +98,10 @@ const Login = props => {
                   {t("SIGN_IN")}
                 </button>
                 <div className="InputForm__options">
-                  <Link to="/reset">
+                  <Link to={() => `/reset${handleRedirect()}`}>
                     <h6>{t("RESET_PASSWORD")}</h6>
                   </Link>
-                  <Link to="/register">
+                  <Link to={() => `/register${handleRedirect()}`}>
                     <h6>{t("REGISTER")}</h6>
                   </Link>
                 </div>

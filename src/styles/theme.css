@@ -784,12 +784,6 @@ body.site-gridmenu-active {
   padding: 30px 30px;
 }
 
-@media (max-width: 479px) {
-  .page-content {
-    padding: 10px;
-  }
-}
-
 .page-content-actions {
   padding: 0 30px 30px;
 }

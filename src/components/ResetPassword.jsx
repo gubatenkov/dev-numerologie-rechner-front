@@ -43,9 +43,17 @@ const ResetPassword = props => {
         position: "top-right"
       });
 
-      // redirecting to user home after delay
+      // redirecting to login page after delay
       setTimeout(() => {
-        history.push("/login");
+        if (
+          history.location?.search &&
+          history.location.search?.split("redirect=")?.length > 1
+        ) {
+          const redirectTo = history.location.search.split("redirect=")[1];
+          history.push(`/login?redirect=${redirectTo}`);
+        } else {
+          history.push("/login");
+        }
       }, DELAY_REDIRECT_AFTER_RESET);
     } catch (error) {
       LoadingOverlay.hide();

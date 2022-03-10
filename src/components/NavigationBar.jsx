@@ -225,7 +225,12 @@ const NavigationBar = props => {
 
   const handleLogout = () => {
     User.logoutUser();
-    props.history.push("/login");
+  };
+
+  const handleLeftIconButtonClick = () => {
+    User?.isAnalResultWasSaved
+      ? props.history.push("/userHome")
+      : props.leftButtonOnClick();
   };
 
   const settingsPopup = (
@@ -254,14 +259,13 @@ const NavigationBar = props => {
               }
             />
           </SegmentContainer>
-          <SwitchSettingItem
+          {/* <SwitchSettingItem
             title={t("USER_SETTINGS.PAGE_TO_LOOK_UP")}
             onChange={newValue =>
               setUserSettings({ ...userSettings, showBookReferences: newValue })
             }
-            checked={/* userSettings.showBookReferences */ false}
-            disabled={true}
-          />
+            checked={false} // userSettings.showBookReferences 
+            disabled={true} /> */}
           <SwitchSettingItem
             title={t("USER_SETTINGS.BOOK_REF")}
             onChange={newValue =>
@@ -329,7 +333,7 @@ const NavigationBar = props => {
       {props.leftButtonIcon && (
         <LeftIconButton
           imageIcon={props.leftButtonIcon}
-          onClick={props.leftButtonOnClick}
+          onClick={handleLeftIconButtonClick}
         />
       )}
 
@@ -375,8 +379,14 @@ const NavigationBar = props => {
           title={props.register ? t("REGISTER") : t("SIGN_IN")}
           onClick={
             props.register
-              ? () => props.history.push("/register")
-              : () => props.history.push("/login")
+              ? () =>
+                  props.history.push(
+                    `/register?redirect=${props.history.location.pathname}`
+                  )
+              : () =>
+                  props.history.push(
+                    `/login?redirect=${props.history.location.pathname}`
+                  )
           }
         />
       )}

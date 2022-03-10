@@ -16,8 +16,9 @@
     },
     "DIALOG": {
       "SAVE_ANALYSIS": "en_Analyse speichern",
-      "YES_SAVE": "en_Ja, bitte speichern",
-      "SAVE_BEFORE_LEAVING": "en_Wollen Sie diese Analyse vor dem Verlassen der Seite speichern?",
+      "PLEASE_LOGIN": "en_Um die Ergebnisse einer Numerologie-Analyse zu speichern, müssen Sie sich zunächst einloggen",
+      "YES_SAVE": "en_Bleiben und behalten",
+      "SAVE_BEFORE_LEAVING": "en_Sind Sie sicher, dass Sie die Seite verlassen wollen, ohne die Analyseergebnisse zu speichern?",
       "DELETE_ANALYSIS": "en_Analyse löschen",
       "SURE_TO_DELETE_NAME": "en_Sind Sie sicher, dass Sie die Analyse {{name}} löschen wollen?",
       "DELETE_GROUP": "en_Gruppe löschen",
@@ -81,13 +82,22 @@
     "CANCEL": "en_Abbrechen",
     "DELETE": "en_Löschen",
     "NO": "en_Nein",
+    "LEAVE": "en_Verlassen Sie",
     "YES": "en_Ja",
     "BIRTH_DATE": "en_Geburtsdatum",
     "BIRTHNAME_ALT_NAME": "en_Geburtsname / Alternativer Name",
     "SHOW_COMPARE_NAME": "en_Vergleichsnamen einblenden",
     "HIDE_COMPARE_NAME": "en_Vergleichsnamen ausblenden",
     "SIGN_IN": "en_Anmelden",
+    "HAVE_ACCOUNT?": "en_Sie haben bereits ein Konto?",
+    "I_HAVE_READ_AND_AGREE": "en_Ich habe gelesen und bin einverstanden mit",
+    "AND": "en_und",
     "REGISTER": "en_Registrieren",
+    "EMAIL_CANT_BE_MORE_128": "en_E-Mail darf nicht mehr als 128 buchstaben haben",
+    "PASS_CANT_BE_MORE_128": "en_Das Passwort darf nicht mehr als 128 Zeichen enthalten",
+    "PASS_CANT_BE_LESS_8": "en_Passwort, darf nicht weniger als 8 buchstaben haben",
+    "MIN_8_LETTERS": "en_mindestens 8 buchstaben",
+    "ENTER_EXISTING_EMAIL": "en_Bitte geben Sie eine bestehende E-Mail ein",
     "START": "en_Starten",
     "DOWNLOAD_PDF_SHORT": "en_Kurzes PDF herunterladen",
     "DOWNLOAD_PDF_LONG": "en_Langes PDF herunterladen",
@@ -99,6 +109,7 @@
     "ERROR_OCCURED": "en_Ein kritischer Fehler beim Laden der Daten ist aufgetreten...",
     "GENERATE_REPORT": "en_Erstelle Auswertung...",
     "COMPARE_NAME": "en_Namen vergleichen",
+    "SAVE": "en_Speichern",
     "READ_ALL": "en_Alles lesen",
     "SHOW": "en_Anzeigen",
     "SHORT_PDF": "en_Kurzes PDF",
@@ -199,6 +210,8 @@
       "FAQ": "en_FAQ",
       "CONTACT": "en_Kontakt"
     },
-    "DOWNLOADING_PDF": "en_Das Analyse-PDF wird heruntergeladen..."
+    "DOWNLOADING_PDF": "en_Das Analyse-PDF wird heruntergeladen...",
+    "FIELD_REQUIRED": "en_Dieses feld ist erforderlich",
+    "PASSWORDS_DONT_MATCH": "en_Passwörter stimmen nicht überein"
   }
 }

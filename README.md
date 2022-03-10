@@ -45,3 +45,18 @@ The frontend project to the numberology calculator project. The main purpose of 
 - `IMAGE_INLINE_SIZE_LIMIT`: sets the file size limit until which images are loaded as data url by `ìmport`. Make sure this is bigh enough for all images loaded (cover images etc.).
 
 Thanks for providing these great libraries as open source 🙏 ️❤️
+
+## info multilang
+
+In order to add new languages, checkout the following files:
+
+- `src/contexts/UserContext.jsx`
+- `src/utils/constants.js`
+
+Additionally, have a look at the files at `src/translations`. The i18n framework access the files from `src/translations/'languageTag'.json`. Currently there is only german active. For testing purpose we added an english version with a prefix `en_` to all texts to check if everything is working. So feel free to enable Englisch in the files above and the frontend and use the languageSwitch in the frontend.
+
+The current workflow for changes is as following:
+
+- Backend has been updated already (see backend readme)
+- Add new json to `src/translations`
+- Enable THE SAME langTag as in Backend in Frontend. The code has to match exactly, otherwise the lang might not match and the fallback (DE) is used.

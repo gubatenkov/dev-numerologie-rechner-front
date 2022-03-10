@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useQuery } from "@apollo/react-hooks";
 
@@ -6,6 +6,9 @@ import { withRouter } from "react-router-dom";
 import _ from "lodash";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import ToastNotifications from "cogo-toast";
+import * as compose from "lodash.flowright";
+import { graphql } from "react-apollo";
 
 // icons
 import bookIconWhite from "../images/icon_openBook_white.svg";
@@ -22,7 +25,6 @@ import ResultPanel from "./ResultPanel";
 import ResultTable from "./ResultTable";
 import TourView from "./TourView";
 import TextButton from "./Buttons/TextButton";
-import IconButton from "./Buttons/IconButton";
 import NameInputDialog from "./dialogs/NameInputDialog";
 import Footer from "./Footer";
 import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
@@ -40,6 +42,8 @@ import ActionBar from "./ActionBar";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import MainContainer from "./MainContainer";
 import { useUser } from "../contexts/UserContext";
+import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
+import { saveAnalysisMutation } from "../graphql/Mutations";
 
 const ContentArea = styled.div`
   display: flex;
@@ -57,6 +61,8 @@ const ResultContent = styled.div`
 `;
 
 const AnalysisResultPersonalRender = props => {
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [groups, setGroups] = useState([]);
   const { t } = useTranslation();
   const User = useUser();
 
@@ -73,7 +79,14 @@ const AnalysisResultPersonalRender = props => {
     configuration
   } = props;
 
+  useEffect(() => {
+    if (User?.user?.currentUser) {
+      setGroups(User?.user?.currentUser?.groups);
+    }
+  }, [User.isFetching, User]);
+
   const [showSaveModal, setShowSaveModal] = useState(false);
+
   const LoadingOverlay = useLoadingOverlay();
 
   const resultConfig = configuration;
@@ -214,25 +227,6 @@ const AnalysisResultPersonalRender = props => {
     }
   };
 
-  const handleSaveAnalysis = () => {
-    const { personalAnalysisResult, personalAnalysisCompareResult } = props;
-
-    const firstNames = [personalAnalysisResult.firstNames];
-    const lastNames = [personalAnalysisResult.lastName];
-    if (personalAnalysisCompareResult) {
-      firstNames.push(personalAnalysisCompareResult.firstNames);
-      lastNames.push(personalAnalysisCompareResult.lastName);
-    }
-
-    props.history.push(
-      `/userHome/saveAnalysis/${encodeURIComponent(
-        firstNames
-      )}/${encodeURIComponent(lastNames)}/${encodeURIComponent(
-        personalAnalysisResult.dateOfBirth
-      )}`
-    );
-  };
-
   const handleClose = () => {
     if (analysisId) {
       props.history.push("/userHome");
@@ -240,6 +234,65 @@ const AnalysisResultPersonalRender = props => {
       setShowSaveModal(true);
     }
   };
+
+  async function saveAnalysis(name, groupId) {
+    const firstNames = decodeURIComponent(props.match.params.firstNames);
+    const lastNames = decodeURIComponent(props.match.params.lastNames);
+    const dateOfBirth = decodeURIComponent(props.match.params.dateOfBirth);
+
+    let nameInputs = [];
+    if (lastNames.split(",").length > 1) {
+      const firstNamesArray = firstNames.split(",");
+      const lastNamesArray = lastNames.split(",");
+      nameInputs = firstNamesArray.map((item, index) => ({
+        firstNames: item,
+        lastName: lastNamesArray[index],
+        dateOfBirth
+      }));
+    } else {
+      nameInputs = [
+        {
+          firstNames,
+          lastName: lastNames,
+          dateOfBirth
+        }
+      ];
+    }
+
+    try {
+      props.saveAnalysis({
+        variables: {
+          name,
+          group: groupId,
+          inputs: nameInputs
+        }
+      });
+
+      LoadingOverlay.hide();
+      User.setIsAnalResultWasSaved(true);
+      ToastNotifications.success(
+        t("TOAST.ANALYSIS_CREATED_SUCCESSFULLY", {
+          name
+        }),
+        { position: "top-right" }
+      );
+
+      // graphql ignores refetches if the same call is already pending, therefore we wait 2sec (randomly) and continue with a refetch
+      setTimeout(() => {
+        User.fetchUser();
+      }, 2000);
+    } catch (error) {
+      User.setIsAnalResultWasSaved(false);
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", { errorMessage: error.message }),
+        {
+          position: "top-right"
+        }
+      );
+    }
+  }
+
+  const handleSaveBtnClick = () => setSaveDialogOpen(true);
 
   LoadingOverlay.hide();
 
@@ -271,9 +324,10 @@ const AnalysisResultPersonalRender = props => {
             title={t("COMPARE_NAME")}
             onClick={() => setIsNameDialogOpen(true)}
           />
-          <IconButton
-            imageIcon={saveIconPrimary}
-            onClick={() => handleSaveAnalysis()}
+          <TextButton
+            icon={saveIconPrimary}
+            title={t("SAVE")}
+            onClick={handleSaveBtnClick}
           />
           <TextButton
             primary
@@ -424,10 +478,37 @@ const AnalysisResultPersonalRender = props => {
       />
       <CreditsBuyModal />
       <AnalysisAutoSaveDialog
-        onAction={handleSaveAnalysis}
+        onAction={() => setShowSaveModal(false)}
         isOpen={showSaveModal}
         onCancel={() => props.history.push("/userHome")}
         onClose={() => setShowSaveModal(false)}
+      />
+      <SaveAnalysisDialog
+        isOpen={saveDialogOpen}
+        onClose={() => setSaveDialogOpen(false)}
+        onSave={group => {
+          const firstNames = decodeURIComponent(props.match.params.firstNames);
+          const lastNames = decodeURIComponent(props.match.params.lastNames);
+          const dateOfBirth = decodeURIComponent(
+            props.match.params.dateOfBirth
+          );
+
+          let analysisName;
+          if (lastNames.split(",").length > 1) {
+            const firstName = firstNames.split(",")[0];
+            const firstNameComfort = firstNames.split(",")[1];
+            const lastName = lastNames.split(",")[0];
+            const lastNameComfort = lastNames.split(",")[1];
+
+            analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
+          } else {
+            analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
+          }
+          saveAnalysis(analysisName, group.id);
+          setSaveDialogOpen(false);
+          LoadingOverlay.showWithText();
+        }}
+        groups={groups}
       />
       {!isTourOpen && <Footer />}
     </MainContainer>
@@ -441,4 +522,6 @@ AnalysisResultPersonalRender.propTypes = {
   }).isRequired
 };
 
-export default withRouter(AnalysisResultPersonalRender);
+export default compose(graphql(saveAnalysisMutation, { name: "saveAnalysis" }))(
+  withRouter(AnalysisResultPersonalRender)
+);

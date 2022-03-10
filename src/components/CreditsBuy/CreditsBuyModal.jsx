@@ -14,7 +14,7 @@ import { createWindowTokenMutation } from "../../graphql/Mutations";
 import { useMediaQuery } from "../../utils/useMediaQuery";
 
 import "../../styles/CreditsBuyModal.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useUser } from "../../contexts/UserContext";
 
 // webshop product ids and price of short and long personal analysis credit
@@ -36,6 +36,7 @@ const CreditsBuyModal = props => {
   const isMobile = useMediaQuery(1000);
   const User = useUser();
   const { t } = useTranslation();
+  const buyLinkRef = useRef(null);
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
@@ -71,9 +72,13 @@ const CreditsBuyModal = props => {
 
     const addToCartURI = `${baseUrl}/warenkorb/?add_to_cart_multiple=${productIDsURI}&window_token=${windowToken}&remote_login=true&access_token=${wpAccessToken}`;
 
-    const shopWindow = window.open(addToCartURI, "", "_blank");
-    if (shopWindow) {
-      shopWindow.focus();
+    // const shopWindow = window.open(addToCartURI, "", "_blank");
+    // if (shopWindow) {
+    //   shopWindow.focus();
+    // }
+
+    if (buyLinkRef?.current) {
+      buyLinkRef.current.href = addToCartURI;
     }
   }
 
@@ -229,13 +234,21 @@ const CreditsBuyModal = props => {
             {t("CANCEL")}
           </Button>
           {!isSuccess && (
-            <Button
+            <a
+              href="!#"
+              ref={buyLinkRef}
+              target="_blank"
               variant="primary"
               onClick={initiateBuy}
               disabled={personalLongs === 0 && personalShorts === 0}
             >
-              {t("BUY")}
-            </Button>
+              <Button
+                variant="primary"
+                disabled={personalLongs === 0 && personalShorts === 0}
+              >
+                {t("BUY")}
+              </Button>
+            </a>
           )}
         </Modal.Footer>
       </Modal>
