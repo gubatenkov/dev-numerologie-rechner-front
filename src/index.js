@@ -58,7 +58,9 @@ import { SidebarProvider } from "./contexts/SidebarContext";
 import { OpenSidebarButton } from "./components/OpenSidebarButton";
 import LoadingOverlay from "./components/LoadingOverlay";
 import { LoadingOverlayProvider } from "./contexts/LoadingOverlayContext";
+import fixWhenGoogleTranslateAppBreak from "./utils/functions";
 
+fixWhenGoogleTranslateAppBreak();
 initTranslationFramework();
 
 // defining UI themes

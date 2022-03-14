@@ -38,7 +38,7 @@ function useInterval(callback, delay) {
  * Wait component that periodically checks passed refetch function and calls onSuccess
  * if provided data contains all required data.
  */
-const Wait = ({ onSuccess, data, refetch }) => {
+const Wait = ({ onSuccess, data, refetch, loading }) => {
   const LoadingOverlay = useLoadingOverlay();
   if (data && data.windowToken && data.windowToken.wpOrderId) {
     LoadingOverlay.hide();
