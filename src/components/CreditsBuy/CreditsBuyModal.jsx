@@ -167,6 +167,8 @@ const CreditsBuyModal = props => {
                 disabled={isSuccess}
                 className="buyModalNumber"
                 type="number"
+                min={1}
+                max={10}
                 size={2}
                 value={personalShorts}
                 onChange={e => setPersonalShorts(e.target.value)}
@@ -178,6 +180,8 @@ const CreditsBuyModal = props => {
                 disabled={isSuccess}
                 className="buyModalNumber"
                 type="number"
+                min={1}
+                max={10}
                 size={2}
                 value={personalLongs}
                 onChange={e => setPersonalLongs(e.target.value)}
