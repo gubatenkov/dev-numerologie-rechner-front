@@ -60,6 +60,7 @@ const Login = props => {
     if (location.search?.split("redirect=")?.length > 1) {
       return `?redirect=${decodeURI(location.search.split("redirect=")[1])}`;
     }
+    return "";
   };
 
   return (

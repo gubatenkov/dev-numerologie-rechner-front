@@ -49,6 +49,14 @@ const Register = ({ history }) => {
     return value === watch("password", "") || t("PASSWORDS_DONT_MATCH");
   };
 
+  // redirect if user already exist
+  useEffect(() => {
+    const email = localStorage.getItem("auth-email");
+    if (email) {
+      history.push("./");
+    }
+  }, [history]);
+
   useEffect(() => {
     // here we check is form ready to be submited
     function isFormReadyToSubmit(isPrivacyChecked, errors) {
@@ -82,7 +90,7 @@ const Register = ({ history }) => {
     return () => {
       document.body.style.backgroundColor = null;
     };
-  });
+  }, []);
 
   const registerUser = async (email, password) => {
     try {
