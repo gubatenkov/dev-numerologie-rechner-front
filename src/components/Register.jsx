@@ -49,7 +49,7 @@ const Register = ({ history }) => {
     return value === watch("password", "") || t("PASSWORDS_DONT_MATCH");
   };
 
-  // redirect if user already exist
+  // redirect to ./ if user already exist
   useEffect(() => {
     const email = localStorage.getItem("auth-email");
     if (email) {

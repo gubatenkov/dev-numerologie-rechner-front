@@ -1,25 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation, withRouter } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
-import Panel from "./Panel";
-import InputField from "./InputField";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, withRouter } from "react-router-dom";
+
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 
-import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
-import "../styles/InputForm.css";
 import "../styles/Login.css";
+import "../styles/InputForm.css";
+
+import FormBase from "./Forms/FormBase";
 import { useUser } from "../contexts/UserContext";
+import useValidators from "../utils/useValidators";
+import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 
 const Login = props => {
   const { t } = useTranslation();
-  const LoadingOverlay = useLoadingOverlay();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { fetchUser, currentLanguage } = useUser();
   const location = useLocation();
+  const LoadingOverlay = useLoadingOverlay();
+  const { fetchUser, currentLanguage } = useUser();
+  const [isReadyToSubmit, setReadyToSubmit] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues
+  } = useForm({ mode: "all" });
+  const { email, password } = getValues();
+  const [emailValidators, passwordValidators] = useValidators();
 
-  const loginUser = async () => {
+  const loginUser = async (email, password) => {
     const { history } = props;
     try {
       LoadingOverlay.showWithText(t("SIGNING_IN"));
@@ -48,12 +58,17 @@ const Login = props => {
     }
   };
 
+  // if user exist redirect him to ./
+  useEffect(() => {
+    const email = localStorage.getItem("auth-email");
+    if (email) {
+      props.history.push("./");
+    }
+  }, [props.history]);
+
   useEffect(() => {
     document.body.style.backgroundColor = "#00b3d4";
-
-    return () => {
-      document.body.style.backgroundColor = null;
-    };
+    return () => (document.body.style.backgroundColor = null);
   });
 
   const handleRedirect = () => {
@@ -62,6 +77,20 @@ const Login = props => {
     }
     return "";
   };
+
+  useEffect(() => {
+    // here we check is form ready to be submited
+    function isFormReadyToSubmit(errors) {
+      if (!errors?.email?.message && !errors?.password?.message) {
+        setReadyToSubmit(true);
+      } else {
+        setReadyToSubmit(false);
+      }
+    }
+    isFormReadyToSubmit(errors);
+  }, [errors, email, password, getValues]);
+
+  const onSubmit = data => loginUser(data.email, data.password);
 
   return (
     <div className="page-register-v3 layout-full">
@@ -75,38 +104,48 @@ const Login = props => {
           </div>
           <div className="row justify-content-md-center">
             <div className="col-lg-4">
-              <Panel title={t("SIGN_IN")}>
-                <form>
-                  <InputField
-                    icon="wb-user"
-                    fieldName={t("EMAIL")}
-                    onChange={event => setEmail(event.target.value)}
-                    autoComplete="username"
-                  />
-                  <InputField
-                    type="password"
-                    icon="wb-lock"
-                    fieldName={t("PASSWORD")}
-                    onChange={event => setPassword(event.target.value)}
-                    autoComplete="current-password"
-                  />
-                </form>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-block"
-                  onClick={loginUser}
-                >
+              <FormBase
+                id="novalidatedform"
+                onSubmit={handleSubmit(onSubmit)}
+                autocomplete="off"
+                noValidate
+              >
+                <FormBase.Title>{t("SIGN_IN")}</FormBase.Title>
+                <FormBase.Divider />
+                <FormBase.Input
+                  placeholder="example@mail.com"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  register={() => register("email", emailValidators)}
+                  form="novalidatedform"
+                  message={errors.email?.message}
+                />
+                <FormBase.Input
+                  type="password"
+                  label="Password"
+                  name="password"
+                  register={() => register("password", passwordValidators)}
+                  message={errors.password?.message}
+                />
+                <Link to={() => `/reset${handleRedirect()}`}>
+                  <h6 style={{ margin: "0 0 15px 0" }}>
+                    {t("RESET_PASSWORD")}
+                  </h6>
+                </Link>
+                <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
                   {t("SIGN_IN")}
-                </button>
-                <div className="InputForm__options">
-                  <Link to={() => `/reset${handleRedirect()}`}>
-                    <h6>{t("RESET_PASSWORD")}</h6>
-                  </Link>
+                </FormBase.Btn>
+                <FormBase.Divider />
+                <FormBase.Text style={{ marginBottom: "10px" }}>
+                  {t("DONT_HAVE_ACCOUNT?")}
+                </FormBase.Text>
+                <FormBase.Text>
                   <Link to={() => `/register${handleRedirect()}`}>
                     <h6>{t("REGISTER")}</h6>
                   </Link>
-                </div>
-              </Panel>
+                </FormBase.Text>
+              </FormBase>
             </div>
           </div>
         </div>
