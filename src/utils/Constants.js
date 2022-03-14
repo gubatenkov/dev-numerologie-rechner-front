@@ -9,11 +9,11 @@ export const LANGUAGES = [
   {
     id: "de",
     code: "DEUTSCH"
+  },
+  {
+    id: "en",
+    code: "ENGLISH"
   }
-  // {
-  //   id: "en",
-  //   code: "ENGLISH"
-  // }
   // {
   //   id: "it",
   //   code: "ITALIANO"
