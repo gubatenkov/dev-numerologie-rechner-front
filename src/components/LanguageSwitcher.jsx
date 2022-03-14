@@ -39,7 +39,7 @@ const LanguageDropDown = styled.div`
   background-color: #f8f8f8;
   max-height: 90px;
   position: absolute;
-  display: ${props => (!props.showing ? "none" : "unset")}
+  display: ${props => (!props.showing ? "none" : "unset")};
   left: 60px;
   bottom: 47px;
   border-radius: 6px;
@@ -48,7 +48,7 @@ const LanguageDropDown = styled.div`
 const LanguageItem = styled.button`
   height: 30px;
   background-color: #f8f8f8;
-  width: 100%
+  width: 100%;
   display: flex;
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   align-items: center;
