@@ -33,7 +33,7 @@ const StyledInput = styled.input`
   border-radius: 5px;
   border: ${props =>
     props.message?.length
-      ? "1px solid rgb(255, 0, 0)"
+      ? "1px solid rgb(255, 0, 0)!important"
       : "1px solid rgba(0, 0, 0, 0.05)"};
   :focus {
     outline: none;

@@ -29,11 +29,11 @@ const Register = ({ history }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const LoadingOverlay = useLoadingOverlay();
-  const [
+  const {
     emailValidators,
     passwordValidators,
     password2Validators
-  ] = useValidators();
+  } = useValidators();
   const [isPrivacyChecked, setPrivacyChecked] = useState(false);
   const [isReadyToSubmit, setReadyToSubmit] = useState(false);
   const [isTermsPopupOpen, setTermsPopupOpen] = useState(false);

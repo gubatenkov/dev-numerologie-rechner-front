@@ -1,25 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
-import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+import { withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import React, { useState, useEffect } from "react";
+
 import { useUser } from "../contexts/UserContext";
 import { postJsonData } from "../utils/AuthUtils";
+import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 
-import Panel from "./Panel";
-import InputField from "./InputField";
-
-import logo from "../images/logo_weiss_trans.png";
 import "../styles/InputForm.css";
+
+import FormBase from "./Forms/FormBase";
+import logo from "../images/logo_weiss_trans.png";
+import useValidators from "../utils/useValidators";
+import { getErrMessageFromString } from "../utils/functions";
 
 const DELAY_REDIRECT_AFTER_RESET = 3000;
 
 const ResetPassword = props => {
-  const { t } = useTranslation();
-  const { history } = props;
-  const LoadingOverlay = useLoadingOverlay();
-  const [email, setEmail] = useState("");
   const User = useUser();
+  const { history } = props;
+  const { t } = useTranslation();
+  const LoadingOverlay = useLoadingOverlay();
+  const [isReadyToSubmit, setReadyToSubmit] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues
+  } = useForm({ mode: "all" });
+  const { email } = getValues();
+  const { emailValidators } = useValidators();
 
   // WORKAROUND: setting background of whole doc upon mount/unmount
   useEffect(() => {
@@ -30,7 +41,7 @@ const ResetPassword = props => {
     };
   });
 
-  const resetPassword = async () => {
+  const resetPassword = async email => {
     try {
       LoadingOverlay.showWithText(t("SEND_EMAIL"));
       console.log(User.currentLanguage.id);
@@ -57,9 +68,28 @@ const ResetPassword = props => {
       }, DELAY_REDIRECT_AFTER_RESET);
     } catch (error) {
       LoadingOverlay.hide();
-      ToastNotifications.error(t("RESET_FAILED"), { position: "top-right" });
+      const msg = getErrMessageFromString(error.message);
+      if (msg) {
+        ToastNotifications.error(msg, { position: "top-right" });
+      } else {
+        ToastNotifications.error(t("RESET_FAILED"), { position: "top-right" });
+      }
     }
   };
+
+  useEffect(() => {
+    // here we check is form ready to be submited
+    function isFormReadyToSubmit(errors) {
+      if (!errors?.email?.message) {
+        setReadyToSubmit(true);
+      } else {
+        setReadyToSubmit(false);
+      }
+    }
+    isFormReadyToSubmit(errors);
+  }, [errors, email, getValues]);
+
+  const onSubmit = data => resetPassword(data.email);
 
   return (
     <div className="page-register-v3 layout-full">
@@ -77,28 +107,31 @@ const ResetPassword = props => {
           </div>
           <div className="row justify-content-md-center">
             <div className="col-lg-4">
-              <Panel title={t("PASSWORD_RESET")}>
-                <InputField
-                  icon="wb-user"
-                  fieldName={t("EMAIL")}
-                  onChange={event => setEmail(event.target.value)}
+              <FormBase
+                id="novalidatedform"
+                onSubmit={handleSubmit(onSubmit)}
+                autocomplete="off"
+                noValidate
+              >
+                <FormBase.Title>{t("PASSWORD_RESET")}</FormBase.Title>
+                <FormBase.Divider />
+                <FormBase.Input
+                  placeholder="example@mail.com"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  register={() => register("email", emailValidators)}
+                  form="novalidatedform"
+                  message={errors.email?.message}
                 />
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-block"
-                  onClick={resetPassword}
-                >
+                <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
                   {t("PASSWORD_RESET")}
-                </button>
-                <div className="InputForm__options">
-                  <Link to="/login">
-                    <h6>{t("SIGN_IN")}</h6>
-                  </Link>
-                  <Link to="/register">
-                    <h6>{t("REGISTER")}</h6>
-                  </Link>
-                </div>
-              </Panel>
+                </FormBase.Btn>
+                <FormBase.Divider />
+                {/* <FormBase.Text style={{ marginBottom: "10px" }}>
+                  {t("DONT_HAVE_ACCOUNT?")}
+                </FormBase.Text> */}
+              </FormBase>
             </div>
           </div>
         </div>

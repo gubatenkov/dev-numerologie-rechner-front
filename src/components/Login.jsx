@@ -27,7 +27,7 @@ const Login = props => {
     getValues
   } = useForm({ mode: "all" });
   const { email, password } = getValues();
-  const [emailValidators, passwordValidators] = useValidators();
+  const { emailValidators, passwordValidators } = useValidators();
 
   const loginUser = async (email, password) => {
     const { history } = props;
@@ -102,51 +102,57 @@ const Login = props => {
           >
             <h1 className="Login__title">{t("NUM_CALCULATOR")}</h1>
           </div>
-          <div className="row justify-content-md-center">
-            <div className="col-lg-4">
-              <FormBase
-                id="novalidatedform"
-                onSubmit={handleSubmit(onSubmit)}
-                autocomplete="off"
-                noValidate
-              >
-                <FormBase.Title>{t("SIGN_IN")}</FormBase.Title>
-                <FormBase.Divider />
-                <FormBase.Input
-                  placeholder="example@mail.com"
-                  name="email"
-                  type="email"
-                  label="Email"
-                  register={() => register("email", emailValidators)}
-                  form="novalidatedform"
-                  message={errors.email?.message}
-                />
-                <FormBase.Input
-                  type="password"
-                  label="Password"
-                  name="password"
-                  register={() => register("password", passwordValidators)}
-                  message={errors.password?.message}
-                />
-                <Link to={() => `/reset${handleRedirect()}`}>
-                  <h6 style={{ margin: "0 0 15px 0" }}>
-                    {t("RESET_PASSWORD")}
-                  </h6>
+          <div className="form-wrap">
+            <FormBase
+              id="novalidatedform"
+              onSubmit={handleSubmit(onSubmit)}
+              autocomplete="off"
+              noValidate
+            >
+              <FormBase.Title>{t("SIGN_IN")}</FormBase.Title>
+              <FormBase.Divider />
+              <FormBase.Input
+                placeholder="example@mail.com"
+                name="email"
+                type="email"
+                label="Email"
+                register={() => register("email", emailValidators)}
+                form="novalidatedform"
+                message={errors.email?.message}
+              />
+              <FormBase.Input
+                type="password"
+                label="Password"
+                name="password"
+                register={() => register("password", passwordValidators)}
+                message={errors.password?.message}
+              />
+              <Link to={() => `/reset${handleRedirect()}`}>
+                <span
+                  style={{
+                    margin: "0 0 15px 0",
+                    display: "block",
+                    fontSize: "13px"
+                  }}
+                >
+                  {t("RESET_PASSWORD")}
+                </span>
+              </Link>
+              <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
+                {t("SIGN_IN")}
+              </FormBase.Btn>
+              <FormBase.Divider />
+              <FormBase.Text style={{ marginBottom: "10px" }}>
+                {t("DONT_HAVE_ACCOUNT?")}
+              </FormBase.Text>
+              <FormBase.Text>
+                <Link to={() => `/register${handleRedirect()}`}>
+                  <span style={{ fontSize: "13px", display: "block" }}>
+                    {t("REGISTER")}
+                  </span>
                 </Link>
-                <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
-                  {t("SIGN_IN")}
-                </FormBase.Btn>
-                <FormBase.Divider />
-                <FormBase.Text style={{ marginBottom: "10px" }}>
-                  {t("DONT_HAVE_ACCOUNT?")}
-                </FormBase.Text>
-                <FormBase.Text>
-                  <Link to={() => `/register${handleRedirect()}`}>
-                    <h6>{t("REGISTER")}</h6>
-                  </Link>
-                </FormBase.Text>
-              </FormBase>
-            </div>
+              </FormBase.Text>
+            </FormBase>
           </div>
         </div>
       </div>

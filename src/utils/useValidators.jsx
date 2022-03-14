@@ -25,7 +25,7 @@ const useValidators = () => {
     // minLength: 8
   };
 
-  return [emailValidators, passwordValidators, password2Validators];
+  return { emailValidators, passwordValidators, password2Validators };
 };
 
 export default useValidators;

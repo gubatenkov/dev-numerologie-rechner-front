@@ -31,3 +31,11 @@ export default function fixWhenGoogleTranslateAppBreak() {
     };
   }
 }
+
+export const getErrMessageFromString = errString => {
+  const data = {
+    NO_USER_WITH_EMAIL:
+      "Tut mir leid, Benutzer mit einer solchen E-Mail gibt es noch nicht"
+  };
+  return errString in data ? data[errString] : null;
+};
