@@ -65,7 +65,6 @@ const AnalysisResultPersonalRender = props => {
   const [groups, setGroups] = useState([]);
   const { t } = useTranslation();
   const User = useUser();
-
   const {
     user,
     match: {
