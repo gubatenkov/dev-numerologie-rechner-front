@@ -47,15 +47,15 @@ import {
   getUserAuthData,
   deleteUserAuthData
 } from "./utils/AuthUtils";
-import { Sidebar } from "./components/Sidebar";
+// import { Sidebar } from "./components/Sidebar";
 
 import { GRAPHQL_ENDPOINT } from "./utils/Configuration";
 import UserProfile from "./components/UserProfile";
 import { BuyModalProvider } from "./contexts/BuyModalContext";
 import { UserProvider } from "./contexts/UserContext";
 import { initTranslationFramework } from "./utils/initTranslationFramework";
-import { SidebarProvider } from "./contexts/SidebarContext";
-import { OpenSidebarButton } from "./components/OpenSidebarButton";
+// import { SidebarProvider } from "./contexts/SidebarContext";
+// import { OpenSidebarButton } from "./components/OpenSidebarButton";
 import LoadingOverlay from "./components/LoadingOverlay";
 import { LoadingOverlayProvider } from "./contexts/LoadingOverlayContext";
 import fixWhenGoogleTranslateAppBreak from "./utils/functions";
@@ -197,10 +197,10 @@ ReactDOM.render(
                   <Route path="/" component={withTracker(AnalysisInput)} />
                 </Switch>
                 <LoadingOverlay />
-                <SidebarProvider>
+                {/* <SidebarProvider>
                   <OpenSidebarButton />
                   <Sidebar />
-                </SidebarProvider>
+                </SidebarProvider> */}
               </BrowserRouter>
             </BuyModalProvider>
           </LoadingOverlayProvider>
