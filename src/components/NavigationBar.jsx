@@ -341,7 +341,7 @@ const NavigationBar = props => {
         <img src={logo} alt={logo} />
       </LogoContainer>
 
-      {loggedIn && (
+      {props.isSettingsVisibleOnBookPage && loggedIn && (
         <OverlayTrigger
           trigger="click"
           key="settings_popover"

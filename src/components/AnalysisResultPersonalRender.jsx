@@ -302,6 +302,7 @@ const AnalysisResultPersonalRender = props => {
         leftButtonOnClick={
           isTourOpen ? () => setIsTourOpen(false) : () => handleClose()
         }
+        isSettingsVisibleOnBookPage={isTourOpen}
       />
       {!isTourOpen && [
         <TitleBar
