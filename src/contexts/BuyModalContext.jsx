@@ -16,5 +16,15 @@ export const useBuyModal = () => {
 
 const useBuyModalProvider = () => {
   const [isOpen, setIsOpen] = useState(false);
-  return { isOpen, setIsOpen };
+  const [cartItems, setCartItems] = useState({
+    personalShorts: 0,
+    personalLongs: 0
+  });
+  const setShorts = val =>
+    setCartItems(prev => ({ ...prev, personalShorts: +val }));
+
+  const setLongs = val =>
+    setCartItems(prev => ({ ...prev, personalLongs: +val }));
+
+  return { isOpen, setIsOpen, cartItems, setShorts, setLongs };
 };

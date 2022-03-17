@@ -92,10 +92,10 @@ const SettingsIconButton = styled(NavBarIconButton)`
   grid-column-start: 5;
 `;
 
-const CartIconButton = styled(NavBarIconButton)`
-  /* positioning at center of area for elements to the right */
-  grid-column-start: 6;
-`;
+// const CartIconButton = styled(NavBarIconButton)`
+/* positioning at center of area for elements to the right */
+/* grid-column-start: 6; */
+// `;
 
 const RightActionButton = styled(TextButton)`
   /* right action spans across all of are for elements to the right */
@@ -146,6 +146,59 @@ const NavbarSpinner = styled(Spinner)`
   justify-self: center;
 `;
 
+const CartIconBtn = ({ onClick, badge, imageIcon, ...restProps }) => {
+  const StyledBadge = styled.div`
+    width: 20px;
+    height: 20px;
+    bottom: -10px;
+    right: -10px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    position: absolute;
+    border-radius: 50%;
+    background-color: #01b2d4;
+    z-index: 10;
+  `;
+
+  const StyledCartButton = styled.button`
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    text-decoration: none;
+    color: #1976d2;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+      box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+      border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+      color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border: 1px solid rgba(25, 118, 210, 0.5);
+    :focus {
+      outline: none;
+    }
+  `;
+
+  const StyledDiv = styled.div`
+    margin-right: 20px;
+    width: fit-content;
+    height: fit-content;
+    display: block;
+    position: relative;
+  `;
+
+  return (
+    <StyledDiv onClick={onClick}>
+      {Boolean(badge) && <StyledBadge>{badge}</StyledBadge>}
+      <StyledCartButton {...restProps}>
+        <img src={imageIcon} alt="cart icon" />
+      </StyledCartButton>
+    </StyledDiv>
+  );
+};
+
 const NavigationBar = props => {
   const [userSettings, setUserSettings] = useState({
     resultConfiguration: null,
@@ -156,9 +209,10 @@ const NavigationBar = props => {
     showNumberCalculationExplanations: false
   });
   const { t } = useTranslation();
-  const { setIsOpen } = useBuyModal();
+  const { setIsOpen, cartItems } = useBuyModal();
   const User = useUser();
   const [componentInitialized, setComponentInitialized] = useState(false);
+  const cartItemsNum = Object.values(cartItems).reduce((acc, val) => acc + val);
 
   const [saveUserSettings] = useMutation(saveUserSettingsMutation);
 
@@ -360,27 +414,30 @@ const NavigationBar = props => {
           <SettingsIconButton imageIcon={iconSettingsPrimary} />
         </OverlayTrigger>
       )}
-      {loggedIn && (
-        <CartIconButton
-          imageIcon={iconCartPrimary}
-          onClick={() => setIsOpen(true)}
-        />
-      )}
-      {loggedIn && (
-        <OverlayTrigger
-          trigger="click"
-          key="avatar_popover"
-          placement="bottom"
-          overlay={avatarPopup}
-          rootClose
-        >
-          <UserAvatar
-            email={data.currentUser.email}
-            name={data.currentUser.email}
-            round={true}
+      <div style={{ display: "flex" }}>
+        {loggedIn && (
+          <CartIconBtn
+            badge={cartItemsNum}
+            imageIcon={iconCartPrimary}
+            onClick={() => setIsOpen(true)}
           />
-        </OverlayTrigger>
-      )}
+        )}
+        {loggedIn && (
+          <OverlayTrigger
+            trigger="click"
+            key="avatar_popover"
+            placement="bottom"
+            overlay={avatarPopup}
+            rootClose
+          >
+            <UserAvatar
+              email={data.currentUser.email}
+              name={data.currentUser.email}
+              round={true}
+            />
+          </OverlayTrigger>
+        )}
+      </div>
 
       {!loggedIn && (
         <RightActionButton

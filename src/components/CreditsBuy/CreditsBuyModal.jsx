@@ -27,8 +27,6 @@ const baseUrl = "https://www.bios-shop.eu";
 
 const CreditsBuyModal = props => {
   const { createWindowToken } = props;
-  const [personalShorts, setPersonalShorts] = useState(1);
-  const [personalLongs, setPersonalLongs] = useState(1);
   const [windowToken, setWindowToken] = useState(null);
   const [isWaitingCallback, setWaitingCallback] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
@@ -37,6 +35,11 @@ const CreditsBuyModal = props => {
   const User = useUser();
   const { t } = useTranslation();
   const buyLinkRef = useRef(null);
+  const {
+    cartItems: { personalShorts, personalLongs },
+    setShorts,
+    setLongs
+  } = useBuyModal();
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
@@ -135,9 +138,9 @@ const CreditsBuyModal = props => {
     return (
       <CreditsBuyModalBodyMobile
         personalLongs={personalLongs}
-        setPersonalLongs={setPersonalLongs}
+        setPersonalLongs={setLongs}
         personalShorts={personalShorts}
-        setPersonalShorts={setPersonalShorts}
+        setPersonalShorts={setShorts}
         PRICE_PERSONAL_SHORT={PRICE_PERSONAL_SHORT}
         PRICE_PERSONAL_LONG={PRICE_PERSONAL_LONG}
         totalPrice={totalPrice}
@@ -167,11 +170,11 @@ const CreditsBuyModal = props => {
                 disabled={isSuccess}
                 className="buyModalNumber"
                 type="number"
-                min={1}
+                min={0}
                 max={10}
                 size={2}
                 value={personalShorts}
-                onChange={e => setPersonalShorts(e.target.value)}
+                onChange={e => setShorts(e.target.value)}
               />
             </td>
             <td>€ {PRICE_PERSONAL_LONG}</td>
@@ -180,11 +183,12 @@ const CreditsBuyModal = props => {
                 disabled={isSuccess}
                 className="buyModalNumber"
                 type="number"
-                min={1}
+                min={0}
                 max={10}
                 size={2}
+                name="personalLongs"
                 value={personalLongs}
-                onChange={e => setPersonalLongs(e.target.value)}
+                onChange={e => setLongs(e.target.value)}
               />
             </td>
             <td>€ {totalPrice}</td>
