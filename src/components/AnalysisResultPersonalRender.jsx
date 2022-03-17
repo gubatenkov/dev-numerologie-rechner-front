@@ -34,7 +34,7 @@ import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 import { PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID } from "../utils/Configuration";
 
-import { introTextQuery } from "../graphql/Queries";
+import { introTextQuery, userSettingsQuery } from "../graphql/Queries";
 
 import { TYPE_ID_MATRIX } from "../utils/Constants";
 
@@ -62,11 +62,12 @@ const ResultContent = styled.div`
 
 const AnalysisResultPersonalRender = props => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [userSettings, setUserSettings] = useState(props.user);
   const [groups, setGroups] = useState([]);
   const { t } = useTranslation();
   const User = useUser();
   const {
-    user,
+    // user,
     match: {
       params: { resultConfigurationId }
     },
@@ -77,6 +78,15 @@ const AnalysisResultPersonalRender = props => {
     },
     configuration
   } = props;
+  const { data: userSettingsData, refetch } = useQuery(userSettingsQuery, {
+    fetchPolicy: "network-only",
+    onCompleted: data => {
+      if (error) {
+        return;
+      }
+      setUserSettings(userSettingsData);
+    }
+  });
 
   useEffect(() => {
     if (User?.user?.currentUser) {
@@ -195,7 +205,7 @@ const AnalysisResultPersonalRender = props => {
       props.personalAnalysisResult,
       resultConfig,
       introTexts,
-      user
+      userSettings
     );
 
     let sectionIndex = tourDataStructure.findIndex(
@@ -295,6 +305,17 @@ const AnalysisResultPersonalRender = props => {
 
   LoadingOverlay.hide();
 
+  const userSettingsChanged = async () => {
+    try {
+      const res = await refetch();
+      if (res?.data?.currentUser) {
+        setUserSettings(res.data.currentUser);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <MainContainer>
       <NavigationBar
@@ -303,6 +324,7 @@ const AnalysisResultPersonalRender = props => {
           isTourOpen ? () => setIsTourOpen(false) : () => handleClose()
         }
         isSettingsVisibleOnBookPage={isTourOpen}
+        userSettingsChanged={userSettingsChanged}
       />
       {!isTourOpen && [
         <TitleBar
@@ -394,7 +416,7 @@ const AnalysisResultPersonalRender = props => {
             personalAnalysisResult,
             resultConfig,
             introTexts,
-            user
+            userSettings
           )}
           name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
           compareTourData={
@@ -403,7 +425,7 @@ const AnalysisResultPersonalRender = props => {
               personalAnalysisCompareResult,
               resultConfig,
               introTexts,
-              user
+              userSettings
             )
           }
           compareName={
@@ -416,7 +438,7 @@ const AnalysisResultPersonalRender = props => {
             setTourSectionIndex(sectionIndex);
             setTourElementIndex(elementIndex);
           }}
-          user={props.user}
+          user={userSettings}
           accessLevel={personalAnalysisResult.accessLevel}
         />
       )}

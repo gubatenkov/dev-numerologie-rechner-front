@@ -202,12 +202,20 @@ const NavigationBar = props => {
           await saveUserSettings({
             variables: userSettings
           });
-
-          window.location.reload();
+          props.userSettingsChanged();
+          // window.location.reload();
         });
       }
     }
-  }, [userSettings, loading, data, saveUserSettings, componentInitialized]);
+  }, [
+    userSettings,
+    loading,
+    data,
+    saveUserSettings,
+    componentInitialized,
+    props.userSettingsChanged,
+    props
+  ]);
 
   if (loading) {
     return (
