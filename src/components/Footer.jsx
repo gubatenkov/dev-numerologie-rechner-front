@@ -7,7 +7,7 @@ const FooterContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 
   /* margin of whole footer*/
@@ -21,14 +21,15 @@ const FooterContainer = styled.div`
 `;
 
 const FooterLink = styled.a`
+  display: inline-block;
   /* text styling*/
   font-family: ${props => props.theme.fontFamily};
   font-size: 16px;
   color: ${props => props.theme.lighterGrey};
   text-align: center;
 
-  /* spacing between items in container*/
-  margin-left: 35px;
+  /* spacing */
+  margin: 0 10px 0 0;
 
   /* removing default link hover optics*/
   :hover {

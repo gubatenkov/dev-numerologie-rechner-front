@@ -213,6 +213,8 @@ const TourOverViewButton = styled(IconButton)`
 
   margin-top: 22px;
   margin-bottom: 22px;
+  opacity: ${props => (props?.hidden ? "0" : "1")};
+  pointer-events: ${props => (props?.hidden ? "none" : "all")};
 `;
 
 const TourOverViewBackButton = styled(TourOverViewButton)`
@@ -256,6 +258,28 @@ const TourView = props => {
   const scrollToTop = () => {
     window.scrollTo(0, 0);
   };
+
+  const getLastSectionLastElementIndex = tourData => {
+    let index = undefined;
+    if (
+      tourData?.length &&
+      tourData[tourData.length - 1]?.sectionElements?.length
+    ) {
+      index = tourData[tourData.length - 1].sectionElements.length - 1;
+    }
+    return index;
+  };
+
+  const getLastSectionIndex = tourData => {
+    let index = undefined;
+    if (tourData?.length) {
+      index = tourData.length - 1;
+    }
+    return index;
+  };
+
+  const lastSectionLastElementIndex = getLastSectionLastElementIndex(tourData);
+  const lastSectionIndex = getLastSectionIndex(tourData);
 
   const handleStepClick = sectionTitleClicked => {
     const index = tourData.findIndex(
@@ -481,6 +505,7 @@ const TourView = props => {
           <TourOverViewBackButton
             imageIcon={iconBackPrimary}
             onClick={() => handleBackClick()}
+            hidden={sectionIndex + elementIndex === 0 ? true : false}
           />
           <TourOverViewMobileStep
             tourStepTitle={shortTourStepTitle}
@@ -501,6 +526,10 @@ const TourView = props => {
           <TourOverViewForwardButton
             imageIcon={iconForwardPrimary}
             onClick={() => handleNextClick()}
+            hidden={
+              sectionIndex === lastSectionIndex &&
+              elementIndex === lastSectionLastElementIndex
+            }
           />
         </TourOverView>
       </TourOverViewInnerWrapper>
