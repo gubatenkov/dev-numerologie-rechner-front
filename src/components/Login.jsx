@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,15 @@ import FormBase from "./Forms/FormBase";
 import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
+
+const StyledSpan = styled.span`
+  margin: 0 0 15px 0;
+  display: inline-block;
+  font-size: 13px;
+  :hover {
+    text-decoration: underline;
+  }
+`;
 
 const Login = props => {
   const { t } = useTranslation();
@@ -128,15 +138,7 @@ const Login = props => {
                 message={errors.password?.message}
               />
               <Link to={() => `/reset${handleRedirect()}`}>
-                <span
-                  style={{
-                    margin: "0 0 15px 0",
-                    display: "block",
-                    fontSize: "13px"
-                  }}
-                >
-                  {t("RESET_PASSWORD")}
-                </span>
+                <StyledSpan>{t("RESET_PASSWORD")}</StyledSpan>
               </Link>
               <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
                 {t("SIGN_IN")}
@@ -147,9 +149,7 @@ const Login = props => {
               </FormBase.Text>
               <FormBase.Text>
                 <Link to={() => `/register${handleRedirect()}`}>
-                  <span style={{ fontSize: "13px", display: "block" }}>
-                    {t("REGISTER")}
-                  </span>
+                  <StyledSpan>{t("REGISTER")}</StyledSpan>
                 </Link>
               </FormBase.Text>
             </FormBase>

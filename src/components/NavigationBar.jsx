@@ -414,15 +414,14 @@ const NavigationBar = props => {
           <SettingsIconButton imageIcon={iconSettingsPrimary} />
         </OverlayTrigger>
       )}
-      <div style={{ display: "flex" }}>
-        {loggedIn && (
+      {loggedIn && (
+        <div style={{ display: "flex" }}>
           <CartIconBtn
             badge={cartItemsNum}
             imageIcon={iconCartPrimary}
             onClick={() => setIsOpen(true)}
           />
-        )}
-        {loggedIn && (
+
           <OverlayTrigger
             trigger="click"
             key="avatar_popover"
@@ -436,8 +435,8 @@ const NavigationBar = props => {
               round={true}
             />
           </OverlayTrigger>
-        )}
-      </div>
+        </div>
+      )}
 
       {!loggedIn && (
         <RightActionButton
