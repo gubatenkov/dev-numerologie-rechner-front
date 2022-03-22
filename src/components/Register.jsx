@@ -112,9 +112,15 @@ const Register = ({ history }) => {
       }
     } catch (error) {
       console.log("Reg failed:", error.message);
-      ToastNotifications.error(t("REGISTRATION_FAILED"), {
-        position: "top-right"
-      });
+      if (error.message === "EMAIL_ALREADY_EXISTS") {
+        ToastNotifications.error(t("EMAIL_ALREADY_EXISTS"), {
+          position: "top-right"
+        });
+      } else {
+        ToastNotifications.error(t("REGISTRATION_FAILED"), {
+          position: "top-right"
+        });
+      }
     } finally {
       LoadingOverlay.hide();
     }

@@ -37,11 +37,12 @@ const NavbarContainer = styled.nav`
 
   /* layout of navbar is a grid of: 3 slots for items to the left, 
   3 slots for items to the right and one true center logo*/
-  display: grid;
-  grid-template-columns: repeat(3, 36px) auto repeat(3, 36px);
+  display: flex;
+  justify-content: space-between;
+  /* grid-template-columns: repeat(3, 36px) auto repeat(3, 36px); */
 
   /* 16px gap between all items in grid (horizontally)*/
-  grid-column-gap: 16px;
+  /* grid-column-gap: 16px; */
 
   /* margin top, left and right*/
   margin: 32px 32px 0 32px;
@@ -59,7 +60,7 @@ const LeftIconButton = styled(NavBarIconButton)`
 
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
     grid-column-start: 1;
-    margin-top: 60px;
+    /* margin-top: 60px; */
   }
 `;
 
@@ -389,7 +390,6 @@ const NavigationBar = props => {
       </PopoverTextContent>
     </Popover>
   );
-
   return (
     <NavbarContainer>
       {props.leftButtonIcon && (
@@ -398,6 +398,8 @@ const NavigationBar = props => {
           onClick={handleLeftIconButtonClick}
         />
       )}
+      {/* empty div here is to show Logo in center on ./userHome page */}
+      {props?.location?.pathname === "/userHome" ? <div /> : null}
 
       <LogoContainer href={t("HOMEPAGE")} target="_blank">
         <img src={logo} alt={logo} />

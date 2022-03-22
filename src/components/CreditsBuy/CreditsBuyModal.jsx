@@ -38,8 +38,13 @@ const CreditsBuyModal = props => {
   const {
     cartItems: { personalShorts, personalLongs },
     setShorts,
-    setLongs
+    setLongs,
+    setCartItems
   } = useBuyModal();
+  const [focused, setFocused] = useState({
+    personalShorts: "",
+    personalLongs: ""
+  });
 
   const totalPrice =
     PRICE_PERSONAL_SHORT * personalShorts + PRICE_PERSONAL_LONG * personalLongs;
@@ -148,6 +153,33 @@ const CreditsBuyModal = props => {
     );
   };
 
+  const handleChange = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    if (value >= 0 && value <= 10) {
+      setCartItems(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleFocus = e => {
+    e.persist();
+    const name = e.target.name;
+    const value = e.target.value;
+    setFocused(prev => ({ ...prev, [name]: Number(value) }));
+    setCartItems(prev => ({ ...prev, [name]: "" }));
+  };
+
+  const handleBlur = e => {
+    e.persist();
+    const name = e.target.name;
+    const value = e.target.value;
+    if (Number(value) || value === "0") {
+      setCartItems(prev => ({ ...prev, [name]: Number(value) }));
+    } else {
+      setCartItems(prev => ({ ...prev, [name]: Number(focused[name]) }));
+    }
+  };
+
   const renderTable = () => {
     return (
       <Table responsive={true}>
@@ -169,12 +201,16 @@ const CreditsBuyModal = props => {
               <input
                 disabled={isSuccess}
                 className="buyModalNumber"
-                type="number"
+                name="personalShorts"
+                type="text"
                 min={0}
                 max={10}
                 size={2}
                 value={personalShorts}
-                onChange={e => setShorts(e.target.value)}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                autocomplete="off"
               />
             </td>
             <td>€ {PRICE_PERSONAL_LONG}</td>
@@ -182,13 +218,14 @@ const CreditsBuyModal = props => {
               <input
                 disabled={isSuccess}
                 className="buyModalNumber"
-                type="number"
-                min={0}
-                max={10}
-                size={2}
                 name="personalLongs"
+                type="text"
+                size={2}
                 value={personalLongs}
-                onChange={e => setLongs(e.target.value)}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                autocomplete="off"
               />
             </td>
             <td>€ {totalPrice}</td>

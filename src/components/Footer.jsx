@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 const FooterContainer = styled.div`
   /* One row wrapping*/
   display: flex;
-  flex-direction: row;
+  flex-direction: column-reverse;
+  gap: 15px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -13,11 +14,8 @@ const FooterContainer = styled.div`
   /* margin of whole footer*/
   padding-left: 15%;
   padding-right: 15%;
+  padding-bottom: 40px;
   margin-top: 40px;
-  margin-bottom: 20px;
-
-  /* used to create gap within flex elements without having wrap markin issues*/
-  margin-left: -35px;
 `;
 
 const FooterLink = styled.a`

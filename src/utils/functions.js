@@ -4,11 +4,11 @@ export default function fixWhenGoogleTranslateAppBreak() {
     Node.prototype.removeChild = function(child) {
       if (child.parentNode !== this) {
         if (console) {
-          console.error(
-            "Cannot remove a child from a different parent",
-            child,
-            this
-          );
+          // console.error(
+          //   "Cannot remove a child from a different parent",
+          //   child,
+          //   this
+          // );
         }
         return child;
       }
@@ -19,11 +19,11 @@ export default function fixWhenGoogleTranslateAppBreak() {
     Node.prototype.insertBefore = function(newNode, referenceNode) {
       if (referenceNode && referenceNode.parentNode !== this) {
         if (console) {
-          console.error(
-            "Cannot insert before a reference node from a different parent",
-            referenceNode,
-            this
-          );
+          // console.error(
+          //   "Cannot insert before a reference node from a different parent",
+          //   referenceNode,
+          //   this
+          // );
         }
         return newNode;
       }
@@ -35,7 +35,8 @@ export default function fixWhenGoogleTranslateAppBreak() {
 export const getErrMessageFromString = errString => {
   const data = {
     NO_USER_WITH_EMAIL:
-      "Tut mir leid, Benutzer mit einer solchen E-Mail gibt es noch nicht"
+      "Tut mir leid, Benutzer mit einer solchen E-Mail gibt es noch nicht",
+    EMAIL_ALREADY_EXISTS: "Ein Benutzer mit dieser E-Mail existiert bereits"
   };
   return errString in data ? data[errString] : null;
 };

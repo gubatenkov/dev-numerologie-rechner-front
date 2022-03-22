@@ -68,9 +68,9 @@ const ContentNavigation = props => {
       const domElement = document.getElementById(stepAnchor);
 
       if (domElement) {
-        const elementBottomPosition = domElement.getBoundingClientRect().bottom;
+        const elementBottomPosition = domElement.getBoundingClientRect().top;
 
-        return elementBottomPosition < window.innerHeight;
+        return elementBottomPosition < window.innerHeight / 2.5;
       }
       return false;
     };

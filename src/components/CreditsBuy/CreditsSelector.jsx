@@ -18,7 +18,7 @@ const useStyles = () => {
     text: {
       color: "#323232",
       textFamily: "Roboto",
-      fontSize: "20px",
+      fontSize: "16px",
       fontWeight: 500,
       letterSpacing: 0,
       padding: 0,

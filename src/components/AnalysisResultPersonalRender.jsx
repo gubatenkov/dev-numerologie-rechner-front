@@ -52,11 +52,9 @@ const ContentArea = styled.div`
 `;
 
 const ResultContent = styled.div`
-  margin-right: 50px;
+  padding: 0 15px;
   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-    margin-right: 30px;
   }
-  margin-left: 30px;
   width: 100%;
 `;
 
@@ -232,7 +230,7 @@ const AnalysisResultPersonalRender = props => {
   const navigateToElementHandler = anchor => {
     const domElement = document.getElementById(anchor);
     if (domElement) {
-      domElement.scrollIntoView();
+      domElement.scrollIntoView({ block: "start", behavior: "smooth" });
     }
   };
 
@@ -315,7 +313,6 @@ const AnalysisResultPersonalRender = props => {
       console.log(err);
     }
   };
-
   return (
     <MainContainer>
       <NavigationBar

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from "react";
 
@@ -128,9 +128,9 @@ const ResetPassword = props => {
                   {t("PASSWORD_RESET")}
                 </FormBase.Btn>
                 <FormBase.Divider />
-                {/* <FormBase.Text style={{ marginBottom: "10px" }}>
-                  {t("DONT_HAVE_ACCOUNT?")}
-                </FormBase.Text> */}
+                <FormBase.Text style={{ marginBottom: "10px" }}>
+                  <Link to="/login">{t("SIGN_IN")}</Link>
+                </FormBase.Text>
               </FormBase>
             </div>
           </div>

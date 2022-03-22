@@ -21,10 +21,10 @@ const useBuyModalProvider = () => {
     personalLongs: 0
   });
   const setShorts = val =>
-    setCartItems(prev => ({ ...prev, personalShorts: +val }));
+    setCartItems(prev => ({ ...prev, personalShorts: Number(val) }));
 
   const setLongs = val =>
-    setCartItems(prev => ({ ...prev, personalLongs: +val }));
+    setCartItems(prev => ({ ...prev, personalLongs: Number(val) }));
 
-  return { isOpen, setIsOpen, cartItems, setShorts, setLongs };
+  return { isOpen, setIsOpen, cartItems, setShorts, setLongs, setCartItems };
 };
