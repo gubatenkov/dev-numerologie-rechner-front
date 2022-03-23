@@ -193,7 +193,8 @@ const Register = ({ history }) => {
                   rel="noopener noreferrer"
                 >
                   {t("PRIVACY_POLICY")}
-                </a>
+                </a>{" "}
+                {t("I_AGREE")}
               </FormBase.TextCheckbox>
               <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
                 {t("REGISTER")}

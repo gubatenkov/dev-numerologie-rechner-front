@@ -125,7 +125,7 @@ const StyledDiv = styled.div`
 `;
 
 const StyledInputCheck = styled.input`
-  width: 20px;
+  width: 30px;
   height: 20px;
   border-radius: 3px;
   border: 1px solid #ebebeb;

@@ -9,19 +9,24 @@
 
   .akb-credits-div {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
+    justify-content: center;
     align-items: flex-start;
-    width: 200px;
     margin-right: 20px;
 
     .akb-credits-box {
       text-align: center;
-      width: 140px;
       display: flex;
       flex-direction: column;
       margin: 20px;
+      h3 {
+        margin: 0;
+      }
       .akb-credits-wrapper {
         padding: 20px;
+        margin: 0 auto;
+        width: fit-content;
         //line-height: 70px;
         div {
           padding: 0 20px 0 20px;

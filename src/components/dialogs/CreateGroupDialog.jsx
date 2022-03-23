@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const CreateGroupDialog = props => {
   const { t } = useTranslation();
-  const [groupName, setGroupName] = useState(null);
+  const [groupName, setGroupName] = useState("");
   const [groupNameInput, setGroupNameInput] = useState(null);
 
   useEffect(() => {
@@ -22,9 +22,9 @@ const CreateGroupDialog = props => {
     }
   };
 
-  const handleInputchange = newGroupName => {
-    setGroupName(newGroupName.target.value);
-  };
+  const handleInputchange = e => setGroupName(e.target.value);
+
+  const handelBlur = e => setGroupName(e.target.value.trim());
 
   return (
     <Dialog
@@ -37,12 +37,14 @@ const CreateGroupDialog = props => {
       <p>{t("DIALOG.GROUP_NAME")}</p>
       <input
         type="text"
+        value={groupName}
         className="form-control"
         placeholder={t("DIALOG.NEW_GROUP")}
         onChange={handleInputchange}
         ref={ref => {
           setGroupNameInput(ref);
         }}
+        onBlur={handelBlur}
       />
     </Dialog>
   );

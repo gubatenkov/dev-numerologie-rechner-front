@@ -295,8 +295,10 @@ const AnalysisBrowser = props => {
               <Card.Header>
                 <AnalysisBrowserToggle
                   eventKey={group.id}
-                  canExpand={analysisOfGroup.length > 0}
-                  isCollapsed={activeKey === group.id}
+                  canExpand={Boolean(analysisOfGroup.length)}
+                  isCollapsed={
+                    activeKey === group.id && Boolean(analysisOfGroup.length)
+                  }
                   onClick={() => {
                     if (activeKey === group.id) {
                       setActiveKey("");
@@ -430,9 +432,11 @@ const AnalysisBrowser = props => {
         isOpen={createGroupDialogOpen}
         onClose={() => setCreateGroupDialogOpen(false)}
         onAction={groupName => {
-          createGroup(groupName);
-          setCreateGroupDialogOpen(false);
-          LoadingOverlay.showWithText();
+          if (groupName.trim()) {
+            createGroup(groupName);
+            setCreateGroupDialogOpen(false);
+            LoadingOverlay.showWithText();
+          }
         }}
         groups={props.groups.map(item => item.name)}
       />

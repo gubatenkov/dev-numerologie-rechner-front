@@ -12,6 +12,7 @@ import "../styles/InputForm.css";
 
 import FormBase from "./Forms/FormBase";
 import { useUser } from "../contexts/UserContext";
+import logo from "../images/logo_weiss_trans.png";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 
@@ -106,11 +107,15 @@ const Login = props => {
     <div className="page-register-v3 layout-full">
       <div className="page vertical-align">
         <div className="page-content">
-          <div
-            className="text-center"
-            style={{ padding: `${50}px`, color: "white" }}
-          >
-            <h1 className="Login__title">{t("NUM_CALCULATOR")}</h1>
+          <div className="text-center">
+            <a href={t("HOMEPAGE")}>
+              <img
+                className="brand-img logo"
+                height="250"
+                src={logo}
+                alt="logo"
+              />
+            </a>
           </div>
           <div className="form-wrap">
             <FormBase
