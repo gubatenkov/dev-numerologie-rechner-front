@@ -80,6 +80,7 @@ const NameColumn = styled.div`
     width: 100%;
   }
   width: 220px;
+  margin-bottom: auto;
 `;
 
 /* container holding all results (might be multiple ones). This container is needed as we

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Spinner } from "react-bootstrap";
+import { Dropdown, Spinner } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
@@ -12,7 +12,9 @@ const SaveAnalysisDialog = ({ groups, onSave, onClose, isOpen }) => {
   const history = useHistory();
   const User = useUser();
   const [isUserAuthorized, setIsUserAuthorized] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(groups ? groups[0] : null);
+  const [selectedGroup, setSelectedGroup] = useState(
+    groups?.length ? groups[0] : null
+  );
 
   useEffect(() => {
     if (User?.user) {
@@ -39,6 +41,7 @@ const SaveAnalysisDialog = ({ groups, onSave, onClose, isOpen }) => {
       {isUserAuthorized ? (
         <DialogForAuthUser
           groups={groups}
+          selectedGroup={selectedGroup}
           setSelectedGroup={setSelectedGroup}
         />
       ) : (
@@ -48,41 +51,53 @@ const SaveAnalysisDialog = ({ groups, onSave, onClose, isOpen }) => {
   );
 };
 
-function DialogForAuthUser({ groups, setSelectedGroup }) {
+function DialogForAuthUser({ groups, setSelectedGroup, selectedGroup }) {
   const { t } = useTranslation();
+
   return (
     <>
       <p>{t("GROUP")}</p>
-      <div className="dropdown">
-        {!groups?.length ? (
-          <Spinner
-            animation="border"
-            role="status"
-            variant="dark"
-            style={{ margin: "0 auto 15px", display: "block" }}
-          />
-        ) : (
-          <select
-            className="form-control"
-            onChange={newSelect => {
-              setSelectedGroup(
-                groups.find(item => item.name === newSelect.target.value)
-              );
-            }}
+      {!groups?.length ? (
+        <Spinner
+          animation="border"
+          role="status"
+          variant="dark"
+          style={{ margin: "0 auto 15px", display: "block" }}
+        />
+      ) : (
+        <Dropdown className="dropdown dropdown-analysis">
+          <Dropdown.Toggle
+            className="dropdown-toggle"
+            id="dropdown-basic"
+            variant="secondary"
           >
+            {selectedGroup
+              ? selectedGroup.isDefault
+                ? t(`GROUP_NAMES.${selectedGroup?.name}`)
+                : `${selectedGroup?.name}`
+              : "Available groups"}
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu className="dropdown-menu-analysis">
             {groups.map(item => {
               const name = item.isDefault
                 ? t(`GROUP_NAMES.${item.name}`)
                 : item.name;
               return (
-                <option key={item.name} value={item.name}>
+                <Dropdown.Item
+                  key={item.name}
+                  value={item.name}
+                  onClick={() => {
+                    setSelectedGroup(groups.find(el => el.name === item.name));
+                  }}
+                >
                   {name}
-                </option>
+                </Dropdown.Item>
               );
             })}
-          </select>
-        )}
-      </div>
+          </Dropdown.Menu>
+        </Dropdown>
+      )}
       <p>
         <small>{t("DIALOG.CHOOSE_GROUP")}</small>
       </p>

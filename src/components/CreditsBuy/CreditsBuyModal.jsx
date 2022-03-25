@@ -210,7 +210,7 @@ const CreditsBuyModal = props => {
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                autocomplete="off"
+                autoComplete="off"
               />
             </td>
             <td>€ {PRICE_PERSONAL_LONG}</td>
@@ -225,7 +225,7 @@ const CreditsBuyModal = props => {
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                autocomplete="off"
+                autoComplete="off"
               />
             </td>
             <td>€ {totalPrice}</td>

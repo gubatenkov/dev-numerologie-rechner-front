@@ -274,7 +274,7 @@ const NavigationBar = props => {
 
   if (loading) {
     return (
-      <NavbarContainer>
+      <NavbarContainer style={{ display: "flex", justifyContent: "center" }}>
         <NavbarSpinner animation="border" role="status" variant="dark" />
       </NavbarContainer>
     );
@@ -398,8 +398,11 @@ const NavigationBar = props => {
           onClick={handleLeftIconButtonClick}
         />
       )}
-      {/* empty div here is to show Logo in center on ./userHome page */}
-      {props?.location?.pathname === "/userHome" ? <div /> : null}
+      {/* empty div to show Logo in center */}
+      {props?.location?.pathname === "/userHome" ||
+      props?.location?.pathname === "/userProfile" ? (
+        <div />
+      ) : null}
 
       <LogoContainer href={t("HOMEPAGE")} target="_blank">
         <img src={logo} alt={logo} />

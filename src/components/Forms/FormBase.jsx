@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const StyledForm = styled.form`
   width: 100%;
@@ -20,7 +23,7 @@ const FormBase = ({ children, ...restProps }) => {
 };
 
 const StyledInput = styled.input`
-  width: auto;
+  width: 100%;
   height: 35px;
   padding: 8px 10px;
 
@@ -31,16 +34,20 @@ const StyledInput = styled.input`
   font-family: inherit;
 
   border-radius: 5px;
-  border: ${props =>
-    props.message?.length
-      ? "1px solid rgb(255, 0, 0)!important"
+  border: ${({ message, borderRequired }) =>
+    message?.length || borderRequired
+      ? "1px solid rgb(255, 0, 0)"
       : "1px solid rgba(0, 0, 0, 0.05)"};
-  :focus {
-    outline: none;
-    border: 1px solid rgba(1, 133, 254, 0.7);
-  }
   :hover {
-    border: 1px solid rgba(1, 133, 254, 0.7);
+    /* border: 1px solid transparent; */
+    outline: ${({ message, borderRequired }) =>
+      message?.length || borderRequired
+        ? "none"
+        : "1px solid rgba(1, 133, 254, 0.7)"};
+  }
+  :focus {
+    outline: 2px solid rgba(1, 133, 254, 0.7);
+    border: 1px solid transparent;
   }
 `;
 
@@ -56,12 +63,17 @@ const StyledLabel = styled.label`
 `;
 
 const FlexDiv = styled.div`
+  width: 100%;
+  margin: 0 0 10px 0;
+
   display: flex;
   flex-direction: column;
 `;
 
 const StyledErrorP = styled.p`
   margin: 5px 0 0;
+  height: 15px;
+  line-height: 1;
   color: red;
   font-size: 13px;
   font-weight: 400;
@@ -73,7 +85,7 @@ const Input = ({ label, register, message = "", ...restProps }) => {
 
   return (
     <FlexDiv className="form-group">
-      <StyledLabel htmlFor={`input${id}`}>{label}</StyledLabel>
+      {label && <StyledLabel htmlFor={`input${id}`}>{label}</StyledLabel>}
       <StyledInput
         id={`input${id}`}
         aria-label={label}
@@ -169,7 +181,7 @@ const StyledParag = styled.p`
   text-align: center;
   font-family: inherit;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 13px;
   line-height: 16px;
   color: rgba(0, 0, 0, 0.4);
@@ -180,6 +192,7 @@ const Text = ({ children, ...restProps }) => {
 };
 
 const StyledPar = styled.p`
+  text-align: center;
   font-family: inherit;
   font-style: normal;
   font-weight: 600;
@@ -192,11 +205,37 @@ const Title = ({ children }) => {
   return <StyledPar>{children}</StyledPar>;
 };
 
+const DateInput = ({ label, message = "", style, inputRef, ...restProps }) => {
+  const id = Math.floor(Math.random() * 1000);
+  const minDate = new Date(1922, 0, 1);
+  const maxDate = new Date();
+
+  return (
+    <FlexDiv
+      className={`form-group ${message?.length ? "error" : ""}`}
+      style={style}
+    >
+      {label && <StyledLabel htmlFor={`input${id}`}>{label}</StyledLabel>}
+      <DatePicker
+        className="analysis-datepicker"
+        isClearable
+        {...restProps}
+        ref={inputRef}
+        minDate={minDate}
+        maxDate={maxDate}
+      />
+
+      <StyledErrorP>{message}</StyledErrorP>
+    </FlexDiv>
+  );
+};
+
 FormBase.Btn = Btn;
 FormBase.Text = Text;
 FormBase.Input = Input;
 FormBase.Title = Title;
 FormBase.Divider = Divider;
 FormBase.TextCheckbox = TextCheckbox;
+FormBase.DateInput = DateInput;
 
 export default FormBase;

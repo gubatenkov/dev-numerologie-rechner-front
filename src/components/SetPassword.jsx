@@ -103,7 +103,7 @@ const SetPassword = props => {
               <FormBase
                 id="novalidatedform"
                 onSubmit={handleSubmit(onSubmit)}
-                autocomplete="off"
+                autoComplete="off"
                 noValidate
               >
                 <FormBase.Title>Neues Passwort setzten</FormBase.Title>

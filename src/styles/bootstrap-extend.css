@@ -3287,11 +3287,11 @@ fieldset[disabled] .btn-pure.focus {
   margin: 6px 0;
 }
 
-.dropdown-menu {
-  -webkit-transition: 0.25s;
+/* .dropdown-menu { */
+/* -webkit-transition: 0.25s;
   -o-transition: 0.25s;
-  transition: 0.25s;
-}
+  transition: 0.25s; */
+/* } */
 .dropdown-menu.dropdown-menu-bullet {
   margin-top: 12px;
 }

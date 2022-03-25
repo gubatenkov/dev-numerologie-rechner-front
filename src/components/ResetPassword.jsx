@@ -110,7 +110,7 @@ const ResetPassword = props => {
               <FormBase
                 id="novalidatedform"
                 onSubmit={handleSubmit(onSubmit)}
-                autocomplete="off"
+                autoComplete="off"
                 noValidate
               >
                 <FormBase.Title>{t("PASSWORD_RESET")}</FormBase.Title>

@@ -121,7 +121,7 @@ const Login = props => {
             <FormBase
               id="novalidatedform"
               onSubmit={handleSubmit(onSubmit)}
-              autocomplete="off"
+              autoComplete="off"
               noValidate
             >
               <FormBase.Title>{t("SIGN_IN")}</FormBase.Title>

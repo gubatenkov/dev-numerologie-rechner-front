@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { Link, withRouter } from "react-router-dom";
 import * as yup from "yup";
 import moment from "moment";
+import PropTypes from "prop-types";
 import queryString from "querystring";
-import { useTranslation } from "react-i18next";
 import ToastNotifications from "cogo-toast";
+import { useTranslation } from "react-i18next";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, withRouter } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
 
-import Panel from "./Panel";
-import InputField from "./InputField";
-
-import logoTransparentWhite from "../images/logo_weiss_trans.png";
-import "../styles/AnalysisInput.css";
 import "../styles/InputForm.css";
+import "../styles/AnalysisInput.css";
+
+import FormBase from "./Forms/FormBase";
+import { useUser } from "../contexts/UserContext";
+import useValidators from "../utils/useValidators";
+import logoTransparentWhite from "../images/logo_weiss_trans.png";
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({
@@ -45,15 +47,33 @@ const inputSchemaPersonalCompare = yup.object({
 });
 
 const AnalysisInput = props => {
+  const User = useUser();
   const { t } = useTranslation();
+  const [isAltNameReq, setIsAltNameReq] = useState(false);
+  const [isAltSurnameReq, setIsAltSurnameReq] = useState(false);
+  const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm();
+  const {
+    analNameValidator,
+    dateValidator,
+    altNameValidator,
+    altLastnameValidator
+  } = useValidators();
+  const formState = watch();
 
-  const [firstNames, setFirstNames] = useState(null);
-  const [lastNames, setLastNames] = useState(null);
-  const [dateOfBirth, setDateOfBirth] = useState(null);
-  const [firstNamesComfort, setFirstNamesComfort] = useState(null);
-  const [lastNameComfort, setLastNameComfort] = useState(null);
-
-  const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
+  useEffect(() => {
+    const { altName, altLastname } = formState;
+    if (altName) setIsAltSurnameReq(true);
+    else setIsAltSurnameReq(false);
+    if (altLastname) setIsAltNameReq(true);
+    else setIsAltNameReq(false);
+  }, [formState]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#00b3d4";
@@ -68,10 +88,7 @@ const AnalysisInput = props => {
       lastNameParam != null &&
       dateOfBirthParam != null
     ) {
-      setFirstNames(firstNameParam);
-      setLastNames(lastNameParam);
-      setDateOfBirth(dateOfBirthParam);
-      startAnalysis();
+      startAnalysis(firstNameParam, lastNameParam, dateOfBirthParam);
     }
 
     return () => {
@@ -79,7 +96,13 @@ const AnalysisInput = props => {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const validateInput = async () => {
+  const validateInput = async (
+    firstNames,
+    lastNames,
+    firstNamesComfort,
+    lastNameComfort,
+    dateOfBirth
+  ) => {
     let valid;
     if (firstNamesComfort || lastNameComfort) {
       valid = await inputSchemaPersonalCompare.isValid({
@@ -114,33 +137,70 @@ const AnalysisInput = props => {
     return true;
   };
 
-  const startAnalysis = async () => {
-    if (!(await validateInput())) {
+  const startAnalysis = async (
+    firstNames,
+    lastNames,
+    firstNamesComfort,
+    lastNameComfort,
+    dateOfBirth
+  ) => {
+    if (
+      !(await validateInput(
+        firstNames,
+        lastNames,
+        firstNamesComfort,
+        lastNameComfort,
+        dateOfBirth
+      ))
+    ) {
       return;
     }
-
+    const names = [firstNames];
+    const surnames = [lastNames];
     if (firstNamesComfort && lastNameComfort) {
-      const firstNamesEncoded = encodeURIComponent([
-        firstNames,
-        firstNamesComfort
-      ]);
-      const lastNamesEncoded = encodeURIComponent([lastNames, lastNameComfort]);
-      const dateOfBirthEncoded = encodeURIComponent(dateOfBirth);
-
-      props.history.push(
-        `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`
-      );
-    } else {
-      const firstNamesEncoded = encodeURIComponent(firstNames);
-      const lastNameEncoded = encodeURIComponent(lastNames);
-      const dateOfBirthEncoded = encodeURIComponent(dateOfBirth);
-
-      // navigating to results
-      props.history.push(
-        `/resultPersonal/${firstNamesEncoded}/${lastNameEncoded}/${dateOfBirthEncoded}`
-      );
+      names.push(firstNamesComfort);
+      surnames.push(lastNameComfort);
     }
+    const firstNamesEncoded = encodeURIComponent(names);
+    const lastNamesEncoded = encodeURIComponent(surnames);
+    const dateOfBirthEncoded = encodeURIComponent(dateOfBirth);
+    // navigating to results
+    props.history.push(
+      `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`
+    );
   };
+
+  const onSubmit = data => {
+    const { name, lastname, altName, altLastname, date } = data;
+    const formatedDate = moment(date).format("DD.MM.YYYY");
+    startAnalysis(name, lastname, altName, altLastname, formatedDate);
+  };
+
+  const callback = useCallback(() => {
+    const checkSubmitState = () => {
+      const { altName, altLastname, date, name, lastname } = formState;
+      if (name && lastname && date && !isAltNameReq && !isAltSurnameReq) {
+        setIsSubmitBtnDisabled(false);
+      } else if (
+        name &&
+        lastname &&
+        date &&
+        isAltNameReq &&
+        altName &&
+        isAltSurnameReq &&
+        altLastname
+      ) {
+        setIsSubmitBtnDisabled(false);
+      } else {
+        setIsSubmitBtnDisabled(true);
+      }
+    };
+    checkSubmitState();
+  }, [formState, isAltNameReq, isAltSurnameReq]);
+
+  useEffect(() => {
+    callback();
+  }, [callback, formState]);
 
   return (
     <div className="page-register-v3 layout-full">
@@ -156,78 +216,98 @@ const AnalysisInput = props => {
               />
             </a>
           </div>
-          <div className="row justify-content-md-center">
-            <div className="col-lg-4">
-              <Panel title={t("NUM_ANALYSIS")}>
-                <h6>{t("FAV_NAME")}</h6>
-                <InputField
-                  icon="wb-user"
-                  fieldName={t("FIRSTNAME")}
-                  onChange={event => {
-                    setFirstNames(event.target.value);
-                  }}
+          <div className="form-wrap">
+            <FormBase
+              id="novalidatedform"
+              onSubmit={handleSubmit(onSubmit)}
+              autoComplete="off"
+              noValidate
+            >
+              <FormBase.Title>{t("NUM_ANALYSIS")}</FormBase.Title>
+              <FormBase.Divider />
+              <FormBase.Input
+                name="name"
+                type="text"
+                label={t("FAV_NAME")}
+                form="novalidatedform"
+                placeholder={t("FIRSTNAME")}
+                register={() => register("name", analNameValidator)}
+                message={errors.name?.message}
+              />
+              <div
+                className="form-group-wrap"
+                style={{ display: "flex", gap: "25px" }}
+              >
+                <FormBase.Input
+                  type="text"
+                  name="lastname"
+                  placeholder={t("LASTNAME")}
+                  register={() => register("lastname", analNameValidator)}
+                  message={errors.lastname?.message}
                 />
-                <InputField
-                  icon="wb-user"
-                  fieldName={t("LASTNAME")}
-                  onChange={event => {
-                    setLastNames(event.target.value);
-                  }}
-                />
-                <InputField
-                  icon="wb-calendar"
-                  fieldName={t("BIRTH_DATE")}
-                  onChange={event => {
-                    setDateOfBirth(event.target.value);
-                  }}
-                />
-                {comfortNameFieldsShown && (
-                  <div>
-                    <h6>{t("BIRTHNAME_ALT_NAME")}</h6>
-                    <InputField
-                      icon="wb-user"
-                      fieldName={t("FIRSTNAME")}
-                      onChange={event => {
-                        setFirstNamesComfort(event.target.value);
+                {/* Datepicker input wrapped with react-hook-from controller*/}
+                <Controller
+                  control={control}
+                  name="date"
+                  rules={dateValidator}
+                  render={({ field: { value, onChange, ref, name } }) => (
+                    <FormBase.DateInput
+                      style={{ marginLeft: "auto", maxWidth: "150px" }}
+                      selected={value}
+                      dateFormat="dd.MM.yyyy"
+                      placeholderText={t("BIRTH_DATE")}
+                      onChange={date => onChange(date)}
+                      inputRef={elem => {
+                        elem && ref(elem.input);
                       }}
+                      name={name}
+                      message={errors.date?.message}
                     />
-                    <InputField
-                      icon="wb-user"
-                      fieldName={t("LASTNAME")}
-                      onChange={event => {
-                        setLastNameComfort(event.target.value);
-                      }}
-                    />
-                  </div>
-                )}
-                <div
-                  role="link"
-                  onClick={() =>
-                    setComfortNameFieldsShown(!comfortNameFieldsShown)
+                  )}
+                />
+              </div>
+              <div
+                className="form-group-wrap"
+                style={{ display: "flex", gap: "25px" }}
+              >
+                <FormBase.Input
+                  type="text"
+                  autoComplete="off"
+                  // placeholder={t("OPTIONAL")}
+                  label={t("BIRTHNAME_ALT")}
+                  register={() => register("altName", altNameValidator)}
+                  message={errors.altName?.message}
+                  borderRequired={isAltNameReq && !formState.altName.length}
+                />
+                <FormBase.Input
+                  type="text"
+                  autoComplete="off"
+                  label={t("NAME_ALT")}
+                  // placeholder={t("OPTIONAL")}
+                  register={() => register("altLastname", altLastnameValidator)}
+                  message={errors.altLastname?.message}
+                  borderRequired={
+                    isAltSurnameReq && !formState.altLastname.length
                   }
-                >
-                  <h6 className="linkText">
-                    {comfortNameFieldsShown
-                      ? t("HIDE_COMPARE_NAME")
-                      : t("SHOW_COMPARE_NAME")}
-                  </h6>
-                </div>
-                <button
-                  className="btn btn-primary btn-block"
-                  onClick={startAnalysis}
-                >
-                  {t("START")}
-                </button>
-                <div className="InputForm__options">
-                  <Link to="/userHome">
-                    <h6>{t("SIGN_IN")}</h6>
-                  </Link>
-                  <Link to="/register">
-                    <h6>{t("REGISTER")}</h6>
-                  </Link>
-                </div>
-              </Panel>
-            </div>
+                />
+              </div>
+
+              <FormBase.Btn type="submit" disabled={isSubmitBtnDisabled}>
+                {t("START")}
+              </FormBase.Btn>
+              <FormBase.Divider />
+
+              {/* show links only for unauthorized users */}
+              {!User?.user && (
+                <>
+                  <FormBase.Text>{t("LOGIN_TO_SAVE_ANALYS")}</FormBase.Text>
+                  <FormBase.Text>
+                    <Link to="/login">{t("SIGN_IN")}</Link> oder{" "}
+                    <Link to="/register">{t("REGISTER")}</Link>
+                  </FormBase.Text>
+                </>
+              )}
+            </FormBase>
           </div>
         </div>
       </div>

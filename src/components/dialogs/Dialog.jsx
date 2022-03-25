@@ -22,7 +22,7 @@ const Dialog = props => {
       className="modal fade show"
       role="dialog"
       tabIndex="-1"
-      style={{ display: "block" }}
+      style={{ display: "block", padding: "0 15px" }}
     >
       <div className="modal-dialog modal-center">
         <div className="modal-content">

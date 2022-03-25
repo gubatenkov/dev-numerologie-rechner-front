@@ -15,6 +15,7 @@ import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+import closeIcon from "../images/icon_close_primary.svg";
 
 const StyledSpan = styled.span`
   color: #007bff;
@@ -150,7 +151,7 @@ const Register = ({ history }) => {
             <FormBase
               id="novalidatedform"
               onSubmit={handleSubmit(onSubmit)}
-              autocomplete="off"
+              autoComplete="off"
               noValidate
             >
               <FormBase.Title>{t("REGISTER")}</FormBase.Title>
@@ -243,8 +244,7 @@ function TermsPopup({ close }) {
     height: 25px;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    border: 1px solid #000;
+
     cursor: pointer;
   `;
 
@@ -268,8 +268,10 @@ function TermsPopup({ close }) {
 
   return (
     <StyledDiv>
-      <StyledSpan onClick={close}>X</StyledSpan>
-      <div style={{ overflowY: "auto", height: "100%" }}>
+      <StyledSpan onClick={close}>
+        <img src={closeIcon} alt="close icon" />
+      </StyledSpan>
+      <div style={{ overflowY: "auto", height: "400px", margin: "20px 0" }}>
         <br />
         <b>{t("PRIVACY_POLICY_HINT")}</b> <br />
         {t("PRIVACY_POLICY_CONTENT")}
