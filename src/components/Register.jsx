@@ -221,9 +221,9 @@ const Register = ({ history }) => {
 function TermsPopup({ close }) {
   const { t } = useTranslation();
   const StyledDiv = styled.div`
-    top: 50%;
-    left: 50%;
-    width: 100%;
+    top: 50vh;
+    left: 50vw;
+    width: 90vw;
     max-width: 500px;
     padding: 10px 20px 20px;
     height: 500px;
@@ -233,7 +233,7 @@ function TermsPopup({ close }) {
     background: #fff;
     position: absolute;
     border-radius: 10px;
-    transform: translate(-50%, -30%);
+    transform: translate(-50%, -50%);
     z-index: 100;
   `;
 
@@ -252,7 +252,7 @@ function TermsPopup({ close }) {
     const div = document.createElement("div");
     div.addEventListener("click", () => close());
     div.classList.add("backdrop");
-    div.style.position = "absolute";
+    div.style.position = "fixed";
     div.style.top = "0";
     div.style.left = "0";
     div.style.right = "0";
