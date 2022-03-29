@@ -6,13 +6,17 @@ import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+// import {  Controller } from "react-hook-form";
 
 import "../styles/InputForm.css";
 import "../styles/AnalysisInput.css";
 
-import FormBase from "./Forms/FormBase";
-import { useUser } from "../contexts/UserContext";
+import Panel from "./Panel";
+import InputField from "./InputField";
+
+// import FormBase from "./Forms/FormBase";
+// import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import logoTransparentWhite from "../images/logo_weiss_trans.png";
 
@@ -47,13 +51,14 @@ const inputSchemaPersonalCompare = yup.object({
 });
 
 const AnalysisInput = props => {
-  const User = useUser();
   const { t } = useTranslation();
   const [isAltNameReq, setIsAltNameReq] = useState(false);
   const [isAltSurnameReq, setIsAltSurnameReq] = useState(false);
+
+  const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
   const {
-    control,
+    // control,
     register,
     handleSubmit,
     watch,
@@ -216,8 +221,77 @@ const AnalysisInput = props => {
               />
             </a>
           </div>
-          <div className="form-wrap">
-            <FormBase
+          <div className="row justify-content-md-center">
+            <form className="col-lg-4" onSubmit={handleSubmit(onSubmit)}>
+              <Panel title={t("NUM_ANALYSIS")}>
+                <h6>{t("FAV_NAME")}</h6>
+                <InputField
+                  icon="wb-user"
+                  fieldName={t("FIRSTNAME")}
+                  register={() => register("name", analNameValidator)}
+                  message={errors.name?.message}
+                />
+                <InputField
+                  icon="wb-user"
+                  fieldName={t("LASTNAME")}
+                  register={() => register("lastname", analNameValidator)}
+                  message={errors.lastname?.message}
+                />
+                <InputField
+                  icon="wb-calendar"
+                  fieldName={t("BIRTH_DATE")}
+                  register={() => register("date", dateValidator)}
+                  message={errors.date?.message}
+                />
+                {comfortNameFieldsShown && (
+                  <div>
+                    <h6>{t("BIRTHNAME_ALT_NAME")}</h6>
+                    <InputField
+                      icon="wb-user"
+                      fieldName={t("FIRSTNAME")}
+                      register={() => register("altName", altNameValidator)}
+                      message={errors.altName?.message}
+                    />
+                    <InputField
+                      icon="wb-user"
+                      fieldName={t("LASTNAME")}
+                      register={() =>
+                        register("altLastname", altLastnameValidator)
+                      }
+                      message={errors.altLastname?.message}
+                    />
+                  </div>
+                )}
+                <div
+                  role="link"
+                  onClick={() =>
+                    setComfortNameFieldsShown(!comfortNameFieldsShown)
+                  }
+                >
+                  <h6 className="linkText">
+                    {comfortNameFieldsShown
+                      ? t("HIDE_COMPARE_NAME")
+                      : t("SHOW_COMPARE_NAME")}
+                  </h6>
+                </div>
+                <button
+                  className="btn btn-primary btn-block"
+                  type="submit"
+                  disabled={isSubmitBtnDisabled}
+                >
+                  {t("START")}
+                </button>
+                <div className="InputForm__options">
+                  <Link to="/userHome">
+                    <h6>{t("SIGN_IN")}</h6>
+                  </Link>
+                  <Link to="/register">
+                    <h6>{t("REGISTER")}</h6>
+                  </Link>
+                </div>
+              </Panel>
+            </form>
+            {/* <FormBase
               id="novalidatedform"
               onSubmit={handleSubmit(onSubmit)}
               autoComplete="off"
@@ -245,7 +319,7 @@ const AnalysisInput = props => {
                   register={() => register("lastname", analNameValidator)}
                   message={errors.lastname?.message}
                 />
-                {/* Datepicker input wrapped with react-hook-from controller*/}
+                // Datepicker input wrapped with react-hook-from controller
                 <Controller
                   control={control}
                   name="date"
@@ -297,7 +371,7 @@ const AnalysisInput = props => {
               </FormBase.Btn>
               <FormBase.Divider />
 
-              {/* show links only for unauthorized users */}
+               // show links only for unauthorized users 
               {!User?.user && (
                 <>
                   <FormBase.Text>{t("LOGIN_TO_SAVE_ANALYS")}</FormBase.Text>
@@ -307,7 +381,7 @@ const AnalysisInput = props => {
                   </FormBase.Text>
                 </>
               )}
-            </FormBase>
+            </FormBase> */}
           </div>
         </div>
       </div>

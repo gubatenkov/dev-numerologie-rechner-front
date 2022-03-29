@@ -1,23 +1,42 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const InputField = props => {
+const InputField = ({
+  icon,
+  type,
+  fieldName,
+  message,
+  onChange,
+  autoComplete,
+  register,
+  ...restProps
+}) => {
   return (
     <div className="form-group">
       <div className="input-group input-group-icon">
-        {props.icon && (
+        {icon && (
           <span className="input-group-addon">
-            <span className={`icon ${props.icon}`} aria-hidden="true" />
+            <span className={`icon ${icon}`} aria-hidden="true" />
           </span>
         )}
         <input
-          type={props.type}
+          type={type}
           className="form-control"
-          placeholder={props.fieldName}
-          onChange={props.onChange}
-          autoComplete={props.autoComplete}
+          placeholder={fieldName}
+          onChange={onChange}
+          autoComplete={autoComplete}
+          {...restProps}
+          {...register()}
         />
       </div>
+      {message?.length && (
+        <p
+          className="err-message"
+          style={{ color: "red", fontSize: "13px", margin: "5px 0 0" }}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
 };
