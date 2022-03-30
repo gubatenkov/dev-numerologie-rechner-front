@@ -6,7 +6,7 @@ import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 // import {  Controller } from "react-hook-form";
 
 import "../styles/InputForm.css";
@@ -15,7 +15,7 @@ import "../styles/AnalysisInput.css";
 import Panel from "./Panel";
 import InputField from "./InputField";
 
-// import FormBase from "./Forms/FormBase";
+import FormBase from "./Forms/FormBase";
 // import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import logoTransparentWhite from "../images/logo_weiss_trans.png";
@@ -58,7 +58,7 @@ const AnalysisInput = props => {
   const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
   const {
-    // control,
+    control,
     register,
     handleSubmit,
     watch,
@@ -237,11 +237,33 @@ const AnalysisInput = props => {
                   register={() => register("lastname", analNameValidator)}
                   message={errors.lastname?.message}
                 />
-                <InputField
+                {/* <InputField
                   icon="wb-calendar"
                   fieldName={t("BIRTH_DATE")}
                   register={() => register("date", dateValidator)}
                   message={errors.date?.message}
+                /> */}
+                <Controller
+                  control={control}
+                  name="date"
+                  rules={dateValidator}
+                  render={({ field: { value, onChange, ref, name } }) => (
+                    <FormBase.DateInput
+                      style={{
+                        marginLeft: "auto"
+                      }}
+                      selected={value}
+                      dateFormat="dd.MM.yyyy"
+                      placeholderText={t("BIRTH_DATE")}
+                      onChange={date => onChange(date)}
+                      inputRef={elem => {
+                        elem && ref(elem.input);
+                      }}
+                      name={name}
+                      message={errors.date?.message}
+                      autoComplete="off"
+                    />
+                  )}
                 />
                 {comfortNameFieldsShown && (
                   <div>

@@ -156,7 +156,7 @@ const CreditsBuyModal = props => {
   const handleChange = e => {
     const name = e.target.name;
     const value = e.target.value;
-    if (value >= 0 && value <= 10) {
+    if (value >= 0 && value <= 100) {
       setCartItems(prev => ({ ...prev, [name]: value }));
     }
   };

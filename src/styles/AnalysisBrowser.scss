@@ -133,6 +133,7 @@
   }
 
   .akb-life-number-display {
+    display: none;
     white-space: nowrap;
     height: 32px;
     padding-left: 10px;
@@ -144,5 +145,9 @@
     color: #323232;
     text-align: center;
     @include font-headline-3;
+
+    @media screen and (min-width: 468px) {
+      display: block;
+    }
   }
 }
