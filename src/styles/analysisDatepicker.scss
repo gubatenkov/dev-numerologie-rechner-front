@@ -9,13 +9,14 @@
   font-style: normal;
   font-family: inherit;
 
-  border-radius: 5px;
+  border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.05);
+  border-color: #e4eaec;
 
-  &:hover {
-    border: 1px solid transparent;
-    outline: 1px solid rgba(1, 133, 254, 0.7);
-  }
+  // &:hover {
+  //   border: 1px solid transparent;
+  //   outline: 1px solid rgba(1, 133, 254, 0.7);
+  // }
 
   &:focus {
     border: 1px solid transparent;
