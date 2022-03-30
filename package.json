@@ -37,6 +37,7 @@
     "react-device-detect": "^1.11.14",
     "react-dock": "^0.2.4",
     "react-dom": "^16.9.0",
+    "react-dropdown-date": "^2.2.7",
     "react-ga": "2.7.0",
     "react-hook-form": "^7.27.1",
     "react-i18next": "^11.4.0",

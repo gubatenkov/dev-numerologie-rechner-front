@@ -6,7 +6,7 @@ import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 // import {  Controller } from "react-hook-form";
 
 import "../styles/InputForm.css";
@@ -15,10 +15,11 @@ import "../styles/AnalysisInput.css";
 import Panel from "./Panel";
 import InputField from "./InputField";
 
-import FormBase from "./Forms/FormBase";
+// import FormBase from "./Forms/FormBase";
 // import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import logoTransparentWhite from "../images/logo_weiss_trans.png";
+import DropdownDateSelect from "./DropdownDateSelect";
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({
@@ -54,11 +55,14 @@ const AnalysisInput = props => {
   const { t } = useTranslation();
   const [isAltNameReq, setIsAltNameReq] = useState(false);
   const [isAltSurnameReq, setIsAltSurnameReq] = useState(false);
-
+  const [date, setDate] = useState({
+    date: new Date(),
+    selectedDate: moment(new Date()).format("YYYY-MM-DD")
+  });
   const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
   const {
-    control,
+    // control,
     register,
     handleSubmit,
     watch,
@@ -66,7 +70,7 @@ const AnalysisInput = props => {
   } = useForm();
   const {
     analNameValidator,
-    dateValidator,
+    // dateValidator,
     altNameValidator,
     altLastnameValidator
   } = useValidators();
@@ -175,21 +179,21 @@ const AnalysisInput = props => {
     );
   };
 
-  const onSubmit = data => {
-    const { name, lastname, altName, altLastname, date } = data;
+  const onSubmit = (data, date) => {
+    const { name, lastname, altName, altLastname } = data;
     const formatedDate = moment(date).format("DD.MM.YYYY");
     startAnalysis(name, lastname, altName, altLastname, formatedDate);
   };
 
   const callback = useCallback(() => {
     const checkSubmitState = () => {
-      const { altName, altLastname, date, name, lastname } = formState;
-      if (name && lastname && date && !isAltNameReq && !isAltSurnameReq) {
+      const { altName, altLastname, name, lastname } = formState;
+      if (name && lastname && date?.date && !isAltNameReq && !isAltSurnameReq) {
         setIsSubmitBtnDisabled(false);
       } else if (
         name &&
         lastname &&
-        date &&
+        date?.date &&
         isAltNameReq &&
         altName &&
         isAltSurnameReq &&
@@ -201,11 +205,11 @@ const AnalysisInput = props => {
       }
     };
     checkSubmitState();
-  }, [formState, isAltNameReq, isAltSurnameReq]);
+  }, [formState, isAltNameReq, isAltSurnameReq, date]);
 
   useEffect(() => {
     callback();
-  }, [callback, formState]);
+  }, [callback, date, formState]);
 
   return (
     <div className="page-register-v3 layout-full">
@@ -222,7 +226,10 @@ const AnalysisInput = props => {
             </a>
           </div>
           <div className="row justify-content-md-center">
-            <form className="col-lg-4" onSubmit={handleSubmit(onSubmit)}>
+            <form
+              className="col-lg-4"
+              onSubmit={handleSubmit(data => onSubmit(data, date?.date))}
+            >
               <Panel title={t("NUM_ANALYSIS")}>
                 <h6>{t("FAV_NAME")}</h6>
                 <InputField
@@ -243,7 +250,7 @@ const AnalysisInput = props => {
                   register={() => register("date", dateValidator)}
                   message={errors.date?.message}
                 /> */}
-                <Controller
+                {/* <Controller
                   control={control}
                   name="date"
                   rules={dateValidator}
@@ -264,7 +271,8 @@ const AnalysisInput = props => {
                       autoComplete="off"
                     />
                   )}
-                />
+                /> */}
+                <DropdownDateSelect date={date} setDate={setDate} />
                 {comfortNameFieldsShown && (
                   <div>
                     <h6>{t("BIRTHNAME_ALT_NAME")}</h6>

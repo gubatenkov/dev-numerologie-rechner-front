@@ -1,0 +1,21 @@
+#dropdown-date {
+  display: flex;
+  flex-grow: 1;
+
+  > div {
+    width: 100%;
+    font-size: 1rem;
+    color: black;
+
+    > select {
+      height: 36px;
+      width: 100%;
+      border: 1px solid #e4eaec;
+      text-align: center;
+    }
+  }
+
+  > div + div {
+    margin-left: 10px;
+  }
+}
