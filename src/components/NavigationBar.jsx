@@ -183,7 +183,6 @@ const CartIconBtn = ({ onClick, badge, imageIcon, ...restProps }) => {
   `;
 
   const StyledDiv = styled.div`
-    margin-right: 20px;
     width: fit-content;
     height: fit-content;
     display: block;
@@ -408,19 +407,22 @@ const NavigationBar = props => {
         <img src={logo} alt={logo} />
       </LogoContainer>
 
-      {props.isSettingsVisibleOnBookPage && loggedIn && (
-        <OverlayTrigger
-          trigger="click"
-          key="settings_popover"
-          placement="bottom"
-          overlay={settingsPopup}
-          rootClose
-        >
-          <SettingsIconButton imageIcon={iconSettingsPrimary} />
-        </OverlayTrigger>
-      )}
+      {/* {props.isSettingsVisibleOnBookPage && loggedIn && (
+        
+      )} */}
       {loggedIn && (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", gap: "20px" }}>
+          {props.isSettingsVisibleOnBookPage && (
+            <OverlayTrigger
+              trigger="click"
+              key="settings_popover"
+              placement="bottom"
+              overlay={settingsPopup}
+              rootClose
+            >
+              <SettingsIconButton imageIcon={iconSettingsPrimary} />
+            </OverlayTrigger>
+          )}
           <CartIconBtn
             badge={cartItemsNum}
             imageIcon={iconCartPrimary}
