@@ -1,6 +1,6 @@
 import React from "react";
 // eslint-disable-next-line no-unused-vars
-import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
+import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date-de";
 
 const DropdownDateSelect = ({ date, setDate }) => {
   return (
