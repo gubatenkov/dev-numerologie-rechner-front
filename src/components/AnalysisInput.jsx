@@ -56,8 +56,10 @@ const AnalysisInput = props => {
   const [isAltNameReq, setIsAltNameReq] = useState(false);
   const [isAltSurnameReq, setIsAltSurnameReq] = useState(false);
   const [date, setDate] = useState({
-    date: new Date(),
-    selectedDate: moment(new Date()).format("YYYY-MM-DD")
+    // date: new Date(),
+    day: String(new Date().getUTCDate()),
+    month: String(new Date().getUTCMonth()),
+    year: String(new Date().getUTCFullYear())
   });
   const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
@@ -181,19 +183,31 @@ const AnalysisInput = props => {
 
   const onSubmit = (data, date) => {
     const { name, lastname, altName, altLastname } = data;
-    const formatedDate = moment(date).format("DD.MM.YYYY");
+    const formatedDate = moment(
+      new Date(date.year, date.month, date.day)
+    ).format("DD.MM.YYYY");
     startAnalysis(name, lastname, altName, altLastname, formatedDate);
   };
 
   const callback = useCallback(() => {
     const checkSubmitState = () => {
       const { altName, altLastname, name, lastname } = formState;
-      if (name && lastname && date?.date && !isAltNameReq && !isAltSurnameReq) {
+      if (
+        name &&
+        lastname &&
+        date.day &&
+        date.month &&
+        date.year &&
+        !isAltNameReq &&
+        !isAltSurnameReq
+      ) {
         setIsSubmitBtnDisabled(false);
       } else if (
         name &&
         lastname &&
-        date?.date &&
+        date.day &&
+        date.month &&
+        date.year &&
         isAltNameReq &&
         altName &&
         isAltSurnameReq &&
@@ -228,7 +242,7 @@ const AnalysisInput = props => {
           <div className="row justify-content-md-center">
             <form
               className="col-lg-4"
-              onSubmit={handleSubmit(data => onSubmit(data, date?.date))}
+              onSubmit={handleSubmit(data => onSubmit(data, date))}
             >
               <Panel title={t("NUM_ANALYSIS")}>
                 <h6>{t("FAV_NAME")}</h6>

@@ -1,21 +1,21 @@
-#dropdown-date {
+.date-group {
   display: flex;
   flex-grow: 1;
 
-  > div {
+  .days,
+  .months,
+  .years {
     width: 100%;
-    font-size: 1rem;
-    color: black;
+    height: 36px;
 
-    > select {
-      height: 36px;
-      width: 100%;
-      border: 1px solid #e4eaec;
-      text-align: center;
-    }
+    color: black;
+    font-size: 1rem;
+    text-align: center;
+
+    border: 1px solid #e4eaec;
   }
 
-  > div + div {
+  > select + select {
     margin-left: 10px;
   }
 }
