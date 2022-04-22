@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 // import {  Controller } from "react-hook-form";
 
 import "../styles/InputForm.css";
-import "../styles/AnalysisInput.css";
+import "../styles/AnalysisInput.scss";
 
 import Panel from "./Panel";
 import InputField from "./InputField";
@@ -20,6 +20,12 @@ import InputField from "./InputField";
 import useValidators from "../utils/useValidators";
 import logoTransparentWhite from "../images/logo_weiss_trans.png";
 import DropdownDateSelect from "./DropdownDateSelect";
+import Header from "./Header";
+import Typography from "./Typography";
+import AnalTypeDropdown from "./AnalTypeDropdown";
+import Input from "./Input";
+import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
+import FooterHoriz from "./FooterHoriz";
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({
@@ -56,10 +62,9 @@ const AnalysisInput = props => {
   const [isAltNameReq, setIsAltNameReq] = useState(false);
   const [isAltSurnameReq, setIsAltSurnameReq] = useState(false);
   const [date, setDate] = useState({
-    // date: new Date(),
-    day: String(new Date().getUTCDate()),
-    month: String(new Date().getUTCMonth()),
-    year: String(new Date().getUTCFullYear())
+    day: "",
+    month: "",
+    year: ""
   });
   const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
@@ -72,7 +77,7 @@ const AnalysisInput = props => {
   } = useForm();
   const {
     analNameValidator,
-    // dateValidator,
+    yearValidator,
     altNameValidator,
     altLastnameValidator
   } = useValidators();
@@ -87,7 +92,6 @@ const AnalysisInput = props => {
   }, [formState]);
 
   useEffect(() => {
-    document.body.style.backgroundColor = "#00b3d4";
     const querString = props.location.search.replace("?", "");
     const values = queryString.parse(querString);
     const firstNameParam = values.firstNames;
@@ -225,9 +229,138 @@ const AnalysisInput = props => {
     callback();
   }, [callback, date, formState]);
 
+  const handleChangeNumber = e => {
+    const { value } = e.target;
+    if (!isNaN(Number(value)) && Number(value) <= 31 && Number(value) > 0) {
+      const day = Number(value) < 10 ? `0${value}` : Number(value);
+      setDate(prev => ({ ...prev, day }));
+    } else {
+      setDate(prev => ({ ...prev, day: "" }));
+    }
+  };
+
+  const handleChangeMonth = e => {
+    const { value } = e.target;
+    if (!isNaN(Number(value)) && Number(value) <= 12 && Number(value) > 0) {
+      const month = Number(value) < 10 ? `0${value}` : `${Number(value)}`;
+      setDate(prev => ({ ...prev, month }));
+    } else {
+      setDate(prev => ({ ...prev, month: "" }));
+    }
+  };
+
+  const handleChangeYear = e => {
+    const { value } = e.target;
+    if (!isNaN(Number(value)) && value.length <= 4) {
+      const year = `${Number(value)}`;
+      setDate(prev => ({ ...prev, year }));
+    } else {
+      setDate(prev => ({ ...prev, year: "" }));
+    }
+  };
+
+  const onBlurYear = e => {
+    const currentYear = new Date().getFullYear();
+    // clear input if year field is not in range 1920 - currentYear
+    if (date.year < 1920 || date.year > currentYear) {
+      setDate(prev => ({ ...prev, year: "" }));
+    }
+  };
+
   return (
     <div className="page-register-v3 layout-full">
-      <div className="page vertical-align">
+      <section className="anal">
+        <Header />
+        <div className="container">
+          <div className="anal-inner">
+            <Typography as="h1" fs="46px" fw="900" color="#fff" lh="69px">
+              Numerology Calculator
+            </Typography>
+
+            <form
+              className="anal-form"
+              onSubmit={handleSubmit(data => onSubmit(data, date))}
+            >
+              <AnalTypeDropdown defaultValue="Personality analysis" />
+
+              <div className="anal-group anal-group__names">
+                <Input
+                  label="First name"
+                  placeholder="John"
+                  register={() => register("name", analNameValidator)}
+                />
+                <Input
+                  label="Last name"
+                  placeholder="Johnson"
+                  register={() => register("lastname", analNameValidator)}
+                />
+
+                <BaseBtn className="transparent-btn transparent-btn--plus">
+                  Name Comparison
+                </BaseBtn>
+              </div>
+
+              <div className="anal-group anal-group__date">
+                <Input
+                  className="number"
+                  placeholder="19"
+                  value={date.day}
+                  onChange={handleChangeNumber}
+                />
+                <Input
+                  className="month"
+                  placeholder="05"
+                  value={date.month}
+                  onChange={handleChangeMonth}
+                />
+                <Input
+                  className="year"
+                  placeholder="1995"
+                  value={date.year}
+                  onBlur={onBlurYear}
+                  onChange={handleChangeYear}
+                />
+              </div>
+
+              <BaseBtn
+                className="blue-btn"
+                type="submit"
+                // disabled={isSubmitBtnDisabled}
+              >
+                Analysis
+              </BaseBtn>
+            </form>
+          </div>
+        </div>
+      </section>
+      <section className="promo">
+        <div className="container">
+          <div className="promo-topcorners">
+            <div className="promo-inner">
+              <div className="promo__left">
+                <Typography
+                  as="h2"
+                  color="#313236"
+                  lh="69px"
+                  fs="46px"
+                  fw="900"
+                  capitalize
+                >
+                  Get to know yourself with psychomerological analysis
+                </Typography>
+              </div>
+              <div className="promo__right">
+                <Typography as="p" color="#323232" lh="25px" fs="18px" fw="400">
+                  Activate all texts of the <strong>extended</strong> version of
+                  the numeroscope of your current calculation for online reading
+                </Typography>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <FooterHoriz />
+      {/*<div className="page vertical-align">
         <div className="page-content">
           <div className="text-center">
             <a href={t("HOMEPAGE")}>
@@ -258,13 +391,13 @@ const AnalysisInput = props => {
                   register={() => register("lastname", analNameValidator)}
                   message={errors.lastname?.message}
                 />
-                {/* <InputField
+                 <InputField
                   icon="wb-calendar"
                   fieldName={t("BIRTH_DATE")}
                   register={() => register("date", dateValidator)}
                   message={errors.date?.message}
-                /> */}
-                {/* <Controller
+                /> 
+                 <Controller
                   control={control}
                   name="date"
                   rules={dateValidator}
@@ -285,8 +418,8 @@ const AnalysisInput = props => {
                       autoComplete="off"
                     />
                   )}
-                /> */}
-                <DropdownDateSelect date={date} setDate={setDate} />
+                /> 
+                 <DropdownDateSelect date={date} setDate={setDate} />
                 {comfortNameFieldsShown && (
                   <div>
                     <h6>{t("BIRTHNAME_ALT_NAME")}</h6>
@@ -335,7 +468,7 @@ const AnalysisInput = props => {
                 </div>
               </Panel>
             </form>
-            {/* <FormBase
+            <FormBase
               id="novalidatedform"
               onSubmit={handleSubmit(onSubmit)}
               autoComplete="off"
@@ -425,10 +558,10 @@ const AnalysisInput = props => {
                   </FormBase.Text>
                 </>
               )}
-            </FormBase> */}
+            </FormBase> 
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

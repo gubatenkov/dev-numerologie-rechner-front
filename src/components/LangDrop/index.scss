@@ -1,0 +1,67 @@
+.lang-drop {
+  margin: 0 65px 0 0;
+  width: fit-content;
+  position: relative;
+
+  &__lang {
+    padding: 0 15px 0 0;
+
+    position: relative;
+    display: inline-block;
+
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #ffffff;
+
+    text-transform: uppercase;
+
+    &:before {
+      position: absolute;
+      right: 0;
+      top: 9px;
+      content: "";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 4px 4px 0 4px;
+      border-color: #fff transparent transparent transparent;
+    }
+  }
+
+  &__menu {
+    padding: 5px;
+    position: absolute;
+    width: fit-content;
+    margin: 0;
+
+    list-style: none;
+
+    border-radius: 5px;
+    background-color: #fff;
+
+    z-index: 10;
+  }
+
+  &__item {
+    padding: 5px 10px;
+
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #313236;
+
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &.active {
+      background-color: #f5f5f5;
+    }
+  }
+}

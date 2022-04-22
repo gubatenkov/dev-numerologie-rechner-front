@@ -1,0 +1,92 @@
+.base-btn {
+  padding: 10px 18px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  color: #d7b267;
+  text-align: center;
+
+  border: transparent;
+  border-radius: 20px;
+  background: #ffffff;
+
+  text-decoration: none;
+
+  &.outlined {
+    color: #ffffff;
+
+    background: transparent;
+    border: 1px solid #fff;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    color: #d7b267;
+  }
+}
+
+.blue-btn {
+  padding: 15px 46px;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+  text-align: center;
+  color: #ffffff;
+
+  border: 1px solid transparent;
+  background-color: #01b2d4;
+  border-radius: 5px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.transparent-btn {
+  padding: 0;
+
+  bottom: -30px;
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 140%;
+  font-style: normal;
+
+  border: none;
+  background: transparent;
+
+  &--plus {
+    &::after {
+      content: "";
+      margin: 0 10px 0 0;
+      width: 14px;
+      height: 14px;
+      display: block;
+
+      background-image: url("../../../images/plus.svg");
+      background-repeat: no-repeat;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

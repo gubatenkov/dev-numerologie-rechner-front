@@ -1,0 +1,67 @@
+.analystype-dropdown {
+  width: 100%;
+  max-width: 260px;
+
+  &__menu {
+    width: 100%;
+
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 20px;
+    color: #323232 !important;
+
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: none !important;
+    border: 1px solid transparent !important;
+  }
+
+  &__item {
+    &:hover {
+      background: #f9f8f6;
+    }
+  }
+
+  &__btn {
+    position: relative;
+
+    padding: 15px;
+    width: 100%;
+
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 20px;
+    color: #323232 !important;
+
+    border-radius: 5px;
+    box-shadow: none !important;
+    background: #f9f8f6 !important;
+    border: 1px solid transparent !important;
+
+    opacity: 0.99;
+
+    &::after {
+      display: none;
+    }
+
+    &::before {
+      position: absolute;
+      content: "";
+      display: flex;
+      width: 20px;
+      height: 20px;
+      right: 21px;
+      background-image: url("../../images/arrowRight.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .show &::before {
+      transform: rotate(90deg);
+    }
+  }
+}

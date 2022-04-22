@@ -13,8 +13,13 @@ const useValidators = () => {
     }
   };
 
-  const dateValidator = {
-    required: t("FIELD_REQUIRED")
+  const yearValidator = {
+    required: t("FIELD_REQUIRED"),
+    maxLength: { value: 4, message: t("MAX_4_LETTERS") },
+    pattern: {
+      value: /^(192\d|200\d|2022)$/,
+      message: "1920-2022"
+    }
   };
 
   const altNameValidator = {
@@ -59,7 +64,7 @@ const useValidators = () => {
     passwordValidators,
     password2Validators,
     analNameValidator,
-    dateValidator,
+    yearValidator,
     altNameValidator,
     altLastnameValidator
   };

@@ -5,6 +5,18 @@ html * {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
+  max-width: 1230px;
+}
+
+a:hover {
+  color: #01b2d4;
+  text-decoration: none;
+}
+
 .main-container {
   max-width: $main-container-max-width;
   margin: auto;
