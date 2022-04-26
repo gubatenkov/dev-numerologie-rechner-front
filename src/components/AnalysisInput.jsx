@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import queryString from "querystring";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
 // import {  Controller } from "react-hook-form";
@@ -66,7 +66,7 @@ const AnalysisInput = props => {
     month: "",
     year: ""
   });
-  const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
+  const [comfortNameFieldsShown, setComfortNamesFieldsShown] = useState(false);
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
   const {
     // control,
@@ -183,9 +183,9 @@ const AnalysisInput = props => {
   };
 
   const onSubmit = data => {
-    const { name, lastname, altName, altLastname, day, month, year } = data;
+    const { name, lastname, altname, altlastname, day, month, year } = data;
     const formatedDate = moment(`${year}-${month}-${day}`).format("DD.MM.YYYY");
-    startAnalysis(name, lastname, altName, altLastname, formatedDate);
+    startAnalysis(name, lastname, altname, altlastname, formatedDate);
   };
 
   const callback = useCallback(() => {
@@ -260,75 +260,105 @@ const AnalysisInput = props => {
               className="anal-form"
               onSubmit={handleSubmit(data => onSubmit(data, date))}
             >
-              <AnalTypeDropdown defaultValue="Personality analysis" />
+              <div className="anal-form-row">
+                <AnalTypeDropdown defaultValue="Personality analysis" />
 
-              <div className="anal-group anal-group__names">
-                <Input
-                  label="First name"
-                  placeholder="John"
-                  register={() => register("name", analNameValidator)}
-                  message={errors.name && errors.name.message}
-                />
-                <Input
-                  label="Last name"
-                  placeholder="Johnson"
-                  register={() => register("lastname", analNameValidator)}
-                  message={errors.lastname && errors.lastname.message}
-                />
+                <div className="anal-group anal-group__names">
+                  <Input
+                    label="First name"
+                    placeholder="John"
+                    register={() => register("name", analNameValidator)}
+                    message={errors.name && " "}
+                  />
+                  <Input
+                    label="Last name"
+                    placeholder="Johnson"
+                    register={() => register("lastname", analNameValidator)}
+                    message={errors.lastname && errors.lastname.message}
+                  />
 
-                <BaseBtn className="transparent-btn transparent-btn--plus">
-                  Name Comparison
+                  <BaseBtn
+                    className="transparent-btn transparent-btn--plus"
+                    onClick={() =>
+                      setComfortNamesFieldsShown(!comfortNameFieldsShown)
+                    }
+                  >
+                    Name Comparison
+                  </BaseBtn>
+                </div>
+
+                <div className="anal-group anal-group__date">
+                  <Input
+                    className="number"
+                    placeholder="19"
+                    register={() =>
+                      register("day", {
+                        required: {
+                          value: true,
+                          message: "Field required"
+                        },
+                        onBlur
+                      })
+                    }
+                    type="number"
+                    onInput={e => changeInput(e, 2)}
+                    // message={errors.day && errors.day.message}
+                  />
+                  <Input
+                    className="month"
+                    placeholder="05"
+                    register={() =>
+                      register("month", {
+                        required: { value: true, message: "Field required" },
+                        onBlur
+                      })
+                    }
+                    type="number"
+                    onInput={e => changeInput(e, 2)}
+                    // message={errors.month && errors.month.message}
+                  />
+                  <Input
+                    className="year"
+                    placeholder="1995"
+                    register={() => register("year", yearValidator)}
+                    type="number"
+                    onInput={e => changeInput(e, 4)}
+                    // onBlur={onBlurYear}
+                    message={errors.year && errors.year.message}
+                  />
+                </div>
+
+                <BaseBtn
+                  className="blue-btn"
+                  type="submit"
+                  // disabled={isSubmitBtnDisabled}
+                >
+                  Analysis
                 </BaseBtn>
               </div>
 
-              <div className="anal-group anal-group__date">
-                <Input
-                  className="number"
-                  placeholder="19"
-                  register={() =>
-                    register("day", {
-                      required: {
-                        value: true,
-                        message: "Field required"
+              {comfortNameFieldsShown && (
+                <div className="anal-form-row">
+                  <div />
+                  <div className="anal-group anal-group__altnames">
+                    <Input
+                      label="Altfirst name"
+                      placeholder="John"
+                      register={() => register("altname", analNameValidator)}
+                      message={errors.name && errors.name.message}
+                    />
+                    <Input
+                      label="Altlast name"
+                      placeholder="Johnson"
+                      register={() =>
+                        register("altlastname", analNameValidator)
                       }
-                    })
-                  }
-                  type="number"
-                  onInput={e => changeInput(e, 2)}
-                  onBlur={onBlur}
-                  // message={errors.day && errors.day.message}
-                />
-                <Input
-                  className="month"
-                  placeholder="05"
-                  register={() =>
-                    register("month", {
-                      required: { value: true, message: "Field required" }
-                    })
-                  }
-                  type="number"
-                  onInput={e => changeInput(e, 2)}
-                  onBlur={onBlur}
-                  // message={errors.month && errors.month.message}
-                />
-                <Input
-                  className="year"
-                  placeholder="1995"
-                  register={() => register("year", yearValidator)}
-                  type="number"
-                  onInput={e => changeInput(e, 4)}
-                  // onBlur={onBlurYear}
-                  message={errors.year && errors.year.message}
-                />
-              </div>
-
-              <BaseBtn
-                className="blue-btn"
-                type="submit"
-                // disabled={isSubmitBtnDisabled}
-              >
-                Analysis
-              </BaseBtn>
+                      message={errors.lastname && errors.lastname.message}
+                    />
+                  </div>
+                  <div />
+                </div>
+              )}
             </form>
           </div>
         </div>

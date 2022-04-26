@@ -15,23 +15,35 @@
     margin: 35px 0 0 0;
 
     gap: 40px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+    display: grid;
+
+    &-row {
+      display: grid;
+      align-items: flex-end;
+      grid-template-columns: 260px repeat(3, 1fr);
+      grid-template-rows: 1fr;
+      grid-column-gap: 40px;
+      grid-row-gap: 20px;
+    }
+
+    &row + &row {
+      gap: 20px;
+    }
   }
 
   &-group {
     display: flex;
     align-items: flex-end;
 
+    &__altnames {
+      grid-gap: 10px;
+      gap: 10px;
+    }
+
     &__names {
       position: relative;
 
       gap: 10px;
-
-      input {
-        max-width: 220px;
-      }
     }
 
     &__date {

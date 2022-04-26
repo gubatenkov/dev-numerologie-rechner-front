@@ -73,9 +73,9 @@
   border: none;
   background: transparent;
 
-  .input-group.error:first-child ~ & {
-    bottom: -50px;
-  }
+  // .input-group.error:first-child ~ & {
+  //   bottom: -50px;
+  // }
 
   &--plus {
     &::after {
