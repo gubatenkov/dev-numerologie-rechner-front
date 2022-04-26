@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
-// import {  Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 import "../styles/InputForm.css";
 import "../styles/AnalysisInput.scss";
@@ -15,8 +15,8 @@ import "../styles/AnalysisInput.scss";
 import Panel from "./Panel";
 import InputField from "./InputField";
 
-// import FormBase from "./Forms/FormBase";
-// import { useUser } from "../contexts/UserContext";
+import FormBase from "./Forms/FormBase";
+import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import logoTransparentWhite from "../images/logo_weiss_trans.png";
 import DropdownDateSelect from "./DropdownDateSelect";
@@ -58,6 +58,7 @@ const inputSchemaPersonalCompare = yup.object({
 });
 
 const AnalysisInput = props => {
+  const User = useUser();
   const { t } = useTranslation();
   const [isAltNameReq, setIsAltNameReq] = useState(false);
   const [isAltSurnameReq, setIsAltSurnameReq] = useState(false);
@@ -69,7 +70,7 @@ const AnalysisInput = props => {
   const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
   const {
-    // control,
+    control,
     register,
     handleSubmit,
     watch,
@@ -269,7 +270,7 @@ const AnalysisInput = props => {
 
   return (
     <div className="page-register-v3 layout-full">
-      <section className="anal">
+      {/* <section className="anal">
         <Header />
         <div className="container">
           <div className="anal-inner">
@@ -359,8 +360,8 @@ const AnalysisInput = props => {
           </div>
         </div>
       </section>
-      <FooterHoriz />
-      {/*<div className="page vertical-align">
+      <FooterHoriz /> */}
+      <div className="page vertical-align">
         <div className="page-content">
           <div className="text-center">
             <a href={t("HOMEPAGE")}>
@@ -391,16 +392,16 @@ const AnalysisInput = props => {
                   register={() => register("lastname", analNameValidator)}
                   message={errors.lastname?.message}
                 />
-                 <InputField
+                <InputField
                   icon="wb-calendar"
                   fieldName={t("BIRTH_DATE")}
-                  register={() => register("date", dateValidator)}
+                  register={() => register("date", yearValidator)}
                   message={errors.date?.message}
-                /> 
-                 <Controller
+                />
+                <Controller
                   control={control}
                   name="date"
-                  rules={dateValidator}
+                  rules={yearValidator}
                   render={({ field: { value, onChange, ref, name } }) => (
                     <FormBase.DateInput
                       style={{
@@ -418,8 +419,8 @@ const AnalysisInput = props => {
                       autoComplete="off"
                     />
                   )}
-                /> 
-                 <DropdownDateSelect date={date} setDate={setDate} />
+                />
+                <DropdownDateSelect date={date} setDate={setDate} />
                 {comfortNameFieldsShown && (
                   <div>
                     <h6>{t("BIRTHNAME_ALT_NAME")}</h6>
@@ -468,7 +469,7 @@ const AnalysisInput = props => {
                 </div>
               </Panel>
             </form>
-            <FormBase
+            {/* <FormBase
               id="novalidatedform"
               onSubmit={handleSubmit(onSubmit)}
               autoComplete="off"
@@ -496,11 +497,11 @@ const AnalysisInput = props => {
                   register={() => register("lastname", analNameValidator)}
                   message={errors.lastname?.message}
                 />
-                // Datepicker input wrapped with react-hook-from controller
+                
                 <Controller
                   control={control}
                   name="date"
-                  rules={dateValidator}
+                  rules={yearValidator}
                   render={({ field: { value, onChange, ref, name } }) => (
                     <FormBase.DateInput
                       style={{ marginLeft: "auto", maxWidth: "150px" }}
@@ -542,13 +543,11 @@ const AnalysisInput = props => {
                   }
                 />
               </div>
-
               <FormBase.Btn type="submit" disabled={isSubmitBtnDisabled}>
                 {t("START")}
               </FormBase.Btn>
               <FormBase.Divider />
-
-               // show links only for unauthorized users 
+              
               {!User?.user && (
                 <>
                   <FormBase.Text>{t("LOGIN_TO_SAVE_ANALYS")}</FormBase.Text>
@@ -558,10 +557,10 @@ const AnalysisInput = props => {
                   </FormBase.Text>
                 </>
               )}
-            </FormBase> 
+            </FormBase> */}
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
