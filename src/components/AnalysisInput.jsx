@@ -58,7 +58,7 @@ const AnalysisInput = props => {
     handleSubmit,
 
     formState: { errors }
-  } = useForm({ mode: "all" });
+  } = useForm({ mode: "onSubmit" });
   const {
     analNameValidator,
     yearValidator,
