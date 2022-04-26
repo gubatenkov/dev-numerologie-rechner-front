@@ -83,7 +83,7 @@ const AnalysisInput = props => {
     altLastnameValidator
   } = useValidators();
   const formState = watch();
-  console.log(errors);
+
   useEffect(() => {
     const { altName, altLastname } = formState;
     if (altName) setIsAltSurnameReq(true);
@@ -106,10 +106,6 @@ const AnalysisInput = props => {
     ) {
       startAnalysis(firstNameParam, lastNameParam, dateOfBirthParam);
     }
-
-    return () => {
-      document.body.style.backgroundColor = null;
-    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const validateInput = async (
