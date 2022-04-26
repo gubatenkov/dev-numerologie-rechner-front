@@ -1,0 +1,305 @@
+.register {
+  .header {
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
+    background-size: cover;
+    background-color: #d7b267;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-image: url("../images/analBg.png");
+  }
+
+  &-inner {
+    padding: 100px 0 150px 0;
+  }
+
+  &-form {
+    width: 100%;
+    margin: 0 auto;
+    max-width: 600px;
+
+    &-elements {
+      position: relative;
+
+      &::after {
+        content: "";
+
+        right: -200px;
+        bottom: -110px;
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        border-radius: 50px;
+        background: white;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-bottom: 1px solid #c4c4c4;
+        border-right: 1px solid transparent;
+
+        transform: rotate(135deg);
+
+        z-index: 10;
+      }
+
+      &::before {
+        content: "";
+
+        left: -200px;
+        bottom: -110px;
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        border-radius: 50px;
+        background: white;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-bottom: 1px solid #c4c4c4;
+        border-right: 1px solid transparent;
+
+        transform: rotate(-135deg);
+
+        z-index: 10;
+      }
+    }
+
+    &-box {
+      position: relative;
+
+      margin: 0 auto;
+      max-width: 600px;
+      padding: 60px 150px;
+
+      border: 1px solid #c4c4c4;
+
+      &::after {
+        content: "";
+
+        top: -50px;
+        right: -50px;
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        border-radius: 50px;
+        background: white;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-bottom: 1px solid #c4c4c4;
+        border-right: 1px solid transparent;
+
+        transform: rotate(45deg);
+
+        z-index: 10;
+      }
+
+      &::before {
+        content: "";
+        top: -50px;
+        left: -50px;
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        border-radius: 50px;
+        background: white;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-bottom: 1px solid #c4c4c4;
+        border-right: 1px solid transparent;
+
+        transform: rotate(-45deg);
+
+        z-index: 10;
+      }
+    }
+
+    &__header {
+      margin: 0 0 50px 0;
+
+      text-align: center;
+    }
+
+    &__body {
+      margin: 0 0 50px 0;
+    }
+
+    &__input {
+      max-height: 50px;
+
+      border: 1px solid rgba(79, 68, 66, 0.3);
+    }
+
+    &__checkbox {
+      display: none;
+      position: relative;
+
+      margin: 0;
+      padding: 0;
+      width: initial;
+      height: initial;
+
+      cursor: pointer;
+    }
+
+    &__checklabel {
+      display: flex;
+      margin: 0 0 35px 0;
+
+      &:before {
+        content: "";
+        position: relative;
+        display: inline-block;
+
+        padding: 10px;
+        margin-right: 10px;
+
+        width: 23px;
+        height: 23px;
+
+        vertical-align: middle;
+        -webkit-appearance: none;
+
+        border-radius: 5px;
+        background-color: transparent;
+        border: 1px solid rgba(79, 68, 66, 0.3);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+          inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+
+        cursor: pointer;
+      }
+
+      .register-form__checkbox:checked + &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 2px;
+        left: 9px;
+        width: 6px;
+        height: 14px;
+        border: solid #0079bf;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    &__group {
+      margin: 0 0 20px 0;
+
+      & .input-group__message {
+        bottom: -18px;
+        font-size: 12px;
+      }
+
+      & > .input-group > label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #323232;
+        line-height: 20px;
+        font-style: normal;
+      }
+
+      &-agreement {
+        padding: 15px 0 0;
+
+        &.error > label::before {
+          border: 1px solid red;
+        }
+      }
+    }
+
+    &__submit {
+      width: 100%;
+      padding: 15px 35px;
+
+      color: #fff;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 20px;
+      font-style: normal;
+
+      border-radius: 5px;
+      background: #01b2d4;
+      border: 1px solid transparent;
+
+      transition: background 0.25s ease-in-out;
+
+      &:hover {
+        background: #01c1e7;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &__footer {
+      padding: 20px 0 0 0;
+
+      text-align: center;
+
+      border-top: 1px solid rgba(79, 68, 66, 0.3);
+    }
+  }
+}
+
+/** css for Checkbox **/
+
+.register-form__group-agreement {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.register-form__group-agreement input {
+  padding: 0;
+  height: initial;
+  width: initial;
+  margin-bottom: 0;
+  display: none;
+  cursor: pointer;
+}
+
+.register-form__group-agreement label {
+  position: relative;
+  margin: 0 0 35px 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  cursor: pointer;
+}
+
+.register-form__group-agreement label:before {
+  content: "";
+
+  position: relative;
+
+  display: inline-block;
+  -webkit-appearance: none;
+  padding: 10px;
+  margin: 0 10px 0 0;
+  vertical-align: middle;
+
+  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid rgba(79, 68, 66, 0.3);
+
+  cursor: pointer;
+}
+
+.register-form__group-agreement input:checked + label:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 2px;
+  left: 9px;
+  width: 6px;
+  height: 14px;
+  border: solid #0079bf;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

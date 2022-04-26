@@ -7,7 +7,7 @@ import { Link, useLocation, withRouter } from "react-router-dom";
 
 import logo from "../images/logo_weiss_trans.png";
 
-import "../styles/Register.css";
+import "../styles/Register.scss";
 import "../styles/InputForm.css";
 
 import FormBase from "./Forms/FormBase";
@@ -16,14 +16,11 @@ import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 import closeIcon from "../images/icon_close_primary.svg";
-
-const StyledSpan = styled.span`
-  color: #007bff;
-  :hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-`;
+import Typography from "./Typography";
+import Input from "./Input";
+import Header from "./Header";
+import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
+import FooterHoriz from "./FooterHoriz";
 
 const Register = ({ history }) => {
   const User = useUser();
@@ -35,17 +32,13 @@ const Register = ({ history }) => {
     passwordValidators,
     password2Validators
   } = useValidators();
-  const [isPrivacyChecked, setPrivacyChecked] = useState(false);
-  const [isReadyToSubmit, setReadyToSubmit] = useState(false);
-  const [isTermsPopupOpen, setTermsPopupOpen] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
-    getValues
-  } = useForm({ mode: "all" });
-  const formValues = getValues();
+    formState: { errors }
+  } = useForm({ mode: "onSubmit" });
+
   password2Validators.validate = value => {
     return value === watch("password", "") || t("PASSWORDS_DONT_MATCH");
   };
@@ -57,41 +50,6 @@ const Register = ({ history }) => {
       history.push("./");
     }
   }, [history]);
-
-  useEffect(() => {
-    // here we check is form ready to be submited
-    function isFormReadyToSubmit(isPrivacyChecked, errors) {
-      const { email, password, password2 } = getValues();
-      if (
-        email &&
-        password &&
-        !errors?.email?.message &&
-        !errors?.password?.message &&
-        password === password2 &&
-        isPrivacyChecked
-      ) {
-        setReadyToSubmit(true);
-      } else {
-        setReadyToSubmit(false);
-      }
-    }
-    isFormReadyToSubmit(isPrivacyChecked, errors);
-  }, [
-    errors,
-    isPrivacyChecked,
-    formValues.email,
-    formValues.password,
-    formValues.password2,
-    getValues
-  ]);
-
-  // WORKAROUND: setting background of whole doc upon mount/unmount
-  useEffect(() => {
-    document.body.style.backgroundColor = "#00b3d4";
-    return () => {
-      document.body.style.backgroundColor = null;
-    };
-  }, []);
 
   const registerUser = async (email, password) => {
     try {
@@ -134,8 +92,110 @@ const Register = ({ history }) => {
   };
 
   return (
-    <div className="page-register-v3 layout-full">
-      <div className="page vertical-align">
+    <div className="register">
+      <Header />
+      <div className="container">
+        <div className="register-inner">
+          <div className="register-form-box">
+            <form
+              className="register-form"
+              id="novalidatedform"
+              autoComplete="off"
+              noValidate
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="register-form__header">
+                <Typography
+                  as="h1"
+                  fs="32px"
+                  lh="40px"
+                  fw="900"
+                  color="#323232"
+                >
+                  Sign up
+                </Typography>
+              </div>
+              <div className="register-form__body">
+                <div className="register-form__group">
+                  <Input
+                    className="register-form__input"
+                    type="email"
+                    label="Email"
+                    placeholder="primalvj3737@gmail.com"
+                    register={() => register("email", emailValidators)}
+                    message={errors.email && errors.email.message}
+                  />
+                </div>
+                <div className="register-form__group">
+                  <Input
+                    className="register-form__input"
+                    label="Password"
+                    type="password"
+                    placeholder="*********"
+                    register={() => register("password", passwordValidators)}
+                    message={errors.password && errors.password.message}
+                  />
+                </div>
+                <div className="register-form__group">
+                  <Input
+                    className="register-form__input"
+                    label="Confirm password"
+                    type="password"
+                    placeholder="*********"
+                    register={() => register("password2", password2Validators)}
+                    message={errors.password2 && errors.password2.message}
+                  />
+                </div>
+                <div
+                  className={`register-form__group register-form__group-agreement ${errors.checked &&
+                    "error"}`}
+                >
+                  <input
+                    className="register-form__checkbox"
+                    type="checkbox"
+                    id="Sho"
+                    {...register("checked", {
+                      required: { value: true, message: "required" }
+                    })}
+                  />
+                  <label htmlFor="Sho">
+                    <Typography
+                      as="p"
+                      fs="14px"
+                      lh="20px"
+                      fw="400"
+                      color="#323232"
+                    >
+                      Yes, I have read the data protection statement, including
+                      the following data protection information, terms of use
+                      and general terms and conditions, and I expressly agree to
+                      them.
+                    </Typography>
+                  </label>
+                </div>
+                <BaseBtn className="register-form__submit" type="submit">
+                  Sign Up
+                </BaseBtn>
+              </div>
+              <div className="register-form__footer">
+                <Typography
+                  as={Link}
+                  to="/login"
+                  fs="16px"
+                  lh="20px"
+                  fw="500"
+                  color="#01B2D4"
+                >
+                  Already have an account
+                </Typography>
+              </div>
+            </form>
+            <div className="register-form-elements" />
+          </div>
+        </div>
+      </div>
+      <FooterHoriz />
+      {/* <div className="page vertical-align">
         <div className="page-content">
           <div className="text-center">
             <a href={t("HOMEPAGE")}>
@@ -149,8 +209,8 @@ const Register = ({ history }) => {
           </div>
           <div className="form-wrap">
             <FormBase
-              id="novalidatedform"
-              onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
+            id="novalidatedform"
               autoComplete="off"
               noValidate
             >
@@ -213,88 +273,88 @@ const Register = ({ history }) => {
             <TermsPopup close={() => setTermsPopupOpen(false)} />
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
 
-function TermsPopup({ close }) {
-  const { t } = useTranslation();
-  const StyledDiv = styled.div`
-    top: 50vh;
-    left: 50vw;
-    width: 90vw;
-    max-width: 500px;
-    padding: 10px 20px 20px;
-    height: 500px;
-    color: #000;
-    font-size: 13px;
-    overflow: hidden;
-    background: #fff;
-    position: absolute;
-    border-radius: 10px;
-    transform: translate(-50%, -50%);
-    z-index: 100;
-  `;
+// function TermsPopup({ close }) {
+//   const { t } = useTranslation();
+//   const StyledDiv = styled.div`
+//     top: 50vh;
+//     left: 50vw;
+//     width: 90vw;
+//     max-width: 500px;
+//     padding: 10px 20px 20px;
+//     height: 500px;
+//     color: #000;
+//     font-size: 13px;
+//     overflow: hidden;
+//     background: #fff;
+//     position: absolute;
+//     border-radius: 10px;
+//     transform: translate(-50%, -50%);
+//     z-index: 100;
+//   `;
 
-  const StyledSpan = styled.span`
-    margin: 0 0 10px auto;
-    display: flex;
-    width: 25px;
-    height: 25px;
-    align-items: center;
-    justify-content: center;
+//   const StyledSpan = styled.span`
+//     margin: 0 0 10px auto;
+//     display: flex;
+//     width: 25px;
+//     height: 25px;
+//     align-items: center;
+//     justify-content: center;
 
-    cursor: pointer;
-  `;
+//     cursor: pointer;
+//   `;
 
-  useEffect(() => {
-    const div = document.createElement("div");
-    div.addEventListener("click", () => close());
-    div.classList.add("backdrop");
-    div.style.position = "fixed";
-    div.style.top = "0";
-    div.style.left = "0";
-    div.style.right = "0";
-    div.style.bottom = "0";
-    div.style.background = "rgba(0, 0, 0, 0.5)";
-    div.style.zIndex = "10";
-    document.body.appendChild(div);
+//   useEffect(() => {
+//     const div = document.createElement("div");
+//     div.addEventListener("click", () => close());
+//     div.classList.add("backdrop");
+//     div.style.position = "fixed";
+//     div.style.top = "0";
+//     div.style.left = "0";
+//     div.style.right = "0";
+//     div.style.bottom = "0";
+//     div.style.background = "rgba(0, 0, 0, 0.5)";
+//     div.style.zIndex = "10";
+//     document.body.appendChild(div);
 
-    return () => {
-      document.querySelector(".backdrop").remove();
-    };
-  }, [close]);
+//     return () => {
+//       document.querySelector(".backdrop").remove();
+//     };
+//   }, [close]);
 
-  return (
-    <StyledDiv>
-      <StyledSpan onClick={close}>
-        <img src={closeIcon} alt="close icon" />
-      </StyledSpan>
-      <div style={{ overflowY: "auto", height: "400px", margin: "20px 0" }}>
-        <br />
-        <b>{t("PRIVACY_POLICY_HINT")}</b> <br />
-        {t("PRIVACY_POLICY_CONTENT")}
-        <br />
-        <br /> <b>{t("PRIVACY_POLICY_CONTENT_2")}</b> <br />
-        <br />
-        {t("PRIVACY_POLICY_CONTENT_3")} <br />
-        <br />
-        {t("PRIVACY_POLICY_CONTENT_4")} <br />
-        <br />
-        <Trans i18nKey="PRIVACY_POLICY_MORE_INFOS">
-          Nähere Informationen findest Du in unserer{" "}
-          <a
-            href="https://www.psychologischenumerologie.eu/datenschutz/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Datenschutzerklärung.
-          </a>
-        </Trans>
-      </div>
-    </StyledDiv>
-  );
-}
+//   return (
+//     <StyledDiv>
+//       <StyledSpan onClick={close}>
+//         <img src={closeIcon} alt="close icon" />
+//       </StyledSpan>
+//       <div style={{ overflowY: "auto", height: "400px", margin: "20px 0" }}>
+//         <br />
+//         <b>{t("PRIVACY_POLICY_HINT")}</b> <br />
+//         {t("PRIVACY_POLICY_CONTENT")}
+//         <br />
+//         <br /> <b>{t("PRIVACY_POLICY_CONTENT_2")}</b> <br />
+//         <br />
+//         {t("PRIVACY_POLICY_CONTENT_3")} <br />
+//         <br />
+//         {t("PRIVACY_POLICY_CONTENT_4")} <br />
+//         <br />
+//         <Trans i18nKey="PRIVACY_POLICY_MORE_INFOS">
+//           Nähere Informationen findest Du in unserer{" "}
+//           <a
+//             href="https://www.psychologischenumerologie.eu/datenschutz/"
+//             target="_blank"
+//             rel="noopener noreferrer"
+//           >
+//             Datenschutzerklärung.
+//           </a>
+//         </Trans>
+//       </div>
+//     </StyledDiv>
+//   );
+// }
 
 export default withRouter(Register);
