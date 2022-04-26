@@ -1,26 +1,21 @@
-import styled from "styled-components";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
-import React, { useState, useEffect } from "react";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, withRouter } from "react-router-dom";
-
-import logo from "../images/logo_weiss_trans.png";
 
 import "../styles/Register.scss";
 import "../styles/InputForm.css";
 
-import FormBase from "./Forms/FormBase";
+import Input from "./Input";
+import Header from "./Header";
+import Typography from "./Typography";
+import FooterHoriz from "./FooterHoriz";
+import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
 import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
-import closeIcon from "../images/icon_close_primary.svg";
-import Typography from "./Typography";
-import Input from "./Input";
-import Header from "./Header";
-import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
-import FooterHoriz from "./FooterHoriz";
 
 const Register = ({ history }) => {
   const User = useUser();
@@ -195,166 +190,8 @@ const Register = ({ history }) => {
         </div>
       </div>
       <FooterHoriz />
-      {/* <div className="page vertical-align">
-        <div className="page-content">
-          <div className="text-center">
-            <a href={t("HOMEPAGE")}>
-              <img
-                className="brand-img logo"
-                height="250"
-                src={logo}
-                alt="logo"
-              />
-            </a>
-          </div>
-          <div className="form-wrap">
-            <FormBase
-            onSubmit={handleSubmit(onSubmit)}
-            id="novalidatedform"
-              autoComplete="off"
-              noValidate
-            >
-              <FormBase.Title>{t("REGISTER")}</FormBase.Title>
-              <FormBase.Divider />
-              <FormBase.Input
-                placeholder="example@mail.com"
-                name="email"
-                type="email"
-                label="Email"
-                register={() => register("email", emailValidators)}
-                form="novalidatedform"
-                message={errors.email?.message}
-              />
-              <FormBase.Input
-                placeholder={t("MIN_8_LETTERS")}
-                type="password"
-                label="Password"
-                name="password"
-                register={() => register("password", passwordValidators)}
-                message={errors.password?.message}
-              />
-              <FormBase.Input
-                type="password"
-                label="Confirm password"
-                name="password2"
-                register={() => register("password2", password2Validators)}
-                message={errors.password2?.message}
-              />
-              <FormBase.TextCheckbox
-                onChange={() => setPrivacyChecked(prev => !prev)}
-              >
-                {t("I_HAVE_READ_AND_AGREE")}{" "}
-                <StyledSpan onClick={() => setTermsPopupOpen(true)}>
-                  {t("TERMS")}
-                </StyledSpan>{" "}
-                {t("AND")}{" "}
-                <a
-                  href="https://www.psychologischenumerologie.eu/datenschutz/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("PRIVACY_POLICY")}
-                </a>{" "}
-                {t("I_AGREE")}
-              </FormBase.TextCheckbox>
-              <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
-                {t("REGISTER")}
-              </FormBase.Btn>
-              <FormBase.Divider />
-              <FormBase.Text style={{ marginBottom: "10px" }}>
-                {t("HAVE_ACCOUNT?")}
-              </FormBase.Text>
-              <FormBase.Text>
-                <Link to="/login">{t("SIGN_IN")}</Link>
-              </FormBase.Text>
-            </FormBase>
-          </div>
-          {isTermsPopupOpen && (
-            <TermsPopup close={() => setTermsPopupOpen(false)} />
-          )}
-        </div>
-      </div> */}
     </div>
   );
 };
-
-// function TermsPopup({ close }) {
-//   const { t } = useTranslation();
-//   const StyledDiv = styled.div`
-//     top: 50vh;
-//     left: 50vw;
-//     width: 90vw;
-//     max-width: 500px;
-//     padding: 10px 20px 20px;
-//     height: 500px;
-//     color: #000;
-//     font-size: 13px;
-//     overflow: hidden;
-//     background: #fff;
-//     position: absolute;
-//     border-radius: 10px;
-//     transform: translate(-50%, -50%);
-//     z-index: 100;
-//   `;
-
-//   const StyledSpan = styled.span`
-//     margin: 0 0 10px auto;
-//     display: flex;
-//     width: 25px;
-//     height: 25px;
-//     align-items: center;
-//     justify-content: center;
-
-//     cursor: pointer;
-//   `;
-
-//   useEffect(() => {
-//     const div = document.createElement("div");
-//     div.addEventListener("click", () => close());
-//     div.classList.add("backdrop");
-//     div.style.position = "fixed";
-//     div.style.top = "0";
-//     div.style.left = "0";
-//     div.style.right = "0";
-//     div.style.bottom = "0";
-//     div.style.background = "rgba(0, 0, 0, 0.5)";
-//     div.style.zIndex = "10";
-//     document.body.appendChild(div);
-
-//     return () => {
-//       document.querySelector(".backdrop").remove();
-//     };
-//   }, [close]);
-
-//   return (
-//     <StyledDiv>
-//       <StyledSpan onClick={close}>
-//         <img src={closeIcon} alt="close icon" />
-//       </StyledSpan>
-//       <div style={{ overflowY: "auto", height: "400px", margin: "20px 0" }}>
-//         <br />
-//         <b>{t("PRIVACY_POLICY_HINT")}</b> <br />
-//         {t("PRIVACY_POLICY_CONTENT")}
-//         <br />
-//         <br /> <b>{t("PRIVACY_POLICY_CONTENT_2")}</b> <br />
-//         <br />
-//         {t("PRIVACY_POLICY_CONTENT_3")} <br />
-//         <br />
-//         {t("PRIVACY_POLICY_CONTENT_4")} <br />
-//         <br />
-//         <Trans i18nKey="PRIVACY_POLICY_MORE_INFOS">
-//           Nähere Informationen findest Du in unserer{" "}
-//           <a
-//             href="https://www.psychologischenumerologie.eu/datenschutz/"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//           >
-//             Datenschutzerklärung.
-//           </a>
-//         </Trans>
-//       </div>
-//     </StyledDiv>
-//   );
-// }
 
 export default withRouter(Register);
