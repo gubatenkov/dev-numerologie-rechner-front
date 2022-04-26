@@ -70,11 +70,12 @@ const AnalysisInput = props => {
   const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
   const {
     // control,
+    setValue,
     register,
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm();
+  } = useForm({ mode: "all" });
   const {
     analNameValidator,
     yearValidator,
@@ -82,7 +83,7 @@ const AnalysisInput = props => {
     altLastnameValidator
   } = useValidators();
   const formState = watch();
-
+  console.log(errors);
   useEffect(() => {
     const { altName, altLastname } = formState;
     if (altName) setIsAltSurnameReq(true);
@@ -185,11 +186,9 @@ const AnalysisInput = props => {
     );
   };
 
-  const onSubmit = (data, date) => {
-    const { name, lastname, altName, altLastname } = data;
-    const formatedDate = moment(
-      new Date(date.year, date.month, date.day)
-    ).format("DD.MM.YYYY");
+  const onSubmit = data => {
+    const { name, lastname, altName, altLastname, day, month, year } = data;
+    const formatedDate = moment(`${year}-${month}-${day}`).format("DD.MM.YYYY");
     startAnalysis(name, lastname, altName, altLastname, formatedDate);
   };
 
@@ -199,9 +198,9 @@ const AnalysisInput = props => {
       if (
         name &&
         lastname &&
-        date.day &&
-        date.month &&
-        date.year &&
+        formState.day &&
+        formState.month &&
+        formState.year &&
         !isAltNameReq &&
         !isAltSurnameReq
       ) {
@@ -209,9 +208,9 @@ const AnalysisInput = props => {
       } else if (
         name &&
         lastname &&
-        date.day &&
-        date.month &&
-        date.year &&
+        formState.day &&
+        formState.month &&
+        formState.year &&
         isAltNameReq &&
         altName &&
         isAltSurnameReq &&
@@ -223,47 +222,31 @@ const AnalysisInput = props => {
       }
     };
     checkSubmitState();
-  }, [formState, isAltNameReq, isAltSurnameReq, date]);
+  }, [formState, isAltNameReq, isAltSurnameReq]);
 
   useEffect(() => {
     callback();
   }, [callback, date, formState]);
 
-  const handleChangeNumber = e => {
-    const { value } = e.target;
-    if (!isNaN(Number(value)) && Number(value) <= 31 && Number(value) > 0) {
-      const day = Number(value) < 10 ? `0${value}` : Number(value);
-      setDate(prev => ({ ...prev, day }));
-    } else {
-      setDate(prev => ({ ...prev, day: "" }));
+  const onBlur = e => {
+    if (e.target.value < 10 && e.target.value > 0) {
+      e.target.value = `0${e.target.value}`;
     }
   };
 
-  const handleChangeMonth = e => {
-    const { value } = e.target;
-    if (!isNaN(Number(value)) && Number(value) <= 12 && Number(value) > 0) {
-      const month = Number(value) < 10 ? `0${value}` : `${Number(value)}`;
-      setDate(prev => ({ ...prev, month }));
-    } else {
-      setDate(prev => ({ ...prev, month: "" }));
-    }
-  };
-
-  const handleChangeYear = e => {
-    const { value } = e.target;
-    if (!isNaN(Number(value)) && value.length <= 4) {
-      const year = `${Number(value)}`;
-      setDate(prev => ({ ...prev, year }));
-    } else {
-      setDate(prev => ({ ...prev, year: "" }));
-    }
-  };
-
-  const onBlurYear = e => {
-    const currentYear = new Date().getFullYear();
-    // clear input if year field is not in range 1920 - currentYear
-    if (date.year < 1920 || date.year > currentYear) {
-      setDate(prev => ({ ...prev, year: "" }));
+  const changeInput = (e, maxLen = 2) => {
+    if (e.target.value.length > maxLen) {
+      e.target.value = e.target.value.slice(0, maxLen);
+    } else if (
+      e.target.name === "day" &&
+      (e.target.value > 31 || e.target.value < 1)
+    ) {
+      e.target.value = "";
+    } else if (
+      e.target.name === "month" &&
+      (e.target.value > 12 || e.target.value < 1)
+    ) {
+      e.target.value = "";
     }
   };
 
@@ -288,11 +271,13 @@ const AnalysisInput = props => {
                   label="First name"
                   placeholder="John"
                   register={() => register("name", analNameValidator)}
+                  message={errors.name && errors.name.message}
                 />
                 <Input
                   label="Last name"
                   placeholder="Johnson"
                   register={() => register("lastname", analNameValidator)}
+                  message={errors.lastname && errors.lastname.message}
                 />
 
                 <BaseBtn className="transparent-btn transparent-btn--plus">
@@ -304,21 +289,40 @@ const AnalysisInput = props => {
                 <Input
                   className="number"
                   placeholder="19"
-                  value={date.day}
-                  onChange={handleChangeNumber}
+                  register={() =>
+                    register("day", {
+                      required: {
+                        value: true,
+                        message: "Field required"
+                      }
+                    })
+                  }
+                  type="number"
+                  onInput={e => changeInput(e, 2)}
+                  onBlur={onBlur}
+                  // message={errors.day && errors.day.message}
                 />
                 <Input
                   className="month"
                   placeholder="05"
-                  value={date.month}
-                  onChange={handleChangeMonth}
+                  register={() =>
+                    register("month", {
+                      required: { value: true, message: "Field required" }
+                    })
+                  }
+                  type="number"
+                  onInput={e => changeInput(e, 2)}
+                  onBlur={onBlur}
+                  // message={errors.month && errors.month.message}
                 />
                 <Input
                   className="year"
                   placeholder="1995"
-                  value={date.year}
-                  onBlur={onBlurYear}
-                  onChange={handleChangeYear}
+                  register={() => register("year", yearValidator)}
+                  type="number"
+                  onInput={e => changeInput(e, 4)}
+                  // onBlur={onBlurYear}
+                  message={errors.year && errors.year.message}
                 />
               </div>
 
