@@ -1,0 +1,16 @@
+.login {
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .header {
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
+    background-size: cover;
+    background-color: #d7b267;
+    background-position: top top;
+    background-repeat: no-repeat;
+    background-image: url("../images/analBg.png");
+  }
+}
