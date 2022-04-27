@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation, withRouter } from "react-router-dom";
+import { Link, useHistory, useLocation, withRouter } from "react-router-dom";
 
 import "../styles/Register.scss";
 import "../styles/InputForm.css";
@@ -15,13 +15,57 @@ import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
 import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
-import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+// import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+
+const Placehoder = () => {
+  const history = useHistory();
+
+  const handleClick = () => {
+    history.push("/");
+  };
+
+  return (
+    <div className="signup-placeholder">
+      <Typography
+        className="signup-placeholder__heading"
+        as="h1"
+        fs="32px"
+        lh="40px"
+        fw="900"
+        color="#323232"
+      >
+        Sign up
+      </Typography>
+
+      <Typography
+        className="signup-placeholder__text"
+        as="p"
+        fs="16px"
+        lh="20px"
+        fw="400"
+        color="#313236"
+      >
+        Check your email. We sent you a link to confirm your registration.
+      </Typography>
+
+      <BaseBtn
+        className="blue-btn signup-placeholder__btn"
+        type="button"
+        onClick={handleClick}
+      >
+        Ok
+      </BaseBtn>
+    </div>
+  );
+};
 
 const Register = ({ history }) => {
   const User = useUser();
   const location = useLocation();
   const { t } = useTranslation();
-  const LoadingOverlay = useLoadingOverlay();
+  // const LoadingOverlay = useLoadingOverlay();
+  const [wasSubmited, setSubmited] = useState(false);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const {
     emailValidators,
     passwordValidators,
@@ -48,7 +92,7 @@ const Register = ({ history }) => {
 
   const registerUser = async (email, password) => {
     try {
-      LoadingOverlay.showWithText(t("REGISTRATING"));
+      // LoadingOverlay.showWithText(t("REGISTRATING"));
 
       const response = await postJsonData("/register", {
         email,
@@ -61,9 +105,8 @@ const Register = ({ history }) => {
       if (location?.search && location.search?.split("redirect=")?.length > 1) {
         const redirectTo = location.search.split("redirect=")[1];
         history.push(redirectTo);
-      } else {
-        history.push("/userHome");
       }
+      setSubmited(true);
     } catch (error) {
       console.log("Reg failed:", error.message);
       if (error.message === "EMAIL_ALREADY_EXISTS") {
@@ -75,8 +118,6 @@ const Register = ({ history }) => {
           position: "top-right"
         });
       }
-    } finally {
-      LoadingOverlay.hide();
     }
   };
 
@@ -88,109 +129,132 @@ const Register = ({ history }) => {
 
   return (
     <div className="register">
-      <Header />
+      <Header
+        isSidebarVisible={isSidebarVisible}
+        onOpen={() => setSidebarVisible(true)}
+        onClose={() => setSidebarVisible(false)}
+      />
+      <Sidebar isVisible={isSidebarVisible} />
       <div className="container">
         <div className="register-inner">
-          <div className="register-form-box">
-            <form
-              className="register-form"
-              id="novalidatedform"
-              autoComplete="off"
-              noValidate
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="register-form__header">
-                <Typography
-                  as="h1"
-                  fs="32px"
-                  lh="40px"
-                  fw="900"
-                  color="#323232"
+          {wasSubmited ? (
+            <Placehoder />
+          ) : (
+            <>
+              <div className="register-form-box">
+                <form
+                  className="register-form"
+                  id="novalidatedform"
+                  autoComplete="off"
+                  noValidate
+                  onSubmit={handleSubmit(onSubmit)}
                 >
-                  Sign up
-                </Typography>
-              </div>
-              <div className="register-form__body">
-                <div className="register-form__group">
-                  <Input
-                    className="register-form__input"
-                    type="email"
-                    label="Email"
-                    placeholder="primalvj3737@gmail.com"
-                    register={() => register("email", emailValidators)}
-                    message={errors.email && errors.email.message}
-                  />
-                </div>
-                <div className="register-form__group">
-                  <Input
-                    className="register-form__input"
-                    label="Password"
-                    type="password"
-                    placeholder="*********"
-                    register={() => register("password", passwordValidators)}
-                    message={errors.password && errors.password.message}
-                  />
-                </div>
-                <div className="register-form__group">
-                  <Input
-                    className="register-form__input"
-                    label="Confirm password"
-                    type="password"
-                    placeholder="*********"
-                    register={() => register("password2", password2Validators)}
-                    message={errors.password2 && errors.password2.message}
-                  />
-                </div>
-                <div
-                  className={`register-form__group register-form__group-agreement ${errors.checked &&
-                    "error"}`}
-                >
-                  <input
-                    className="register-form__checkbox"
-                    type="checkbox"
-                    id="Sho"
-                    {...register("checked", {
-                      required: { value: true, message: "required" }
-                    })}
-                  />
-                  <label htmlFor="Sho">
+                  <div className="register-form__header">
                     <Typography
-                      as="p"
-                      fs="14px"
-                      lh="20px"
-                      fw="400"
+                      as="h1"
+                      fs="32px"
+                      lh="40px"
+                      fw="900"
                       color="#323232"
                     >
-                      Yes, I have read the data protection statement, including
-                      the following data protection information, terms of use
-                      and general terms and conditions, and I expressly agree to
-                      them.
+                      Sign up
                     </Typography>
-                  </label>
-                </div>
-                <BaseBtn className="register-form__submit" type="submit">
-                  Sign Up
-                </BaseBtn>
+                  </div>
+                  <div className="register-form__body">
+                    <div className="register-form__group">
+                      <Input
+                        className="register-form__input"
+                        type="email"
+                        label="Email"
+                        placeholder="primalvj3737@gmail.com"
+                        register={() => register("email", emailValidators)}
+                        message={errors.email && errors.email.message}
+                      />
+                    </div>
+                    <div className="register-form__group">
+                      <Input
+                        className="register-form__input"
+                        label="Password"
+                        type="password"
+                        placeholder="*********"
+                        register={() =>
+                          register("password", passwordValidators)
+                        }
+                        message={errors.password && errors.password.message}
+                      />
+                    </div>
+                    <div className="register-form__group">
+                      <Input
+                        className="register-form__input"
+                        label="Confirm password"
+                        type="password"
+                        placeholder="*********"
+                        register={() =>
+                          register("password2", password2Validators)
+                        }
+                        message={errors.password2 && errors.password2.message}
+                      />
+                    </div>
+                    <div
+                      className={`register-form__group register-form__group-agreement ${errors.checked &&
+                        "error"}`}
+                    >
+                      <input
+                        className="register-form__checkbox"
+                        type="checkbox"
+                        id="Sho"
+                        {...register("checked", {
+                          required: { value: true, message: "required" }
+                        })}
+                      />
+                      <label htmlFor="Sho">
+                        <Typography
+                          as="p"
+                          fs="14px"
+                          lh="20px"
+                          fw="400"
+                          color="#323232"
+                        >
+                          Yes, I have read the data protection statement,
+                          including the following data protection information,
+                          terms of use and general terms and conditions, and I
+                          expressly agree to them.
+                        </Typography>
+                      </label>
+                    </div>
+                    <BaseBtn className="register-form__submit" type="submit">
+                      Sign Up
+                    </BaseBtn>
+                  </div>
+                  <div className="register-form__footer">
+                    <Typography
+                      as={Link}
+                      to="/login"
+                      fs="16px"
+                      lh="20px"
+                      fw="500"
+                      color="#01B2D4"
+                    >
+                      Already have an account
+                    </Typography>
+                  </div>
+                </form>
+                <div className="register-form-elements" />
               </div>
-              <div className="register-form__footer">
-                <Typography
-                  as={Link}
-                  to="/login"
-                  fs="16px"
-                  lh="20px"
-                  fw="500"
-                  color="#01B2D4"
-                >
-                  Already have an account
-                </Typography>
-              </div>
-            </form>
-            <div className="register-form-elements" />
-          </div>
+            </>
+          )}
         </div>
       </div>
       <FooterHoriz />
     </div>
+  );
+};
+
+const Sidebar = ({ isVisible }) => {
+  return (
+    <aside className={`register-sidebar ${isVisible ? "visible" : ""}`}>
+      sidebar
+    </aside>
   );
 };
 

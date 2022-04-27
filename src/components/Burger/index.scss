@@ -1,0 +1,83 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.burger {
+  position: relative;
+
+  margin: 0 auto;
+  padding: 15px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border: none;
+  background: transparent;
+
+  z-index: 1;
+
+  cursor: pointer;
+
+  &-line {
+    display: block;
+
+    position: relative;
+
+    width: 27px;
+    height: 2px;
+
+    background-color: $white;
+    transition: transform 0.25s ease-in-out;
+
+    .active & {
+      transform: rotate(45deg);
+    }
+
+    &::before {
+      content: "";
+
+      display: block;
+
+      top: -8px;
+      position: absolute;
+
+      width: 27px;
+      height: 2px;
+
+      background-color: $white;
+      transition: transform 0.25s ease-in-out;
+
+      .active & {
+        transform: translate(0, 8px) rotate(0);
+      }
+    }
+
+    &::after {
+      content: "";
+
+      display: block;
+
+      bottom: -8px;
+      position: absolute;
+
+      width: 27px;
+      height: 2px;
+
+      background-color: $white;
+      transition: transform 0.25s ease-in-out;
+
+      .active & {
+        transform: translate(0, -8px) rotate(90deg);
+      }
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  @include min-media($md) {
+    display: none;
+  }
+}

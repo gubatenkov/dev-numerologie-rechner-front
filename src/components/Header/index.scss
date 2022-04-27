@@ -1,5 +1,12 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
 .header {
+  position: sticky;
+
   padding: 0 20px;
+
+  z-index: 10;
 
   &-inner {
     padding: 12px 0;
@@ -21,12 +28,56 @@
     gap: 12px;
     display: flex;
     align-items: center;
+
+    & > .lang-drop {
+      @include max-media($md) {
+        display: none;
+      }
+    }
+
+    & > .base-btn__signup {
+      @include max-media($md) {
+        display: none;
+      }
+    }
+
+    & > .base-btn__login.outlined {
+      @include max-media($md) {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 20px;
+
+        border: 1px solid transparent;
+      }
+    }
   }
 
   &-brand {
+    display: block;
+
     width: 56px;
     height: 56px;
     margin: 0 100px 0 0;
+
+    @include max-media($md) {
+      display: none;
+    }
+
+    &__mobile {
+      display: block;
+
+      @include min-media($md) {
+        display: none;
+      }
+    }
+  }
+
+  &__info {
+    margin: 0 0 0 100px;
+
+    @include max-media($md) {
+      display: none;
+    }
   }
 
   &__img {

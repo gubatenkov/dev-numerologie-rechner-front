@@ -1,4 +1,15 @@
+@import "../styles/variables";
+@import "../styles/mixins";
+
 .register {
+  position: relative;
+
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   .header {
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
     background-size: cover;
@@ -8,8 +19,39 @@
     background-image: url("../images/analBg.png");
   }
 
+  &-sidebar {
+    display: block;
+
+    top: 0;
+    left: 0;
+    position: fixed;
+
+    width: 0;
+    height: 100vh;
+    max-width: 300px;
+
+    background: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    transition: 0.25s all ease;
+
+    overflow: hidden;
+
+    z-index: 9;
+
+    &.visible {
+      width: 100%;
+      padding: 75px 10px 0;
+
+      transition: 0.25s all ease;
+    }
+  }
+
   &-inner {
     padding: 100px 0 150px 0;
+
+    @include max-media($md) {
+      padding: 0;
+    }
   }
 
   &-form {
@@ -19,6 +61,10 @@
 
     &-elements {
       position: relative;
+
+      @include max-media($md) {
+        display: none;
+      }
 
       &::after {
         content: "";
@@ -74,6 +120,11 @@
 
       border: 1px solid #c4c4c4;
 
+      @include max-media($md) {
+        padding: 45px 0;
+        border: 1px solid transparent;
+      }
+
       &::after {
         content: "";
 
@@ -94,6 +145,10 @@
         transform: rotate(45deg);
 
         z-index: 10;
+
+        @include max-media($md) {
+          display: none;
+        }
       }
 
       &::before {
@@ -115,6 +170,10 @@
         transform: rotate(-45deg);
 
         z-index: 10;
+
+        @include max-media($md) {
+          display: none;
+        }
       }
     }
 
@@ -125,7 +184,11 @@
     }
 
     &__body {
-      margin: 0 0 50px 0;
+      margin: 0 auto;
+      max-width: 292px;
+      padding: 0 0 50px;
+
+      border-bottom: 1px solid rgba(79, 68, 66, 0.3);
     }
 
     &__input {
@@ -241,8 +304,6 @@
       padding: 20px 0 0 0;
 
       text-align: center;
-
-      border-top: 1px solid rgba(79, 68, 66, 0.3);
     }
   }
 }
@@ -302,4 +363,29 @@
   border: solid #0079bf;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+.signup-placeholder {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 292px;
+
+  text-align: center;
+
+  &__heading {
+    margin: 0 0 50px 0;
+  }
+
+  &__text {
+    margin: 0 auto 50px;
+  }
+
+  &__btn {
+    width: 100%;
+
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+  }
 }
