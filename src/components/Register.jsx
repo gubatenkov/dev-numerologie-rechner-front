@@ -9,6 +9,7 @@ import "../styles/InputForm.css";
 
 import Input from "./Input";
 import Header from "./Header";
+import Sidebar from "./SidebarD2";
 import Typography from "./Typography";
 import FooterHoriz from "./FooterHoriz";
 import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
@@ -247,14 +248,6 @@ const Register = ({ history }) => {
       </div>
       <FooterHoriz />
     </div>
-  );
-};
-
-const Sidebar = ({ isVisible }) => {
-  return (
-    <aside className={`register-sidebar ${isVisible ? "visible" : ""}`}>
-      sidebar
-    </aside>
   );
 };
 

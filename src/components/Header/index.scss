@@ -35,12 +35,6 @@
       }
     }
 
-    & > .base-btn__signup {
-      @include max-media($md) {
-        display: none;
-      }
-    }
-
     & > .base-btn__login.outlined {
       @include max-media($md) {
         font-size: 16px;
@@ -48,6 +42,22 @@
         line-height: 20px;
 
         border: 1px solid transparent;
+      }
+    }
+
+    & > .base-btn__signup {
+      @include max-media($md) {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 20px;
+
+        border: 1px solid transparent;
+        background-color: transparent;
+
+        &:hover {
+          color: #fff;
+        }
       }
     }
   }
@@ -86,5 +96,12 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+  }
+}
+
+.base-btn__login,
+.base-btn__signup {
+  &.hidden {
+    display: none;
   }
 }

@@ -1,0 +1,252 @@
+@import "../styles/variables";
+@import "../styles/mixins";
+
+.login {
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .header {
+    background-size: cover;
+    background-position: top top;
+    background-color: #d7b267;
+    background-repeat: no-repeat;
+    background-image: url("../images/analBg.png");
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
+  }
+
+  &-outter {
+    padding: 70px 0 90px;
+
+    @include max-media($md) {
+      padding: 40px 0 60px;
+    }
+  }
+
+  &-form {
+    padding: 0 65px 65px;
+
+    border-top-left-radius: 215px;
+    border-top-right-radius: 215px;
+    border: 1px solid rgba(79, 68, 66, 0.3);
+
+    @include max-media($md) {
+      padding: 0;
+
+      border: 1px solid transparent;
+    }
+
+    &__wrap {
+      width: 100%;
+      padding: 15px;
+      margin: 0 auto;
+      max-width: 460px;
+
+      border: 1px solid rgba(79, 68, 66, 0.3);
+
+      @include max-media($md) {
+        padding: 0;
+        max-width: 300px;
+
+        border: 1px solid transparent;
+      }
+    }
+
+    &__header {
+      margin: 0 0 50px 0;
+      padding: 70px 0 30px;
+
+      text-align: center;
+
+      border-bottom: 1px solid rgba(79, 68, 66, 0.3);
+
+      @include max-media($md) {
+        padding: 0;
+        margin: 0 0 30px 0;
+
+        border: 1px solid transparent;
+      }
+    }
+
+    &__subheading {
+      margin: 0 0 30px 0;
+
+      text-align: center;
+    }
+
+    &__body {
+      padding: 0 0 60px 0;
+      border-bottom: 1px solid rgba(79, 68, 66, 0.3);
+
+      & .input-group {
+        margin: 0 0 30px 0;
+      }
+
+      & .input-group__label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #323232;
+        line-height: 20px;
+        font-style: normal;
+        font-family: Inter, sans-serif;
+      }
+
+      & input {
+        width: 100%;
+
+        border-radius: 5px;
+        background: #ffffff;
+        border: 1px solid rgba(79, 68, 66, 0.3);
+
+        &:focus {
+          outline: none;
+          border: 1px solid #01b2d4;
+        }
+      }
+    }
+
+    &__group {
+      &--password {
+        & p {
+          font-size: 12px;
+        }
+      }
+
+      &-agreement {
+        &.error > label::before {
+          border: 1px solid red;
+        }
+      }
+    }
+
+    &__submit {
+      width: 100%;
+
+      font-size: 18px;
+      font-weight: 500;
+      color: #ffffff;
+      line-height: 20px;
+      text-align: center;
+      font-style: normal;
+
+      transition: background 0.25s ease-in-out;
+
+      &:hover {
+        background: #01c1e7;
+      }
+    }
+
+    &__footer {
+      padding: 30px 0 0;
+
+      text-align: center;
+    }
+
+    &__signup {
+      width: 100%;
+      display: block;
+      margin: 30px 0 0;
+      padding: 15px 35px;
+
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      text-align: center;
+      font-family: Inter, sans-serif;
+
+      color: #01b2d4;
+
+      border-radius: 5px;
+      background: #fff;
+      border: 1px solid #01b2d4;
+    }
+
+    &__back {
+      width: 100%;
+      display: block;
+      margin: 20px 0 0;
+      padding: 15px 35px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 20px;
+      text-align: center;
+      font-family: Inter, sans-serif;
+      color: #01b2d4;
+      border-radius: 5px;
+      background: #fff;
+      border: 1px solid #01b2d4;
+    }
+
+    &__reset {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 20px;
+      text-align: center;
+      font-style: normal;
+      font-family: Inter;
+
+      color: #01b2d4;
+    }
+  }
+}
+
+/** css for Checkbox **/
+
+.login-form__group-agreement {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.login-form__group-agreement input {
+  padding: 0;
+  height: initial;
+  width: initial;
+  margin-bottom: 0;
+  display: none;
+  cursor: pointer;
+}
+
+.login-form__group-agreement label {
+  position: relative;
+  margin: 0 0 30px 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  cursor: pointer;
+}
+
+.login-form__group-agreement label:before {
+  content: "";
+
+  position: relative;
+
+  display: inline-block;
+  -webkit-appearance: none;
+  padding: 10px;
+  margin: 0 10px 0 0;
+  vertical-align: middle;
+
+  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid rgba(79, 68, 66, 0.3);
+
+  cursor: pointer;
+}
+
+.login-form__group-agreement input:checked + label:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 2px;
+  left: 9px;
+  width: 6px;
+  height: 14px;
+  border: solid #0079bf;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
