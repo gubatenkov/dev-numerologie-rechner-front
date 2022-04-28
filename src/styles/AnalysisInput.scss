@@ -35,6 +35,11 @@
     display: flex;
     align-items: flex-end;
 
+    &__input {
+      background: #f9f8f6;
+      border: 1px solid transparent;
+    }
+
     &__altnames {
       grid-gap: 10px;
       gap: 10px;

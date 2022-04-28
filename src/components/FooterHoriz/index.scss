@@ -1,3 +1,6 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
 .footer {
   padding: 20px 0;
   background: #363431;
@@ -6,6 +9,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @include max-media($md) {
+      flex-direction: column;
+    }
+  }
+
+  &-left {
+    @include max-media($md) {
+      margin: 0 0 20px 0;
+    }
   }
 
   &-right {
@@ -16,5 +29,12 @@
     align-items: center;
 
     list-style: none;
+
+    @include max-media($md) {
+      padding: 0;
+
+      gap: 20px;
+      flex-direction: column;
+    }
   }
 }

@@ -7,7 +7,7 @@ import { Link, useLocation, withRouter } from "react-router-dom";
 
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 
-import "../styles/Login.css";
+import "../styles/Login.scss";
 import "../styles/InputForm.css";
 
 import FormBase from "./Forms/FormBase";
@@ -15,6 +15,8 @@ import { useUser } from "../contexts/UserContext";
 import logo from "../images/logo_weiss_trans.png";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
+import Header from "./Header";
+import FooterHoriz from "./FooterHoriz";
 
 const StyledSpan = styled.span`
   margin: 0 0 15px 0;
@@ -77,11 +79,6 @@ const Login = props => {
     }
   }, [props.history]);
 
-  useEffect(() => {
-    document.body.style.backgroundColor = "#00b3d4";
-    return () => (document.body.style.backgroundColor = null);
-  });
-
   const handleRedirect = () => {
     if (location.search?.split("redirect=")?.length > 1) {
       return `?redirect=${decodeURI(location.search.split("redirect=")[1])}`;
@@ -104,8 +101,13 @@ const Login = props => {
   const onSubmit = data => loginUser(data.email, data.password);
 
   return (
-    <div className="page-register-v3 layout-full">
-      <div className="page vertical-align">
+    <div className="login">
+      <Header />
+      <div className="container">
+        <div className="login-inner">yo</div>
+      </div>
+      <FooterHoriz />
+      {/* <div className="page vertical-align">
         <div className="page-content">
           <div className="text-center">
             <a href={t("HOMEPAGE")}>
@@ -160,7 +162,7 @@ const Login = props => {
             </FormBase>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

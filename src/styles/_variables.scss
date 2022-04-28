@@ -9,12 +9,18 @@ $akb-breakpoints: (
   desktop: $mobile-resolution-threshold
 ) !default;
 
-$dark-yellow: #f8f8f8;
 $red: #ff0000;
-$light-blue: #01b2d4;
 $white: #ffffff;
+$light-blue: #01b2d4;
 $light-gray: #eaeaea;
+$dark-yellow: #f8f8f8;
 
 $ddwnBg: #ffffff;
 $ddwnBorder: #6c757d54;
 $ddwnFontColor: #212529;
+
+$xs: 480px;
+$sm: 768px;
+$md: 992px;
+$lg: 1200px;
+$xl: 1440px;
