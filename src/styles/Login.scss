@@ -136,6 +136,10 @@
       &:hover {
         background: #01c1e7;
       }
+
+      &:focus {
+        border: 1px solid #006c81;
+      }
     }
 
     &__footer {
@@ -162,6 +166,10 @@
       border-radius: 5px;
       background: #fff;
       border: 1px solid #01b2d4;
+
+      &:focus {
+        border: 1px solid #006c81;
+      }
     }
 
     &__back {
@@ -179,6 +187,10 @@
       border-radius: 5px;
       background: #fff;
       border: 1px solid #01b2d4;
+
+      &:focus {
+        border: 1px solid #006c81;
+      }
     }
 
     &__reset {
@@ -190,6 +202,10 @@
       font-family: Inter;
 
       color: #01b2d4;
+
+      &:focus {
+        border: 1px solid #006c81;
+      }
     }
   }
 }
