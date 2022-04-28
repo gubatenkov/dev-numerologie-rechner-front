@@ -51,6 +51,7 @@ const inputSchemaPersonalCompare = yup.object({
 });
 
 const AnalysisInput = props => {
+  const User = useUser();
   const { t } = useTranslation();
   const [comfortNameFieldsShown, setComfortNamesFieldsShown] = useState(false);
   const {
