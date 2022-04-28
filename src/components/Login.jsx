@@ -1,52 +1,40 @@
-import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, withRouter } from "react-router-dom";
-
-import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
+import { useLocation, withRouter } from "react-router-dom";
 
 import "../styles/Login.scss";
 import "../styles/InputForm.css";
 
-import FormBase from "./Forms/FormBase";
+import Input from "./Input";
+import Header from "./Header";
+import Typography from "./Typography";
+import FooterHoriz from "./FooterHoriz";
+import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
 import { useUser } from "../contexts/UserContext";
-import logo from "../images/logo_weiss_trans.png";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
-import Header from "./Header";
-import FooterHoriz from "./FooterHoriz";
+import Sidebar from "./SidebarD2";
 
-const StyledSpan = styled.span`
-  margin: 0 0 15px 0;
-  display: inline-block;
-  font-size: 13px;
-  :hover {
-    text-decoration: underline;
-  }
-`;
 
-const Login = props => {
+const Login = ({ history }) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const LoadingOverlay = useLoadingOverlay();
   const { fetchUser, currentLanguage } = useUser();
-  const [isReadyToSubmit, setReadyToSubmit] = useState(true);
+  const [isEmailAuth, setEmailAuth] = useState(false);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues
-  } = useForm({ mode: "all" });
+  } = useForm({ mode: "onSubmit" });
   const { email, password } = getValues();
   const { emailValidators, passwordValidators } = useValidators();
 
   const loginUser = async (email, password) => {
-    const { history } = props;
     try {
-      LoadingOverlay.showWithText(t("SIGNING_IN"));
-
       const response = await postJsonData("/login", {
         email,
         password,
@@ -61,13 +49,11 @@ const Login = props => {
       if (location?.search && location.search?.split("redirect=")?.length > 1) {
         const redirectTo = location.search.split("redirect=")[1];
         history.push(redirectTo);
-      } else {
-        history.push("/userHome");
       }
+      // push user to main page after success login
+      history.push("/");
     } catch (error) {
       ToastNotifications.error(t("LOGIN_FAILED"), { position: "top-right" });
-    } finally {
-      LoadingOverlay.hide();
     }
   };
 
@@ -75,94 +61,192 @@ const Login = props => {
   useEffect(() => {
     const email = localStorage.getItem("auth-email");
     if (email) {
-      props.history.push("./");
+      history.push("./");
     }
-  }, [props.history]);
+  }, [history]);
 
-  const handleRedirect = () => {
-    if (location.search?.split("redirect=")?.length > 1) {
-      return `?redirect=${decodeURI(location.search.split("redirect=")[1])}`;
+  // const handleRedirect = () => {
+  //   if (location.search?.split("redirect=")?.length > 1) {
+  //     return `?redirect=${decodeURI(location.search.split("redirect=")[1])}`;
+  //   }
+  //   return "";
+  // };
+
+  const handleClickBack = () => setEmailAuth(false);
+
+  const submit = () => {
+    if (!isEmailAuth) {
+      setEmailAuth(true);
+    } else {
+      loginUser(email, password);
     }
-    return "";
   };
-
-  useEffect(() => {
-    // here we check is form ready to be submited
-    function isFormReadyToSubmit(errors) {
-      if (!errors?.email?.message && !errors?.password?.message) {
-        setReadyToSubmit(true);
-      } else {
-        setReadyToSubmit(false);
-      }
-    }
-    isFormReadyToSubmit(errors);
-  }, [errors, email, password, getValues]);
-
-  const onSubmit = data => loginUser(data.email, data.password);
 
   return (
     <div className="login">
-      <Header />
-      <div className="container">
-        <div className="login-inner">yo</div>
-      </div>
-      <FooterHoriz />
-      {/* <div className="page vertical-align">
-        <div className="page-content">
-          <div className="text-center">
-            <a href={t("HOMEPAGE")}>
-              <img
-                className="brand-img logo"
-                height="250"
-                src={logo}
-                alt="logo"
-              />
-            </a>
-          </div>
-          <div className="form-wrap">
-            <FormBase
-              id="novalidatedform"
-              onSubmit={handleSubmit(onSubmit)}
-              autoComplete="off"
-              noValidate
-            >
-              <FormBase.Title>{t("SIGN_IN")}</FormBase.Title>
-              <FormBase.Divider />
-              <FormBase.Input
-                placeholder="example@mail.com"
-                name="email"
-                type="email"
-                label="Email"
-                register={() => register("email", emailValidators)}
-                form="novalidatedform"
-                message={errors.email?.message}
-              />
-              <FormBase.Input
-                type="password"
-                label="Password"
-                name="password"
-                register={() => register("password", passwordValidators)}
-                message={errors.password?.message}
-              />
-              <Link to={() => `/reset${handleRedirect()}`}>
-                <StyledSpan>{t("RESET_PASSWORD")}</StyledSpan>
-              </Link>
-              <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
-                {t("SIGN_IN")}
-              </FormBase.Btn>
-              <FormBase.Divider />
-              <FormBase.Text style={{ marginBottom: "10px" }}>
-                {t("DONT_HAVE_ACCOUNT?")}
-              </FormBase.Text>
-              <FormBase.Text>
-                <Link to={() => `/register${handleRedirect()}`}>
-                  <StyledSpan>{t("REGISTER")}</StyledSpan>
-                </Link>
-              </FormBase.Text>
-            </FormBase>
+      <Header
+        isSidebarVisible={isSidebarVisible}
+        onOpen={() => setSidebarVisible(true)}
+        onClose={() => setSidebarVisible(false)}
+      />
+      <Sidebar isVisible={isSidebarVisible} />
+      <div className="login-outter">
+        <div className="container">
+          <div className="login-inner">
+            <div className="login-form__wrap">
+              <form
+                className="login-form"
+                id="novalidatedform"
+                onSubmit={handleSubmit(submit)}
+                autoComplete="off"
+                noValidate
+              >
+                <div className="login-form__inner">
+                  {isEmailAuth ? (
+                    <>
+                      <div className="login-form__header">
+                        <Typography
+                          as="h1"
+                          fs="26px"
+                          color="#313236"
+                          lh="40px"
+                          fw="700"
+                        >
+                          Welcome!
+                        </Typography>
+                      </div>
+                      <Typography
+                        className="login-form__subheading"
+                        as="p"
+                        fs="18px"
+                        lh="20px"
+                        fw="600"
+                        color="#323232"
+                      >
+                        {email}
+                      </Typography>
+                      <div className="login-form__body">
+                        <div className="login-form__group login-form__group--password">
+                          <Input
+                            className="login-form__input"
+                            name="password"
+                            type="password"
+                            label="Password"
+                            form="novalidatedform"
+                            placeholder="**********"
+                            message={errors.password?.message}
+                            register={() =>
+                              register("password", passwordValidators)
+                            }
+                          />
+                        </div>
+
+                        <div
+                          className={`login-form__group login-form__group-agreement ${
+                            errors.checked ? "error" : ""
+                          }`}
+                        >
+                          <input
+                            className="login-form__checkbox"
+                            type="checkbox"
+                            id="Sho"
+                            {...register("checked")}
+                          />
+                          <label htmlFor="Sho">
+                            <Typography
+                              as="p"
+                              fs="16px"
+                              lh="20px"
+                              fw="400"
+                              color="#323232"
+                            >
+                              Remember me
+                            </Typography>
+                          </label>
+                        </div>
+                        <BaseBtn
+                          className="blue-btn login-form__submit"
+                          type="submit"
+                        >
+                          Log In
+                        </BaseBtn>
+                        <BaseBtn
+                          className="blue-btn login-form__back"
+                          onClick={handleClickBack}
+                        >
+                          Back
+                        </BaseBtn>
+                      </div>
+                      <div className="login-form__footer">
+                        <BaseBtn
+                          className="login-form__reset"
+                          href="/reset"
+                          link
+                        >
+                          Forgot your password?
+                        </BaseBtn>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="login-form__header">
+                        <Typography
+                          as="h1"
+                          fs="26px"
+                          color="#313236"
+                          lh="40px"
+                          fw="700"
+                        >
+                          Log In
+                        </Typography>
+                      </div>
+                      <div className="login-form__body">
+                        <div className="login-form__group">
+                          <Input
+                            className="login-form__input-email"
+                            name="email"
+                            type="email"
+                            label="Email"
+                            form="novalidatedform"
+                            placeholder="example@mail.com"
+                            message={errors.email?.message}
+                            register={() => register("email", emailValidators)}
+                          />
+                          <BaseBtn
+                            className="blue-btn login-form__submit"
+                            type="submit"
+                          >
+                            Continue with e-mail
+                          </BaseBtn>
+                        </div>
+                      </div>
+                      <div className="login-form__footer">
+                        <Typography
+                          as="p"
+                          fs="16px"
+                          color="#313236"
+                          lh="20px"
+                          fw="400"
+                        >
+                          Don't have a <br /> psychologischenumerologie account?
+                        </Typography>
+                        <BaseBtn
+                          className="login-form__signup"
+                          href="/register"
+                          link
+                        >
+                          Sign Up
+                        </BaseBtn>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div> */}
+      </div>
+      <FooterHoriz />
     </div>
   );
 };
