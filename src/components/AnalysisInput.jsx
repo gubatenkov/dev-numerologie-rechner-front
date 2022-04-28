@@ -56,7 +56,6 @@ const AnalysisInput = props => {
   const {
     register,
     handleSubmit,
-
     formState: { errors }
   } = useForm({ mode: "onSubmit" });
   const {
