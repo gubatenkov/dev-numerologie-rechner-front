@@ -1,6 +1,18 @@
 .input-group {
+  position: relative;
+
   display: flex;
   flex-direction: column;
+
+  &__message {
+    margin: 0;
+
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+
+    color: #ff0000;
+  }
 
   &__label {
     margin: 0 0 5px 0;
@@ -14,6 +26,7 @@
   }
 
   &__input {
+    max-width: 220px;
     padding: 15px;
 
     font-style: normal;
@@ -26,9 +39,13 @@
     background: #f9f8f6;
     border: 1px solid transparent;
 
+    .error & {
+      border-color: #ff0000;
+    }
+
     &:focus {
       outline: none;
-      border: 1px solid #ffffff;
+      border: 1px solid #01b2d4;
     }
   }
 }

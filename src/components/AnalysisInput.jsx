@@ -4,22 +4,15 @@ import PropTypes from "prop-types";
 import queryString from "querystring";
 import ToastNotifications from "cogo-toast";
 import { useTranslation } from "react-i18next";
-import React, { useCallback, useEffect, useState } from "react";
-import { Link, withRouter } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Controller } from "react-hook-form";
 
 import "../styles/InputForm.css";
 import "../styles/AnalysisInput.scss";
 
-import Panel from "./Panel";
-import InputField from "./InputField";
-
-import FormBase from "./Forms/FormBase";
-import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
-import logoTransparentWhite from "../images/logo_weiss_trans.png";
-import DropdownDateSelect from "./DropdownDateSelect";
+
 import Header from "./Header";
 import Typography from "./Typography";
 import AnalTypeDropdown from "./AnalTypeDropdown";
@@ -60,37 +53,18 @@ const inputSchemaPersonalCompare = yup.object({
 const AnalysisInput = props => {
   const User = useUser();
   const { t } = useTranslation();
-  const [isAltNameReq, setIsAltNameReq] = useState(false);
-  const [isAltSurnameReq, setIsAltSurnameReq] = useState(false);
-  const [date, setDate] = useState({
-    day: "",
-    month: "",
-    year: ""
-  });
-  const [comfortNameFieldsShown, setComfortNameFieldsShown] = useState(false);
-  const [isSubmitBtnDisabled, setIsSubmitBtnDisabled] = useState(false);
+  const [comfortNameFieldsShown, setComfortNamesFieldsShown] = useState(false);
   const {
-    control,
     register,
     handleSubmit,
-    watch,
     formState: { errors }
-  } = useForm();
+  } = useForm({ mode: "onSubmit" });
   const {
     analNameValidator,
     yearValidator,
     altNameValidator,
     altLastnameValidator
   } = useValidators();
-  const formState = watch();
-
-  useEffect(() => {
-    const { altName, altLastname } = formState;
-    if (altName) setIsAltSurnameReq(true);
-    else setIsAltSurnameReq(false);
-    if (altLastname) setIsAltNameReq(true);
-    else setIsAltNameReq(false);
-  }, [formState]);
 
   useEffect(() => {
     const querString = props.location.search.replace("?", "");
@@ -106,10 +80,6 @@ const AnalysisInput = props => {
     ) {
       startAnalysis(firstNameParam, lastNameParam, dateOfBirthParam);
     }
-
-    return () => {
-      document.body.style.backgroundColor = null;
-    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const validateInput = async (
@@ -186,91 +156,39 @@ const AnalysisInput = props => {
     );
   };
 
-  const onSubmit = (data, date) => {
-    const { name, lastname, altName, altLastname } = data;
-    const formatedDate = moment(
-      new Date(date.year, date.month, date.day)
-    ).format("DD.MM.YYYY");
-    startAnalysis(name, lastname, altName, altLastname, formatedDate);
-  };
-
-  const callback = useCallback(() => {
-    const checkSubmitState = () => {
-      const { altName, altLastname, name, lastname } = formState;
-      if (
-        name &&
-        lastname &&
-        date.day &&
-        date.month &&
-        date.year &&
-        !isAltNameReq &&
-        !isAltSurnameReq
-      ) {
-        setIsSubmitBtnDisabled(false);
-      } else if (
-        name &&
-        lastname &&
-        date.day &&
-        date.month &&
-        date.year &&
-        isAltNameReq &&
-        altName &&
-        isAltSurnameReq &&
-        altLastname
-      ) {
-        setIsSubmitBtnDisabled(false);
-      } else {
-        setIsSubmitBtnDisabled(true);
-      }
-    };
-    checkSubmitState();
-  }, [formState, isAltNameReq, isAltSurnameReq, date]);
-
-  useEffect(() => {
-    callback();
-  }, [callback, date, formState]);
-
-  const handleChangeNumber = e => {
-    const { value } = e.target;
-    if (!isNaN(Number(value)) && Number(value) <= 31 && Number(value) > 0) {
-      const day = Number(value) < 10 ? `0${value}` : Number(value);
-      setDate(prev => ({ ...prev, day }));
-    } else {
-      setDate(prev => ({ ...prev, day: "" }));
+  const onBlur = e => {
+    // add zero to day or month input if val < 10
+    if (e.target.value < 10 && e.target.value > 0) {
+      e.target.value = `0${e.target.value}`;
     }
   };
 
-  const handleChangeMonth = e => {
-    const { value } = e.target;
-    if (!isNaN(Number(value)) && Number(value) <= 12 && Number(value) > 0) {
-      const month = Number(value) < 10 ? `0${value}` : `${Number(value)}`;
-      setDate(prev => ({ ...prev, month }));
-    } else {
-      setDate(prev => ({ ...prev, month: "" }));
+  const changeInput = (e, maxLen = 2) => {
+    if (e.target.value.length > maxLen) {
+      // cut input to maxLen
+      e.target.value = e.target.value.slice(0, maxLen);
+    } else if (
+      e.target.name === "day" &&
+      (e.target.value > 31 || e.target.value < 1)
+    ) {
+      e.target.value = "";
+    } else if (
+      e.target.name === "month" &&
+      (e.target.value > 12 || e.target.value < 1)
+    ) {
+      e.target.value = "";
     }
   };
 
-  const handleChangeYear = e => {
-    const { value } = e.target;
-    if (!isNaN(Number(value)) && value.length <= 4) {
-      const year = `${Number(value)}`;
-      setDate(prev => ({ ...prev, year }));
-    } else {
-      setDate(prev => ({ ...prev, year: "" }));
-    }
-  };
-
-  const onBlurYear = e => {
-    const currentYear = new Date().getFullYear();
-    // clear input if year field is not in range 1920 - currentYear
-    if (date.year < 1920 || date.year > currentYear) {
-      setDate(prev => ({ ...prev, year: "" }));
-    }
+  const onSubmit = data => {
+    const { name, lastname, altname, altlastname, day, month, year } = data;
+    const formatedDate = moment(`${year}-${month}-${day}`).format("DD.MM.YYYY");
+    startAnalysis(name, lastname, altname, altlastname, formatedDate);
   };
 
   return (
     <div className="page-register-v3 layout-full">
-      {/* <section className="anal">
+      <section className="anal">
         <Header />
         <div className="container">
           <div className="anal-inner">
@@ -280,56 +198,104 @@ const AnalysisInput = props => {
 
             <form
               className="anal-form"
-              onSubmit={handleSubmit(data => onSubmit(data, date))}
+              onSubmit={handleSubmit(data => onSubmit(data))}
             >
-              <AnalTypeDropdown defaultValue="Personality analysis" />
+              <div className="anal-form-row">
+                <AnalTypeDropdown defaultValue="Personality analysis" />
 
-              <div className="anal-group anal-group__names">
-                <Input
-                  label="First name"
-                  placeholder="John"
-                  register={() => register("name", analNameValidator)}
-                />
-                <Input
-                  label="Last name"
-                  placeholder="Johnson"
-                  register={() => register("lastname", analNameValidator)}
-                />
+                <div className="anal-group anal-group__names">
+                  <Input
+                    label="First name"
+                    placeholder="John"
+                    register={() => register("name", analNameValidator)}
+                    message={errors.name && " "}
+                  />
+                  <Input
+                    label="Last name"
+                    placeholder="Johnson"
+                    register={() => register("lastname", analNameValidator)}
+                    message={errors.lastname && errors.lastname.message}
+                  />
 
-                <BaseBtn className="transparent-btn transparent-btn--plus">
-                  Name Comparison
+                  <BaseBtn
+                    className="transparent-btn transparent-btn--plus"
+                    onClick={() =>
+                      setComfortNamesFieldsShown(!comfortNameFieldsShown)
+                    }
+                    type="button"
+                  >
+                    Name Comparison
+                  </BaseBtn>
+                </div>
+
+                <div className="anal-group anal-group__date">
+                  <Input
+                    className="number"
+                    placeholder="19"
+                    register={() =>
+                      register("day", {
+                        required: {
+                          value: true,
+                          message: "Field required"
+                        },
+                        onBlur
+                      })
+                    }
+                    type="number"
+                    onInput={e => changeInput(e, 2)}
+                    // message={errors.day && errors.day.message}
+                  />
+                  <Input
+                    className="month"
+                    placeholder="05"
+                    register={() =>
+                      register("month", {
+                        required: { value: true, message: "Field required" },
+                        onBlur
+                      })
+                    }
+                    type="number"
+                    onInput={e => changeInput(e, 2)}
+                    // message={errors.month && errors.month.message}
+                  />
+                  <Input
+                    className="year"
+                    placeholder="1995"
+                    register={() => register("year", yearValidator)}
+                    type="number"
+                    onInput={e => changeInput(e, 4)}
+                    // onBlur={onBlurYear}
+                    message={errors.year && errors.year.message}
+                  />
+                </div>
+
+                <BaseBtn className="blue-btn" type="submit">
+                  Analysis
                 </BaseBtn>
               </div>
 
-              <div className="anal-group anal-group__date">
-                <Input
-                  className="number"
-                  placeholder="19"
-                  value={date.day}
-                  onChange={handleChangeNumber}
-                />
-                <Input
-                  className="month"
-                  placeholder="05"
-                  value={date.month}
-                  onChange={handleChangeMonth}
-                />
-                <Input
-                  className="year"
-                  placeholder="1995"
-                  value={date.year}
-                  onBlur={onBlurYear}
-                  onChange={handleChangeYear}
-                />
-              </div>
-
-              <BaseBtn
-                className="blue-btn"
-                type="submit"
-                // disabled={isSubmitBtnDisabled}
-              >
-                Analysis
-              </BaseBtn>
+              {comfortNameFieldsShown && (
+                <div className="anal-form-row">
+                  <div />
+                  <div className="anal-group anal-group__altnames">
+                    <Input
+                      label="Altfirst name"
+                      placeholder="John"
+                      register={() => register("altname", altNameValidator)}
+                      message={errors.altname && errors.altname.message}
+                    />
+                    <Input
+                      label="Altlast name"
+                      placeholder="Johnson"
+                      register={() =>
+                        register("altlastname", altLastnameValidator)
+                      }
+                      message={errors.altlastname && errors.altlastname.message}
+                    />
+                  </div>
+                  <div />
+                </div>
+              )}
             </form>
           </div>
         </div>
@@ -360,207 +326,7 @@ const AnalysisInput = props => {
           </div>
         </div>
       </section>
-      <FooterHoriz /> */}
-      <div className="page vertical-align">
-        <div className="page-content">
-          <div className="text-center">
-            <a href={t("HOMEPAGE")}>
-              <img
-                className="brand-img logo"
-                height="250"
-                src={logoTransparentWhite}
-                alt="logo"
-              />
-            </a>
-          </div>
-          <div className="row justify-content-md-center">
-            <form
-              className="col-lg-4"
-              onSubmit={handleSubmit(data => onSubmit(data, date))}
-            >
-              <Panel title={t("NUM_ANALYSIS")}>
-                <h6>{t("FAV_NAME")}</h6>
-                <InputField
-                  icon="wb-user"
-                  fieldName={t("FIRSTNAME")}
-                  register={() => register("name", analNameValidator)}
-                  message={errors.name?.message}
-                />
-                <InputField
-                  icon="wb-user"
-                  fieldName={t("LASTNAME")}
-                  register={() => register("lastname", analNameValidator)}
-                  message={errors.lastname?.message}
-                />
-                <InputField
-                  icon="wb-calendar"
-                  fieldName={t("BIRTH_DATE")}
-                  register={() => register("date", yearValidator)}
-                  message={errors.date?.message}
-                />
-                <Controller
-                  control={control}
-                  name="date"
-                  rules={yearValidator}
-                  render={({ field: { value, onChange, ref, name } }) => (
-                    <FormBase.DateInput
-                      style={{
-                        marginLeft: "auto"
-                      }}
-                      selected={value}
-                      dateFormat="dd.MM.yyyy"
-                      placeholderText={t("BIRTH_DATE")}
-                      onChange={date => onChange(date)}
-                      inputRef={elem => {
-                        elem && ref(elem.input);
-                      }}
-                      name={name}
-                      message={errors.date?.message}
-                      autoComplete="off"
-                    />
-                  )}
-                />
-                <DropdownDateSelect date={date} setDate={setDate} />
-                {comfortNameFieldsShown && (
-                  <div>
-                    <h6>{t("BIRTHNAME_ALT_NAME")}</h6>
-                    <InputField
-                      icon="wb-user"
-                      fieldName={t("FIRSTNAME")}
-                      register={() => register("altName", altNameValidator)}
-                      message={errors.altName?.message}
-                    />
-                    <InputField
-                      icon="wb-user"
-                      fieldName={t("LASTNAME")}
-                      register={() =>
-                        register("altLastname", altLastnameValidator)
-                      }
-                      message={errors.altLastname?.message}
-                    />
-                  </div>
-                )}
-                <div
-                  role="link"
-                  onClick={() =>
-                    setComfortNameFieldsShown(!comfortNameFieldsShown)
-                  }
-                >
-                  <h6 className="linkText">
-                    {comfortNameFieldsShown
-                      ? t("HIDE_COMPARE_NAME")
-                      : t("SHOW_COMPARE_NAME")}
-                  </h6>
-                </div>
-                <button
-                  className="btn btn-primary btn-block"
-                  type="submit"
-                  disabled={isSubmitBtnDisabled}
-                >
-                  {t("START")}
-                </button>
-                <div className="InputForm__options">
-                  <Link to="/userHome">
-                    <h6>{t("SIGN_IN")}</h6>
-                  </Link>
-                  <Link to="/register">
-                    <h6>{t("REGISTER")}</h6>
-                  </Link>
-                </div>
-              </Panel>
-            </form>
-            {/* <FormBase
-              id="novalidatedform"
-              onSubmit={handleSubmit(onSubmit)}
-              autoComplete="off"
-              noValidate
-            >
-              <FormBase.Title>{t("NUM_ANALYSIS")}</FormBase.Title>
-              <FormBase.Divider />
-              <FormBase.Input
-                name="name"
-                type="text"
-                label={t("FAV_NAME")}
-                form="novalidatedform"
-                placeholder={t("FIRSTNAME")}
-                register={() => register("name", analNameValidator)}
-                message={errors.name?.message}
-              />
-              <div
-                className="form-group-wrap"
-                style={{ display: "flex", gap: "25px" }}
-              >
-                <FormBase.Input
-                  type="text"
-                  name="lastname"
-                  placeholder={t("LASTNAME")}
-                  register={() => register("lastname", analNameValidator)}
-                  message={errors.lastname?.message}
-                />
-                
-                <Controller
-                  control={control}
-                  name="date"
-                  rules={yearValidator}
-                  render={({ field: { value, onChange, ref, name } }) => (
-                    <FormBase.DateInput
-                      style={{ marginLeft: "auto", maxWidth: "150px" }}
-                      selected={value}
-                      dateFormat="dd.MM.yyyy"
-                      placeholderText={t("BIRTH_DATE")}
-                      onChange={date => onChange(date)}
-                      inputRef={elem => {
-                        elem && ref(elem.input);
-                      }}
-                      name={name}
-                      message={errors.date?.message}
-                    />
-                  )}
-                />
-              </div>
-              <div
-                className="form-group-wrap"
-                style={{ display: "flex", gap: "25px" }}
-              >
-                <FormBase.Input
-                  type="text"
-                  autoComplete="off"
-                  // placeholder={t("OPTIONAL")}
-                  label={t("BIRTHNAME_ALT")}
-                  register={() => register("altName", altNameValidator)}
-                  message={errors.altName?.message}
-                  borderRequired={isAltNameReq && !formState.altName.length}
-                />
-                <FormBase.Input
-                  type="text"
-                  autoComplete="off"
-                  label={t("NAME_ALT")}
-                  // placeholder={t("OPTIONAL")}
-                  register={() => register("altLastname", altLastnameValidator)}
-                  message={errors.altLastname?.message}
-                  borderRequired={
-                    isAltSurnameReq && !formState.altLastname.length
-                  }
-                />
-              </div>
-              <FormBase.Btn type="submit" disabled={isSubmitBtnDisabled}>
-                {t("START")}
-              </FormBase.Btn>
-              <FormBase.Divider />
-              
-              {!User?.user && (
-                <>
-                  <FormBase.Text>{t("LOGIN_TO_SAVE_ANALYS")}</FormBase.Text>
-                  <FormBase.Text>
-                    <Link to="/login">{t("SIGN_IN")}</Link> oder{" "}
-                    <Link to="/register">{t("REGISTER")}</Link>
-                  </FormBase.Text>
-                </>
-              )}
-            </FormBase> */}
-          </div>
-        </div>
-      </div>
+      <FooterHoriz />
     </div>
   );
 };

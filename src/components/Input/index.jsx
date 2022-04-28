@@ -6,13 +6,14 @@ const Input = ({
   className = "",
   label = "",
   placeholder = "",
+  message = "",
   register = () => {},
   ...restProps
 }) => {
   const inputName = `input-${Math.floor(Math.random() * 1000)}`;
 
   return (
-    <div className="input-group">
+    <div className={`input-group ${message.length > 0 ? "error" : ""}`}>
       <label className="input-group__label" htmlFor={inputName}>
         {label}
       </label>
@@ -24,6 +25,7 @@ const Input = ({
         placeholder={placeholder}
         {...register()}
       />
+      {message.length > 0 && <p className="input-group__message">{message}</p>}
     </div>
   );
 };

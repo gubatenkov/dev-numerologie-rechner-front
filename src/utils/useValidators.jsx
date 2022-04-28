@@ -17,8 +17,8 @@ const useValidators = () => {
     required: t("FIELD_REQUIRED"),
     maxLength: { value: 4, message: t("MAX_4_LETTERS") },
     pattern: {
-      value: /^(192\d|200\d|2022)$/,
-      message: "1920-2022"
+      value: /^(192[2-9]|19[3-9][0-9]|20[0-1][0-9]|202[0-2])$/,
+      message: "1922-2022"
     }
   };
 
