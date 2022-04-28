@@ -297,6 +297,7 @@
 
       &:focus {
         outline: none;
+        border: 1px solid #006c81;
       }
     }
 
@@ -320,7 +321,6 @@
   height: initial;
   width: initial;
   margin-bottom: 0;
-  display: none;
   cursor: pointer;
 }
 

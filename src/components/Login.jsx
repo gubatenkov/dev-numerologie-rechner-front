@@ -17,6 +17,7 @@ import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 import Sidebar from "./SidebarD2";
 
+
 const Login = ({ history }) => {
   const { t } = useTranslation();
   const location = useLocation();
@@ -163,7 +164,6 @@ const Login = ({ history }) => {
                             </Typography>
                           </label>
                         </div>
-
                         <BaseBtn
                           className="blue-btn login-form__submit"
                           type="submit"
