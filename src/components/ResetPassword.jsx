@@ -1,50 +1,42 @@
 import { useForm } from "react-hook-form";
 import ToastNotifications from "cogo-toast";
-import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 
 import { useUser } from "../contexts/UserContext";
 import { postJsonData } from "../utils/AuthUtils";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 
-import "../styles/InputForm.css";
+import "../styles/ResetPassword.scss";
 
-import FormBase from "./Forms/FormBase";
-import logo from "../images/logo_weiss_trans.png";
+import Input from "./Input";
+import Header from "./Header";
+import Typography from "./Typography";
+import FooterHoriz from "./FooterHoriz";
+import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
 import useValidators from "../utils/useValidators";
 import { getErrMessageFromString } from "../utils/functions";
 
 const DELAY_REDIRECT_AFTER_RESET = 3000;
 
-const ResetPassword = props => {
+const ResetPassword = ({ history }) => {
   const User = useUser();
-  const { history } = props;
   const { t } = useTranslation();
   const LoadingOverlay = useLoadingOverlay();
-  const [isReadyToSubmit, setReadyToSubmit] = useState(true);
+  const [isEmailAccepted, setEmailAccepted] = useState(false);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    getValues
-  } = useForm({ mode: "all" });
-  const { email } = getValues();
+    formState: { errors }
+  } = useForm({ mode: "onSubmit" });
   const { emailValidators } = useValidators();
-
-  // WORKAROUND: setting background of whole doc upon mount/unmount
-  useEffect(() => {
-    document.body.style.backgroundColor = "#00b3d4";
-
-    return () => {
-      document.body.style.backgroundColor = null;
-    };
-  });
 
   const resetPassword = async email => {
     try {
-      LoadingOverlay.showWithText(t("SEND_EMAIL"));
-      console.log(User.currentLanguage.id);
+      // LoadingOverlay.showWithText(t("SEND_EMAIL"));
+      // console.log(User.currentLanguage.id);
       await postJsonData("/reset-password", {
         email,
         langId: User.currentLanguage.id
@@ -62,12 +54,13 @@ const ResetPassword = props => {
         ) {
           const redirectTo = history.location.search.split("redirect=")[1];
           history.push(`/login?redirect=${redirectTo}`);
-        } else {
-          history.push("/login");
         }
+        //  else {
+        //   history.push("/login");
+        // }
       }, DELAY_REDIRECT_AFTER_RESET);
     } catch (error) {
-      LoadingOverlay.hide();
+      // LoadingOverlay.hide();
       const msg = getErrMessageFromString(error.message);
       if (msg) {
         ToastNotifications.error(msg, { position: "top-right" });
@@ -77,65 +70,91 @@ const ResetPassword = props => {
     }
   };
 
-  useEffect(() => {
-    // here we check is form ready to be submited
-    function isFormReadyToSubmit(errors) {
-      if (!errors?.email?.message) {
-        setReadyToSubmit(true);
-      } else {
-        setReadyToSubmit(false);
-      }
+  const submit = data => {
+    if (!isEmailAccepted) {
+      setEmailAccepted(true);
+      resetPassword(data.email);
+    } else {
+      history.push("/login");
     }
-    isFormReadyToSubmit(errors);
-  }, [errors, email, getValues]);
-
-  const onSubmit = data => resetPassword(data.email);
+  };
 
   return (
-    <div className="page-register-v3 layout-full">
-      <div className="page vertical-align">
-        <div className="page-content">
-          <div className="text-center">
-            <a href={t("HOMEPAGE")}>
-              <img
-                className="brand-img logo"
-                height="250"
-                src={logo}
-                alt="logo"
-              />
-            </a>
-          </div>
-          <div className="row justify-content-md-center">
-            <div className="col-lg-4">
-              <FormBase
-                id="novalidatedform"
-                onSubmit={handleSubmit(onSubmit)}
-                autoComplete="off"
-                noValidate
-              >
-                <FormBase.Title>{t("PASSWORD_RESET")}</FormBase.Title>
-                <FormBase.Divider />
-                <FormBase.Input
-                  placeholder="example@mail.com"
-                  name="email"
-                  type="email"
-                  label="Email"
-                  register={() => register("email", emailValidators)}
-                  form="novalidatedform"
-                  message={errors.email?.message}
-                />
-                <FormBase.Btn type="submit" disabled={!isReadyToSubmit}>
-                  {t("PASSWORD_RESET")}
-                </FormBase.Btn>
-                <FormBase.Divider />
-                <FormBase.Text style={{ marginBottom: "10px" }}>
-                  <Link to="/login">{t("SIGN_IN")}</Link>
-                </FormBase.Text>
-              </FormBase>
-            </div>
+    <div className="reset">
+      <Header
+        isSidebarVisible={isSidebarVisible}
+        onOpen={() => setSidebarVisible(true)}
+        onClose={() => setSidebarVisible(false)}
+      />
+      {/* <Sidebar isVisible={isSidebarVisible} /> */}
+      <div className="container">
+        <div className="reset-inner">
+          <div className="reset-form-box">
+            <form className="reset-form" onSubmit={handleSubmit(submit)}>
+              <div className="reset-form__header">
+                <Typography
+                  as="h1"
+                  fs="32px"
+                  color="#313236"
+                  lh="40px"
+                  fw="900"
+                >
+                  Reset Password
+                </Typography>
+              </div>
+              <div className="reset-form__body">
+                {isEmailAccepted ? (
+                  <div className="reset-form__body-group">
+                    <Typography
+                      as="p"
+                      fs="16px"
+                      fw="400"
+                      lh="20px"
+                      color="#313236"
+                    >
+                      Check your email. We sent you a link to reset your
+                      password.
+                    </Typography>
+                    <BaseBtn className="blue-btn reset-form__ok " type="submit">
+                      Ok
+                    </BaseBtn>
+                  </div>
+                ) : (
+                  <>
+                    <div className="reset-form__group reset-form__group--password">
+                      <Input
+                        className="reset-form__input"
+                        name="email"
+                        type="email"
+                        label="Email"
+                        form="novalidatedform"
+                        placeholder="primalvj3737@gmail.com"
+                        message={errors.email?.message}
+                        register={() => register("email", emailValidators)}
+                      />
+                    </div>
+
+                    <BaseBtn
+                      className="blue-btn reset-form__submit"
+                      type="submit"
+                    >
+                      Reset password
+                    </BaseBtn>
+                    <BaseBtn
+                      className="blue-btn reset-form__back"
+                      type="button"
+                    >
+                      Back
+                    </BaseBtn>
+                  </>
+                )}
+              </div>
+            </form>
+            <div className="reset-form-elements" />
           </div>
         </div>
       </div>
+      <FooterHoriz />
     </div>
   );
 };
