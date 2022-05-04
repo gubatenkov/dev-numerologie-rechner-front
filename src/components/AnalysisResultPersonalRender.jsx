@@ -4,45 +4,45 @@ import { useQuery } from "@apollo/react-hooks";
 
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import ToastNotifications from "cogo-toast";
+// import ToastNotifications from "cogo-toast";
 import * as compose from "lodash.flowright";
 import { graphql } from "react-apollo";
 
 // icons
-import bookIconWhite from "../images/icon_openBook_white.svg";
-import bookIconPrimary from "../images/icon_openBook_primary.svg";
-import saveIconPrimary from "../images/icon_save_primary.svg";
-import iconBackPrimary from "../images/icon_back_primary.svg";
-import iconClosePrimary from "../images/icon_close_primary.svg";
+// import bookIconWhite from "../images/icon_openBook_white.svg";
+// import bookIconPrimary from "../images/icon_openBook_primary.svg";
+// import saveIconPrimary from "../images/icon_save_primary.svg";
+// import iconBackPrimary from "../images/icon_back_primary.svg";
+// import iconClosePrimary from "../images/icon_close_primary.svg";
 
 // components
-import TitleBar from "./TitleBar";
-import NavigationBar from "./NavigationBar";
-import ContentNavigation from "./ContentNavigation";
-import ResultPanel from "./ResultPanel";
-import ResultTable from "./ResultTable";
-import TourView from "./TourView";
-import TextButton from "./Buttons/TextButton";
-import NameInputDialog from "./dialogs/NameInputDialog";
-import Footer from "./Footer";
-import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
-import AnalysisAutoSaveDialog from "./dialogs/AnalysisAutoSaveDialog";
+// import TitleBar from "./TitleBar";
+// import NavigationBar from "./NavigationBar";
+// import ContentNavigation from "./ContentNavigation";
+// import ResultPanel from "./ResultPanel";
+// import ResultTable from "./ResultTable";
+// import TourView from "./TourView";
+// import TextButton from "./Buttons/TextButton";
+// import NameInputDialog from "./dialogs/NameInputDialog";
+// import Footer from "./Footer";
+// import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
+// import AnalysisAutoSaveDialog from "./dialogs/AnalysisAutoSaveDialog";
 
-import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
+// import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
 
 import { PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID } from "../utils/Configuration";
 
 import { introTextQuery, userSettingsQuery } from "../graphql/Queries";
 
-import { TYPE_ID_MATRIX } from "../utils/Constants";
+// import { TYPE_ID_MATRIX } from "../utils/Constants";
 
-import ActionBar from "./ActionBar";
+// import ActionBar from "./ActionBar";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
-import MainContainer from "./MainContainer";
+// import MainContainer from "./MainContainer";
 import { useUser } from "../contexts/UserContext";
-import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
+// import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
 import { saveAnalysisMutation } from "../graphql/Mutations";
 import Header from "./Header";
 import AnalForm from "../components/Forms/AnalForm";
@@ -50,21 +50,21 @@ import AnalBlock from "./AnalBlock";
 import FooterHoriz from "./FooterHoriz";
 import Results from "./Sections/Results";
 
-const ContentArea = styled.div`
-  display: flex;
-  align-content: flex-start;
-  flex-direction: row;
-`;
+// const ContentArea = styled.div`
+//   display: flex;
+//   align-content: flex-start;
+//   flex-direction: row;
+// `;
 
-const ResultContent = styled.div`
-  padding: 0 15px;
-  @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-  }
-  width: 100%;
-`;
+// const ResultContent = styled.div`
+//   padding: 0 15px;
+//   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
+//   }
+//   width: 100%;
+// `;
 
 const AnalysisResultPersonalRender = props => {
-  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  // const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [userSettings, setUserSettings] = useState(props.user);
   const [groups, setGroups] = useState([]);
   const { t } = useTranslation();
@@ -75,7 +75,7 @@ const AnalysisResultPersonalRender = props => {
       params: { resultConfigurationId }
     },
     personalAnalysisResult,
-    personalAnalysisCompareResult,
+    // personalAnalysisCompareResult,
     match: {
       params: { analysisId }
     },
@@ -97,7 +97,7 @@ const AnalysisResultPersonalRender = props => {
     }
   }, [User.isFetching, User]);
 
-  const [showSaveModal, setShowSaveModal] = useState(false);
+  // const [showSaveModal, setShowSaveModal] = useState(false);
 
   const LoadingOverlay = useLoadingOverlay();
 
@@ -118,10 +118,10 @@ const AnalysisResultPersonalRender = props => {
     }
   });
 
-  const [isTourOpen, setIsTourOpen] = useState(false);
-  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
-  const [tourSectionIndex, setTourSectionIndex] = useState(0);
-  const [tourElementIndex, setTourElementIndex] = useState(0);
+  // const [isTourOpen, setIsTourOpen] = useState(false);
+  // const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
+  // const [tourSectionIndex, setTourSectionIndex] = useState(0);
+  // const [tourElementIndex, setTourElementIndex] = useState(0);
 
   if (loading) {
     LoadingOverlay.showWithText(t("GENERATE_REPORT"));
@@ -133,46 +133,46 @@ const AnalysisResultPersonalRender = props => {
     return null;
   }
 
-  const { introTexts } = data;
+  // const { introTexts } = data;
 
-  const buildTourDataStructure = (
-    resultData,
-    configuration,
-    introTexts,
-    user
-  ) =>
-    configuration.map(resultSection => {
-      const sectionIntroText = introTexts.filter(
-        text => text.sectionId === resultSection.name
-      )[0];
+  // const buildTourDataStructure = (
+  //   resultData,
+  //   configuration,
+  //   introTexts,
+  //   user
+  // ) =>
+  //   configuration.map(resultSection => {
+  //     const sectionIntroText = introTexts.filter(
+  //       text => text.sectionId === resultSection.name
+  //     )[0];
 
-      const resultSectionElements = [];
+  //     const resultSectionElements = [];
 
-      if (!user || user.showCategoryExplanations) {
-        resultSectionElements.push({
-          type: "sectionIntroText",
-          title: sectionIntroText.title,
-          text: sectionIntroText.text
-        });
-      }
+  //     if (!user || user.showCategoryExplanations) {
+  //       resultSectionElements.push({
+  //         type: "sectionIntroText",
+  //         title: sectionIntroText.title,
+  //         text: sectionIntroText.text
+  //       });
+  //     }
 
-      resultSection.tables.forEach(resultTable => {
-        resultSectionElements.push(
-          ...resultTable.numberIds
-            .map(numberId => ({
-              ..._.get(resultData, numberId),
-              type: "resultText"
-            }))
-            .filter(item => item.result.type !== TYPE_ID_MATRIX)
-            .filter(item => item.result.value || item.result.list.length > 0)
-        );
-      });
+  //     resultSection.tables.forEach(resultTable => {
+  //       resultSectionElements.push(
+  //         ...resultTable.numberIds
+  //           .map(numberId => ({
+  //             ..._.get(resultData, numberId),
+  //             type: "resultText"
+  //           }))
+  //           .filter(item => item.result.type !== TYPE_ID_MATRIX)
+  //           .filter(item => item.result.value || item.result.list.length > 0)
+  //       );
+  //     });
 
-      return {
-        sectionName: resultSection.name,
-        sectionElements: resultSectionElements
-      };
-    });
+  //     return {
+  //       sectionName: resultSection.name,
+  //       sectionElements: resultSectionElements
+  //     };
+  //   });
 
   const buildContentDataStructure = (configuration, result) =>
     configuration.map(configSection => {
@@ -203,121 +203,121 @@ const AnalysisResultPersonalRender = props => {
       };
     });
 
-  const handleItemDetailClick = (sectionId, numberId) => {
-    const tourDataStructure = buildTourDataStructure(
-      props.personalAnalysisResult,
-      resultConfig,
-      introTexts,
-      userSettings
-    );
+  // const handleItemDetailClick = (sectionId, numberId) => {
+  //   const tourDataStructure = buildTourDataStructure(
+  //     props.personalAnalysisResult,
+  //     resultConfig,
+  //     introTexts,
+  //     userSettings
+  //   );
 
-    let sectionIndex = tourDataStructure.findIndex(
-      section => section.sectionName === sectionId
-    );
+  //   let sectionIndex = tourDataStructure.findIndex(
+  //     section => section.sectionName === sectionId
+  //   );
 
-    if (sectionIndex < 0) {
-      sectionIndex = 0;
-    }
+  //   if (sectionIndex < 0) {
+  //     sectionIndex = 0;
+  //   }
 
-    let elementIndex = tourDataStructure[
-      sectionIndex
-    ].sectionElements.findIndex(element => element.numberId === numberId);
+  //   let elementIndex = tourDataStructure[
+  //     sectionIndex
+  //   ].sectionElements.findIndex(element => element.numberId === numberId);
 
-    if (elementIndex < 0) {
-      elementIndex = 0;
-    }
+  //   if (elementIndex < 0) {
+  //     elementIndex = 0;
+  //   }
 
-    setIsTourOpen(true);
-    setTourSectionIndex(sectionIndex);
-    setTourElementIndex(elementIndex);
-  };
+  //   setIsTourOpen(true);
+  //   setTourSectionIndex(sectionIndex);
+  //   setTourElementIndex(elementIndex);
+  // };
 
-  const navigateToElementHandler = anchor => {
-    const domElement = document.getElementById(anchor);
-    if (domElement) {
-      domElement.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  };
+  // const navigateToElementHandler = anchor => {
+  //   const domElement = document.getElementById(anchor);
+  //   if (domElement) {
+  //     domElement.scrollIntoView({ block: "start", behavior: "smooth" });
+  //   }
+  // };
 
-  const handleClose = () => {
-    if (analysisId) {
-      props.history.push("/userHome");
-    } else {
-      setShowSaveModal(true);
-    }
-  };
+  // const handleClose = () => {
+  //   if (analysisId) {
+  //     props.history.push("/userHome");
+  //   } else {
+  //     setShowSaveModal(true);
+  //   }
+  // };
 
-  async function saveAnalysis(name, groupId) {
-    const firstNames = decodeURIComponent(props.match.params.firstNames);
-    const lastNames = decodeURIComponent(props.match.params.lastNames);
-    const dateOfBirth = decodeURIComponent(props.match.params.dateOfBirth);
+  // async function saveAnalysis(name, groupId) {
+  //   const firstNames = decodeURIComponent(props.match.params.firstNames);
+  //   const lastNames = decodeURIComponent(props.match.params.lastNames);
+  //   const dateOfBirth = decodeURIComponent(props.match.params.dateOfBirth);
 
-    let nameInputs = [];
-    if (lastNames.split(",").length > 1) {
-      const firstNamesArray = firstNames.split(",");
-      const lastNamesArray = lastNames.split(",");
-      nameInputs = firstNamesArray.map((item, index) => ({
-        firstNames: item,
-        lastName: lastNamesArray[index],
-        dateOfBirth
-      }));
-    } else {
-      nameInputs = [
-        {
-          firstNames,
-          lastName: lastNames,
-          dateOfBirth
-        }
-      ];
-    }
+  //   let nameInputs = [];
+  //   if (lastNames.split(",").length > 1) {
+  //     const firstNamesArray = firstNames.split(",");
+  //     const lastNamesArray = lastNames.split(",");
+  //     nameInputs = firstNamesArray.map((item, index) => ({
+  //       firstNames: item,
+  //       lastName: lastNamesArray[index],
+  //       dateOfBirth
+  //     }));
+  //   } else {
+  //     nameInputs = [
+  //       {
+  //         firstNames,
+  //         lastName: lastNames,
+  //         dateOfBirth
+  //       }
+  //     ];
+  //   }
 
-    try {
-      props.saveAnalysis({
-        variables: {
-          name,
-          group: groupId,
-          inputs: nameInputs
-        }
-      });
+  //   try {
+  //     props.saveAnalysis({
+  //       variables: {
+  //         name,
+  //         group: groupId,
+  //         inputs: nameInputs
+  //       }
+  //     });
 
-      LoadingOverlay.hide();
-      User.setIsAnalResultWasSaved(true);
-      ToastNotifications.success(
-        t("TOAST.ANALYSIS_CREATED_SUCCESSFULLY", {
-          name
-        }),
-        { position: "top-right" }
-      );
+  //     LoadingOverlay.hide();
+  //     User.setIsAnalResultWasSaved(true);
+  //     ToastNotifications.success(
+  //       t("TOAST.ANALYSIS_CREATED_SUCCESSFULLY", {
+  //         name
+  //       }),
+  //       { position: "top-right" }
+  //     );
 
-      // graphql ignores refetches if the same call is already pending, therefore we wait 2sec (randomly) and continue with a refetch
-      setTimeout(() => {
-        User.fetchUser();
-      }, 2000);
-    } catch (error) {
-      User.setIsAnalResultWasSaved(false);
-      ToastNotifications.error(
-        t("TOAST.GRAPHQL_ERROR", { errorMessage: error.message }),
-        {
-          position: "top-right"
-        }
-      );
-    }
-  }
+  //     // graphql ignores refetches if the same call is already pending, therefore we wait 2sec (randomly) and continue with a refetch
+  //     setTimeout(() => {
+  //       User.fetchUser();
+  //     }, 2000);
+  //   } catch (error) {
+  //     User.setIsAnalResultWasSaved(false);
+  //     ToastNotifications.error(
+  //       t("TOAST.GRAPHQL_ERROR", { errorMessage: error.message }),
+  //       {
+  //         position: "top-right"
+  //       }
+  //     );
+  //   }
+  // }
 
-  const handleSaveBtnClick = () => setSaveDialogOpen(true);
+  // const handleSaveBtnClick = () => setSaveDialogOpen(true);
 
   LoadingOverlay.hide();
 
-  const userSettingsChanged = async () => {
-    try {
-      const res = await refetch();
-      if (res?.data?.currentUser) {
-        setUserSettings(res.data.currentUser);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const userSettingsChanged = async () => {
+  //   try {
+  //     const res = await refetch();
+  //     if (res?.data?.currentUser) {
+  //       setUserSettings(res.data.currentUser);
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const onSubmit = () => console.log("submit");
 
