@@ -52,11 +52,12 @@ const Login = ({ history }) => {
         history.push(redirectTo);
       }
       // push user to main page after success login
+      setLoading(false);
       history.push("/");
     } catch (error) {
+      setLoading(false);
       ToastNotifications.error(t("LOGIN_FAILED"), { position: "top-right" });
     }
-    setLoading(false);
   };
 
   // if user exist redirect him to ./
