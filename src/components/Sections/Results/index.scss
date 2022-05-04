@@ -1,0 +1,171 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.results {
+  padding: 55px 0 150px;
+
+  @include max-media($md) {
+    padding: 30px 0;
+  }
+
+  .aside {
+    @include max-media($md) {
+      display: none;
+    }
+  }
+
+  &-inner {
+    display: flex;
+  }
+
+  &-right {
+    width: 100%;
+    padding: 0 0 0 40px;
+
+    @include max-media($md) {
+      padding: 0;
+    }
+  }
+
+  &-row {
+    &__wrap {
+      border-top: 1px solid rgba(79, 68, 66, 0.3);
+      border-bottom: 1px solid rgba(79, 68, 66, 0.3);
+    }
+  }
+
+  &-wrap .results-section:first-child h3 {
+    padding: 20px 25px 40px;
+
+    @include max-media($md) {
+      padding: 0 0 25px;
+    }
+  }
+
+  &-section {
+    &__toggle {
+      display: none;
+      padding: 10px;
+
+      width: 30px;
+      height: 30px;
+
+      right: 0;
+      top: 19px;
+      position: absolute;
+
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url("../../../images/arrowRight.svg");
+
+      transform: rotate(-90deg);
+
+      pointer-events: none;
+
+      @include max-media($md) {
+        display: block;
+      }
+
+      .collapsed & {
+        transform: rotate(90deg);
+        height: auto;
+        overflow: unset;
+      }
+    }
+
+    &__box {
+      border-bottom: 1px solid rgba(79, 68, 66, 0.3);
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(79, 68, 66, 0.3);
+    }
+
+    &:not(:first-child) {
+      margin: 100px 0 0;
+
+      @include max-media($md) {
+        margin: 27px 0 0;
+      }
+    }
+
+    &.collapsed {
+      @include max-media($md) {
+        height: 36px;
+        overflow: hidden;
+
+        border-bottom: none;
+      }
+    }
+
+    &__heading {
+      position: relative;
+
+      margin: 0;
+      padding: 0 25px 40px;
+
+      font-size: 32px;
+      color: #323232;
+      font-weight: 600;
+      line-height: 40px;
+      font-style: normal;
+      text-transform: capitalize;
+
+      @include max-media($md) {
+        padding: 0 0 25px;
+
+        font-size: 24px;
+        font-weight: 600;
+        color: #323232;
+        line-height: 36px;
+        font-style: normal;
+
+        text-transform: capitalize;
+
+        cursor: pointer;
+      }
+
+      &::after {
+        content: "";
+        width: 30px;
+        height: 30px;
+        display: none;
+
+        top: 0;
+        right: 0;
+        position: absolute;
+
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url("../../../images/arrowRight.svg");
+
+        transform: rotate(-90deg);
+
+        z-index: 1;
+
+        .collapsed & {
+          transform: rotate(90deg);
+        }
+
+        @include max-media($md) {
+          display: block;
+        }
+      }
+    }
+
+    &__subheading {
+      margin: 40px 25px 40px;
+
+      font-size: 24px;
+      font-weight: 600;
+      color: #baa270;
+      line-height: 40px;
+      font-style: normal;
+      text-transform: capitalize;
+
+      @include max-media($md) {
+        margin: 20px 0px 20px;
+      }
+    }
+  }
+}

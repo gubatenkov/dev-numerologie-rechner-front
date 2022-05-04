@@ -1,0 +1,56 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.anal-form {
+  gap: 40px;
+  display: grid;
+
+  position: relative;
+
+  @include max-media($md) {
+    gap: 0px;
+
+    margin: 0 auto;
+    max-width: 282px;
+  }
+
+  &-row {
+    display: grid;
+    align-items: flex-end;
+    grid-template-rows: 1fr;
+    grid-column-gap: 40px;
+    grid-row-gap: 20px;
+    grid-template-columns:
+      minmax(100px, 260px) minmax(100px, 1fr) minmax(100px, 191px)
+      minmax(100px, 165px);
+
+    @include max-media($md) {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      grid-row-gap: 0;
+    }
+  }
+
+  &row + &row {
+    gap: 20px;
+  }
+
+  &__submit {
+    top: 25px;
+    right: 0;
+    position: absolute;
+
+    width: 100%;
+    max-width: 165px;
+    margin-left: auto;
+
+    @include max-media($md) {
+      margin: 40px 0 0;
+
+      max-width: 100%;
+      position: unset;
+    }
+  }
+}
