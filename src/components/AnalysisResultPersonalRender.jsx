@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { useQuery } from "@apollo/react-hooks";
 
@@ -34,7 +34,10 @@ import { graphql } from "react-apollo";
 
 import { PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID } from "../utils/Configuration";
 
-import { introTextQuery, userSettingsQuery } from "../graphql/Queries";
+import {
+  introTextQuery
+  // userSettingsQuery
+} from "../graphql/Queries";
 
 // import { TYPE_ID_MATRIX } from "../utils/Constants";
 
@@ -65,8 +68,8 @@ import Results from "./Sections/Results";
 
 const AnalysisResultPersonalRender = props => {
   // const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  const [userSettings, setUserSettings] = useState(props.user);
-  const [groups, setGroups] = useState([]);
+  // const [userSettings, setUserSettings] = useState(props.user);
+  // const [groups, setGroups] = useState([]);
   const { t } = useTranslation();
   const User = useUser();
   const {
@@ -76,26 +79,29 @@ const AnalysisResultPersonalRender = props => {
     },
     personalAnalysisResult,
     // personalAnalysisCompareResult,
-    match: {
-      params: { analysisId }
-    },
+    // match: {
+    //   params: { analysisId }
+    // },
     configuration
   } = props;
-  const { data: userSettingsData, refetch } = useQuery(userSettingsQuery, {
-    fetchPolicy: "network-only",
-    onCompleted: data => {
-      if (error) {
-        return;
-      }
-      setUserSettings(userSettingsData);
-    }
-  });
+  // const {
+  //   data: userSettingsData,
+  //   refetch
+  // } = useQuery(userSettingsQuery, {
+  //   fetchPolicy: "network-only",
+  //   onCompleted: data => {
+  //     if (error) {
+  //       return;
+  //     }
+  //     setUserSettings(userSettingsData);
+  //   }
+  // });
 
-  useEffect(() => {
-    if (User?.user?.currentUser) {
-      setGroups(User?.user?.currentUser?.groups);
-    }
-  }, [User.isFetching, User]);
+  // useEffect(() => {
+  //   if (User?.user?.currentUser) {
+  //     setGroups(User?.user?.currentUser?.groups);
+  //   }
+  // }, [User.isFetching, User]);
 
   // const [showSaveModal, setShowSaveModal] = useState(false);
 
@@ -109,7 +115,11 @@ const AnalysisResultPersonalRender = props => {
   const sectionIds = resultConfig.map(section => section.name);
   sectionIds.push(resultConfigId.toLowerCase());
 
-  const { loading, error, data } = useQuery(introTextQuery, {
+  const {
+    loading,
+    error
+    // data
+  } = useQuery(introTextQuery, {
     variables: {
       sectionIds,
       isPdf: false,

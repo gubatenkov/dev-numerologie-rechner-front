@@ -13,13 +13,9 @@ import "../styles/AnalysisInput.scss";
 
 import Header from "./Header";
 import AnalBlock from "./AnalBlock";
-
-import Typography from "./Typography";
-import FooterHoriz from "./FooterHoriz";
-
 import Promo from "./Sections/Promo";
 import AnalForm from "./Forms/AnalForm";
-import Results from "./Sections/Results";
+import FooterHoriz from "./FooterHoriz";
 import { useUser } from "../contexts/UserContext";
 
 // defining model for validation
