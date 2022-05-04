@@ -118,16 +118,7 @@ const Login = ({ history }) => {
                           Welcome!
                         </Typography>
                       </div>
-                      <Typography
-                        className="login-form__subheading"
-                        as="p"
-                        fs="18px"
-                        lh="20px"
-                        fw="600"
-                        color="#323232"
-                      >
-                        {email}
-                      </Typography>
+                      <p className="login-form__subheading">{email}</p>
                       <div className="login-form__body">
                         <div className="login-form__group login-form__group--password">
                           <Input
