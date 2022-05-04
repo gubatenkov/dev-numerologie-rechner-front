@@ -140,6 +140,11 @@
       &:focus {
         border: 1px solid #006c81;
       }
+
+      &[disabled] {
+        border: 1px solid transparent;
+        background: #01c1e7;
+      }
     }
 
     &__footer {
