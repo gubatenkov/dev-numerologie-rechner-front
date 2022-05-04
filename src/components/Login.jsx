@@ -9,20 +9,20 @@ import "../styles/InputForm.css";
 
 import Input from "./Input";
 import Header from "./Header";
+import Sidebar from "./SidebarD2";
 import Typography from "./Typography";
 import FooterHoriz from "./FooterHoriz";
 import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
 import { useUser } from "../contexts/UserContext";
 import useValidators from "../utils/useValidators";
 import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
-import Sidebar from "./SidebarD2";
-
 
 const Login = ({ history }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const { fetchUser, currentLanguage } = useUser();
   const [isEmailAuth, setEmailAuth] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const {
     register,
@@ -34,6 +34,7 @@ const Login = ({ history }) => {
   const { emailValidators, passwordValidators } = useValidators();
 
   const loginUser = async (email, password) => {
+    setLoading(true);
     try {
       const response = await postJsonData("/login", {
         email,
@@ -55,6 +56,7 @@ const Login = ({ history }) => {
     } catch (error) {
       ToastNotifications.error(t("LOGIN_FAILED"), { position: "top-right" });
     }
+    setLoading(false);
   };
 
   // if user exist redirect him to ./
@@ -167,6 +169,7 @@ const Login = ({ history }) => {
                         <BaseBtn
                           className="blue-btn login-form__submit"
                           type="submit"
+                          loading={isLoading}
                         >
                           Log In
                         </BaseBtn>
