@@ -9,11 +9,15 @@
   color: #d7b267;
   text-align: center;
 
-  border: transparent;
   border-radius: 20px;
   background: #ffffff;
+  border: 1px solid transparent;
 
   text-decoration: none;
+
+  &--mlauto {
+    margin-left: auto;
+  }
 
   &.outlined {
     color: #ffffff;
@@ -28,6 +32,7 @@
 
   &:focus {
     outline: none;
+    border: 1px solid #006c81;
   }
 
   &:hover {
@@ -51,6 +56,7 @@
 
   &:focus {
     outline: none;
+    border: 1px solid #006c81;
   }
 }
 
@@ -80,10 +86,12 @@
   &--plus {
     &::after {
       content: "";
-      margin: 0 10px 0 0;
+
+      display: block;
+
       width: 14px;
       height: 14px;
-      display: block;
+      margin: 0 10px 0 0;
 
       background-image: url("../../../images/plus.svg");
       background-repeat: no-repeat;

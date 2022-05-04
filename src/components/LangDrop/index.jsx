@@ -28,6 +28,12 @@ const LangDrop = () => {
         >
           DE
         </li>
+        <li
+          className={`lang-drop__item ${lang === "IT" && "active"}`}
+          onClick={() => setLang("IT")}
+        >
+          IT
+        </li>
       </ul>
     </div>
   );

@@ -1,33 +1,55 @@
-.anal {
-  padding: 0 0 100px;
+@import "../styles/variables";
+@import "../styles/mixins";
 
+.anal {
   background-size: cover;
   background-color: #d7b267;
   background-position: center;
   background-repeat: no-repeat;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
   background-image: url("../images/analBg.png");
+
+  &-title {
+    margin: 0;
+
+    font-style: normal;
+    font-weight: 900;
+    font-size: 46px;
+    line-height: 69px;
+
+    text-transform: capitalize;
+
+    color: #ffffff;
+
+    @include max-media($md) {
+      font-style: normal;
+      font-weight: 900;
+      font-size: 32px;
+      line-height: 48px;
+    }
+  }
+
+  &-compare__btn {
+    @include max-media($md) {
+      bottom: -130px !important;
+    }
+  }
 
   &-inner {
     margin: 65px 0 0;
+    padding: 0 0 100px;
+
+    @include max-media($md) {
+      margin: 30px 0 0;
+      padding: 0 0 60px;
+    }
   }
 
-  &-form {
+  &-form__wrapper {
     margin: 35px 0 0 0;
 
-    gap: 40px;
-    display: grid;
-
-    &-row {
-      display: grid;
-      align-items: flex-end;
-      grid-template-columns: 260px repeat(3, 1fr);
-      grid-template-rows: 1fr;
-      grid-column-gap: 40px;
-      grid-row-gap: 20px;
-    }
-
-    &row + &row {
-      gap: 20px;
+    @include max-media($md) {
+      margin: 20px 0 0 0;
     }
   }
 
@@ -41,20 +63,41 @@
     }
 
     &__altnames {
-      grid-gap: 10px;
       gap: 10px;
+      grid-gap: 10px;
+
+      @include max-media($md) {
+        max-width: 282px;
+        display: flex;
+        flex-direction: column;
+      }
     }
 
     &__names {
       position: relative;
 
       gap: 10px;
+
+      @include max-media($md) {
+        margin: 0 0 35px 0;
+
+        gap: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     &__date {
       position: relative;
 
+      max-width: 282px;
+
       gap: 10px;
+
+      @include max-media($md) {
+        margin: 0 0 35px 0;
+      }
 
       &::before {
         content: "Date of birth";
@@ -74,151 +117,17 @@
       }
 
       input {
-        max-width: 55px;
+        min-width: 55px;
+        text-align: center;
       }
 
       .year {
-        max-width: 75px;
+        min-width: 75px;
+
+        @include max-media($md) {
+          min-width: 122px;
+        }
       }
     }
-  }
-}
-
-.promo {
-  position: relative;
-
-  padding: 50px 0;
-
-  background: #fff;
-
-  &::before {
-    content: "";
-
-    top: 0;
-    left: 0;
-    right: 0;
-    position: absolute;
-
-    width: 100%;
-    height: 0px;
-
-    background: #fff;
-    box-shadow: 0px 4px 14px 5px rgba(0, 0, 0, 0.06);
-
-    z-index: 11;
-  }
-
-  &-topcorners {
-    position: relative;
-
-    &::before {
-      content: "";
-
-      top: -50px;
-      left: -50px;
-      position: absolute;
-
-      width: 100px;
-      height: 100px;
-
-      border-radius: 50px;
-      background: white;
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-bottom: 1px solid #c4c4c4;
-      border-right: 1px solid transparent;
-
-      transform: rotate(-45deg);
-
-      z-index: 10;
-    }
-
-    &::after {
-      content: "";
-
-      top: -50px;
-      right: -50px;
-      position: absolute;
-
-      width: 100px;
-      height: 100px;
-
-      border-radius: 50px;
-      background: white;
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-bottom: 1px solid #c4c4c4;
-      border-right: 1px solid transparent;
-
-      transform: rotate(45deg);
-
-      z-index: 10;
-    }
-  }
-
-  &-inner {
-    position: relative;
-
-    padding: 97px 136px 96px 110px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    border: 1px solid #c4c4c4;
-
-    &::before {
-      content: "";
-
-      left: -50px;
-      bottom: -50px;
-      position: absolute;
-
-      width: 100px;
-      height: 100px;
-
-      border-radius: 50px;
-      background: white;
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-bottom: 1px solid #c4c4c4;
-      border-right: 1px solid transparent;
-
-      transform: rotate(225deg);
-
-      z-index: 10;
-    }
-
-    &::after {
-      content: "";
-
-      right: -50px;
-      bottom: -50px;
-      position: absolute;
-
-      width: 100px;
-      height: 100px;
-
-      border-radius: 50px;
-      background: white;
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-bottom: 1px solid #c4c4c4;
-      border-right: 1px solid transparent;
-
-      transform: rotate(135deg);
-
-      z-index: 10;
-    }
-  }
-
-  &__left {
-    width: 100%;
-    max-width: 600px;
-  }
-
-  &__right {
-    width: 100%;
-    max-width: 212px;
   }
 }

@@ -4,14 +4,28 @@
 .header {
   position: sticky;
 
-  padding: 0 20px;
+  padding: 0 15px;
 
   z-index: 10;
 
+  &-btns {
+    gap: 12px;
+    display: flex;
+  }
+
+  &--bg {
+    background-size: cover;
+    background-position: top top;
+    background-color: #d7b267;
+    background-repeat: no-repeat;
+    background-image: url("../../images/analBg.png");
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
+  }
+
   &-inner {
-    padding: 12px 0;
     width: 100%;
     margin: 0 auto;
+    padding: 12px 0;
     max-width: 1200px;
 
     display: flex;
@@ -19,15 +33,62 @@
     justify-content: space-between;
   }
 
+  &__plus {
+    padding: 12px;
+
+    border-radius: 50%;
+    background-color: #01b2d4;
+    border: 1px solid transparent;
+
+    &:focus {
+      outline: none;
+      border: 1px solid #006c81;
+    }
+  }
+
   &-left {
+    padding: 0 15px 0 0;
+
+    gap: 100px;
     display: flex;
     align-items: center;
+
+    text-align: center;
+
+    @include max-media($md) {
+      padding: 0;
+    }
+
+    &__analysis {
+      gap: 5px;
+      display: flex;
+      align-items: center;
+
+      @include max-media($md) {
+        display: none;
+      }
+    }
   }
 
   &-right {
-    gap: 12px;
+    padding: 0 0 0 15px;
+
+    gap: 40px;
     display: flex;
     align-items: center;
+
+    text-align: center;
+
+    @include max-media($md) {
+      gap: 0;
+      padding: 0;
+    }
+
+    &__plans {
+      @include max-media($md) {
+        display: none;
+      }
+    }
 
     & > .lang-drop {
       @include max-media($md) {
@@ -35,7 +96,7 @@
       }
     }
 
-    & > .base-btn__login.outlined {
+    & .base-btn__login.outlined {
       @include max-media($md) {
         font-size: 16px;
         font-weight: 500;
@@ -45,7 +106,7 @@
       }
     }
 
-    & > .base-btn__signup {
+    & .base-btn.base-btn__signup {
       @include max-media($md) {
         color: #fff;
         font-size: 16px;
@@ -64,10 +125,10 @@
 
   &-brand {
     display: block;
+    min-width: fit-content;
 
     width: 56px;
     height: 56px;
-    margin: 0 100px 0 0;
 
     @include max-media($md) {
       display: none;
@@ -83,8 +144,6 @@
   }
 
   &__info {
-    margin: 0 0 0 100px;
-
     @include max-media($md) {
       display: none;
     }
@@ -96,6 +155,16 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+  }
+
+  &__credits {
+    gap: 5px;
+    display: flex;
+    align-items: center;
+
+    &--ml10 {
+      margin-left: 10px;
+    }
   }
 }
 

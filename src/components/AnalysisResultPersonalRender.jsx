@@ -44,6 +44,11 @@ import MainContainer from "./MainContainer";
 import { useUser } from "../contexts/UserContext";
 import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
 import { saveAnalysisMutation } from "../graphql/Mutations";
+import Header from "./Header";
+import AnalForm from "../components/Forms/AnalForm";
+import AnalBlock from "./AnalBlock";
+import FooterHoriz from "./FooterHoriz";
+import Results from "./Sections/Results";
 
 const ContentArea = styled.div`
   display: flex;
@@ -313,224 +318,272 @@ const AnalysisResultPersonalRender = props => {
       console.log(err);
     }
   };
+
+  const onSubmit = () => console.log("submit");
+
+  const structure = buildContentDataStructure(
+    resultConfig,
+    personalAnalysisResult
+  );
+
+  const sections = resultConfig.reduce((acc, el) => {
+    const items = el.tables.map(table => ({
+      rows: table.numberIds.map(numberId =>
+        _.get(personalAnalysisResult, numberId)
+      ),
+      showTitle: Boolean(table.showTitle),
+      name: table.name,
+      accessLevel: personalAnalysisResult.accessLevel
+    }));
+
+    const section = {
+      sectionHeading: el.name,
+      groups: items
+    };
+
+    acc.push(section);
+
+    return acc;
+  }, []);
+
   return (
-    <MainContainer>
-      <NavigationBar
-        leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
-        leftButtonOnClick={
-          isTourOpen ? () => setIsTourOpen(false) : () => handleClose()
-        }
-        isSettingsVisibleOnBookPage={isTourOpen}
-        userSettingsChanged={userSettingsChanged}
-      />
-      {!isTourOpen && [
-        <TitleBar
-          primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-          primaryDate={personalAnalysisResult.dateOfBirth}
-          secondaryName={
-            personalAnalysisCompareResult &&
-            `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+    <>
+      <section className="anal">
+        <Header user={User?.user} />
+        <div className="container">
+          <div className="anal-inner">
+            <h1 className="anal-title">Numerology Calculator</h1>
+            <div className="anal-form__wrapper">
+              <AnalForm onSubmit={onSubmit} />
+            </div>
+          </div>
+          {User?.user && <AnalBlock anals={User?.user?.analyses} />}
+        </div>
+      </section>
+      <Results sidebarItems={structure} renderItems={sections} />
+      <FooterHoriz />
+      {/* <MainContainer>
+        <NavigationBar
+          leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
+          leftButtonOnClick={
+            isTourOpen ? () => setIsTourOpen(false) : () => handleClose()
           }
-          onRemoveSecondaryName={() => {
-            props.history.push(
-              `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`
-            );
-          }}
-          key="titlebar"
-        />,
-        <ActionBar key="actionbar">
-          <TextButton
-            title={t("COMPARE_NAME")}
-            onClick={() => setIsNameDialogOpen(true)}
-          />
-          <TextButton
-            icon={saveIconPrimary}
-            title={t("SAVE")}
-            onClick={handleSaveBtnClick}
-          />
-          <TextButton
-            primary
-            icon={bookIconWhite}
-            title={t("READ_ALL")}
-            onClick={() => {
-              setIsTourOpen(true);
-              setTourSectionIndex(0);
-              setTourElementIndex(0);
+          isSettingsVisibleOnBookPage={isTourOpen}
+          userSettingsChanged={userSettingsChanged}
+        />
+        {!isTourOpen && [
+          <TitleBar
+            primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+            primaryDate={personalAnalysisResult.dateOfBirth}
+            secondaryName={
+              personalAnalysisCompareResult &&
+              `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+            }
+            onRemoveSecondaryName={() => {
+              props.history.push(
+                `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`
+              );
             }}
-          />
-        </ActionBar>,
-        <ContentArea key="resultContent">
-          <ContentNavigation
-            contentItems={buildContentDataStructure(
-              resultConfig,
-              personalAnalysisResult
-            )}
-            onItemClick={navigateToElementHandler}
-            autoAdapt
-          />
+            key="titlebar"
+          />,
+          <ActionBar key="actionbar">
+            <TextButton
+              title={t("COMPARE_NAME")}
+              onClick={() => setIsNameDialogOpen(true)}
+            />
+            <TextButton
+              icon={saveIconPrimary}
+              title={t("SAVE")}
+              onClick={handleSaveBtnClick}
+            />
+            <TextButton
+              primary
+              icon={bookIconWhite}
+              title={t("READ_ALL")}
+              onClick={() => {
+                setIsTourOpen(true);
+                setTourSectionIndex(0);
+                setTourElementIndex(0);
+              }}
+            />
+          </ActionBar>,
+          <ContentArea key="resultContent">
+            <ContentNavigation
+              contentItems={buildContentDataStructure(
+                resultConfig,
+                personalAnalysisResult
+              )}
+              onItemClick={navigateToElementHandler}
+              autoAdapt
+            />
 
-          <ResultContent>
-            {resultConfig.map(resultSection => (
-              <ResultPanel
-                title={resultSection.name}
-                rightActionIcon={bookIconPrimary}
-                onRightActionClick={() =>
-                  handleItemDetailClick(resultSection.name)
-                }
-                id={resultSection.name}
-                key={resultSection.name}
-              >
-                {resultSection.tables.map(tableData => (
-                  <ResultTable
-                    name={tableData.name}
-                    numbers={tableData.numberIds.map(numberId =>
-                      _.get(personalAnalysisResult, numberId)
-                    )}
-                    compareNumbers={
-                      personalAnalysisCompareResult &&
-                      tableData.numberIds.map(numberId =>
-                        _.get(personalAnalysisCompareResult, numberId)
-                      )
-                    }
-                    headings={tableData.headings}
-                    showTitle={tableData.showTitle}
-                    handleTextDetailClick={handleItemDetailClick}
-                    sectionId={resultSection.name}
-                    accessLevel={personalAnalysisResult.accessLevel}
-                    key={`${resultSection.name + tableData.name}`}
-                  />
-                ))}
-              </ResultPanel>
-            ))}
-          </ResultContent>
-        </ContentArea>
-      ]}
+            <ResultContent>
+              {resultConfig.map(resultSection => (
+                <ResultPanel
+                  title={resultSection.name}
+                  rightActionIcon={bookIconPrimary}
+                  onRightActionClick={() =>
+                    handleItemDetailClick(resultSection.name)
+                  }
+                  id={resultSection.name}
+                  key={resultSection.name}
+                >
+                  {resultSection.tables.map(tableData => (
+                    <ResultTable
+                      name={tableData.name}
+                      numbers={tableData.numberIds.map(numberId =>
+                        _.get(personalAnalysisResult, numberId)
+                      )}
+                      compareNumbers={
+                        personalAnalysisCompareResult &&
+                        tableData.numberIds.map(numberId =>
+                          _.get(personalAnalysisCompareResult, numberId)
+                        )
+                      }
+                      headings={tableData.headings}
+                      showTitle={tableData.showTitle}
+                      handleTextDetailClick={handleItemDetailClick}
+                      sectionId={resultSection.name}
+                      accessLevel={personalAnalysisResult.accessLevel}
+                      key={`${resultSection.name + tableData.name}`}
+                    />
+                  ))}
+                </ResultPanel>
+              ))}
+            </ResultContent>
+          </ContentArea>
+        ]}
 
-      {isTourOpen && (
-        <TourView
-          onClose={() => setIsTourOpen(false)}
-          tourData={buildTourDataStructure(
-            personalAnalysisResult,
-            resultConfig,
-            introTexts,
-            userSettings
-          )}
-          name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-          compareTourData={
-            personalAnalysisCompareResult &&
-            buildTourDataStructure(
-              personalAnalysisCompareResult,
+        {isTourOpen && (
+          <TourView
+            onClose={() => setIsTourOpen(false)}
+            tourData={buildTourDataStructure(
+              personalAnalysisResult,
               resultConfig,
               introTexts,
               userSettings
-            )
-          }
-          compareName={
+            )}
+            name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+            compareTourData={
+              personalAnalysisCompareResult &&
+              buildTourDataStructure(
+                personalAnalysisCompareResult,
+                resultConfig,
+                introTexts,
+                userSettings
+              )
+            }
+            compareName={
+              personalAnalysisCompareResult &&
+              `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+            }
+            sectionIndex={tourSectionIndex}
+            elementIndex={tourElementIndex}
+            onIndexChange={(sectionIndex, elementIndex) => {
+              setTourSectionIndex(sectionIndex);
+              setTourElementIndex(elementIndex);
+            }}
+            user={userSettings}
+            accessLevel={personalAnalysisResult.accessLevel}
+          />
+        )}
+
+        <NameInputDialog
+          show={isNameDialogOpen}
+          onHide={() => setIsNameDialogOpen(false)}
+          firstNames={personalAnalysisResult.firstNames}
+          lastName={personalAnalysisResult.lastName}
+          compareFirstNames={
             personalAnalysisCompareResult &&
-            `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+            personalAnalysisCompareResult.firstNames
           }
-          sectionIndex={tourSectionIndex}
-          elementIndex={tourElementIndex}
-          onIndexChange={(sectionIndex, elementIndex) => {
-            setTourSectionIndex(sectionIndex);
-            setTourElementIndex(elementIndex);
-          }}
-          user={userSettings}
-          accessLevel={personalAnalysisResult.accessLevel}
-        />
-      )}
-
-      <NameInputDialog
-        show={isNameDialogOpen}
-        onHide={() => setIsNameDialogOpen(false)}
-        firstNames={personalAnalysisResult.firstNames}
-        lastName={personalAnalysisResult.lastName}
-        compareFirstNames={
-          personalAnalysisCompareResult &&
-          personalAnalysisCompareResult.firstNames
-        }
-        compareLastName={
-          personalAnalysisCompareResult &&
-          personalAnalysisCompareResult.lastName
-        }
-        onChange={(
-          firstNames,
-          lastName,
-          compareFirstNames,
-          compareLastName
-        ) => {
-          const hasCompareName =
-            !!(compareFirstNames.length > 0) || !!(compareLastName.length > 0);
-
-          let hasNameChanged =
-            firstNames !== personalAnalysisResult.firstNames ||
-            lastName !== personalAnalysisResult.lastName;
-
-          if (personalAnalysisCompareResult) {
-            hasNameChanged =
-              hasNameChanged ||
-              compareFirstNames !== personalAnalysisCompareResult.firstNames ||
-              compareLastName !== personalAnalysisCompareResult.lastName;
-          } else {
-            hasNameChanged = hasNameChanged || hasCompareName;
+          compareLastName={
+            personalAnalysisCompareResult &&
+            personalAnalysisCompareResult.lastName
           }
+          onChange={(
+            firstNames,
+            lastName,
+            compareFirstNames,
+            compareLastName
+          ) => {
+            const hasCompareName =
+              !!(compareFirstNames.length > 0) ||
+              !!(compareLastName.length > 0);
 
-          if (hasNameChanged) {
-            let firstNameParam;
-            let lastNameParam;
+            let hasNameChanged =
+              firstNames !== personalAnalysisResult.firstNames ||
+              lastName !== personalAnalysisResult.lastName;
 
-            if (hasCompareName) {
-              firstNameParam = [firstNames, compareFirstNames || firstNames];
-              lastNameParam = [lastName, compareLastName || lastName];
+            if (personalAnalysisCompareResult) {
+              hasNameChanged =
+                hasNameChanged ||
+                compareFirstNames !==
+                  personalAnalysisCompareResult.firstNames ||
+                compareLastName !== personalAnalysisCompareResult.lastName;
             } else {
-              firstNameParam = firstNames;
-              lastNameParam = lastName;
+              hasNameChanged = hasNameChanged || hasCompareName;
             }
 
-            props.history.push(
-              `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`
+            if (hasNameChanged) {
+              let firstNameParam;
+              let lastNameParam;
+
+              if (hasCompareName) {
+                firstNameParam = [firstNames, compareFirstNames || firstNames];
+                lastNameParam = [lastName, compareLastName || lastName];
+              } else {
+                firstNameParam = firstNames;
+                lastNameParam = lastName;
+              }
+
+              props.history.push(
+                `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`
+              );
+            } else {
+              setIsNameDialogOpen(false);
+            }
+          }}
+        />
+        <CreditsBuyModal />
+        <AnalysisAutoSaveDialog
+          onAction={() => setShowSaveModal(false)}
+          isOpen={showSaveModal}
+          onCancel={() => props.history.push("/userHome")}
+          onClose={() => setShowSaveModal(false)}
+        />
+        <SaveAnalysisDialog
+          isOpen={saveDialogOpen}
+          onClose={() => setSaveDialogOpen(false)}
+          onSave={group => {
+            const firstNames = decodeURIComponent(
+              props.match.params.firstNames
             );
-          } else {
-            setIsNameDialogOpen(false);
-          }
-        }}
-      />
-      <CreditsBuyModal />
-      <AnalysisAutoSaveDialog
-        onAction={() => setShowSaveModal(false)}
-        isOpen={showSaveModal}
-        onCancel={() => props.history.push("/userHome")}
-        onClose={() => setShowSaveModal(false)}
-      />
-      <SaveAnalysisDialog
-        isOpen={saveDialogOpen}
-        onClose={() => setSaveDialogOpen(false)}
-        onSave={group => {
-          const firstNames = decodeURIComponent(props.match.params.firstNames);
-          const lastNames = decodeURIComponent(props.match.params.lastNames);
-          const dateOfBirth = decodeURIComponent(
-            props.match.params.dateOfBirth
-          );
+            const lastNames = decodeURIComponent(props.match.params.lastNames);
+            const dateOfBirth = decodeURIComponent(
+              props.match.params.dateOfBirth
+            );
 
-          let analysisName;
-          if (lastNames.split(",").length > 1) {
-            const firstName = firstNames.split(",")[0];
-            const firstNameComfort = firstNames.split(",")[1];
-            const lastName = lastNames.split(",")[0];
-            const lastNameComfort = lastNames.split(",")[1];
+            let analysisName;
+            if (lastNames.split(",").length > 1) {
+              const firstName = firstNames.split(",")[0];
+              const firstNameComfort = firstNames.split(",")[1];
+              const lastName = lastNames.split(",")[0];
+              const lastNameComfort = lastNames.split(",")[1];
 
-            analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
-          } else {
-            analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
-          }
-          saveAnalysis(analysisName, group.id);
-          setSaveDialogOpen(false);
-          LoadingOverlay.showWithText();
-        }}
-        groups={groups}
-      />
-      {!isTourOpen && <Footer />}
-    </MainContainer>
+              analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
+            } else {
+              analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
+            }
+            saveAnalysis(analysisName, group.id);
+            setSaveDialogOpen(false);
+            LoadingOverlay.showWithText();
+          }}
+          groups={groups}
+        />
+        {!isTourOpen && <Footer />}
+      </MainContainer> */}
+    </>
   );
 };
 

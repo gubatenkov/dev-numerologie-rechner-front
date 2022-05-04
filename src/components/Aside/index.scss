@@ -1,0 +1,144 @@
+.aside {
+  top: 40px;
+  position: sticky;
+
+  max-width: 270px;
+  min-width: 270px;
+  padding: 15px 15px 20px;
+
+  background: #fff;
+  border: 1px solid rgba(79, 68, 66, 0.3);
+
+  &-inner {
+    margin: 0 0 20px;
+    padding: 40px 30px;
+
+    background: #fffefc;
+    border-radius: 130px 130px 0px 0px;
+    border: 1px solid rgba(79, 68, 66, 0.3);
+  }
+
+  &-heading {
+    margin: 0 0 20px;
+    text-align: center;
+  }
+
+  &-border {
+    margin: 0 0 30px;
+  }
+
+  &-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &__item {
+      position: relative;
+
+      height: 20px;
+      overflow: hidden;
+
+      font-size: 14px;
+      font-weight: 400;
+      color: #8f8f8f;
+      line-height: 20px;
+      font-style: normal;
+
+      cursor: pointer;
+
+      &::after {
+        content: "";
+
+        width: 10px;
+        height: 10px;
+
+        top: 5px;
+        right: 0;
+        position: absolute;
+
+        opacity: 0.5;
+
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url("../../images/arrowRight.svg");
+      }
+
+      &--active {
+        font-size: 14px;
+        color: #323232;
+        font-weight: 500;
+        line-height: 20px;
+        font-style: normal;
+
+        height: auto;
+
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    &__item + &__item {
+      margin-top: 20px;
+    }
+
+    &__submenu {
+      margin: 0;
+      padding: 20px 0 0;
+      list-style: none;
+
+      &-item {
+        padding: 0 0 0 20px;
+
+        font-size: 14px;
+        font-weight: 400;
+        color: #323232;
+        line-height: 20px;
+        font-style: normal;
+
+        cursor: default;
+      }
+
+      &-item + &-item {
+        margin-top: 15px;
+      }
+    }
+  }
+
+  &-btn {
+    position: relative;
+
+    width: 100%;
+    padding: 15px 20px;
+
+    font-size: 18px;
+    color: #ffffff;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+    text-align: center;
+
+    > span {
+      display: block;
+      margin: 0 0 0 15px;
+    }
+
+    &::before {
+      content: "";
+
+      width: 16px;
+      height: 20px;
+      display: block;
+
+      top: 50%;
+      left: 20px;
+      position: absolute;
+
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url("../../images/pdfIcon.svg");
+
+      transform: translateY(-50%);
+    }
+  }
+}

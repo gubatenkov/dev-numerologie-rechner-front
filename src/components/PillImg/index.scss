@@ -1,0 +1,44 @@
+.pill-img {
+  padding: 9px 20px;
+  min-width: fit-content;
+
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-radius: 55px;
+  border: 1px solid transparent;
+  background: rgba(79, 68, 66, 0.2);
+
+  &:focus {
+    outline: none;
+    border: 1px solid #006c81;
+  }
+
+  &--blur {
+    backdrop-filter: blur(3px);
+  }
+
+  & > p {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 700;
+    line-height: 20px;
+  }
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 20px;
+
+    color: #01b2d4;
+
+    border-radius: 5px;
+    background: #ffffff;
+  }
+}
