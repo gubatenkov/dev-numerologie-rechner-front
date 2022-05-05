@@ -6,7 +6,12 @@ import Aside from "../../Aside";
 import ResultRow from "../../ResultRow";
 import ResultsSection from "./components/ResultsSection";
 
-const Results = ({ sidebarItems, renderItems }) => {
+const Results = ({
+  sidebarItems,
+  renderItems,
+  onDownloadClick,
+  isDownloadable
+}) => {
   const render = (items, Comp) => {
     return items.map((group, idx) => {
       if (group.showTitle) {
@@ -30,7 +35,11 @@ const Results = ({ sidebarItems, renderItems }) => {
       <div className="container">
         <div className="results-inner">
           <div className="results-left">
-            <Aside items={sidebarItems} />
+            <Aside
+              items={sidebarItems}
+              onDownloadClick={onDownloadClick}
+              isDownloadable={isDownloadable}
+            />
           </div>
           <div className="results-right">
             <div className="results-wrap">

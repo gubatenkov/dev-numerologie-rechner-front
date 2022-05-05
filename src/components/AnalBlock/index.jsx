@@ -20,11 +20,29 @@ const AnalBlock = ({ anals }) => {
       </Typography>
       <div className="prevanals__list">
         {anals?.length &&
-          anals.map(({ name = "analysis", id }, index) => (
-            <PillImg key={index} text="" onClick={() => handleClick(id)} blur>
-              {name.split(",")[0]}
-            </PillImg>
-          ))}
+          anals.map(({ name = "analysis", id, usedCreditTypes }, index) => {
+            let text = "";
+            if (usedCreditTypes.length) {
+              const shortType = usedCreditTypes.find(
+                type => type === "persoenlichkeit_kurz"
+              );
+              if (shortType) {
+                text = "S";
+              } else {
+                text = "L";
+              }
+            }
+            return (
+              <PillImg
+                key={index}
+                text={text}
+                onClick={() => handleClick(id)}
+                blur
+              >
+                {name.split(",")[0]}
+              </PillImg>
+            );
+          })}
       </div>
       <button className="prevanals-more base-btn outlined base-btn--mlauto">
         More

@@ -135,7 +135,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const httpLink = createHttpLink({ uri: GRAPHQL_ENDPOINT });
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: authLink.concat(errorLink).concat(httpLink),
   cache: new InMemoryCache({
     fragmentMatcher

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { Spinner } from "react-bootstrap";
 
 import "./index.scss";
 
 import Typography from "../Typography";
 import MenuList from "./components/MenuList";
 import MenuItem from "./components/MenuItem";
+import { useUser } from "../../contexts/UserContext";
 
-const Aside = ({ items }) => {
+const Aside = ({ items, onDownloadClick, isDownloadable }) => {
+  const User = useUser();
   const [isActive, setActive] = useState(0);
 
   const render = () => {
@@ -34,6 +37,34 @@ const Aside = ({ items }) => {
     ));
   };
 
+  const getDownloadBtn = () => {
+    if (!User?.user) {
+      return (
+        <button className="aside-btn blue-btn" disabled={true}>
+          <span>Login to Download</span>
+        </button>
+      );
+    } else {
+      return isDownloadable ? (
+        <button
+          className="aside-btn blue-btn"
+          onClick={onDownloadClick}
+          disabled={!isDownloadable}
+        >
+          <span>Download analysis</span>
+        </button>
+      ) : (
+        <button
+          className="aside-btn blue-btn  no-img"
+          onClick={onDownloadClick}
+          disabled={!isDownloadable}
+        >
+          <Spinner animation="border" role="status" variant="light" />
+        </button>
+      );
+    }
+  };
+
   return (
     <aside className="aside">
       <div className="aside-inner">
@@ -50,9 +81,7 @@ const Aside = ({ items }) => {
         <hr className="aside-border" />
         <MenuList className="aside-menu">{render()}</MenuList>
       </div>
-      <button className="aside-btn blue-btn">
-        <span>Download analysis</span>
-      </button>
+      {getDownloadBtn()}
     </aside>
   );
 };
