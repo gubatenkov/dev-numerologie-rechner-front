@@ -6,7 +6,7 @@ import PillImg from "../PillImg";
 import Typography from "../Typography";
 import { useHistory } from "react-router-dom";
 
-const AnalBlock = ({ anals }) => {
+const AnalBlock = ({ anals, text = "Previous analysis:" }) => {
   const history = useHistory();
 
   const handleClick = id => {
@@ -16,33 +16,35 @@ const AnalBlock = ({ anals }) => {
   return (
     <div className="prevanals">
       <Typography as="p" fs="14px" fw="700" lh="21px" color="#fff" upperCase>
-        Previous analysis:
+        {text}
       </Typography>
       <div className="prevanals__list">
         {anals?.length &&
-          anals.map(({ name = "analysis", id, usedCreditTypes }, index) => {
-            let text = "";
-            if (usedCreditTypes.length) {
-              const shortType = usedCreditTypes.find(
-                type => type === "persoenlichkeit_kurz"
-              );
-              if (shortType) {
-                text = "S";
-              } else {
-                text = "L";
+          anals
+            .slice(0, 3)
+            .map(({ name = "analysis", id, usedCreditTypes }, index) => {
+              let text = "";
+              if (usedCreditTypes.length) {
+                const shortType = usedCreditTypes.find(
+                  type => type === "persoenlichkeit_kurz"
+                );
+                if (shortType) {
+                  text = "S";
+                } else {
+                  text = "L";
+                }
               }
-            }
-            return (
-              <PillImg
-                key={index}
-                text={text}
-                onClick={() => handleClick(id)}
-                blur
-              >
-                {name.split(",")[0]}
-              </PillImg>
-            );
-          })}
+              return (
+                <PillImg
+                  key={index}
+                  text={text}
+                  onClick={() => handleClick(id)}
+                  blur
+                >
+                  {name.split(",")[0]}
+                </PillImg>
+              );
+            })}
       </div>
       <button className="prevanals-more base-btn outlined base-btn--mlauto">
         More
