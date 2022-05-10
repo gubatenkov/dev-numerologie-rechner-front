@@ -1,0 +1,82 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.popup-base {
+  padding: 100px 0;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+
+  background-color: #fff;
+
+  width: 100%;
+  height: 100%;
+
+  overflow-y: auto;
+
+  z-index: 11;
+
+  @include max-media($md) {
+    padding: 40px 0;
+  }
+
+  &__title {
+    max-width: 50%;
+    margin: 0 0 50px 0;
+
+    font-size: 32px;
+    color: #323232;
+    font-weight: 600;
+    line-height: 40px;
+    font-style: normal;
+    text-transform: capitalize;
+
+    @include max-media($md) {
+      max-width: 100%;
+
+      font-size: 24px;
+      line-height: 36px;
+    }
+  }
+
+  &__name {
+    margin: 0;
+
+    font-size: 14px;
+    color: #baa270;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+  }
+
+  &__header {
+    margin: 0 0 5px;
+
+    display: flex;
+    align-items: center;
+  }
+
+  &__close {
+    padding: 0;
+    margin: 0 0 0 auto;
+
+    border-radius: 5px;
+    border: 1px solid transparent;
+    background-color: transparent;
+
+    &:focus {
+      outline: none;
+      border: 1px solid #006c81;
+    }
+  }
+
+  &__inner {
+    width: 100%;
+    padding: 0 15px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+}

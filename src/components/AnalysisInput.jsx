@@ -17,6 +17,8 @@ import Promo from "./Sections/Promo";
 import AnalForm from "./Forms/AnalForm";
 import FooterHoriz from "./FooterHoriz";
 import { useUser } from "../contexts/UserContext";
+import PopupBase from "./Popups/PopupBase";
+import BoxWithCards from "./BoxWithCards/BoxWithCards";
 
 // defining model for validation
 const inputSchemaPersonal = yup.object({
@@ -52,6 +54,7 @@ const AnalysisInput = props => {
   const User = useUser();
   const { t } = useTranslation();
   const [anals, setAnals] = useState(null);
+  const [isPopupVisible, setPopupVisibility] = useState(false);
 
   useEffect(() => {
     if (User.user && User.user.analyses) {
@@ -149,6 +152,14 @@ const AnalysisInput = props => {
     );
   };
 
+  const openPopup = () => {
+    setPopupVisibility(true);
+  };
+
+  const closePopup = () => {
+    setPopupVisibility(false);
+  };
+
   const onSubmit = data => {
     const { name, lastname, altname, altlastname, day, month, year } = data;
     const formatedDate = moment(`${year}-${month}-${day}`).format("DD.MM.YYYY");
@@ -156,24 +167,34 @@ const AnalysisInput = props => {
   };
 
   return (
-    <div className="page-register-v3 layout-full">
-      <section className="anal">
-        <Header user={User?.user} />
+    <>
+      <div className="page-register-v3 layout-full">
+        <section className="anal">
+          <Header user={User?.user} plusBtn={openPopup} />
 
-        <div className="container">
-          <div className="anal-inner">
-            <h1 className="anal-title">Numerology Calculator</h1>
-            <div className="anal-form__wrapper">
-              <AnalForm onSubmit={onSubmit} />
+          <div className="container">
+            <div className="anal-inner">
+              <h1 className="anal-title">Numerology Calculator</h1>
+              <div className="anal-form__wrapper">
+                <AnalForm onSubmit={onSubmit} />
+              </div>
             </div>
+            {User?.user && <AnalBlock anals={anals} />}
           </div>
-          {User?.user && <AnalBlock anals={anals} />}
-        </div>
-      </section>
-      {/* <Results /> */}
-      <Promo />
-      <FooterHoriz />
-    </div>
+        </section>
+        {/* <Results /> */}
+        <Promo />
+        <FooterHoriz />
+        {isPopupVisible && (
+          <PopupBase
+            name="Pricing"
+            title="Read all texts of numerological analysis!"
+            onClose={closePopup}
+            children={<BoxWithCards />}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

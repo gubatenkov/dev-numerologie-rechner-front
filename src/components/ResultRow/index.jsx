@@ -15,13 +15,14 @@ const ResultRow = ({
   result,
   accessLevel = "ACCESS_LEVEL_GUEST",
   descriptionText: desc,
+  onBuyClick,
   ...restProps
 }) => {
   const [isCollapsed, setCollapsed] = useState(true);
   const actions = {
     buy: {
       children: <img src={iconPath} alt="buy btn icon" />,
-      handler: () => console.log("buy")
+      handler: onBuyClick
     },
     more: {
       children: "More",
