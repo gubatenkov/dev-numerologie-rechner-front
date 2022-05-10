@@ -140,5 +140,11 @@
 
       transform: translateY(-50%);
     }
+
+    &.no-img {
+      &::before {
+        display: none;
+      }
+    }
   }
 }

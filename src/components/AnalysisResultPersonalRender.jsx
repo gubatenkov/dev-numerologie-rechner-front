@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useQuery } from "@apollo/react-hooks";
 
@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import _ from "lodash";
 // import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-// import ToastNotifications from "cogo-toast";
+import ToastNotifications from "cogo-toast";
 import * as compose from "lodash.flowright";
 import { graphql } from "react-apollo";
 
@@ -52,6 +52,7 @@ import AnalForm from "../components/Forms/AnalForm";
 import AnalBlock from "./AnalBlock";
 import FooterHoriz from "./FooterHoriz";
 import Results from "./Sections/Results";
+import usePdfTrigger from "../utils/hooks/usePdfTrigger";
 
 // const ContentArea = styled.div`
 //   display: flex;
@@ -70,6 +71,8 @@ const AnalysisResultPersonalRender = props => {
   // const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   // const [userSettings, setUserSettings] = useState(props.user);
   // const [groups, setGroups] = useState([]);
+  const [isPDFSaving, setPDFSaving] = useState(false);
+  const [triggerDownloadPdf, isPDFGenerating] = usePdfTrigger();
   const { t } = useTranslation();
   const User = useUser();
   const {
@@ -257,62 +260,67 @@ const AnalysisResultPersonalRender = props => {
   //   }
   // };
 
-  // async function saveAnalysis(name, groupId) {
-  //   const firstNames = decodeURIComponent(props.match.params.firstNames);
-  //   const lastNames = decodeURIComponent(props.match.params.lastNames);
-  //   const dateOfBirth = decodeURIComponent(props.match.params.dateOfBirth);
+  async function saveAnalysis(name, groupId) {
+    const firstNames = decodeURIComponent(props.match.params.firstNames);
+    const lastNames = decodeURIComponent(props.match.params.lastNames);
+    const dateOfBirth = decodeURIComponent(props.match.params.dateOfBirth);
 
-  //   let nameInputs = [];
-  //   if (lastNames.split(",").length > 1) {
-  //     const firstNamesArray = firstNames.split(",");
-  //     const lastNamesArray = lastNames.split(",");
-  //     nameInputs = firstNamesArray.map((item, index) => ({
-  //       firstNames: item,
-  //       lastName: lastNamesArray[index],
-  //       dateOfBirth
-  //     }));
-  //   } else {
-  //     nameInputs = [
-  //       {
-  //         firstNames,
-  //         lastName: lastNames,
-  //         dateOfBirth
-  //       }
-  //     ];
-  //   }
+    let nameInputs = [];
+    if (lastNames.split(",").length > 1) {
+      const firstNamesArray = firstNames.split(",");
+      const lastNamesArray = lastNames.split(",");
+      nameInputs = firstNamesArray.map((item, index) => ({
+        firstNames: item,
+        lastName: lastNamesArray[index],
+        dateOfBirth
+      }));
+    } else {
+      nameInputs = [
+        {
+          firstNames,
+          lastName: lastNames,
+          dateOfBirth
+        }
+      ];
+    }
 
-  //   try {
-  //     props.saveAnalysis({
-  //       variables: {
-  //         name,
-  //         group: groupId,
-  //         inputs: nameInputs
-  //       }
-  //     });
+    try {
+      setPDFSaving(true);
+      const result = await props.saveAnalysis({
+        variables: {
+          name,
+          group: groupId,
+          inputs: nameInputs
+        }
+      });
 
-  //     LoadingOverlay.hide();
-  //     User.setIsAnalResultWasSaved(true);
-  //     ToastNotifications.success(
-  //       t("TOAST.ANALYSIS_CREATED_SUCCESSFULLY", {
-  //         name
-  //       }),
-  //       { position: "top-right" }
-  //     );
+      LoadingOverlay.hide();
+      User.setIsAnalResultWasSaved(true);
+      ToastNotifications.success(
+        t("TOAST.ANALYSIS_CREATED_SUCCESSFULLY", {
+          name
+        }),
+        { position: "top-right" }
+      );
+      setPDFSaving(false);
 
-  //     // graphql ignores refetches if the same call is already pending, therefore we wait 2sec (randomly) and continue with a refetch
-  //     setTimeout(() => {
-  //       User.fetchUser();
-  //     }, 2000);
-  //   } catch (error) {
-  //     User.setIsAnalResultWasSaved(false);
-  //     ToastNotifications.error(
-  //       t("TOAST.GRAPHQL_ERROR", { errorMessage: error.message }),
-  //       {
-  //         position: "top-right"
-  //       }
-  //     );
-  //   }
-  // }
+      // graphql ignores refetches if the same call is already pending, therefore we wait 2sec (randomly) and continue with a refetch
+      setTimeout(() => {
+        User.fetchUser();
+      }, 2000);
+      // return saved analysis
+      return result.data.saveAnalysis;
+    } catch (error) {
+      setPDFSaving(false);
+      User.setIsAnalResultWasSaved(false);
+      ToastNotifications.error(
+        t("TOAST.GRAPHQL_ERROR", { errorMessage: error.message }),
+        {
+          position: "top-right"
+        }
+      );
+    }
+  }
 
   // const handleSaveBtnClick = () => setSaveDialogOpen(true);
 
@@ -356,6 +364,60 @@ const AnalysisResultPersonalRender = props => {
     return acc;
   }, []);
 
+  const saveNamedAnalysis = async () => {
+    const firstNames = decodeURIComponent(props.match.params.firstNames);
+    const lastNames = decodeURIComponent(props.match.params.lastNames);
+    const dateOfBirth = decodeURIComponent(props.match.params.dateOfBirth);
+
+    let analysisName;
+    if (lastNames.split(",").length > 1) {
+      const firstName = firstNames.split(",")[0];
+      const firstNameComfort = firstNames.split(",")[1];
+      const lastName = lastNames.split(",")[0];
+      const lastNameComfort = lastNames.split(",")[1];
+
+      analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
+    } else {
+      analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
+    }
+    // My analyses group id is hardcoded
+    return await saveAnalysis(analysisName, 641);
+  };
+
+  const handleDownloadClick = async () => {
+    const analysisId = decodeURIComponent(props.match.params.analysisId);
+
+    // try to find existing analysis in the Users analysis list by id from URL
+    if (analysisId !== "undefined") {
+      const anal = User.user.analyses.find(
+        analysis => analysis.id === analysisId
+      );
+      // if analysis was found, try generate & download it
+      if (anal) {
+        triggerDownloadPdf(anal);
+      } else {
+        // in bad case we show messsage to user
+        ToastNotifications.error(t("Please, try to download PDF later"), {
+          position: "top-right"
+        });
+      }
+    } else {
+      // if no analysis id is provided, we need to save the analysis first
+      const saved = await saveNamedAnalysis();
+      // then generate & download the pdf
+      triggerDownloadPdf(saved);
+    }
+  };
+
+  // function that tells if analysis can be downloaded
+  const isDownloadable = () => {
+    // if user authenticated and pdf is not generating right now and analysis is not saving
+    if (!isPDFGenerating && !isPDFSaving) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <>
       <section className="anal">
@@ -370,7 +432,12 @@ const AnalysisResultPersonalRender = props => {
           {User?.user && <AnalBlock anals={User?.user?.analyses} />}
         </div>
       </section>
-      <Results sidebarItems={structure} renderItems={sections} />
+      <Results
+        sidebarItems={structure}
+        renderItems={sections}
+        onDownloadClick={handleDownloadClick}
+        isDownloadable={isDownloadable()}
+      />
       <FooterHoriz />
       {/* <MainContainer>
         <NavigationBar
