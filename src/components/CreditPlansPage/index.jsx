@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
 import Header from "../Header";
-import AnalBlock from "../AnalBlock";
+import Plans from "../Sections/Plans";
+import LinksBlock from "../LinksBlock";
 import FooterHoriz from "../FooterHoriz";
 import PopupBase from "../Popups/PopupBase";
 import { useUser } from "../../contexts/UserContext";
@@ -19,17 +20,14 @@ const CreditPlansPage = () => {
     <div className="plans-page">
       <section className="anal">
         <Header user={User?.user} plusBtn={openPopup} />
-
         <div className="container">
           <div className="anal-inner">
             <h1 className="anal-title">Analysis Comparison</h1>
           </div>
-          {User?.user?.analyses?.length && (
-            <AnalBlock anals={User?.user?.analyses} text="Learn more" />
-          )}
+          <LinksBlock />
         </div>
       </section>
-
+      <Plans />
       <FooterHoriz />
       {isPopupVisible && (
         <PopupBase
