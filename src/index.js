@@ -59,6 +59,7 @@ import { initTranslationFramework } from "./utils/initTranslationFramework";
 import LoadingOverlay from "./components/LoadingOverlay";
 import { LoadingOverlayProvider } from "./contexts/LoadingOverlayContext";
 import fixWhenGoogleTranslateAppBreak from "./utils/functions";
+import CreditPlansPage from "./components/CreditPlansPage";
 
 fixWhenGoogleTranslateAppBreak();
 initTranslationFramework();
@@ -161,6 +162,7 @@ ReactDOM.render(
             <BuyModalProvider>
               <BrowserRouter>
                 <Switch>
+                  <Route path="/plans" component={CreditPlansPage} />
                   <Route path="/login" component={withTracker(Login)} />
                   <Route path="/register" component={withTracker(Register)} />
                   <Route path="/reset" component={withTracker(ResetPassword)} />

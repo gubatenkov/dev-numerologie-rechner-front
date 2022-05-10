@@ -23,8 +23,9 @@ const Header = ({
   onClose
 }) => {
   const location = useLocation();
-  const [shorts, setShorts] = useState(0);
   const [longs, setLongs] = useState(0);
+  const [shorts, setShorts] = useState(0);
+  const isExactPage = location.pathname === "/plans" ? true : false;
 
   // if number of user credits was changed, update the number of shorts and longs
   useEffect(() => {
@@ -153,7 +154,7 @@ const Header = ({
         </div>
 
         <div className="header-right">
-          {user && (
+          {user && !isExactPage && (
             <Typography
               className="header-right__plans"
               as={Link}
