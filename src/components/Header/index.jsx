@@ -16,6 +16,7 @@ import logoMini from "../../images/logoMini.png";
 
 const Header = ({
   className,
+  plusBtn,
   user,
   isSidebarVisible = false,
   onOpen,
@@ -66,7 +67,11 @@ const Header = ({
               {longs}
             </PillImg>
           </div>
-          <ButtonImg className="header__plus" imgPath={plusIcon} />
+          <ButtonImg
+            className="header__plus"
+            imgPath={plusIcon}
+            onClick={plusBtn}
+          />
         </>
       );
     } else {

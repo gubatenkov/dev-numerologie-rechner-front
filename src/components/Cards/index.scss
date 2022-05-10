@@ -1,0 +1,217 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.creditscard {
+  background: #fff;
+  border: 1px solid rgba(79, 68, 66, 0.3);
+  border-radius: 230px 230px 0px 0px;
+
+  &__list-item + &__list-item {
+    margin-top: 20px;
+  }
+
+  &__list-item {
+    padding: 0 0 0 30px;
+
+    font-size: 18px;
+    color: #323232;
+    font-weight: 400;
+    line-height: 25px;
+    font-style: normal;
+
+    opacity: 0.8;
+
+    position: relative;
+
+    &::before {
+      content: "";
+
+      left: 0;
+      position: absolute;
+
+      width: 15px;
+      height: 15px;
+      display: block;
+      margin: 5px 0 0;
+
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-image: url("../../images/blueMark.svg");
+    }
+
+    @include max-media($md) {
+      font-size: 16px;
+      line-height: 22px;
+    }
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+  }
+
+  &__list:not(:last-child) {
+    margin: 0 0 20px 0;
+  }
+
+  &__list-heading {
+    width: fit-content;
+    padding: 0 25px 0 0;
+
+    font-size: 18px;
+    color: #323232;
+    font-weight: 500;
+    line-height: 30px;
+    font-style: normal;
+
+    display: flex;
+    align-items: center;
+
+    position: relative;
+
+    &::after {
+      content: "";
+
+      right: 0;
+      position: absolute;
+
+      width: 15px;
+      height: 15px;
+      display: block;
+
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url("../../images/arrowRight.svg");
+
+      transform: rotate(90deg);
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    display: block;
+    margin: 0 0 30px;
+
+    &:hover {
+      color: #fff !important;
+    }
+  }
+
+  &__note {
+    display: block;
+    padding: 0 0 0 30px;
+
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25px;
+    font-style: normal;
+    color: rgba(50, 50, 50, 0.6);
+
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url("../../images/book.svg");
+
+    @include max-media($md) {
+      padding: 0;
+      background-image: none;
+    }
+  }
+
+  &__price {
+    padding: 10px 30px;
+
+    font-size: 28px;
+    color: #323232;
+    font-weight: 500;
+    line-height: 40px;
+    font-style: normal;
+
+    border-radius: 50px;
+    background: rgba(215, 178, 103, 0.2);
+
+    @include max-media($md) {
+      padding: 10px 20px;
+
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 40px;
+    }
+  }
+
+  &__price-wrap {
+    margin: 0 0 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @include max-media($md) {
+      margin: 0 0 40px;
+    }
+  }
+
+  &__subtitle {
+    margin: 0 0 30px 0;
+
+    font-size: 18px;
+    color: #323232;
+    font-weight: 400;
+    line-height: 25px;
+    text-align: center;
+    font-style: normal;
+
+    @include max-media($md) {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 22px;
+    }
+  }
+
+  &__divider {
+    margin: 30px 0 40px;
+
+    @include max-media($md) {
+      margin: 20px 0 30px;
+    }
+  }
+
+  &__title {
+    margin: 0;
+
+    text-align: center;
+
+    @include max-media($md) {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 40px;
+    }
+  }
+
+  &__inner {
+    padding: 70px 30px 25px;
+  }
+
+  &__box {
+    max-width: 450px;
+    padding: 20px 15px 15px;
+
+    background-color: #fff;
+    border: 1px solid rgba(79, 68, 66, 0.3);
+
+    &--bgrey {
+      background-color: #fdfaf4;
+
+      @include max-media($md) {
+        background-color: #fff;
+      }
+    }
+
+    @include max-media($md) {
+      padding: 0;
+
+      border: 1px solid transparent;
+    }
+  }
+}

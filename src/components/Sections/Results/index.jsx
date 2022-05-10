@@ -10,7 +10,8 @@ const Results = ({
   sidebarItems,
   renderItems,
   onDownloadClick,
-  isDownloadable
+  isDownloadable,
+  onBuyClick
 }) => {
   const render = (items, Comp) => {
     return items.map((group, idx) => {
@@ -19,13 +20,23 @@ const Results = ({
           <div className="results-section__box" key={idx}>
             <h4 className="results-section__subheading">{group.name}</h4>
             {group.rows.map((row, idx) => (
-              <Comp key={idx} {...row} accessLevel={group.accessLevel} />
+              <Comp
+                key={idx}
+                {...row}
+                accessLevel={group.accessLevel}
+                onBuyClick={onBuyClick}
+              />
             ))}
           </div>
         );
       }
       return group.rows.map((row, idx) => (
-        <Comp key={idx} {...row} accessLevel={group.accessLevel} />
+        <Comp
+          key={idx}
+          {...row}
+          accessLevel={group.accessLevel}
+          onBuyClick={onBuyClick}
+        />
       ));
     });
   };

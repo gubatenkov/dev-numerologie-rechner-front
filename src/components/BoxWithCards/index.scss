@@ -1,0 +1,12 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.creditscards-wrap {
+  gap: 30px;
+  display: flex;
+
+  @include max-media($md) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

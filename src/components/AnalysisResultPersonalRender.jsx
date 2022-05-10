@@ -53,6 +53,8 @@ import AnalBlock from "./AnalBlock";
 import FooterHoriz from "./FooterHoriz";
 import Results from "./Sections/Results";
 import usePdfTrigger from "../utils/hooks/usePdfTrigger";
+import PopupBase from "./Popups/PopupBase";
+import BoxWithCards from "./BoxWithCards/BoxWithCards";
 
 // const ContentArea = styled.div`
 //   display: flex;
@@ -73,6 +75,7 @@ const AnalysisResultPersonalRender = props => {
   // const [groups, setGroups] = useState([]);
   const [isPDFSaving, setPDFSaving] = useState(false);
   const [triggerDownloadPdf, isPDFGenerating] = usePdfTrigger();
+  const [isPopupVisible, setPopupVisibility] = useState(false);
   const { t } = useTranslation();
   const User = useUser();
   const {
@@ -418,10 +421,18 @@ const AnalysisResultPersonalRender = props => {
     return false;
   };
 
+  const openPopup = () => {
+    setPopupVisibility(true);
+  };
+
+  const closePopup = () => {
+    setPopupVisibility(false);
+  };
+
   return (
     <>
       <section className="anal">
-        <Header user={User?.user} />
+        <Header user={User?.user} plusBtn={openPopup} />
         <div className="container">
           <div className="anal-inner">
             <h1 className="anal-title">Numerology Calculator</h1>
@@ -437,8 +448,17 @@ const AnalysisResultPersonalRender = props => {
         renderItems={sections}
         onDownloadClick={handleDownloadClick}
         isDownloadable={isDownloadable()}
+        onBuyClick={openPopup}
       />
       <FooterHoriz />
+      {isPopupVisible && (
+        <PopupBase
+          name="Pricing"
+          title="Read all texts of numerological analysis!"
+          onClose={closePopup}
+          children={<BoxWithCards />}
+        />
+      )}
       {/* <MainContainer>
         <NavigationBar
           leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
