@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import "./index.scss";
@@ -22,6 +22,26 @@ const Header = ({
   onClose
 }) => {
   const location = useLocation();
+  const [shorts, setShorts] = useState(0);
+  const [longs, setLongs] = useState(0);
+
+  // if number of user credits was changed, update the number of shorts and longs
+  useEffect(() => {
+    if (user) {
+      const data = user?.currentUser?.credits;
+      const newShorts = data?.find(el => el?.type === "persoenlichkeit_kurz")
+        ?.total;
+      const newLongs = data?.find(el => el?.type === "persoenlichkeit_lang")
+        ?.total;
+      if (newShorts && newShorts !== shorts) {
+        setShorts(newShorts);
+      }
+      if (newLongs && newLongs !== longs) {
+        setLongs(newLongs);
+      }
+    }
+    // eslint-disable-next-line
+  }, [user]);
 
   const setAnalysisItemsElseText = () => {
     if (user) {
@@ -40,10 +60,10 @@ const Header = ({
           </Typography>
           <div className="header__credits header__credits--ml10">
             <PillImg text="S" switched>
-              2
+              {shorts}
             </PillImg>
             <PillImg text="L" switched>
-              1
+              {longs}
             </PillImg>
           </div>
           <ButtonImg className="header__plus" imgPath={plusIcon} />
