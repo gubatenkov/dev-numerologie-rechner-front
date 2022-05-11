@@ -1,0 +1,47 @@
+.topbar {
+  width: 100%;
+
+  background-color: #323232;
+
+  &-inner {
+    padding: 30px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__left {
+    gap: 15px;
+    display: flex;
+    align-items: center;
+
+    &-text {
+      margin: 0;
+
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 500;
+      line-height: 20px;
+
+      text-transform: uppercase;
+
+      opacity: 0.5;
+
+      &--on {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__right {
+    &-btn {
+      border: none;
+      background-color: transparent;
+
+      & > img {
+        color: #fff;
+      }
+    }
+  }
+}

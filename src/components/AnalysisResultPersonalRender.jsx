@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useQuery } from "@apollo/react-hooks";
+import React, { useEffect, useState } from "react";
 
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
@@ -55,6 +55,10 @@ import Results from "./Sections/Results";
 import usePdfTrigger from "../utils/hooks/usePdfTrigger";
 import PopupBase from "./Popups/PopupBase";
 import BoxWithCards from "./BoxWithCards/BoxWithCards";
+import { TYPE_ID_MATRIX } from "../utils/Constants";
+import TourView from "./TourView";
+import Popup from "./Popups/Popup";
+import Topbar from "./Topbar";
 
 // const ContentArea = styled.div`
 //   display: flex;
@@ -110,6 +114,8 @@ const AnalysisResultPersonalRender = props => {
   // }, [User.isFetching, User]);
 
   // const [showSaveModal, setShowSaveModal] = useState(false);
+  const [tourData, setTourData] = useState([]);
+  const [tourStructure, setTourStructure] = useState([]);
 
   const LoadingOverlay = useLoadingOverlay();
 
@@ -121,11 +127,7 @@ const AnalysisResultPersonalRender = props => {
   const sectionIds = resultConfig.map(section => section.name);
   sectionIds.push(resultConfigId.toLowerCase());
 
-  const {
-    loading,
-    error
-    // data
-  } = useQuery(introTextQuery, {
+  const { loading, error, data } = useQuery(introTextQuery, {
     variables: {
       sectionIds,
       isPdf: false,
@@ -134,61 +136,66 @@ const AnalysisResultPersonalRender = props => {
     }
   });
 
-  // const [isTourOpen, setIsTourOpen] = useState(false);
-  // const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
-  // const [tourSectionIndex, setTourSectionIndex] = useState(0);
-  // const [tourElementIndex, setTourElementIndex] = useState(0);
+  useEffect(() => {
+    if (data) setTourData(data);
+  }, [data]);
 
-  if (loading) {
-    LoadingOverlay.showWithText(t("GENERATE_REPORT"));
-    return null;
-  }
+  const buildTourDataStructure = (
+    resultData,
+    configuration,
+    introTexts,
+    user
+  ) => {
+    return configuration.map(resultSection => {
+      const sectionIntroText = introTexts.filter(
+        text => text.sectionId === resultSection.name
+      )[0];
 
-  if (error) {
-    LoadingOverlay.showWithText(t("ERROR_OCCURED"));
-    return null;
-  }
+      const resultSectionElements = [];
 
-  // const { introTexts } = data;
+      if (!user || user.showCategoryExplanations) {
+        resultSectionElements.push({
+          type: "sectionIntroText",
+          title: sectionIntroText.title,
+          text: sectionIntroText.text
+        });
+      }
 
-  // const buildTourDataStructure = (
-  //   resultData,
-  //   configuration,
-  //   introTexts,
-  //   user
-  // ) =>
-  //   configuration.map(resultSection => {
-  //     const sectionIntroText = introTexts.filter(
-  //       text => text.sectionId === resultSection.name
-  //     )[0];
+      resultSection.tables.forEach(resultTable => {
+        resultSectionElements.push(
+          ...resultTable.numberIds
+            .map(numberId => ({
+              ..._.get(resultData, numberId),
+              type: "resultText"
+            }))
+            .filter(item => item.result.type !== TYPE_ID_MATRIX)
+            .filter(item => item.result.value || item.result.list.length > 0)
+        );
+      });
 
-  //     const resultSectionElements = [];
+      return {
+        sectionName: resultSection.name,
+        sectionElements: resultSectionElements
+      };
+    });
+  };
 
-  //     if (!user || user.showCategoryExplanations) {
-  //       resultSectionElements.push({
-  //         type: "sectionIntroText",
-  //         title: sectionIntroText.title,
-  //         text: sectionIntroText.text
-  //       });
-  //     }
-
-  //     resultSection.tables.forEach(resultTable => {
-  //       resultSectionElements.push(
-  //         ...resultTable.numberIds
-  //           .map(numberId => ({
-  //             ..._.get(resultData, numberId),
-  //             type: "resultText"
-  //           }))
-  //           .filter(item => item.result.type !== TYPE_ID_MATRIX)
-  //           .filter(item => item.result.value || item.result.list.length > 0)
-  //       );
-  //     });
-
-  //     return {
-  //       sectionName: resultSection.name,
-  //       sectionElements: resultSectionElements
-  //     };
-  //   });
+  useEffect(() => {
+    if (
+      User?.user?.currentUser &&
+      tourData?.introTexts &&
+      personalAnalysisResult &&
+      resultConfig
+    ) {
+      const struct = buildTourDataStructure(
+        personalAnalysisResult,
+        resultConfig,
+        tourData.introTexts,
+        User.user.currentUser
+      );
+      setTourStructure(struct);
+    }
+  }, [User, tourData, personalAnalysisResult, resultConfig]);
 
   const buildContentDataStructure = (configuration, result) =>
     configuration.map(configSection => {
@@ -459,6 +466,37 @@ const AnalysisResultPersonalRender = props => {
           children={<BoxWithCards />}
         />
       )}
+      {false && (
+        <Popup>
+          <Topbar />
+        </Popup>
+      )}
+      {/* <TourView
+        onClose={() => console.log("closed")}
+        tourData={tourData}
+        name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
+        // compareTourData={
+        //   personalAnalysisCompareResult &&
+        //   buildTourDataStructure(
+        //     personalAnalysisCompareResult,
+        //     resultConfig,
+        //     introTexts,
+        //     userSettings
+        //   )
+        // }
+        // compareName={
+        //   personalAnalysisCompareResult &&
+        //   `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
+        // }
+        // sectionIndex={tourSectionIndex}
+        // elementIndex={tourElementIndex}
+        // onIndexChange={(sectionIndex, elementIndex) => {
+        //   setTourSectionIndex(sectionIndex);
+        //   setTourElementIndex(elementIndex);
+        // }}
+      //   user={User?.user?.currentUser}
+      //   accessLevel={personalAnalysisResult.accessLevel}
+      // />
       {/* <MainContainer>
         <NavigationBar
           leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
