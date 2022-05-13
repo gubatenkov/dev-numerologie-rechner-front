@@ -1,0 +1,81 @@
+.twocol {
+  padding: 40px 0;
+
+  display: grid;
+  grid-row-gap: 0px;
+  grid-column-gap: 50px;
+  grid-template-rows: 1fr;
+  grid-template-columns: 240px 1fr;
+
+  &:not(:first-child) {
+    border-top: 1px solid rgba(79, 68, 66, 0.3);
+  }
+
+  &__col {
+    font-size: 18px;
+    color: #323232;
+    font-weight: 400;
+    line-height: 25px;
+    font-style: normal;
+
+    & h1,
+    & h2,
+    & h3,
+    & h4,
+    & h5,
+    & h6 {
+      font-size: 24px;
+      color: #323232;
+      font-weight: 600;
+      line-height: 40px;
+      font-style: normal;
+    }
+
+    & > h2 {
+      margin: 0 0 20px 0;
+
+      &:not(:first-child) {
+        margin: 40px 0 20px;
+      }
+    }
+
+    & > ul {
+      margin: 0;
+      padding: 0;
+
+      list-style: none;
+
+      & > li {
+        position: relative;
+        padding: 10px 0 10px 26px;
+
+        &::before {
+          content: "";
+
+          left: 0;
+          top: 14px;
+          position: absolute;
+
+          width: 15px;
+          height: 15px;
+          display: block;
+
+          background-size: contain;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-image: url("../../../../images/check.svg");
+        }
+      }
+    }
+
+    &-text {
+      margin: 0;
+
+      font-size: 18px;
+      color: #baa270;
+      font-weight: 500;
+      line-height: 25px;
+      font-style: normal;
+    }
+  }
+}

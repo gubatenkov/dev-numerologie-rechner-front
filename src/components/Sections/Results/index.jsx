@@ -11,10 +11,11 @@ const Results = ({
   renderItems,
   onDownloadClick,
   isDownloadable,
-  onBuyClick
+  onBuyClick,
+  onMoreClick
 }) => {
-  const render = (items, Comp) => {
-    return items.map((group, idx) => {
+  const render = (section, Comp) => {
+    return section.groups.map((group, idx) => {
       if (group.showTitle) {
         return (
           <div className="results-section__box" key={idx}>
@@ -23,8 +24,10 @@ const Results = ({
               <Comp
                 key={idx}
                 {...row}
+                sectionName={section.sectionHeading}
                 accessLevel={group.accessLevel}
                 onBuyClick={onBuyClick}
+                onMoreClick={onMoreClick}
               />
             ))}
           </div>
@@ -34,8 +37,10 @@ const Results = ({
         <Comp
           key={idx}
           {...row}
+          sectionName={section.sectionHeading}
           accessLevel={group.accessLevel}
           onBuyClick={onBuyClick}
+          onMoreClick={onMoreClick}
         />
       ));
     });
@@ -54,10 +59,10 @@ const Results = ({
           </div>
           <div className="results-right">
             <div className="results-wrap">
-              {renderItems.map((sec, idx) => {
+              {renderItems.map((section, idx) => {
                 return (
-                  <ResultsSection heading={sec.sectionHeading} key={idx}>
-                    {render(sec.groups, ResultRow)}
+                  <ResultsSection heading={section.sectionHeading} key={idx}>
+                    {render(section, ResultRow)}
                   </ResultsSection>
                 );
               })}

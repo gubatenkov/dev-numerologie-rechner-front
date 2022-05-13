@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useQuery } from "@apollo/react-hooks";
+import React, { useState } from "react";
 
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import ToastNotifications from "cogo-toast";
 import * as compose from "lodash.flowright";
 import { graphql } from "react-apollo";
+import LongBody from "./LongBody";
 
 // icons
 // import bookIconWhite from "../images/icon_openBook_white.svg";
@@ -55,31 +56,20 @@ import Results from "./Sections/Results";
 import usePdfTrigger from "../utils/hooks/usePdfTrigger";
 import PopupBase from "./Popups/PopupBase";
 import BoxWithCards from "./BoxWithCards/BoxWithCards";
-
-// const ContentArea = styled.div`
-//   display: flex;
-//   align-content: flex-start;
-//   flex-direction: row;
-// `;
-
-// const ResultContent = styled.div`
-//   padding: 0 15px;
-//   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-//   }
-//   width: 100%;
-// `;
+import { TYPE_ID_MATRIX } from "../utils/Constants";
+import Popup from "./Popups/Popup";
+import Topbar from "./Topbar";
 
 const AnalysisResultPersonalRender = props => {
-  // const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  // const [userSettings, setUserSettings] = useState(props.user);
-  // const [groups, setGroups] = useState([]);
+  const [currentSectionIdx, setCurrentSectionIdx] = useState(0);
   const [isPDFSaving, setPDFSaving] = useState(false);
+  const [isLongPopupOpen, setLongPopupOpen] = useState(false);
   const [triggerDownloadPdf, isPDFGenerating] = usePdfTrigger();
   const [isPopupVisible, setPopupVisibility] = useState(false);
   const { t } = useTranslation();
   const User = useUser();
   const {
-    // user,
+    user,
     match: {
       params: { resultConfigurationId }
     },
@@ -109,8 +99,6 @@ const AnalysisResultPersonalRender = props => {
   //   }
   // }, [User.isFetching, User]);
 
-  // const [showSaveModal, setShowSaveModal] = useState(false);
-
   const LoadingOverlay = useLoadingOverlay();
 
   const resultConfig = configuration;
@@ -121,11 +109,7 @@ const AnalysisResultPersonalRender = props => {
   const sectionIds = resultConfig.map(section => section.name);
   sectionIds.push(resultConfigId.toLowerCase());
 
-  const {
-    loading,
-    error
-    // data
-  } = useQuery(introTextQuery, {
+  const { loading, error, data } = useQuery(introTextQuery, {
     variables: {
       sectionIds,
       isPdf: false,
@@ -133,11 +117,6 @@ const AnalysisResultPersonalRender = props => {
       langId: User.currentLanguage.id
     }
   });
-
-  // const [isTourOpen, setIsTourOpen] = useState(false);
-  // const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
-  // const [tourSectionIndex, setTourSectionIndex] = useState(0);
-  // const [tourElementIndex, setTourElementIndex] = useState(0);
 
   if (loading) {
     LoadingOverlay.showWithText(t("GENERATE_REPORT"));
@@ -149,46 +128,47 @@ const AnalysisResultPersonalRender = props => {
     return null;
   }
 
-  // const { introTexts } = data;
+  const { introTexts } = data;
 
-  // const buildTourDataStructure = (
-  //   resultData,
-  //   configuration,
-  //   introTexts,
-  //   user
-  // ) =>
-  //   configuration.map(resultSection => {
-  //     const sectionIntroText = introTexts.filter(
-  //       text => text.sectionId === resultSection.name
-  //     )[0];
+  const buildTourDataStructure = (
+    resultData,
+    configuration,
+    introTexts,
+    user
+  ) => {
+    return configuration.map(resultSection => {
+      const sectionIntroText = introTexts.filter(
+        text => text.sectionId === resultSection.name
+      )[0];
 
-  //     const resultSectionElements = [];
+      const resultSectionElements = [];
 
-  //     if (!user || user.showCategoryExplanations) {
-  //       resultSectionElements.push({
-  //         type: "sectionIntroText",
-  //         title: sectionIntroText.title,
-  //         text: sectionIntroText.text
-  //       });
-  //     }
+      if (!user || user.showCategoryExplanations) {
+        resultSectionElements.push({
+          type: "sectionIntroText",
+          title: sectionIntroText.title,
+          text: sectionIntroText.text
+        });
+      }
 
-  //     resultSection.tables.forEach(resultTable => {
-  //       resultSectionElements.push(
-  //         ...resultTable.numberIds
-  //           .map(numberId => ({
-  //             ..._.get(resultData, numberId),
-  //             type: "resultText"
-  //           }))
-  //           .filter(item => item.result.type !== TYPE_ID_MATRIX)
-  //           .filter(item => item.result.value || item.result.list.length > 0)
-  //       );
-  //     });
+      resultSection.tables.forEach(resultTable => {
+        resultSectionElements.push(
+          ...resultTable.numberIds
+            .map(numberId => ({
+              ..._.get(resultData, numberId),
+              type: "resultText"
+            }))
+            .filter(item => item.result.type !== TYPE_ID_MATRIX)
+            .filter(item => item.result.value || item.result.list.length > 0)
+        );
+      });
 
-  //     return {
-  //       sectionName: resultSection.name,
-  //       sectionElements: resultSectionElements
-  //     };
-  //   });
+      return {
+        sectionName: resultSection.name,
+        sectionElements: resultSectionElements
+      };
+    });
+  };
 
   const buildContentDataStructure = (configuration, result) =>
     configuration.map(configSection => {
@@ -325,8 +305,6 @@ const AnalysisResultPersonalRender = props => {
     }
   }
 
-  // const handleSaveBtnClick = () => setSaveDialogOpen(true);
-
   LoadingOverlay.hide();
 
   // const userSettingsChanged = async () => {
@@ -429,6 +407,27 @@ const AnalysisResultPersonalRender = props => {
     setPopupVisibility(false);
   };
 
+  const sectionsData = buildTourDataStructure(
+    personalAnalysisResult,
+    resultConfig,
+    introTexts,
+    user
+  );
+
+  const handleMoreClick = sectionName => {
+    const index = sectionsData.findIndex(
+      section => section.sectionName === sectionName
+    );
+    setCurrentSectionIdx(index);
+    setLongPopupOpen(true);
+  };
+
+  const handleNavClick = dir => {
+    dir === "next"
+      ? setCurrentSectionIdx(currentSectionIdx + 1)
+      : setCurrentSectionIdx(currentSectionIdx - 1);
+  };
+
   return (
     <>
       <section className="anal">
@@ -449,6 +448,7 @@ const AnalysisResultPersonalRender = props => {
         onDownloadClick={handleDownloadClick}
         isDownloadable={isDownloadable()}
         onBuyClick={openPopup}
+        onMoreClick={handleMoreClick}
       />
       <FooterHoriz />
       {isPopupVisible && (
@@ -458,6 +458,17 @@ const AnalysisResultPersonalRender = props => {
           onClose={closePopup}
           children={<BoxWithCards />}
         />
+      )}
+      {isLongPopupOpen && (
+        <Popup>
+          <Topbar onClick={() => setLongPopupOpen(false)} />
+          <LongBody
+            section={sectionsData[currentSectionIdx]}
+            onNavClick={handleNavClick}
+            prevName={sectionsData[currentSectionIdx - 1]?.sectionName}
+            nextName={sectionsData[currentSectionIdx + 1]?.sectionName}
+          />
+        </Popup>
       )}
       {/* <MainContainer>
         <NavigationBar

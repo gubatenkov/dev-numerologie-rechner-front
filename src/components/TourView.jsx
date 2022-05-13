@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Interweave from "interweave";
 import styled from "styled-components";
@@ -254,6 +254,8 @@ const TourView = props => {
     name,
     compareName
   } = props;
+  const [sections, setSections] = useState(tourData);
+  const [currentSection, setCurrentSection] = useState(sections[sectionIndex]);
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -475,7 +477,8 @@ const TourView = props => {
       <Spacer />
       <ContentArea>
         <h1>{tourStepTitle}</h1>
-        {tourStepContent ? (
+        {tourData.map(section => console.log(section))}
+        {/* {tourStepContent ? (
           <Interweave
             content={tourStepContent}
             filters={[
@@ -487,9 +490,9 @@ const TourView = props => {
           />
         ) : (
           <ResultLockedWidget accessLevel={props.accessLevel} />
-        )}
+        )} */}
       </ContentArea>
-      <PromotionArea>
+      {/* <PromotionArea>
         <UserLevelPromotionWidget accessLevel={props.accessLevel} />
         {showBookPromotion && (
           <BookPromotionWidget
@@ -497,43 +500,43 @@ const TourView = props => {
             bookReference={resultItem.bookReference}
           />
         )}
-      </PromotionArea>
-    </TourContentContainer>,
-    <TourOverViewOuterWrapper key="tourOverviewWrapper">
-      <TourOverViewInnerWrapper>
-        <TourOverView>
-          <TourOverViewBackButton
-            imageIcon={iconBackPrimary}
-            onClick={() => handleBackClick()}
-            hidden={sectionIndex + elementIndex === 0 ? true : false}
-          />
-          <TourOverViewMobileStep
-            tourStepTitle={shortTourStepTitle}
-            onClick={scrollToTop}
-          />
-          <TourOverviewSteps horizontal>
-            {tourData.map((tourSection, tourSectionIndex) => (
-              <Step
-                key={tourSection.sectionName}
-                name={tourSection.sectionName}
-                currentIndex={sectionIndex}
-                stepIndex={tourSectionIndex}
-                // active={tourSectionIndex <= sectionIndex}
-                onStepClick={name => handleStepClick(name)}
-              />
-            ))}
-          </TourOverviewSteps>
-          <TourOverViewForwardButton
-            imageIcon={iconForwardPrimary}
-            onClick={() => handleNextClick()}
-            hidden={
-              sectionIndex === lastSectionIndex &&
-              elementIndex === lastSectionLastElementIndex
-            }
-          />
-        </TourOverView>
-      </TourOverViewInnerWrapper>
-    </TourOverViewOuterWrapper>
+      </PromotionArea> */}
+    </TourContentContainer>
+    // <TourOverViewOuterWrapper key="tourOverviewWrapper">
+    //   <TourOverViewInnerWrapper>
+    //     <TourOverView>
+    //       <TourOverViewBackButton
+    //         imageIcon={iconBackPrimary}
+    //         onClick={() => handleBackClick()}
+    //         hidden={sectionIndex + elementIndex === 0 ? true : false}
+    //       />
+    //       <TourOverViewMobileStep
+    //         tourStepTitle={shortTourStepTitle}
+    //         onClick={scrollToTop}
+    //       />
+    //       <TourOverviewSteps horizontal>
+    //         {tourData.map((tourSection, tourSectionIndex) => (
+    //           <Step
+    //             key={tourSection.sectionName}
+    //             name={tourSection.sectionName}
+    //             currentIndex={sectionIndex}
+    //             stepIndex={tourSectionIndex}
+    //             // active={tourSectionIndex <= sectionIndex}
+    //             onStepClick={name => handleStepClick(name)}
+    //           />
+    //         ))}
+    //       </TourOverviewSteps>
+    //       <TourOverViewForwardButton
+    //         imageIcon={iconForwardPrimary}
+    //         onClick={() => handleNextClick()}
+    //         hidden={
+    //           sectionIndex === lastSectionIndex &&
+    //           elementIndex === lastSectionLastElementIndex
+    //         }
+    //       />
+    //     </TourOverView>
+    //   </TourOverViewInnerWrapper>
+    // </TourOverViewOuterWrapper>
   ];
 };
 
