@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useQuery } from "@apollo/react-hooks";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import ToastNotifications from "cogo-toast";
 import * as compose from "lodash.flowright";
 import { graphql } from "react-apollo";
+import LongBody from "./LongBody";
 
 // icons
 // import bookIconWhite from "../images/icon_openBook_white.svg";
@@ -56,34 +57,19 @@ import usePdfTrigger from "../utils/hooks/usePdfTrigger";
 import PopupBase from "./Popups/PopupBase";
 import BoxWithCards from "./BoxWithCards/BoxWithCards";
 import { TYPE_ID_MATRIX } from "../utils/Constants";
-import TourView from "./TourView";
 import Popup from "./Popups/Popup";
 import Topbar from "./Topbar";
 
-// const ContentArea = styled.div`
-//   display: flex;
-//   align-content: flex-start;
-//   flex-direction: row;
-// `;
-
-// const ResultContent = styled.div`
-//   padding: 0 15px;
-//   @media (max-width: ${MOBILE_RESOLUTION_THRESHOLD}px) {
-//   }
-//   width: 100%;
-// `;
-
 const AnalysisResultPersonalRender = props => {
-  // const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  // const [userSettings, setUserSettings] = useState(props.user);
-  // const [groups, setGroups] = useState([]);
+  const [currentSectionIdx, setCurrentSectionIdx] = useState(0);
   const [isPDFSaving, setPDFSaving] = useState(false);
+  const [isLongPopupOpen, setLongPopupOpen] = useState(false);
   const [triggerDownloadPdf, isPDFGenerating] = usePdfTrigger();
   const [isPopupVisible, setPopupVisibility] = useState(false);
   const { t } = useTranslation();
   const User = useUser();
   const {
-    // user,
+    user,
     match: {
       params: { resultConfigurationId }
     },
@@ -113,10 +99,6 @@ const AnalysisResultPersonalRender = props => {
   //   }
   // }, [User.isFetching, User]);
 
-  // const [showSaveModal, setShowSaveModal] = useState(false);
-  const [tourData, setTourData] = useState([]);
-  const [tourStructure, setTourStructure] = useState([]);
-
   const LoadingOverlay = useLoadingOverlay();
 
   const resultConfig = configuration;
@@ -136,9 +118,17 @@ const AnalysisResultPersonalRender = props => {
     }
   });
 
-  useEffect(() => {
-    if (data) setTourData(data);
-  }, [data]);
+  if (loading) {
+    LoadingOverlay.showWithText(t("GENERATE_REPORT"));
+    return null;
+  }
+
+  if (error) {
+    LoadingOverlay.showWithText(t("ERROR_OCCURED"));
+    return null;
+  }
+
+  const { introTexts } = data;
 
   const buildTourDataStructure = (
     resultData,
@@ -179,23 +169,6 @@ const AnalysisResultPersonalRender = props => {
       };
     });
   };
-
-  useEffect(() => {
-    if (
-      User?.user?.currentUser &&
-      tourData?.introTexts &&
-      personalAnalysisResult &&
-      resultConfig
-    ) {
-      const struct = buildTourDataStructure(
-        personalAnalysisResult,
-        resultConfig,
-        tourData.introTexts,
-        User.user.currentUser
-      );
-      setTourStructure(struct);
-    }
-  }, [User, tourData, personalAnalysisResult, resultConfig]);
 
   const buildContentDataStructure = (configuration, result) =>
     configuration.map(configSection => {
@@ -332,8 +305,6 @@ const AnalysisResultPersonalRender = props => {
     }
   }
 
-  // const handleSaveBtnClick = () => setSaveDialogOpen(true);
-
   LoadingOverlay.hide();
 
   // const userSettingsChanged = async () => {
@@ -436,6 +407,27 @@ const AnalysisResultPersonalRender = props => {
     setPopupVisibility(false);
   };
 
+  const sectionsData = buildTourDataStructure(
+    personalAnalysisResult,
+    resultConfig,
+    introTexts,
+    user
+  );
+
+  const handleMoreClick = sectionName => {
+    const index = sectionsData.findIndex(
+      section => section.sectionName === sectionName
+    );
+    setCurrentSectionIdx(index);
+    setLongPopupOpen(true);
+  };
+
+  const handleNavClick = dir => {
+    dir === "next"
+      ? setCurrentSectionIdx(currentSectionIdx + 1)
+      : setCurrentSectionIdx(currentSectionIdx - 1);
+  };
+
   return (
     <>
       <section className="anal">
@@ -456,6 +448,7 @@ const AnalysisResultPersonalRender = props => {
         onDownloadClick={handleDownloadClick}
         isDownloadable={isDownloadable()}
         onBuyClick={openPopup}
+        onMoreClick={handleMoreClick}
       />
       <FooterHoriz />
       {isPopupVisible && (
@@ -466,37 +459,17 @@ const AnalysisResultPersonalRender = props => {
           children={<BoxWithCards />}
         />
       )}
-      {false && (
+      {isLongPopupOpen && (
         <Popup>
-          <Topbar />
+          <Topbar onClick={() => setLongPopupOpen(false)} />
+          <LongBody
+            section={sectionsData[currentSectionIdx]}
+            onNavClick={handleNavClick}
+            prevName={sectionsData[currentSectionIdx - 1]?.sectionName}
+            nextName={sectionsData[currentSectionIdx + 1]?.sectionName}
+          />
         </Popup>
       )}
-      {/* <TourView
-        onClose={() => console.log("closed")}
-        tourData={tourData}
-        name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-        // compareTourData={
-        //   personalAnalysisCompareResult &&
-        //   buildTourDataStructure(
-        //     personalAnalysisCompareResult,
-        //     resultConfig,
-        //     introTexts,
-        //     userSettings
-        //   )
-        // }
-        // compareName={
-        //   personalAnalysisCompareResult &&
-        //   `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
-        // }
-        // sectionIndex={tourSectionIndex}
-        // elementIndex={tourElementIndex}
-        // onIndexChange={(sectionIndex, elementIndex) => {
-        //   setTourSectionIndex(sectionIndex);
-        //   setTourElementIndex(elementIndex);
-        // }}
-      //   user={User?.user?.currentUser}
-      //   accessLevel={personalAnalysisResult.accessLevel}
-      // />
       {/* <MainContainer>
         <NavigationBar
           leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}

@@ -16,6 +16,8 @@ const ResultRow = ({
   accessLevel = "ACCESS_LEVEL_GUEST",
   descriptionText: desc,
   onBuyClick,
+  onMoreClick,
+  sectionName,
   ...restProps
 }) => {
   const [isCollapsed, setCollapsed] = useState(true);
@@ -26,7 +28,7 @@ const ResultRow = ({
     },
     more: {
       children: "More",
-      handler: () => console.log("more")
+      handler: () => onMoreClick(sectionName)
     }
   };
 

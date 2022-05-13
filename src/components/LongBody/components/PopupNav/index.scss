@@ -1,0 +1,86 @@
+.popupnav {
+  &__nav {
+    padding: 0 0 10px;
+
+    display: flex;
+    justify-content: space-between;
+
+    &-btn {
+      padding: 0 25px;
+
+      font-size: 14px;
+      color: #baa270;
+      font-weight: 500;
+      font-style: normal;
+      line-height: 20px;
+
+      background: transparent;
+      border: 1px solid transparent;
+
+      position: relative;
+
+      &--left {
+        &::before {
+          content: "";
+
+          width: 10px;
+          height: 10px;
+          display: block;
+
+          left: 0;
+          top: 5px;
+          position: absolute;
+
+          background-position: center;
+          background-repeat: no-repeat;
+          background-image: url("../../../../images/leftArr.svg");
+
+          z-index: 1;
+        }
+      }
+
+      &--right {
+        &::before {
+          content: "";
+
+          width: 10px;
+          height: 10px;
+          display: block;
+
+          right: 0;
+          top: 5px;
+          position: absolute;
+
+          background-position: center;
+          background-repeat: no-repeat;
+          background-image: url("../../../../images/leftArr.svg");
+
+          transform: rotate(180deg);
+
+          z-index: 1;
+        }
+      }
+
+      &--disabled {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      &:focus {
+        outline: none;
+        border: 1px solid transparent;
+      }
+    }
+
+    &--bb {
+      border-bottom: 1px solid rgba(79, 68, 66, 0.3);
+    }
+
+    &--bt {
+      margin: 40px 0;
+      padding-top: 80px;
+
+      border-top: 1px solid rgba(79, 68, 66, 0.3);
+    }
+  }
+}

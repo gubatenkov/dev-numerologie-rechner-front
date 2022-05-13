@@ -1,0 +1,26 @@
+.numpill {
+  gap: 10px;
+  display: flex;
+  padding: 10px 30px;
+
+  height: 60px;
+  width: fit-content;
+
+  border-radius: 50px;
+  background: rgba(215, 178, 103, 0.2);
+
+  &__item {
+    font-size: 28px;
+    color: #4f4442;
+    font-weight: 500;
+    line-height: 40px;
+
+    opacity: 0.2;
+
+    &--bold {
+      color: #313236;
+
+      opacity: 1;
+    }
+  }
+}
