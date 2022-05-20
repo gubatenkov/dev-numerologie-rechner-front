@@ -1,10 +1,12 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import "./index.scss";
 
 import Typography from "../Typography";
 
 const FooterHoriz = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -26,7 +28,7 @@ const FooterHoriz = () => {
                 color="#fff"
                 href="#"
               >
-                Psychological Numerology
+                {t("FOOTER_APPNAME_TEXT")}
               </Typography>
             </li>
             <li className="footer-right__item">
@@ -38,7 +40,7 @@ const FooterHoriz = () => {
                 color="#fff"
                 href="#"
               >
-                About us
+                {t("FOOTER_ABOUT_TEXT")}
               </Typography>
             </li>
             <li className="footer-right__item">
@@ -50,7 +52,7 @@ const FooterHoriz = () => {
                 color="#fff"
                 href="#"
               >
-                Imprint
+                {t("FOOTER_IMPRINT_TEXT")}
               </Typography>
             </li>
             <li className="footer-right__item">
@@ -62,7 +64,7 @@ const FooterHoriz = () => {
                 color="#fff"
                 href="#"
               >
-                Privacy
+                {t("FOOTER_PRIVACY_TEXT")}
               </Typography>
             </li>
             <li className="footer-right__item">
@@ -74,7 +76,7 @@ const FooterHoriz = () => {
                 color="#fff"
                 href="#"
               >
-                Terms of Use
+                {t("FOOTER_TERMS_TEXT")}
               </Typography>
             </li>
           </ul>

@@ -115,7 +115,7 @@ const Login = ({ history }) => {
                           lh="40px"
                           fw="700"
                         >
-                          Welcome!
+                          {t("LOGIN_FORM_WELCOME_TEXT")}
                         </Typography>
                       </div>
                       <p className="login-form__subheading">{email}</p>
@@ -125,7 +125,7 @@ const Login = ({ history }) => {
                             className="login-form__input"
                             name="password"
                             type="password"
-                            label="Password"
+                            label={t("LOGIN_FORM_EMAIL_LABEL_TEXT")}
                             form="novalidatedform"
                             placeholder="**********"
                             message={errors.password?.message}
@@ -154,7 +154,7 @@ const Login = ({ history }) => {
                               fw="400"
                               color="#323232"
                             >
-                              Remember me
+                              {t("LOGIN_FORM_CHECKBOX_TEXT")}
                             </Typography>
                           </label>
                         </div>
@@ -163,13 +163,13 @@ const Login = ({ history }) => {
                           type="submit"
                           loading={isLoading}
                         >
-                          Log In
+                          {t("LOGIN_FORM_LOGINBTN_TEXT")}
                         </BaseBtn>
                         <BaseBtn
                           className="blue-btn login-form__back"
                           onClick={handleClickBack}
                         >
-                          Back
+                          {t("LOGIN_FORM_BACKBTN_TEXT")}
                         </BaseBtn>
                       </div>
                       <div className="login-form__footer">
@@ -178,7 +178,7 @@ const Login = ({ history }) => {
                           href="/reset"
                           link
                         >
-                          Forgot your password?
+                          {t("LOGIN_FORM_FORGOT_TEXT")}
                         </BaseBtn>
                       </div>
                     </>
@@ -192,7 +192,7 @@ const Login = ({ history }) => {
                           lh="40px"
                           fw="700"
                         >
-                          Log In
+                          {t("SIGN_IN")}
                         </Typography>
                       </div>
                       <div className="login-form__body">
@@ -201,7 +201,7 @@ const Login = ({ history }) => {
                             className="login-form__input-email"
                             name="email"
                             type="email"
-                            label="Email"
+                            label={t("EMAIL")}
                             form="novalidatedform"
                             placeholder="example@mail.com"
                             message={errors.email?.message}
@@ -211,7 +211,7 @@ const Login = ({ history }) => {
                             className="blue-btn login-form__submit"
                             type="submit"
                           >
-                            Continue with e-mail
+                            {t("LOGIN_FORM_SUBMITBTN_TEXT")}
                           </BaseBtn>
                         </div>
                       </div>
@@ -223,14 +223,14 @@ const Login = ({ history }) => {
                           lh="20px"
                           fw="400"
                         >
-                          Don't have a <br /> psychologischenumerologie account?
+                          {t("LOGIN_FORM_TEXT")}
                         </Typography>
                         <BaseBtn
                           className="login-form__signup"
                           href="/register"
                           link
                         >
-                          Sign Up
+                          {t("LOGIN_FORM_SIGNUPBTN_TEXT")}
                         </BaseBtn>
                       </div>
                     </>

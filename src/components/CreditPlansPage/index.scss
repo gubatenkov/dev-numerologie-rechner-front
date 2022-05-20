@@ -1,0 +1,25 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.plans-page {
+  position: relative;
+
+  > .header {
+    width: 100%;
+
+    top: 0;
+    position: absolute;
+
+    @include max-media($md) {
+      position: sticky;
+    }
+  }
+
+  > .anal {
+    padding: 74px 0 0;
+
+    @include max-media($md) {
+      padding: 0;
+    }
+  }
+}

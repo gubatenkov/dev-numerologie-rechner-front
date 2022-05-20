@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { Spinner } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 import "./index.scss";
 
 import Typography from "../Typography";
 import MenuList from "./components/MenuList";
 import MenuItem from "./components/MenuItem";
-import { useUser } from "../../contexts/UserContext";
 
-const Aside = ({ items, onDownloadClick, isDownloadable }) => {
-  const User = useUser();
+const Aside = ({ items, downloadBtn }) => {
+  const { t } = useTranslation();
   const [isActive, setActive] = useState(0);
 
   const render = () => {
@@ -23,46 +22,23 @@ const Aside = ({ items, onDownloadClick, isDownloadable }) => {
         key={idx}
         onClick={() => setActive(idx)}
       >
-        {name}
-        {titles?.length && (
-          <MenuList className="aside-menu__submenu">
-            {titles.map(({ title }, idx) => (
-              <MenuItem className="aside-menu__submenu-item" key={idx}>
-                {title}
-              </MenuItem>
-            ))}
-          </MenuList>
-        )}
+        <a href={`#Section-${idx + 1}`} ref={React.createRef()}>
+          {name}
+          {titles?.length && (
+            <MenuList className="aside-menu__submenu">
+              {titles.map(({ title }, idx) => {
+                title = title.split("=")[0];
+                return (
+                  <MenuItem className="aside-menu__submenu-item" key={idx}>
+                    {title}
+                  </MenuItem>
+                );
+              })}
+            </MenuList>
+          )}
+        </a>
       </MenuItem>
     ));
-  };
-
-  const getDownloadBtn = () => {
-    if (!User?.user) {
-      return (
-        <button className="aside-btn blue-btn" disabled={true}>
-          <span>Login to Download</span>
-        </button>
-      );
-    } else {
-      return isDownloadable ? (
-        <button
-          className="aside-btn blue-btn"
-          onClick={onDownloadClick}
-          disabled={!isDownloadable}
-        >
-          <span>Download analysis</span>
-        </button>
-      ) : (
-        <button
-          className="aside-btn blue-btn  no-img"
-          onClick={onDownloadClick}
-          disabled={!isDownloadable}
-        >
-          <Spinner animation="border" role="status" variant="light" />
-        </button>
-      );
-    }
   };
 
   return (
@@ -76,12 +52,12 @@ const Aside = ({ items, onDownloadClick, isDownloadable }) => {
           lh="30px"
           color="#323232"
         >
-          Contents
+          {t("ASIDE_HEADING_TEXT")}
         </Typography>
         <hr className="aside-border" />
         <MenuList className="aside-menu">{render()}</MenuList>
       </div>
-      {getDownloadBtn()}
+      {downloadBtn()}
     </aside>
   );
 };

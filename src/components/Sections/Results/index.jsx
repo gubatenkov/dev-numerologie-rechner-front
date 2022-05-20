@@ -9,8 +9,7 @@ import ResultsSection from "./components/ResultsSection";
 const Results = ({
   sidebarItems,
   renderItems,
-  onDownloadClick,
-  isDownloadable,
+  downloadBtn,
   onBuyClick,
   onMoreClick
 }) => {
@@ -51,17 +50,17 @@ const Results = ({
       <div className="container">
         <div className="results-inner">
           <div className="results-left">
-            <Aside
-              items={sidebarItems}
-              onDownloadClick={onDownloadClick}
-              isDownloadable={isDownloadable}
-            />
+            <Aside items={sidebarItems} downloadBtn={downloadBtn} />
           </div>
           <div className="results-right">
             <div className="results-wrap">
               {renderItems.map((section, idx) => {
                 return (
-                  <ResultsSection heading={section.sectionHeading} key={idx}>
+                  <ResultsSection
+                    key={idx}
+                    idx={idx + 1}
+                    heading={section.sectionHeading}
+                  >
                     {render(section, ResultRow)}
                   </ResultsSection>
                 );

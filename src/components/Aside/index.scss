@@ -46,6 +46,11 @@
 
       cursor: pointer;
 
+      > a {
+        font-size: inherit;
+        color: inherit;
+      }
+
       &::after {
         content: "";
 

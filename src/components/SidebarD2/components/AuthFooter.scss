@@ -1,0 +1,38 @@
+.authfooter {
+  margin: 0;
+  padding: 50px 0 0;
+
+  list-style: none;
+
+  &-link {
+    display: block;
+
+    font-size: 14px;
+    color: #313236;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: normal;
+  }
+
+  &-btn {
+    padding: 0;
+    width: 100%;
+    display: block;
+    margin: 20px 0 20px;
+
+    font-size: 14px;
+    color: #313236;
+    font-weight: 500;
+    text-align: left;
+    line-height: 20px;
+    font-style: normal;
+
+    background: transparent;
+    border: 1px solid transparent;
+
+    &:focus {
+      outline: none;
+      border: 1px solid transparent;
+    }
+  }
+}

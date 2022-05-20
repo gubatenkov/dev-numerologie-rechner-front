@@ -1,0 +1,62 @@
+.loginblock {
+  padding: 40px 0 0;
+
+  &__text {
+    margin: 0 0 30px 0;
+
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+
+    text-align: center;
+    text-transform: uppercase;
+
+    color: #313236;
+  }
+
+  &__actions {
+    padding: 0 0 50px;
+
+    gap: 12px;
+    display: flex;
+    justify-content: center;
+
+    border-bottom: 1px solid #cac6c4;
+  }
+
+  &-btn {
+    padding: 10px 19px;
+
+    font-size: 14px;
+    background: #01b2d4;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    border: 1px solid transparent;
+
+    &:hover {
+      color: #ffffff;
+    }
+
+    &:focus {
+      border: 1px solid #006c81;
+    }
+
+    &--outlined {
+      color: #01b2d4;
+      background-color: #fff;
+      border: 1px solid #01b2d4;
+
+      &:hover {
+        color: #01b2d4;
+      }
+    }
+  }
+}

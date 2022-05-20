@@ -2,7 +2,13 @@ import React from "react";
 
 import "./index.scss";
 
-const PopupNav = ({ className = "", prevName, nextName, onNavClick }) => {
+const PopupNav = ({
+  className = "",
+  prevName,
+  centerName,
+  nextName,
+  onNavClick
+}) => {
   return (
     <div className={`popupnav__nav ${className}`}>
       <button
@@ -15,6 +21,9 @@ const PopupNav = ({ className = "", prevName, nextName, onNavClick }) => {
       >
         {prevName}
       </button>
+      {centerName?.length > 0 && (
+        <span className="popupnav__nav-center">{centerName}</span>
+      )}
       <button
         className={
           !nextName?.length

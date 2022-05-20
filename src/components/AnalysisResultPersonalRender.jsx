@@ -1,55 +1,25 @@
 import PropTypes from "prop-types";
-import { useQuery } from "@apollo/react-hooks";
 import React, { useState } from "react";
+import { Spinner } from "react-bootstrap";
+import { useQuery } from "@apollo/react-hooks";
 
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
-// import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import ToastNotifications from "cogo-toast";
 import * as compose from "lodash.flowright";
 import { graphql } from "react-apollo";
 import LongBody from "./LongBody";
 
-// icons
-// import bookIconWhite from "../images/icon_openBook_white.svg";
-// import bookIconPrimary from "../images/icon_openBook_primary.svg";
-// import saveIconPrimary from "../images/icon_save_primary.svg";
-// import iconBackPrimary from "../images/icon_back_primary.svg";
-// import iconClosePrimary from "../images/icon_close_primary.svg";
-
-// components
-// import TitleBar from "./TitleBar";
-// import NavigationBar from "./NavigationBar";
-// import ContentNavigation from "./ContentNavigation";
-// import ResultPanel from "./ResultPanel";
-// import ResultTable from "./ResultTable";
-// import TourView from "./TourView";
-// import TextButton from "./Buttons/TextButton";
-// import NameInputDialog from "./dialogs/NameInputDialog";
-// import Footer from "./Footer";
-// import CreditsBuyModal from "./CreditsBuy/CreditsBuyModal";
-// import AnalysisAutoSaveDialog from "./dialogs/AnalysisAutoSaveDialog";
-
-// import { MOBILE_RESOLUTION_THRESHOLD } from "../utils/Constants";
-
 import { PERSONAL_RESULT_CONFIGURATION_DEFAULT_ID } from "../utils/Configuration";
 
-import {
-  introTextQuery
-  // userSettingsQuery
-} from "../graphql/Queries";
+import { introTextQuery } from "../graphql/Queries";
 
-// import { TYPE_ID_MATRIX } from "../utils/Constants";
-
-// import ActionBar from "./ActionBar";
 import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
-// import MainContainer from "./MainContainer";
 import { useUser } from "../contexts/UserContext";
-// import SaveAnalysisDialog from "./dialogs/SaveAnalysisDialog";
 import { saveAnalysisMutation } from "../graphql/Mutations";
 import Header from "./Header";
-import AnalForm from "../components/Forms/AnalForm";
+// import AnalForm from "../components/Forms/AnalForm";
 import AnalBlock from "./AnalBlock";
 import FooterHoriz from "./FooterHoriz";
 import Results from "./Sections/Results";
@@ -59,15 +29,22 @@ import BoxWithCards from "./BoxWithCards/BoxWithCards";
 import { TYPE_ID_MATRIX } from "../utils/Constants";
 import Popup from "./Popups/Popup";
 import Topbar from "./Topbar";
+// import useAnalysis from "../utils/useAnalysis";
+// import moment from "moment";
+import Sidebar from "./SidebarD2";
+import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
 
 const AnalysisResultPersonalRender = props => {
-  const [currentSectionIdx, setCurrentSectionIdx] = useState(0);
+  // const [startAnalysis] = useAnalysis();
   const [isPDFSaving, setPDFSaving] = useState(false);
   const [isLongPopupOpen, setLongPopupOpen] = useState(false);
-  const [triggerDownloadPdf, isPDFGenerating] = usePdfTrigger();
   const [isPopupVisible, setPopupVisibility] = useState(false);
+  const [currentSectionIdx, setCurrentSectionIdx] = useState(0);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [triggerDownloadPdf, isPDFGenerating] = usePdfTrigger();
   const { t } = useTranslation();
   const User = useUser();
+  const [isForProfessionals, setForProfessionals] = useState(false);
   const {
     user,
     match: {
@@ -80,25 +57,6 @@ const AnalysisResultPersonalRender = props => {
     // },
     configuration
   } = props;
-  // const {
-  //   data: userSettingsData,
-  //   refetch
-  // } = useQuery(userSettingsQuery, {
-  //   fetchPolicy: "network-only",
-  //   onCompleted: data => {
-  //     if (error) {
-  //       return;
-  //     }
-  //     setUserSettings(userSettingsData);
-  //   }
-  // });
-
-  // useEffect(() => {
-  //   if (User?.user?.currentUser) {
-  //     setGroups(User?.user?.currentUser?.groups);
-  //   }
-  // }, [User.isFetching, User]);
-
   const LoadingOverlay = useLoadingOverlay();
 
   const resultConfig = configuration;
@@ -199,50 +157,6 @@ const AnalysisResultPersonalRender = props => {
       };
     });
 
-  // const handleItemDetailClick = (sectionId, numberId) => {
-  //   const tourDataStructure = buildTourDataStructure(
-  //     props.personalAnalysisResult,
-  //     resultConfig,
-  //     introTexts,
-  //     userSettings
-  //   );
-
-  //   let sectionIndex = tourDataStructure.findIndex(
-  //     section => section.sectionName === sectionId
-  //   );
-
-  //   if (sectionIndex < 0) {
-  //     sectionIndex = 0;
-  //   }
-
-  //   let elementIndex = tourDataStructure[
-  //     sectionIndex
-  //   ].sectionElements.findIndex(element => element.numberId === numberId);
-
-  //   if (elementIndex < 0) {
-  //     elementIndex = 0;
-  //   }
-
-  //   setIsTourOpen(true);
-  //   setTourSectionIndex(sectionIndex);
-  //   setTourElementIndex(elementIndex);
-  // };
-
-  // const navigateToElementHandler = anchor => {
-  //   const domElement = document.getElementById(anchor);
-  //   if (domElement) {
-  //     domElement.scrollIntoView({ block: "start", behavior: "smooth" });
-  //   }
-  // };
-
-  // const handleClose = () => {
-  //   if (analysisId) {
-  //     props.history.push("/userHome");
-  //   } else {
-  //     setShowSaveModal(true);
-  //   }
-  // };
-
   async function saveAnalysis(name, groupId) {
     const firstNames = decodeURIComponent(props.match.params.firstNames);
     const lastNames = decodeURIComponent(props.match.params.lastNames);
@@ -307,18 +221,11 @@ const AnalysisResultPersonalRender = props => {
 
   LoadingOverlay.hide();
 
-  // const userSettingsChanged = async () => {
-  //   try {
-  //     const res = await refetch();
-  //     if (res?.data?.currentUser) {
-  //       setUserSettings(res.data.currentUser);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
+  // const onSubmit = data => {
+  //   const { name, lastname, altname, altlastname, day, month, year } = data;
+  //   const formatedDate = moment(`${year}-${month}-${day}`).format("DD.MM.YYYY");
+  //   startAnalysis(name, lastname, altname, altlastname, formatedDate);
   // };
-
-  const onSubmit = () => console.log("submit");
 
   const structure = buildContentDataStructure(
     resultConfig,
@@ -428,16 +335,62 @@ const AnalysisResultPersonalRender = props => {
       : setCurrentSectionIdx(currentSectionIdx - 1);
   };
 
+  const renderDownloadBtn = () => {
+    if (!User?.user) {
+      return (
+        <button className="aside-btn blue-btn" disabled={true}>
+          <span>{t("ASIDE_DOWNLOADBTN_UNAUTH_TEXT")}</span>
+        </button>
+      );
+    } else {
+      return isDownloadable() ? (
+        <button
+          className="aside-btn blue-btn"
+          onClick={handleDownloadClick}
+          disabled={!isDownloadable()}
+        >
+          <span>{t("ASIDE_DOWNLOADBTN_AUTH_TEXT")}</span>
+        </button>
+      ) : (
+        <button
+          className="aside-btn blue-btn no-img"
+          onClick={handleDownloadClick}
+          disabled={!isDownloadable()}
+        >
+          <Spinner animation="border" role="status" variant="light" />
+        </button>
+      );
+    }
+  };
+
   return (
     <>
       <section className="anal">
-        <Header user={User?.user} plusBtn={openPopup} />
+        <Header
+          user={User?.user}
+          plusBtn={openPopup}
+          isSidebarVisible={isSidebarVisible}
+          onOpen={() => setSidebarVisible(true)}
+          onClose={() => setSidebarVisible(false)}
+        />
+        <Sidebar isVisible={isSidebarVisible} openPopup={openPopup} />
         <div className="container">
           <div className="anal-inner">
-            <h1 className="anal-title">Numerology Calculator</h1>
-            <div className="anal-form__wrapper">
+            <BaseBtn className="anal-btn__back" href="/" link>
+              {"< Personal analyses"}
+            </BaseBtn>
+            <h1 className="anal-title">
+              {`
+                ${personalAnalysisResult.firstNames}
+                ${personalAnalysisResult.lastName}
+              `}
+            </h1>
+            <p className="anal-date">{personalAnalysisResult.dateOfBirth}</p>
+            {/* <h1 className="anal-title">{t("ANAL_TITLE_TEXT")}</h1> */}
+            {/* <div className="anal-form__wrapper">
               <AnalForm onSubmit={onSubmit} />
-            </div>
+            </div> */}
+            {renderDownloadBtn()}
           </div>
           {User?.user && <AnalBlock anals={User?.user?.analyses} />}
         </div>
@@ -445,8 +398,7 @@ const AnalysisResultPersonalRender = props => {
       <Results
         sidebarItems={structure}
         renderItems={sections}
-        onDownloadClick={handleDownloadClick}
-        isDownloadable={isDownloadable()}
+        downloadBtn={renderDownloadBtn}
         onBuyClick={openPopup}
         onMoreClick={handleMoreClick}
       />
@@ -461,236 +413,20 @@ const AnalysisResultPersonalRender = props => {
       )}
       {isLongPopupOpen && (
         <Popup>
-          <Topbar onClick={() => setLongPopupOpen(false)} />
+          <Topbar
+            toggleValue={isForProfessionals}
+            onToggleChange={() => setForProfessionals(!isForProfessionals)}
+            onCrossClick={() => setLongPopupOpen(false)}
+          />
           <LongBody
             section={sectionsData[currentSectionIdx]}
+            isForProfessionals={isForProfessionals}
             onNavClick={handleNavClick}
             prevName={sectionsData[currentSectionIdx - 1]?.sectionName}
             nextName={sectionsData[currentSectionIdx + 1]?.sectionName}
           />
         </Popup>
       )}
-      {/* <MainContainer>
-        <NavigationBar
-          leftButtonIcon={isTourOpen ? iconClosePrimary : iconBackPrimary}
-          leftButtonOnClick={
-            isTourOpen ? () => setIsTourOpen(false) : () => handleClose()
-          }
-          isSettingsVisibleOnBookPage={isTourOpen}
-          userSettingsChanged={userSettingsChanged}
-        />
-        {!isTourOpen && [
-          <TitleBar
-            primaryName={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-            primaryDate={personalAnalysisResult.dateOfBirth}
-            secondaryName={
-              personalAnalysisCompareResult &&
-              `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
-            }
-            onRemoveSecondaryName={() => {
-              props.history.push(
-                `/resultPersonal/${personalAnalysisResult.firstNames}/${personalAnalysisResult.lastName}/${personalAnalysisResult.dateOfBirth}`
-              );
-            }}
-            key="titlebar"
-          />,
-          <ActionBar key="actionbar">
-            <TextButton
-              title={t("COMPARE_NAME")}
-              onClick={() => setIsNameDialogOpen(true)}
-            />
-            <TextButton
-              icon={saveIconPrimary}
-              title={t("SAVE")}
-              onClick={handleSaveBtnClick}
-            />
-            <TextButton
-              primary
-              icon={bookIconWhite}
-              title={t("READ_ALL")}
-              onClick={() => {
-                setIsTourOpen(true);
-                setTourSectionIndex(0);
-                setTourElementIndex(0);
-              }}
-            />
-          </ActionBar>,
-          <ContentArea key="resultContent">
-            <ContentNavigation
-              contentItems={buildContentDataStructure(
-                resultConfig,
-                personalAnalysisResult
-              )}
-              onItemClick={navigateToElementHandler}
-              autoAdapt
-            />
-
-            <ResultContent>
-              {resultConfig.map(resultSection => (
-                <ResultPanel
-                  title={resultSection.name}
-                  rightActionIcon={bookIconPrimary}
-                  onRightActionClick={() =>
-                    handleItemDetailClick(resultSection.name)
-                  }
-                  id={resultSection.name}
-                  key={resultSection.name}
-                >
-                  {resultSection.tables.map(tableData => (
-                    <ResultTable
-                      name={tableData.name}
-                      numbers={tableData.numberIds.map(numberId =>
-                        _.get(personalAnalysisResult, numberId)
-                      )}
-                      compareNumbers={
-                        personalAnalysisCompareResult &&
-                        tableData.numberIds.map(numberId =>
-                          _.get(personalAnalysisCompareResult, numberId)
-                        )
-                      }
-                      headings={tableData.headings}
-                      showTitle={tableData.showTitle}
-                      handleTextDetailClick={handleItemDetailClick}
-                      sectionId={resultSection.name}
-                      accessLevel={personalAnalysisResult.accessLevel}
-                      key={`${resultSection.name + tableData.name}`}
-                    />
-                  ))}
-                </ResultPanel>
-              ))}
-            </ResultContent>
-          </ContentArea>
-        ]}
-
-        {isTourOpen && (
-          <TourView
-            onClose={() => setIsTourOpen(false)}
-            tourData={buildTourDataStructure(
-              personalAnalysisResult,
-              resultConfig,
-              introTexts,
-              userSettings
-            )}
-            name={`${personalAnalysisResult.firstNames} ${personalAnalysisResult.lastName}`}
-            compareTourData={
-              personalAnalysisCompareResult &&
-              buildTourDataStructure(
-                personalAnalysisCompareResult,
-                resultConfig,
-                introTexts,
-                userSettings
-              )
-            }
-            compareName={
-              personalAnalysisCompareResult &&
-              `${personalAnalysisCompareResult.firstNames} ${personalAnalysisCompareResult.lastName}`
-            }
-            sectionIndex={tourSectionIndex}
-            elementIndex={tourElementIndex}
-            onIndexChange={(sectionIndex, elementIndex) => {
-              setTourSectionIndex(sectionIndex);
-              setTourElementIndex(elementIndex);
-            }}
-            user={userSettings}
-            accessLevel={personalAnalysisResult.accessLevel}
-          />
-        )}
-
-        <NameInputDialog
-          show={isNameDialogOpen}
-          onHide={() => setIsNameDialogOpen(false)}
-          firstNames={personalAnalysisResult.firstNames}
-          lastName={personalAnalysisResult.lastName}
-          compareFirstNames={
-            personalAnalysisCompareResult &&
-            personalAnalysisCompareResult.firstNames
-          }
-          compareLastName={
-            personalAnalysisCompareResult &&
-            personalAnalysisCompareResult.lastName
-          }
-          onChange={(
-            firstNames,
-            lastName,
-            compareFirstNames,
-            compareLastName
-          ) => {
-            const hasCompareName =
-              !!(compareFirstNames.length > 0) ||
-              !!(compareLastName.length > 0);
-
-            let hasNameChanged =
-              firstNames !== personalAnalysisResult.firstNames ||
-              lastName !== personalAnalysisResult.lastName;
-
-            if (personalAnalysisCompareResult) {
-              hasNameChanged =
-                hasNameChanged ||
-                compareFirstNames !==
-                  personalAnalysisCompareResult.firstNames ||
-                compareLastName !== personalAnalysisCompareResult.lastName;
-            } else {
-              hasNameChanged = hasNameChanged || hasCompareName;
-            }
-
-            if (hasNameChanged) {
-              let firstNameParam;
-              let lastNameParam;
-
-              if (hasCompareName) {
-                firstNameParam = [firstNames, compareFirstNames || firstNames];
-                lastNameParam = [lastName, compareLastName || lastName];
-              } else {
-                firstNameParam = firstNames;
-                lastNameParam = lastName;
-              }
-
-              props.history.push(
-                `/resultPersonal/${firstNameParam}/${lastNameParam}/${personalAnalysisResult.dateOfBirth}`
-              );
-            } else {
-              setIsNameDialogOpen(false);
-            }
-          }}
-        />
-        <CreditsBuyModal />
-        <AnalysisAutoSaveDialog
-          onAction={() => setShowSaveModal(false)}
-          isOpen={showSaveModal}
-          onCancel={() => props.history.push("/userHome")}
-          onClose={() => setShowSaveModal(false)}
-        />
-        <SaveAnalysisDialog
-          isOpen={saveDialogOpen}
-          onClose={() => setSaveDialogOpen(false)}
-          onSave={group => {
-            const firstNames = decodeURIComponent(
-              props.match.params.firstNames
-            );
-            const lastNames = decodeURIComponent(props.match.params.lastNames);
-            const dateOfBirth = decodeURIComponent(
-              props.match.params.dateOfBirth
-            );
-
-            let analysisName;
-            if (lastNames.split(",").length > 1) {
-              const firstName = firstNames.split(",")[0];
-              const firstNameComfort = firstNames.split(",")[1];
-              const lastName = lastNames.split(",")[0];
-              const lastNameComfort = lastNames.split(",")[1];
-
-              analysisName = `${firstName} ${lastName} / ${firstNameComfort} ${lastNameComfort}, ${dateOfBirth}`;
-            } else {
-              analysisName = `${firstNames} ${lastNames}, ${dateOfBirth}`;
-            }
-            saveAnalysis(analysisName, group.id);
-            setSaveDialogOpen(false);
-            LoadingOverlay.showWithText();
-          }}
-          groups={groups}
-        />
-        {!isTourOpen && <Footer />}
-      </MainContainer> */}
     </>
   );
 };

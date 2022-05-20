@@ -77,6 +77,10 @@
     top: 100%;
     position: absolute;
 
+    @include max-media($md) {
+      min-width: max-content;
+    }
+
     &.opened {
       padding: 10px 0 0;
     }

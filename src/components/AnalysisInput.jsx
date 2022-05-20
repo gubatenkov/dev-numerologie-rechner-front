@@ -1,60 +1,31 @@
-import * as yup from "yup";
 import moment from "moment";
 import PropTypes from "prop-types";
 import queryString from "querystring";
-
-import React, { useEffect, useState } from "react";
-import ToastNotifications from "cogo-toast";
 import { withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react";
 
 import "../styles/InputForm.css";
 import "../styles/AnalysisInput.scss";
 
 import Header from "./Header";
+import Sidebar from "./SidebarD2";
 import AnalBlock from "./AnalBlock";
 import Promo from "./Sections/Promo";
 import AnalForm from "./Forms/AnalForm";
 import FooterHoriz from "./FooterHoriz";
-import { useUser } from "../contexts/UserContext";
 import PopupBase from "./Popups/PopupBase";
+import useAnalysis from "../utils/useAnalysis";
+import { useUser } from "../contexts/UserContext";
 import BoxWithCards from "./BoxWithCards/BoxWithCards";
-
-// defining model for validation
-const inputSchemaPersonal = yup.object({
-  firstNames: yup
-    .string()
-    .trim()
-    .required(),
-  lastName: yup
-    .string()
-    .trim()
-    .required()
-});
-const inputSchemaPersonalCompare = yup.object({
-  firstNames: yup
-    .string()
-    .trim()
-    .required(),
-  lastName: yup
-    .string()
-    .trim()
-    .required(),
-  firstNamesCompare: yup
-    .string()
-    .trim()
-    .required(),
-  lastNameCompare: yup
-    .string()
-    .trim()
-    .required()
-});
 
 const AnalysisInput = props => {
   const User = useUser();
   const { t } = useTranslation();
+  const [startAnalysis] = useAnalysis();
   const [anals, setAnals] = useState(null);
   const [isPopupVisible, setPopupVisibility] = useState(false);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
 
   useEffect(() => {
     if (User.user && User.user.analyses) {
@@ -78,80 +49,6 @@ const AnalysisInput = props => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const validateInput = async (
-    firstNames,
-    lastNames,
-    firstNamesComfort,
-    lastNameComfort,
-    dateOfBirth
-  ) => {
-    let valid;
-    if (firstNamesComfort || lastNameComfort) {
-      valid = await inputSchemaPersonalCompare.isValid({
-        firstNames: firstNames,
-        lastName: lastNames,
-        firstNamesCompare: firstNamesComfort,
-        lastNameCompare: lastNameComfort
-      });
-    } else {
-      valid = await inputSchemaPersonal.isValid({
-        firstNames: firstNames,
-        lastName: lastNames
-      });
-    }
-
-    if (!valid) {
-      ToastNotifications.error(t("TOAST.FIRST_AND_LASTNAME_REQUIRED"), {
-        position: "top-right"
-      });
-      return false;
-    }
-
-    // validating dateOfBirth
-    const date = moment(dateOfBirth, "DD.MM.YYYY", true);
-    if (!date.isValid()) {
-      ToastNotifications.error(t("TOAST.DATE_FORMAT_REQUIRED"), {
-        position: "top-right"
-      });
-      return false;
-    }
-
-    return true;
-  };
-
-  const startAnalysis = async (
-    firstNames,
-    lastNames,
-    firstNamesComfort,
-    lastNameComfort,
-    dateOfBirth
-  ) => {
-    if (
-      !(await validateInput(
-        firstNames,
-        lastNames,
-        firstNamesComfort,
-        lastNameComfort,
-        dateOfBirth
-      ))
-    ) {
-      return;
-    }
-    const names = [firstNames];
-    const surnames = [lastNames];
-    if (firstNamesComfort && lastNameComfort) {
-      names.push(firstNamesComfort);
-      surnames.push(lastNameComfort);
-    }
-    const firstNamesEncoded = encodeURIComponent(names);
-    const lastNamesEncoded = encodeURIComponent(surnames);
-    const dateOfBirthEncoded = encodeURIComponent(dateOfBirth);
-    // navigating to results
-    props.history.push(
-      `/resultPersonal/${firstNamesEncoded}/${lastNamesEncoded}/${dateOfBirthEncoded}`
-    );
-  };
-
   const openPopup = () => {
     setPopupVisibility(true);
   };
@@ -168,22 +65,34 @@ const AnalysisInput = props => {
 
   return (
     <>
-      <div className="page-register-v3 layout-full">
+      <div className="anal-input page-register-v3 layout-full">
+        <Header
+          user={User?.user}
+          plusBtn={openPopup}
+          isSidebarVisible={isSidebarVisible}
+          onOpen={() => setSidebarVisible(true)}
+          onClose={() => setSidebarVisible(false)}
+        />
+        <Promo className="promo__desktop-hidden" />
+        <Sidebar
+          isVisible={isSidebarVisible}
+          openPopup={() => setPopupVisibility(true)}
+        />
         <section className="anal">
-          <Header user={User?.user} plusBtn={openPopup} />
-
           <div className="container">
             <div className="anal-inner">
-              <h1 className="anal-title">Numerology Calculator</h1>
+              <h1 className="anal-title">{t("ANAL_TITLE_TEXT")}</h1>
               <div className="anal-form__wrapper">
                 <AnalForm onSubmit={onSubmit} />
               </div>
             </div>
-            {User?.user && <AnalBlock anals={anals} />}
+            {User?.user?.analyses?.length > 0 && (
+              <AnalBlock text={t("PREVANALS_BLOCK_TEXT")} anals={anals} />
+            )}
           </div>
         </section>
         {/* <Results /> */}
-        <Promo />
+        <Promo className="promo__mobile-hidden" />
         <FooterHoriz />
         {isPopupVisible && (
           <PopupBase

@@ -1,9 +1,13 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import PillImg from "../PillImg";
 import Typography from "../Typography";
 
-const LinksBlock = ({ text = "LEARN MORE" }) => {
+const LinksBlock = () => {
+  const { t } = useTranslation();
+  const text = t("PLANS_LEANMORE_TEXT");
+
   return (
     <div className="prevanals">
       <Typography as="p" fs="14px" fw="700" lh="21px" color="#fff" upperCase>

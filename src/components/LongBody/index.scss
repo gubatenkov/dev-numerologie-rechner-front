@@ -1,3 +1,6 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
 .popuplong {
   &__title {
     margin: 100px 0 50px;
@@ -10,5 +13,14 @@
     font-style: normal;
 
     text-transform: capitalize;
+
+    @include max-media($md) {
+      margin: 40px 0 0;
+
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 39px;
+      font-style: normal;
+    }
   }
 }

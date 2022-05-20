@@ -12,9 +12,16 @@
     background-size: cover;
     background-position: top top;
     background-color: #d7b267;
-    background-repeat: no-repeat;
     background-image: url("../images/analBg.png");
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
+
+    @include max-media($md) {
+      background-size: unset;
+      background-repeat: repeat;
+      background-color: #d7b267;
+      background-position: center;
+      background-image: url("../images/noise.png");
+    }
   }
 
   &-outter {
@@ -238,9 +245,9 @@
 
 .login-form__group-agreement label {
   position: relative;
-  margin: 0 0 30px 0;
+  margin: 0 0 20px 0;
 
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
 
   cursor: pointer;

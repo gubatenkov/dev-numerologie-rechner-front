@@ -7,28 +7,35 @@ import PlaceholderText from "./components/PlaceholderText";
 
 import "./index.scss";
 
-const PopupLong = ({ section, prevName = "", nextName = "", onNavClick }) => {
+const PopupLong = ({
+  section,
+  prevName = "",
+  nextName = "",
+  isForProfessionals,
+  onNavClick
+}) => {
   const title = section?.sectionName ?? "Title available in full version";
   const sectionElements =
-    section?.sectionElements?.filter(el => el.descriptionText.length) ?? [];
+    section?.sectionElements?.filter(el => el?.descriptionText?.length) ?? [];
 
-  const checkLeft = left => {
-    if (typeof left === "string" && left?.trim()?.length) {
-      return left;
-    } else {
-      return <NumPill />;
+  const checkLeft = (description, number) => {
+    if (typeof description === "string" && description?.trim()?.length) {
+      return description;
     }
+    return <NumPill numbers={[Number(number)]} />;
   };
 
   const setContent = () => {
     if (sectionElements?.length) {
       return sectionElements.map((el, i) => {
-        console.log(el);
+        const heading = el?.numberDescription?.calculationDescription ?? "";
+
         return (
           <TwoColRow
             key={i}
-            left={checkLeft(el.numberDescription.description)}
+            left={checkLeft(el.numberDescription.description, el.result.value)}
             right={el.descriptionText}
+            heading={!isForProfessionals ? heading : ""}
           />
         );
       });
@@ -42,7 +49,7 @@ const PopupLong = ({ section, prevName = "", nextName = "", onNavClick }) => {
         <div className="popuplong-inner">
           <h1 className="popuplong__title">{title}</h1>
           <PopupNav
-            className="popupnav__nav--bb"
+            className="popupnav__nav--bb popupnav__nav--hidden"
             prevName={prevName}
             nextName={nextName}
             onNavClick={onNavClick}
@@ -52,6 +59,7 @@ const PopupLong = ({ section, prevName = "", nextName = "", onNavClick }) => {
             <PopupNav
               className="popupnav__nav--bt"
               prevName={prevName}
+              centerName={title}
               nextName={nextName}
               onNavClick={onNavClick}
             />

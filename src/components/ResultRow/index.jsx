@@ -56,6 +56,27 @@ const ResultRow = ({
   const number =
     result.value?.length > 0 ? result.value.replace(/\s/g, "") : "";
 
+  const getColItemByType = () => {
+    switch (result.type) {
+      case "matrix":
+        return (
+          <Matrix
+            text={text}
+            result={result}
+            name={name}
+            numberId={numberId}
+            blurred={!isDescriptionAvailable()}
+          />
+        );
+      case "number":
+        return <Number value={number} />;
+      case "list":
+        return <List result={result} />;
+      default:
+        break;
+    }
+  };
+
   return (
     <div className={getRowClasses()}>
       <h5 className="result-row__title">
@@ -67,19 +88,7 @@ const ResultRow = ({
         </span>
       </h5>
       <span className="result-row__toggle" />
-      <div className="result-row__col">
-        {result.type === "matrix" && (
-          <Matrix
-            text={text}
-            result={result}
-            name={name}
-            numberId={numberId}
-            blurred={!isDescriptionAvailable()}
-          />
-        )}
-        {result.type === "number" && <Number value={number} />}
-        {result.type === "list" && <List result={result} />}
-      </div>
+      <div className="result-row__col">{getColItemByType()}</div>
       <p
         className={`result-row__text ${
           isDescriptionAvailable() ? "" : "result-row__text--blur"

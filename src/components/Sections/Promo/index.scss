@@ -8,6 +8,18 @@
 
   background: #fff;
 
+  &__mobile-hidden {
+    @include max-media($md) {
+      display: none;
+    }
+  }
+
+  &__desktop-hidden {
+    @include min-media($md) {
+      display: none;
+    }
+  }
+
   &-inner {
     position: relative;
 
