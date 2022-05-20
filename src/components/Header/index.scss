@@ -8,6 +8,14 @@
 
   z-index: 10;
 
+  @include max-media($md) {
+    top: 0;
+
+    background-color: #d7b267;
+    background-position: center;
+    background-image: url("../../images/noise.png");
+  }
+
   &-btns {
     gap: 12px;
     display: flex;
@@ -20,6 +28,13 @@
     background-repeat: no-repeat;
     background-image: url("../../images/analBg.png");
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
+
+    @include max-media($md) {
+      background-size: unset;
+      background-color: #d7b267;
+      background-position: center;
+      background-image: url("../../images/noise.png");
+    }
   }
 
   &-inner {
@@ -47,7 +62,8 @@
   }
 
   &-left {
-    padding: 0 15px 0 0;
+    padding: 0;
+    width: 100%;
 
     gap: 100px;
     display: flex;
@@ -57,9 +73,12 @@
 
     @include max-media($md) {
       padding: 0;
+      width: fit-content;
     }
 
     &__analysis {
+      margin: 0 auto;
+
       gap: 5px;
       display: flex;
       align-items: center;
@@ -71,20 +90,26 @@
   }
 
   &-right {
+    width: 100%;
     padding: 0 0 0 15px;
 
     gap: 40px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 
     text-align: center;
 
     @include max-media($md) {
+      width: fit-content;
+
       gap: 0;
       padding: 0;
     }
 
     &__plans {
+      text-transform: uppercase !important;
+
       @include max-media($md) {
         display: none;
       }

@@ -4,10 +4,13 @@ import "./index.scss";
 
 import Sector from "../../Sector";
 import Typography from "../../Typography";
+import { useTranslation } from "react-i18next";
 
-const Promo = () => {
+const Promo = ({ className, ...restProps }) => {
+  const { t } = useTranslation();
+
   return (
-    <section className="promo">
+    <section className={`promo ${className}`}>
       <div className="container">
         <div className="promo-inner">
           <Sector left="-1" top="-1" />
@@ -23,13 +26,12 @@ const Promo = () => {
               fw="900"
               capitalize
             >
-              Get to know yourself with psychomerological analysis
+              {t("PROMO_BIG_TEXT")}
             </Typography>
           </div>
           <div className="promo__right">
             <Typography as="p" color="#323232" lh="25px" fs="18px" fw="400">
-              Activate all texts of the <strong>extended</strong> version of the
-              numeroscope of your current calculation for online reading
+              {t("PROMO_SMALL_TEXT")}
             </Typography>
           </div>
         </div>

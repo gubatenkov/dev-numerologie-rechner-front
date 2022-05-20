@@ -9,6 +9,57 @@
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.06);
   background-image: url("../images/analBg.png");
 
+  &-compare__btn {
+    &.opacity {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
+    @include max-media($md) {
+      bottom: -100px !important;
+    }
+  }
+
+  &-input {
+    position: relative;
+
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+
+    & > .header {
+      width: 100%;
+
+      top: 0;
+      position: absolute;
+
+      @include max-media($md) {
+        position: sticky;
+      }
+    }
+
+    & > .anal {
+      padding: 80px 0 0;
+
+      @include max-media($md) {
+        padding: 0 0 0;
+      }
+    }
+  }
+
+  &-btn__back {
+    margin: 0 0 15px 0;
+    display: inline-block;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 21px;
+    font-style: normal;
+
+    text-transform: capitalize;
+  }
+
   &-title {
     margin: 0;
 
@@ -29,9 +80,25 @@
     }
   }
 
-  &-compare__btn {
+  &-date {
+    margin: 0;
+
+    font-size: 21px;
+    color: #ffffff;
+    font-weight: 600;
+    line-height: 32px;
+    font-style: normal;
+
+    text-transform: capitalize;
+  }
+
+  & .aside-btn {
+    display: none;
+    margin: 40px 0 0 0;
+
     @include max-media($md) {
-      bottom: -130px !important;
+      display: block;
+      max-width: 290px;
     }
   }
 
@@ -54,12 +121,27 @@
   }
 
   &-group {
+    width: fit-content;
+
     display: flex;
     align-items: flex-end;
 
     &__input {
+      max-width: 220px;
       background: #f9f8f6;
       border: 1px solid transparent;
+
+      &--mw50 {
+        max-width: 50px;
+      }
+
+      &--mw75 {
+        max-width: 75px;
+      }
+
+      @include max-media($md) {
+        max-width: 100%;
+      }
     }
 
     &__altnames {
@@ -68,7 +150,6 @@
 
       @include max-media($md) {
         max-width: 282px;
-        display: flex;
         flex-direction: column;
       }
     }
@@ -88,32 +169,31 @@
       }
     }
 
-    &__date {
+    &__dates {
       position: relative;
 
-      max-width: 282px;
-
-      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, 55px) 75px;
+      grid-template-rows: 1fr;
+      grid-column-gap: 10px;
+      grid-row-gap: 0px;
 
       @include max-media($md) {
         margin: 0 0 35px 0;
       }
 
-      &::before {
-        content: "Date of birth";
+      &-text {
+        margin: 0 0 5px 0;
+        display: inline-block;
 
         top: -20px;
         position: absolute;
-
-        margin: 0 0 5px 0;
 
         font-style: normal;
         font-weight: 700;
         font-size: 14px;
         line-height: 20px;
         color: #ffffff;
-
-        z-index: 1;
       }
 
       input {
@@ -129,5 +209,9 @@
         }
       }
     }
+  }
+
+  &-group + &-group {
+    margin-top: 20px;
   }
 }

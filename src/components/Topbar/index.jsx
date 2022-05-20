@@ -7,7 +7,7 @@ import SwitchBtn from "../Buttons/SwitchBtn";
 
 import img from "../../images/plusGrey.svg";
 
-const Topbar = ({ onClick }) => {
+const Topbar = ({ onCrossClick, onToggleChange }) => {
   const [isON, setIsON] = useState(false);
   const textLeftClasses = !isON
     ? "topbar__left-text topbar__left-text--on"
@@ -16,7 +16,10 @@ const Topbar = ({ onClick }) => {
     ? "topbar__left-text topbar__left-text--on"
     : "topbar__left-text";
 
-  const handleSwitch = () => setIsON(!isON);
+  const handleChange = () => {
+    setIsON(!isON);
+    onToggleChange();
+  };
 
   return (
     <div className="topbar">
@@ -24,14 +27,14 @@ const Topbar = ({ onClick }) => {
         <div className="topbar-inner">
           <div className="topbar__left">
             <p className={textLeftClasses}>For Beginners</p>
-            <SwitchBtn onChange={handleSwitch} />
+            <SwitchBtn onChange={handleChange} />
             <p className={textRightClasses}>For Professionals</p>
           </div>
           <div className="topbar__right">
             <ButtonImg
               className="topbar__right-btn"
               imgPath={img}
-              onClick={onClick}
+              onClick={onCrossClick}
             />
           </div>
         </div>

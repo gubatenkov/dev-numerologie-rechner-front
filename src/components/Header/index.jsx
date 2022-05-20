@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -13,6 +14,8 @@ import BaseBtn from "../Buttons/BaseBtn/BaseBtn";
 
 import plusIcon from "../../images/plus.svg";
 import logoMini from "../../images/logoMini.png";
+import { useUser } from "../../contexts/UserContext";
+import useLangContext from "../../utils/useLangContext";
 
 const Header = ({
   className,
@@ -22,13 +25,25 @@ const Header = ({
   onOpen,
   onClose
 }) => {
+  const User = useUser();
+  const { t } = useTranslation();
   const location = useLocation();
+  const { lang } = useLangContext();
   const [longs, setLongs] = useState(0);
   const [shorts, setShorts] = useState(0);
   const isExactPage = location.pathname === "/plans" ? true : false;
 
+  useEffect(() => {
+    User.setLanguageWithId(lang);
+  }, [User, lang]);
+
   // if number of user credits was changed, update the number of shorts and longs
   useEffect(() => {
+    updateUserCredits();
+    // eslint-disable-next-line
+  }, [user]);
+
+  const updateUserCredits = () => {
     if (user) {
       const data = user?.currentUser?.credits;
       const newShorts = data?.find(el => el?.type === "persoenlichkeit_kurz")
@@ -42,8 +57,9 @@ const Header = ({
         setLongs(newLongs);
       }
     }
-    // eslint-disable-next-line
-  }, [user]);
+  };
+
+  const handlePillClick = () => plusBtn();
 
   const setAnalysisItemsElseText = () => {
     if (user) {
@@ -58,13 +74,13 @@ const Header = ({
             color="#fff"
             upperCase
           >
-            Personality analysis
+            {t("HEADER_ANAL_TYPE_TEXT")}
           </Typography>
           <div className="header__credits header__credits--ml10">
-            <PillImg text="S" switched>
+            <PillImg text="S" switched onClick={handlePillClick}>
               {shorts}
             </PillImg>
-            <PillImg text="L" switched>
+            <PillImg text="L" switched onClick={handlePillClick}>
               {longs}
             </PillImg>
           </div>
@@ -86,7 +102,7 @@ const Header = ({
           color="#fff"
           upperCase
         >
-          Login to your profile to display your balance
+          {t("HEADER_UNAUTH_TEXT")}
         </Typography>
       );
     }
@@ -105,7 +121,7 @@ const Header = ({
             href="/login"
             link
           >
-            Log In
+            {t("HEADER_LOGIN_BTN_TEXT")}
           </BaseBtn>
           <BaseBtn
             className={`base-btn base-btn__signup ${
@@ -114,7 +130,7 @@ const Header = ({
             href="/register"
             link
           >
-            Sign Up
+            {t("HEADER_SIGNUP_BTN_TEXT")}
           </BaseBtn>
         </div>
       );
@@ -130,13 +146,9 @@ const Header = ({
             onClick={isSidebarVisible ? onClose : onOpen}
           />
           <div className="header-brand">
-            <a
-              href="https://www.psychologischenumerologie.eu/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link to="/">
               <img className="header__img" src={logoMini} alt="logo" />
-            </a>
+            </Link>
           </div>
           <div className="header-left__analysis">
             {setAnalysisItemsElseText()}
@@ -144,13 +156,9 @@ const Header = ({
         </div>
 
         <div className="header-brand__mobile">
-          <a
-            href="https://www.psychologischenumerologie.eu/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Link to="/">
             <img className="header__img" src={logoMini} alt="logo" />
-          </a>
+          </Link>
         </div>
 
         <div className="header-right">
@@ -164,7 +172,7 @@ const Header = ({
               fw="500"
               color="#fff"
             >
-              CREDIT PLANS
+              {t("HEADER_CREDIT_PLANS_TEXT")}
             </Typography>
           )}
           <LangDrop />

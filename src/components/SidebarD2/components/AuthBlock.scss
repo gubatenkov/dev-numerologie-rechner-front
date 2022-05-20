@@ -1,0 +1,45 @@
+.authblock {
+  &-top {
+    padding: 45px 0 40px;
+
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+
+    &__link {
+      display: block;
+
+      font-size: 14px;
+      color: #313236;
+      font-weight: 500;
+      line-height: 20px;
+      font-style: normal;
+    }
+  }
+
+  &-center {
+    padding: 0 0 30px;
+
+    border-bottom: 1px solid #cac6c4;
+
+    &__locale {
+      margin: 10px 0 0 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &-text {
+        margin: 0;
+      }
+
+      & .lang-drop__lang {
+        color: #313236;
+
+        &::before {
+          border-color: #787878 transparent transparent transparent;
+        }
+      }
+    }
+  }
+}

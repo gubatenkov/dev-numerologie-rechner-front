@@ -19,6 +19,7 @@ import { setUserAuthData, postJsonData } from "../utils/AuthUtils";
 // import { useLoadingOverlay } from "../contexts/LoadingOverlayContext";
 
 const Placehoder = () => {
+  const { t } = useTranslation();
   const history = useHistory();
 
   const handleClick = () => {
@@ -35,7 +36,7 @@ const Placehoder = () => {
         fw="900"
         color="#323232"
       >
-        Sign up
+        {t("REGISTER_FORM_TITLE_TEXT")}
       </Typography>
 
       <Typography
@@ -46,7 +47,7 @@ const Placehoder = () => {
         fw="400"
         color="#313236"
       >
-        Check your email. We sent you a link to confirm your registration.
+        {t("REGISTER_CONFIRM_TEXT")}
       </Typography>
 
       <BaseBtn
@@ -54,7 +55,7 @@ const Placehoder = () => {
         type="button"
         onClick={handleClick}
       >
-        Ok
+        {t("REGISTER_CONFIRM_BTN_TEXT")}
       </BaseBtn>
     </div>
   );
@@ -64,7 +65,7 @@ const Register = ({ history }) => {
   const User = useUser();
   const location = useLocation();
   const { t } = useTranslation();
-  // const LoadingOverlay = useLoadingOverlay();
+  const [isLoading, setLoading] = useState(false);
   const [wasSubmited, setSubmited] = useState(false);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const {
@@ -92,6 +93,7 @@ const Register = ({ history }) => {
   }, [history]);
 
   const registerUser = async (email, password) => {
+    setLoading(true);
     try {
       // LoadingOverlay.showWithText(t("REGISTRATING"));
 
@@ -108,7 +110,9 @@ const Register = ({ history }) => {
         history.push(redirectTo);
       }
       setSubmited(true);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log("Reg failed:", error.message);
       if (error.message === "EMAIL_ALREADY_EXISTS") {
         ToastNotifications.error(t("EMAIL_ALREADY_EXISTS"), {
@@ -158,7 +162,7 @@ const Register = ({ history }) => {
                       fw="900"
                       color="#323232"
                     >
-                      Sign up
+                      {t("REGISTER_FORM_TITLE_TEXT")}
                     </Typography>
                   </div>
                   <div className="register-form__body">
@@ -166,7 +170,7 @@ const Register = ({ history }) => {
                       <Input
                         className="register-form__input"
                         type="email"
-                        label="Email"
+                        label={t("REGSITER_FORM_EMAIL_LABEL_TEXT")}
                         placeholder="primalvj3737@gmail.com"
                         register={() => register("email", emailValidators)}
                         message={errors.email && errors.email.message}
@@ -175,7 +179,7 @@ const Register = ({ history }) => {
                     <div className="register-form__group">
                       <Input
                         className="register-form__input"
-                        label="Password"
+                        label={t("REGSITER_FORM_PASS_LABEL_TEXT")}
                         type="password"
                         placeholder="*********"
                         register={() =>
@@ -187,7 +191,7 @@ const Register = ({ history }) => {
                     <div className="register-form__group">
                       <Input
                         className="register-form__input"
-                        label="Confirm password"
+                        label={t("REGSITER_FORM_CONFIRM_PASS_LABEL_TEXT")}
                         type="password"
                         placeholder="*********"
                         register={() =>
@@ -216,15 +220,16 @@ const Register = ({ history }) => {
                           fw="400"
                           color="#323232"
                         >
-                          Yes, I have read the data protection statement,
-                          including the following data protection information,
-                          terms of use and general terms and conditions, and I
-                          expressly agree to them.
+                          {t("REGISTER_FORM_PRIVACY_TEXT")}
                         </Typography>
                       </label>
                     </div>
-                    <BaseBtn className="register-form__submit" type="submit">
-                      Sign Up
+                    <BaseBtn
+                      className="register-form__submit"
+                      type="submit"
+                      loading={isLoading}
+                    >
+                      {t("REGSITER_FORM_SUBMITBTN_TEXT")}
                     </BaseBtn>
                   </div>
                   <div className="register-form__footer">
@@ -236,7 +241,7 @@ const Register = ({ history }) => {
                       fw="500"
                       color="#01B2D4"
                     >
-                      Already have an account
+                      {t("REGISTER_FROM_LINK_TEXT")}
                     </Typography>
                   </div>
                 </form>

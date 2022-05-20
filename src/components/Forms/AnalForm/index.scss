@@ -3,12 +3,15 @@
 
 .anal-form {
   gap: 40px;
-  display: grid;
+  display: flex;
+  align-items: flex-start;
 
   position: relative;
 
   @include max-media($md) {
-    gap: 0px;
+    display: block;
+
+    position: unset;
 
     margin: 0 auto;
     max-width: 282px;
@@ -38,13 +41,9 @@
   }
 
   &__submit {
-    top: 25px;
-    right: 0;
-    position: absolute;
-
     width: 100%;
     max-width: 165px;
-    margin-left: auto;
+    margin: 25px 0 0;
 
     @include max-media($md) {
       margin: 40px 0 0;

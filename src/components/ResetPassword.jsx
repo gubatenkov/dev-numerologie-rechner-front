@@ -17,6 +17,9 @@ import FooterHoriz from "./FooterHoriz";
 import BaseBtn from "./Buttons/BaseBtn/BaseBtn";
 import useValidators from "../utils/useValidators";
 import { getErrMessageFromString } from "../utils/functions";
+import Sidebar from "./SidebarD2";
+import PopupBase from "./Popups/PopupBase";
+import BoxWithCards from "./BoxWithCards/BoxWithCards";
 
 const DELAY_REDIRECT_AFTER_RESET = 3000;
 
@@ -25,6 +28,7 @@ const ResetPassword = ({ history }) => {
   const { t } = useTranslation();
   const LoadingOverlay = useLoadingOverlay();
   const [isEmailAccepted, setEmailAccepted] = useState(false);
+  const [isPopupVisible, setPopupVisibility] = useState(false);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const {
     register,
@@ -79,14 +83,19 @@ const ResetPassword = ({ history }) => {
     }
   };
 
+  const openPopup = () => setPopupVisibility(true);
+
+  const closePopup = () => setPopupVisibility(false);
+
   return (
     <div className="reset">
       <Header
+        user={User?.user}
         isSidebarVisible={isSidebarVisible}
         onOpen={() => setSidebarVisible(true)}
         onClose={() => setSidebarVisible(false)}
       />
-      {/* <Sidebar isVisible={isSidebarVisible} /> */}
+      <Sidebar isVisible={isSidebarVisible} openPopup={openPopup} />
       <div className="container">
         <div className="reset-inner">
           <div className="reset-form-box">
@@ -99,7 +108,7 @@ const ResetPassword = ({ history }) => {
                   lh="40px"
                   fw="900"
                 >
-                  Reset Password
+                  {t("RESET_PASS_FORM_TITLE_TEXT")}
                 </Typography>
               </div>
               <div className="reset-form__body">
@@ -116,7 +125,7 @@ const ResetPassword = ({ history }) => {
                       password.
                     </Typography>
                     <BaseBtn className="blue-btn reset-form__ok " type="submit">
-                      Ok
+                      {t("RESET_PASS_CONFIRM_BTN_TEXT")}
                     </BaseBtn>
                   </div>
                 ) : (
@@ -126,7 +135,7 @@ const ResetPassword = ({ history }) => {
                         className="reset-form__input"
                         name="email"
                         type="email"
-                        label="Email"
+                        label={t("RESET_PASS_FORM_EMAIL_LABEL_TEXT")}
                         form="novalidatedform"
                         placeholder="primalvj3737@gmail.com"
                         message={errors.email?.message}
@@ -138,13 +147,14 @@ const ResetPassword = ({ history }) => {
                       className="blue-btn reset-form__submit"
                       type="submit"
                     >
-                      Reset password
+                      {t("RESET_PASS_FORM_RESETBTN_TEXT")}
                     </BaseBtn>
                     <BaseBtn
                       className="blue-btn reset-form__back"
                       type="button"
+                      onClick={() => history.push("/login")}
                     >
-                      Back
+                      {t("RESET_PASS_FORM_BACKBTN_TEXT")}
                     </BaseBtn>
                   </>
                 )}
@@ -155,6 +165,14 @@ const ResetPassword = ({ history }) => {
         </div>
       </div>
       <FooterHoriz />
+      {isPopupVisible && (
+        <PopupBase
+          name="Pricing"
+          title="Read all texts of numerological analysis!"
+          onClose={closePopup}
+          children={<BoxWithCards />}
+        />
+      )}
     </div>
   );
 };

@@ -3,27 +3,11 @@ import React from "react";
 import "./index.scss";
 
 const NumPill = ({ numbers = [] }) => {
-  const generateSixRandomNums = () => {
-    for (let i = 0; i < 6; i++) {
-      const randomNumber = Math.floor(Math.random() * 10);
-      numbers.push(randomNumber);
-    }
-  };
-
-  generateSixRandomNums();
-
   const setNumbers = () => {
     if (numbers.length) {
       return numbers.map((num, i) => {
         return (
-          <span
-            key={i}
-            className={
-              num % 2 === 0
-                ? "numpill__item numpill__item--bold"
-                : "numpill__item"
-            }
-          >
+          <span key={i} className="numpill__item numpill__item--bold">
             {num}
           </span>
         );

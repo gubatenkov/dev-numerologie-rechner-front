@@ -1,21 +1,27 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import "./index.scss";
 
-import placeholder from "../../images/userPlaceholder.svg";
 import useHover from "../../utils/hooks/useHover";
 import { useUser } from "../../contexts/UserContext";
+import placeholder from "../../images/userPlaceholder.svg";
 
 const EmailWidget = ({ imgPath, email }) => {
   const User = useUser();
-  const [ref, isHovered] = useHover();
   const history = useHistory();
+  const { t } = useTranslation();
+  const [ref, isHovered] = useHover();
 
   const menuItems = [
-    { id: 1, text: "Analyses", handler: () => history.push("/userHome") },
-    { id: 2, text: "Profile", handler: () => history.push("/userProfile") },
-    { id: 3, text: "Logout", handler: () => User.logoutUser() }
+    { id: 1, text: t("MY_ANALYSIS"), handler: () => history.push("/userHome") },
+    {
+      id: 2,
+      text: t("MY_PROFILE"),
+      handler: () => history.push("/userProfile")
+    },
+    { id: 3, text: t("LOG_OUT"), handler: () => User.logoutUser() }
   ];
 
   return (

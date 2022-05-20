@@ -60,6 +60,8 @@ import LoadingOverlay from "./components/LoadingOverlay";
 import { LoadingOverlayProvider } from "./contexts/LoadingOverlayContext";
 import fixWhenGoogleTranslateAppBreak from "./utils/functions";
 import CreditPlansPage from "./components/CreditPlansPage";
+import { LangProvider } from "./contexts/LangContext";
+import { FormProvider } from "./contexts/FormContext";
 
 fixWhenGoogleTranslateAppBreak();
 initTranslationFramework();
@@ -155,60 +157,70 @@ export const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <ApolloHooksProvider client={client}>
-      <ThemeProvider theme={lightTheme}>
-        <UserProvider>
-          <LoadingOverlayProvider>
-            <BuyModalProvider>
-              <BrowserRouter>
-                <Switch>
-                  <Route path="/plans" component={CreditPlansPage} />
-                  <Route path="/login" component={withTracker(Login)} />
-                  <Route path="/register" component={withTracker(Register)} />
-                  <Route path="/reset" component={withTracker(ResetPassword)} />
-                  <Route
-                    path="/input-set-password/:token?"
-                    component={withTracker(SetPassword)}
-                  />
-                  <Route
-                    exact
-                    path="/resultPersonal/:analysisId/:resultConfigurationId?"
-                    component={withTracker(AnalysisResultPersonal)}
-                  />
-                  <Route
-                    exact
-                    path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
-                    component={withTracker(AnalysisResultPersonal)}
-                  />
-                  <Route
-                    path="/analysisInput"
-                    component={withTracker(AnalysisInput)}
-                  />
-                  <PrivateRoute
-                    path="/userProfile"
-                    isAuthenticated={isUserAuthenticated}
-                    loginPath="/login"
-                    component={UserProfile}
-                  />
-                  <PrivateRoute
-                    path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
-                    isAuthenticated={isUserAuthenticated}
-                    loginPath="/login"
-                    component={withTracker(UserHome)}
-                  />
-                  <Route path="/" component={withTracker(AnalysisInput)} />
-                </Switch>
-                <LoadingOverlay />
-                {/* <SidebarProvider>
+    <LangProvider>
+      <FormProvider>
+        <ApolloHooksProvider client={client}>
+          <ThemeProvider theme={lightTheme}>
+            <UserProvider>
+              <LoadingOverlayProvider>
+                <BuyModalProvider>
+                  <BrowserRouter>
+                    <Switch>
+                      <Route path="/plans" component={CreditPlansPage} />
+                      <Route path="/login" component={withTracker(Login)} />
+                      <Route
+                        path="/register"
+                        component={withTracker(Register)}
+                      />
+                      <Route
+                        path="/reset"
+                        component={withTracker(ResetPassword)}
+                      />
+                      <Route
+                        path="/input-set-password/:token?"
+                        component={withTracker(SetPassword)}
+                      />
+                      <Route
+                        exact
+                        path="/resultPersonal/:analysisId/:resultConfigurationId?"
+                        component={withTracker(AnalysisResultPersonal)}
+                      />
+                      <Route
+                        exact
+                        path="/resultPersonal/:firstNames/:lastNames/:dateOfBirth/:resultConfigurationId?"
+                        component={withTracker(AnalysisResultPersonal)}
+                      />
+                      <Route
+                        path="/analysisInput"
+                        component={withTracker(AnalysisInput)}
+                      />
+                      <PrivateRoute
+                        path="/userProfile"
+                        isAuthenticated={isUserAuthenticated}
+                        loginPath="/login"
+                        component={UserProfile}
+                      />
+                      <PrivateRoute
+                        path="/userHome/:userAction?/:firstNames?/:lastNames?/:dateOfBirth?/"
+                        isAuthenticated={isUserAuthenticated}
+                        loginPath="/login"
+                        component={withTracker(UserHome)}
+                      />
+                      <Route path="/" component={withTracker(AnalysisInput)} />
+                    </Switch>
+                    <LoadingOverlay />
+                    {/* <SidebarProvider>
                   <OpenSidebarButton />
                   <Sidebar />
                 </SidebarProvider> */}
-              </BrowserRouter>
-            </BuyModalProvider>
-          </LoadingOverlayProvider>
-        </UserProvider>
-      </ThemeProvider>
-    </ApolloHooksProvider>
+                  </BrowserRouter>
+                </BuyModalProvider>
+              </LoadingOverlayProvider>
+            </UserProvider>
+          </ThemeProvider>
+        </ApolloHooksProvider>
+      </FormProvider>
+    </LangProvider>
   </ApolloProvider>,
   document.getElementById("root")
 );

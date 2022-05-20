@@ -5,9 +5,11 @@ import "./index.scss";
 import PillImg from "../PillImg";
 import Typography from "../Typography";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const AnalBlock = ({ anals, text = "Previous analysis:" }) => {
   const history = useHistory();
+  const { t } = useTranslation();
 
   const handleClick = id => {
     history.push(`/resultPersonal/${id}`);
@@ -19,9 +21,9 @@ const AnalBlock = ({ anals, text = "Previous analysis:" }) => {
         {text}
       </Typography>
       <div className="prevanals__list">
-        {anals?.length &&
+        {anals?.length > 0 &&
           anals
-            .slice(0, 3)
+            .slice(-3)
             .map(({ name = "analysis", id, usedCreditTypes }, index) => {
               let text = "";
               if (usedCreditTypes.length) {
@@ -47,7 +49,7 @@ const AnalBlock = ({ anals, text = "Previous analysis:" }) => {
             })}
       </div>
       <button className="prevanals-more base-btn outlined base-btn--mlauto">
-        More
+        {t("PREVANALS_BLOCKBTN_TEXT")}
       </button>
     </div>
   );
