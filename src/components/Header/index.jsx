@@ -104,7 +104,7 @@ const Header = ({
           color="#fff"
           upperCase
         >
-          {t(analType)}
+          {t("HEADER_UNAUTH_TEXT")}
         </Typography>
       );
     }
