@@ -4,7 +4,7 @@ const nameValidator = {
   required: "FIELD_REQUIRED",
   maxLength: { value: 30, message: "MAX_30_LETTERS" },
   pattern: {
-    value: /^[A-Za-zÄÖÜäöüß]+$/,
+    value: /^[A-Za-zÄÖÜäöüß( )-]+$/,
     message: "ONLY_LETTERS"
   }
 };
@@ -31,7 +31,7 @@ const yearValidator = {
 const altNameValidator = {
   maxLength: { value: 30, message: "MAX_30_LETTERS" },
   pattern: {
-    value: /^[A-Za-zÄÖÜäöüß]+$/,
+    value: /^[A-Za-zÄÖÜäöüß( )-]+$/,
     message: "ONLY_LETTERS"
   }
 };
@@ -39,7 +39,7 @@ const altNameValidator = {
 const altLastnameValidator = {
   maxLength: { value: 30, message: "MAX_30_LETTERS" },
   pattern: {
-    value: /^[A-Za-zÄÖÜäöüß]+$/,
+    value: /^[A-Za-zÄÖÜäöüß( )-]+$/,
     message: "ONLY_LETTERS"
   }
 };

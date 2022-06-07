@@ -2,19 +2,54 @@
 @import "../../../styles/mixins";
 
 .anal-form {
-  gap: 40px;
+  gap: 20px;
   display: flex;
-  align-items: flex-start;
-
-  position: relative;
+  flex-direction: column;
 
   @include max-media($md) {
-    display: block;
+    gap: 0px;
+  }
 
-    position: unset;
+  &__inner {
+    gap: 40px;
+    display: flex;
+    align-items: flex-start;
 
-    margin: 0 auto;
-    max-width: 282px;
+    position: relative;
+
+    @include max-media($md) {
+      display: block;
+
+      position: unset;
+
+      margin: 0 auto;
+      max-width: 282px;
+    }
+  }
+
+  &__comparenames {
+    gap: 40px;
+    display: flex;
+
+    @include max-media($md) {
+      margin: 20px auto 0;
+
+      gap: 0;
+      display: flex;
+      max-width: 280px;
+      flex-direction: column;
+    }
+
+    &--w280 {
+      height: 0;
+      width: 282px;
+    }
+
+    &-names {
+      gap: 10px;
+      display: flex;
+      max-width: 428px;
+    }
   }
 
   &-row {
@@ -46,10 +81,37 @@
     margin: 25px 0 0;
 
     @include max-media($md) {
-      margin: 40px 0 0;
+      display: none;
+      margin: 80px 0 0;
 
       max-width: 100%;
       position: unset;
+    }
+
+    &--mobile {
+      display: none;
+      max-width: 282px;
+      margin: 80px auto 0;
+
+      @include max-media($md) {
+        display: block;
+      }
+    }
+  }
+
+  &__group {
+    &-wrap {
+      position: relative;
+
+      gap: 40px;
+      row-gap: 20px;
+      display: grid;
+      grid-template-columns: minmax(250px, 450px) 1fr;
+
+      @include max-media($md) {
+        display: flex;
+        flex-direction: column;
+      }
     }
   }
 }

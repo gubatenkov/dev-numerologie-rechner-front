@@ -1,12 +1,13 @@
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react";
 
 import "./index.scss";
 
 import Input from "../../Input";
 import BaseBtn from "../../Buttons/BaseBtn/BaseBtn";
 import AnalTypeDropdown from "../../AnalTypeDropdown";
+import { altNames } from "../../../utils/formStructure";
 import useFormContext from "../../../utils/useFormContext";
 
 const AnalForm = ({ onSubmit }) => {
@@ -18,7 +19,8 @@ const AnalForm = ({ onSubmit }) => {
   } = useForm({ mode: "onSubmit" });
 
   const [isAddBtnVisible, setAddBtnVisible] = useState(true);
-  const { pushPersonalAltnames, formGroups } = useFormContext();
+  const { formGroups, analType } = useFormContext();
+  const personal = analType === "ANAL_PERSONALITY_TEXT";
 
   // const onBlur = e => {
   //   let val = e.target.value;
@@ -41,49 +43,84 @@ const AnalForm = ({ onSubmit }) => {
   //   }
   // };
 
+  useEffect(() => {
+    if (!personal) {
+      setAddBtnVisible(false);
+    } else {
+      setAddBtnVisible(true);
+    }
+  }, [analType, personal]);
+
   const handleCompareBtnClick = () => {
-    pushPersonalAltnames();
     setAddBtnVisible(false);
   };
 
   return (
     <form className="anal-form" onSubmit={handleSubmit(data => onSubmit(data))}>
-      <AnalTypeDropdown />
-      <div className="anal-form__group-wrap">
-        {formGroups.map((group, idx) => {
-          return (
-            <div
-              className={`anal-group anal-group__${group.groupName}`}
-              key={idx}
-            >
-              {group.inputs.map((input, idx) => {
-                return (
-                  <Input
-                    className={input.className}
-                    key={idx}
-                    label={t(input.label)}
-                    placeholder={input.placeholder}
-                    message={errors[input.name] && " "}
-                    register={() => register(input.name, input.validator)}
-                  />
-                );
-              })}
-            </div>
-          );
-        })}
-        <BaseBtn
-          className={
-            isAddBtnVisible
-              ? "transparent-btn transparent-btn--plus anal-compare__btn"
-              : "transparent-btn transparent-btn--plus anal-compare__btn opacity"
-          }
-          type="button"
-          onClick={handleCompareBtnClick}
-        >
-          {t("ANAL_FORM_PLUSBTN_TEXT")}
+      <div className="anal-form__inner">
+        <AnalTypeDropdown />
+        <div className="anal-form__group-wrap">
+          {formGroups.map((group, idx) => {
+            return (
+              <div
+                className={`anal-group anal-group__${group.groupName}`}
+                key={idx}
+              >
+                {group.inputs.map((input, idx) => {
+                  return (
+                    <Input
+                      className={input.className}
+                      key={idx}
+                      label={t(input.label)}
+                      placeholder={input.placeholder}
+                      message={errors[input.name] && " "}
+                      register={() => register(input.name, input.validator)}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
+          <BaseBtn
+            className={
+              isAddBtnVisible
+                ? "transparent-btn transparent-btn--plus anal-compare__btn"
+                : "transparent-btn transparent-btn--plus anal-compare__btn opacity"
+            }
+            type="button"
+            onClick={handleCompareBtnClick}
+          >
+            {t("ANAL_FORM_PLUSBTN_TEXT")}
+          </BaseBtn>
+        </div>
+        <BaseBtn className="blue-btn anal-form__submit" type="submit">
+          {t("ANAL_FORM_SUBMITBTN_TEXT")}
         </BaseBtn>
       </div>
-      <BaseBtn className="blue-btn anal-form__submit" type="submit">
+      <div className="anal-form__comparenames">
+        <div className="anal-form__comparenames--w280" />
+        {!isAddBtnVisible && personal && (
+          <div className="anal-form__comparenames-names">
+            {altNames.inputs.map((input, idx) => {
+              return (
+                <Input
+                  className={input.className}
+                  key={idx}
+                  label={t(input.label)}
+                  placeholder={input.placeholder}
+                  message={errors[input.name] && " "}
+                  register={() => register(input.name, input.validator)}
+                />
+              );
+            })}
+          </div>
+        )}
+        <div />
+      </div>
+      <BaseBtn
+        className="blue-btn anal-form__submit anal-form__submit--mobile"
+        type="submit"
+      >
         {t("ANAL_FORM_SUBMITBTN_TEXT")}
       </BaseBtn>
     </form>

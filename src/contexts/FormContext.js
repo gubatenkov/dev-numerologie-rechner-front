@@ -22,18 +22,13 @@ export const FormProvider = ({ children }) => {
     dispatch({ type: "SET_CHILD_TYPE" });
   };
 
-  const pushPersonalAltnames = () => {
-    dispatch({ type: "PUSH_PERSONAL_ALTNAMES" });
-  };
-
   return (
     <FormContext.Provider
       value={{
         ...state,
         setPersonalType,
         setCoupleType,
-        setChildType,
-        pushPersonalAltnames
+        setChildType
       }}
     >
       {children}
