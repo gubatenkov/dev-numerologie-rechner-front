@@ -246,6 +246,7 @@
     "LOGIN_FORM_SIGNUPBTN_TEXT": "Sign up",
     "LOGIN_FORM_WELCOME_TEXT": "Welcome",
     "LOGIN_FORM_EMAIL_LABEL_TEXT": "Email",
+    "LOGIN_FORM_PASS_LABEL_TEXT": "Password",
     "LOGIN_FORM_CHECKBOX_TEXT": "Remember me",
     "LOGIN_FORM_LOGINBTN_TEXT": "Log In",
     "LOGIN_FORM_BACKBTN_TEXT": "Back",

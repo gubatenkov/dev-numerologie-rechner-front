@@ -125,7 +125,7 @@ const Login = ({ history }) => {
                             className="login-form__input"
                             name="password"
                             type="password"
-                            label={t("LOGIN_FORM_EMAIL_LABEL_TEXT")}
+                            label={t("LOGIN_FORM_PASS_LABEL_TEXT")}
                             form="novalidatedform"
                             placeholder="**********"
                             message={errors.password?.message}

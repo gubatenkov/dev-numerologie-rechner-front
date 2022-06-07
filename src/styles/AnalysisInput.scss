@@ -24,7 +24,7 @@
     position: relative;
 
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     flex-direction: column;
 
     & > .header {
@@ -34,7 +34,7 @@
       position: absolute;
 
       @include max-media($md) {
-        position: sticky;
+        position: static;
       }
     }
 
