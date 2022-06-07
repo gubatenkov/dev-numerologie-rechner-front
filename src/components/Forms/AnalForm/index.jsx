@@ -20,7 +20,7 @@ const AnalForm = ({ onSubmit }) => {
 
   const [isAddBtnVisible, setAddBtnVisible] = useState(true);
   const { formGroups, analType } = useFormContext();
-  const personal = analType === "ANAL_PERSONALITY_TEXT";
+  const couple = analType === "ANAL_COUPLE_TEXT";
 
   // const onBlur = e => {
   //   let val = e.target.value;
@@ -43,13 +43,10 @@ const AnalForm = ({ onSubmit }) => {
   //   }
   // };
 
+  // show add btn only if it's not the couple type
   useEffect(() => {
-    if (!personal) {
-      setAddBtnVisible(false);
-    } else {
-      setAddBtnVisible(true);
-    }
-  }, [analType, personal]);
+    couple ? setAddBtnVisible(false) : setAddBtnVisible(true);
+  }, [couple]);
 
   const handleCompareBtnClick = () => {
     setAddBtnVisible(false);
@@ -99,7 +96,7 @@ const AnalForm = ({ onSubmit }) => {
       </div>
       <div className="anal-form__comparenames">
         <div className="anal-form__comparenames--w280" />
-        {!isAddBtnVisible && personal && (
+        {!isAddBtnVisible && !couple && (
           <div className="anal-form__comparenames-names">
             {altNames.inputs.map((input, idx) => {
               return (

@@ -16,6 +16,7 @@ import plusIcon from "../../images/plus.svg";
 import logoMini from "../../images/logoMini.png";
 import { useUser } from "../../contexts/UserContext";
 import useLangContext from "../../utils/useLangContext";
+import useFormContext from "../../utils/useFormContext";
 
 const Header = ({
   className,
@@ -29,6 +30,7 @@ const Header = ({
   const { t } = useTranslation();
   const location = useLocation();
   const { lang } = useLangContext();
+  const { analType } = useFormContext();
   const [longs, setLongs] = useState(0);
   const [shorts, setShorts] = useState(0);
   const isExactPage = location.pathname === "/plans" ? true : false;
@@ -74,7 +76,7 @@ const Header = ({
             color="#fff"
             upperCase
           >
-            {t("HEADER_ANAL_TYPE_TEXT")}
+            {t(analType)}
           </Typography>
           <div className="header__credits header__credits--ml10">
             <PillImg text="S" switched onClick={handlePillClick}>
@@ -102,7 +104,7 @@ const Header = ({
           color="#fff"
           upperCase
         >
-          {t("HEADER_UNAUTH_TEXT")}
+          {t(analType)}
         </Typography>
       );
     }
