@@ -58,7 +58,7 @@ const AnalysisResultPersonalRender = props => {
     configuration
   } = props;
   const LoadingOverlay = useLoadingOverlay();
-
+  console.log(personalAnalysisResult);
   const resultConfig = configuration;
 
   const resultConfigId =

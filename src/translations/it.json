@@ -245,6 +245,7 @@
     "LOGIN_FORM_SIGNUPBTN_TEXT": "Inscríbase en",
     "LOGIN_FORM_WELCOME_TEXT": "Benvenuti",
     "LOGIN_FORM_EMAIL_LABEL_TEXT": "Email",
+    "LOGIN_FORM_PASS_LABEL_TEXT": "Password",
     "LOGIN_FORM_CHECKBOX_TEXT": "Ricordati di me",
     "LOGIN_FORM_LOGINBTN_TEXT": "Accedi",
     "LOGIN_FORM_BACKBTN_TEXT": "Indietro",

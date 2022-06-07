@@ -2,15 +2,13 @@
 @import "../../styles/mixins";
 
 .header {
-  position: sticky;
+  position: static;
 
   padding: 0 15px;
 
   z-index: 10;
 
   @include max-media($md) {
-    top: 0;
-
     background-color: #d7b267;
     background-position: center;
     background-image: url("../../images/noise.png");

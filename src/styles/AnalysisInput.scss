@@ -16,7 +16,7 @@
     }
 
     @include max-media($md) {
-      bottom: -100px !important;
+      bottom: -35px !important;
     }
   }
 
@@ -24,7 +24,7 @@
     position: relative;
 
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     flex-direction: column;
 
     & > .header {
@@ -34,7 +34,7 @@
       position: absolute;
 
       @include max-media($md) {
-        position: sticky;
+        position: static;
       }
     }
 
@@ -126,6 +126,37 @@
     display: flex;
     align-items: flex-end;
 
+    &__date {
+      gap: 10px;
+
+      &--bb {
+        @include max-media($md) {
+          padding: 0 0 30px;
+          border-bottom: 1px solid #fff;
+        }
+      }
+
+      > .input-group {
+        > input {
+          text-align: center;
+        }
+
+        @include max-media($md) {
+          min-width: 75px;
+        }
+
+        &:last-child {
+          input {
+            min-width: 75px;
+
+            @include max-media($md) {
+              min-width: 100%;
+            }
+          }
+        }
+      }
+    }
+
     &__input {
       max-width: 220px;
       background: #f9f8f6;
@@ -133,6 +164,10 @@
 
       &--mw50 {
         max-width: 50px;
+
+        @include max-media($md) {
+          max-width: 75px !important;
+        }
       }
 
       &--mw75 {
@@ -160,8 +195,6 @@
       gap: 10px;
 
       @include max-media($md) {
-        margin: 0 0 35px 0;
-
         gap: 20px;
         display: flex;
         flex-direction: column;
@@ -209,9 +242,5 @@
         }
       }
     }
-  }
-
-  &-group + &-group {
-    margin-top: 20px;
   }
 }

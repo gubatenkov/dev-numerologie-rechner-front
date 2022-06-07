@@ -260,6 +260,7 @@
     "LOGIN_FORM_SIGNUPBTN_TEXT": "Anmeldung",
     "LOGIN_FORM_WELCOME_TEXT": "Willkommen",
     "LOGIN_FORM_EMAIL_LABEL_TEXT": "Email",
+    "LOGIN_FORM_PASS_LABEL_TEXT": "Passwort",
     "LOGIN_FORM_CHECKBOX_TEXT": "Erinnern Sie sich an mich",
     "LOGIN_FORM_LOGINBTN_TEXT": "Einloggen",
     "LOGIN_FORM_BACKBTN_TEXT": "Zurück",

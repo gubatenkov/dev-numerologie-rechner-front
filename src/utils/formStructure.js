@@ -22,13 +22,19 @@ export const personalStructure = {
           className: "anal-group__input",
           label: "ANAL_FORM_LASTNAME_LABEL",
           validator: validators.nameValidator
-        },
+        }
+      ]
+    },
+    {
+      groupName: "date",
+      groupLabel: "",
+      inputs: [
         {
           value: "",
           name: "day",
           placeholder: "26",
           className: "anal-group__input anal-group__input--mw50",
-          label: "",
+          label: "Date",
           validator: validators.dayValidator
         },
         {
@@ -74,13 +80,19 @@ export const coupleStructure = {
           className: "anal-group__input",
           label: "ANAL_FORM_LASTNAME_LABEL",
           validator: validators.nameValidator
-        },
+        }
+      ]
+    },
+    {
+      groupName: "date anal-group__date--bb",
+      groupLabel: "",
+      inputs: [
         {
           value: "",
           name: "day",
           placeholder: "26",
           className: "anal-group__input anal-group__input--mw50",
-          label: "",
+          label: "Date",
           validator: validators.dayValidator
         },
         {
@@ -120,19 +132,25 @@ export const coupleStructure = {
           className: "anal-group__input",
           label: "ANAL_FORM_LASTNAME_LABEL",
           validator: validators.nameValidator
-        },
+        }
+      ]
+    },
+    {
+      groupName: "date",
+      groupLabel: "",
+      inputs: [
         {
           value: "",
           name: "day",
-          placeholder: "03",
+          placeholder: "26",
           className: "anal-group__input anal-group__input--mw50",
-          label: "",
+          label: "Date",
           validator: validators.dayValidator
         },
         {
           value: "",
           name: "month",
-          placeholder: "12",
+          placeholder: "05",
           className: "anal-group__input anal-group__input--mw50",
           label: "",
           validator: validators.monthValidator
@@ -140,7 +158,7 @@ export const coupleStructure = {
         {
           value: "",
           name: "year",
-          placeholder: "1995",
+          placeholder: "1986",
           className: "anal-group__input anal-group__input--mw75",
           label: "",
           validator: validators.yearValidator
@@ -172,13 +190,19 @@ export const childStructure = {
           className: "anal-group__input",
           label: "ANAL_FORM_LASTNAME_LABEL",
           validator: validators.nameValidator
-        },
+        }
+      ]
+    },
+    {
+      groupName: "date anal-group__date--bb",
+      groupLabel: "",
+      inputs: [
         {
           value: "",
           name: "day",
           placeholder: "26",
           className: "anal-group__input anal-group__input--mw50",
-          label: "",
+          label: "Date",
           validator: validators.dayValidator
         },
         {
@@ -196,28 +220,6 @@ export const childStructure = {
           className: "anal-group__input anal-group__input--mw75",
           label: "",
           validator: validators.yearValidator
-        }
-      ]
-    },
-    {
-      groupName: "altnames",
-      groupLabel: "",
-      inputs: [
-        {
-          value: "",
-          name: "altname",
-          placeholder: "",
-          className: "anal-group__input",
-          label: "ANAL_FORM_ALTNAME_LABEL",
-          validator: validators.altNameValidator
-        },
-        {
-          value: "",
-          name: "altlastname",
-          placeholder: "",
-          className: "anal-group__input",
-          label: "ANAL_FORM_ALTLASTNAME_LABEL",
-          validator: validators.altLastnameValidator
         }
       ]
     },
@@ -240,19 +242,25 @@ export const childStructure = {
           className: "anal-group__input",
           label: "ANAL_FORM_PARENT_1_LASTNAME_LABEL",
           validator: validators.nameValidator
-        },
+        }
+      ]
+    },
+    {
+      groupName: "date anal-group__date--bb",
+      groupLabel: "",
+      inputs: [
         {
           value: "",
           name: "day",
-          placeholder: "",
+          placeholder: "26",
           className: "anal-group__input anal-group__input--mw50",
-          label: "",
+          label: "Date",
           validator: validators.dayValidator
         },
         {
           value: "",
           name: "month",
-          placeholder: "",
+          placeholder: "05",
           className: "anal-group__input anal-group__input--mw50",
           label: "",
           validator: validators.monthValidator
@@ -260,7 +268,7 @@ export const childStructure = {
         {
           value: "",
           name: "year",
-          placeholder: "",
+          placeholder: "1986",
           className: "anal-group__input anal-group__input--mw75",
           label: "",
           validator: validators.yearValidator
@@ -286,19 +294,25 @@ export const childStructure = {
           className: "anal-group__input",
           label: "ANAL_FORM_PARENT_2_LASTNAME_LABEL",
           validator: validators.nameValidator
-        },
+        }
+      ]
+    },
+    {
+      groupName: "date",
+      groupLabel: "",
+      inputs: [
         {
           value: "",
           name: "day",
-          placeholder: "",
+          placeholder: "26",
           className: "anal-group__input anal-group__input--mw50",
-          label: "",
+          label: "Date",
           validator: validators.dayValidator
         },
         {
           value: "",
           name: "month",
-          placeholder: "",
+          placeholder: "05",
           className: "anal-group__input anal-group__input--mw50",
           label: "",
           validator: validators.monthValidator
@@ -306,7 +320,7 @@ export const childStructure = {
         {
           value: "",
           name: "year",
-          placeholder: "",
+          placeholder: "1986",
           className: "anal-group__input anal-group__input--mw75",
           label: "",
           validator: validators.yearValidator

@@ -1,8 +1,7 @@
 import {
   personalStructure,
   coupleStructure,
-  childStructure,
-  altNames
+  childStructure
 } from "../utils/formStructure";
 
 export const formReducer = (state, action) => {
@@ -16,19 +15,6 @@ export const formReducer = (state, action) => {
     case "SET_CHILD_TYPE":
       const childState = JSON.parse(JSON.stringify(childStructure));
       return childState;
-    case "PUSH_PERSONAL_ALTNAMES":
-      const existAltnames = state.formGroups.find(
-        group => group.groupName === "altnames"
-      );
-      if (!existAltnames) {
-        const altnames = JSON.parse(JSON.stringify(altNames));
-        const stateWithAltnames = {
-          ...state,
-          formGroups: [...state.formGroups, altnames]
-        };
-        return stateWithAltnames;
-      }
-      return state;
     default:
       return state;
   }
